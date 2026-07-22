@@ -14,12 +14,14 @@
     "in_band": true,
     "source": "Eames et al. 2015",
     "cubic_3x3x3_crosscheck_eV": 0.119,
-    "status": "MET"
+    "status": "SANITY CHECK (not an Eames reproduction: Eames 2015 = MAPbI3 ~0.6 eV; 0.259 eV is within the broad lead-halide-perovskite spread)",
+    "literature_note": "Eames et al. 2015 studied MAPbI3 (~0.6 eV, large cell), not gamma-CsPbI3; 0.1-0.6 eV is the cross-literature range, not Eames' value"
   },
   "anchor_b_chargestate": {
-    "status": "DFT-GATED (scaffold only)",
+    "status": "PROTOCOL READY, CALCULATION PENDING (most important unvalidated link, not a formality)",
     "reason": "MACE charge-agnostic; V_I+ vs V_I0 needs charged-supercell DFT + per-charge-state fine-tuning",
-    "source": "Tyagi et al. 2025"
+    "source": "Tyagi et al. 2025",
+    "note": "barriers are charge-unspecified neutral-reference predictions; cannot be assigned to V_I0 or V_I+; 'V_I0-like' wording retracted"
   },
   "anchor_c_GA": {
     "Ea_undoped_eV": 0.25895710819509077,
@@ -28,7 +30,16 @@
     "effect": "pins (+)",
     "dopant_distance_A": 3.3554065450734694,
     "converged": true,
-    "status": "MET (sign correct: pins)"
+    "status": "PRELIMINARY QUALITATIVE PASS (sign correct, +70 meV; single configuration, system mismatch vs MA/GA hybrid lit., DFT + config sampling pending)",
+    "x_GA_percent": 3.125,
+    "n_atoms_GA_cell": 168,
+    "caveats": [
+      "GA replaces Cs in gamma-CsPbI3 vs GA-for-MA in hybrid lit.",
+      "lit value is multi-path effective Ea from conductivity vs single 0K NEB path",
+      "MACE charge-agnostic: 'GA+' is a stoichiometric label, not explicit +1",
+      "n=1 configuration/orientation",
+      "H-bond-stiffening mechanism untested"
+    ]
   },
   "anchor_d_strain": {
     "primary": "biaxial (in-plane epitaxial)",
@@ -53,7 +64,10 @@
       ],
       "slope_eV_per_strain": -2.2483062264405302,
       "pearson_r": -0.9763026295463484,
-      "monotonic": false
+      "monotonic": false,
+      "monotonicity_note": "monotonic decreasing from -3% through +2%; +3 meV uptick at +3% (0.204->0.207) breaks strict monotonicity. Strongly negatively correlated and monotonic up to +2%.",
+      "dEa_per_1pct_tensile_meV": -41,
+      "dEa_per_1pct_compressive_meV": 19
     },
     "isotropic": {
       "strain": [
@@ -76,9 +90,10 @@
       ],
       "slope_eV_per_strain": -0.30764962668488965,
       "pearson_r": -0.10368951550768617,
-      "note": "confirms tensile sign; real PES roughness under compression (gamma tilt softness), confirmed by bit-identical tight-convergence re-run"
+      "note": "confirms tensile sign; compressive scatter is numerically reproducible and convergence-independent (bit-identical tight re-run) but mechanistically UNRESOLVED \u2014 could be path-switching, local minima, or model artefact, not proven physical PES roughness"
     },
     "sign": "tensile LOWERS, compressive RAISES",
-    "status": "MET (biaxial clean, r=-0.98)"
-  }
+    "status": "TREND REPRODUCED (biaxial, sign correct, r=-0.98); hydrostatic compressive branch unresolved; DFT 3-point check pending"
+  },
+  "overall_status": "Three zero-shot qualitative checks complete (pipeline runs, trends physical); strict literature reproduction and quantitative screening-readiness pending DFT benchmarking, configurational sampling, finite-size verification, and charge-state validation."
 }
