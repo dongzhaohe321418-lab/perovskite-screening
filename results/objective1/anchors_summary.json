@@ -30,7 +30,7 @@
     "effect": "pins (+)",
     "dopant_distance_A": 3.3554065450734694,
     "converged": true,
-    "status": "PRELIMINARY QUALITATIVE PASS (sign correct, +70 meV; single configuration, system mismatch vs MA/GA hybrid lit., DFT + config sampling pending)",
+    "status": "SIGN ROBUST, MAGNITUDE NOT CONVERGED: pins in all 3 orientations at near site (+70/+278/+182 meV, 207 meV spread) + far-site control -23 meV (~0, confirms LOCAL effect); magnitude also size-dependent (see finite_size). Quantitative pinning strength DFT- and averaging-gated.",
     "x_GA_percent": 3.125,
     "n_atoms_GA_cell": 168,
     "caveats": [
@@ -39,7 +39,25 @@
       "MACE charge-agnostic: 'GA+' is a stoichiometric label, not explicit +1",
       "n=1 configuration/orientation",
       "H-bond-stiffening mechanism untested"
-    ]
+    ],
+    "configurational_sampling": {
+      "near_orientations_dEa_meV": {
+        "xy_plane": 70.3,
+        "xz_plane": 277.6,
+        "tilted_60": 182.3
+      },
+      "far_control_dEa_meV": -23.4,
+      "near_spread_meV": 207.2,
+      "near_all_positive": true,
+      "NH_I_saddle_contacts_A": [
+        2.41,
+        2.63,
+        2.66,
+        2.67
+      ],
+      "interpretation": "sign robust (local, H-bond mediated); magnitude configuration-dependent"
+    },
+    "single_config_note": "the original +70 meV was the near/xy_plane orientation \u2014 the LOWEST of the three sampled"
   },
   "anchor_d_strain": {
     "primary": "biaxial (in-plane epitaxial)",
@@ -93,7 +111,22 @@
       "note": "confirms tensile sign; compressive scatter is numerically reproducible and convergence-independent (bit-identical tight re-run) but mechanistically UNRESOLVED \u2014 could be path-switching, local minima, or model artefact, not proven physical PES roughness"
     },
     "sign": "tensile LOWERS, compressive RAISES",
-    "status": "TREND REPRODUCED (biaxial, sign correct, r=-0.98); hydrostatic compressive branch unresolved; DFT 3-point check pending"
+    "status": "TREND REPRODUCED (biaxial, sign correct, r=-0.98); hydrostatic compressive branch unresolved; DFT 3-point check pending",
+    "finite_size_robust": {
+      "tensile_1pct_dEa_2x2x2_meV": -41.5,
+      "tensile_1pct_dEa_3x3x3_meV": -40.8,
+      "verdict": "strain shift size-converged (cancels): identical at 2x2x2 and 3x3x3"
+    }
   },
-  "overall_status": "Three zero-shot qualitative checks complete (pipeline runs, trends physical); strict literature reproduction and quantitative screening-readiness pending DFT benchmarking, configurational sampling, finite-size verification, and charge-state validation."
+  "overall_status": "Three zero-shot qualitative checks complete (pipeline runs, trends physical, SIGNS ROBUST). Two DFT-free review next-steps now closed: GA configurational sampling (sign robust, magnitude not converged) and gamma-phase finite-size (undoped + strain size-converged, GA magnitude not). Strict literature reproduction + quantitative screening-readiness remain DFT- and charge-state-gated.",
+  "finite_size_check": {
+    "note": "gamma-phase 3x3x3 (~540-atom) vs 2x2x2 (159-atom), same V_I edge-hop",
+    "undoped_Ea_2x2x2_eV": 0.2589571081950339,
+    "undoped_Ea_3x3x3_eV": 0.25849509474937804,
+    "dEa_GA_2x2x2_meV": 70.3,
+    "dEa_GA_3x3x3_meV": 334.8,
+    "dEa_tensile1pct_2x2x2_meV": -41.5,
+    "dEa_tensile1pct_3x3x3_meV": -40.8,
+    "verdict": "undoped absolute size-converged (0.259->0.258 eV); strain shift cancels (-41=-41); GA magnitude does NOT converge (+70->+335 meV)"
+  }
 }

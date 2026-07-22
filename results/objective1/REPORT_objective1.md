@@ -4,21 +4,25 @@
 **Pipeline: zero-shot MACE-MP-0 (medium) + CI-NEB, γ-P1 phase, 2×2×2 V_I cell, float64, RTX 5090**
 
 > **Status in one line.** Three zero-shot qualitative checks are complete: the
-> undoped barrier passes a broad physical sanity check, GA⁺ predicts a promising
-> positive local barrier shift, and biaxial strain reproduces the expected trend.
-> **Strict literature reproduction and quantitative screening-readiness remain
-> pending** DFT benchmarking, configurational sampling, finite-size verification,
-> and explicit charge-state validation. This is *"the pipeline runs and the
-> trends are physical,"* not *"the method is fully validated."*
+> undoped barrier passes a broad physical sanity check, GA⁺ predicts a robust
+> positive *local* barrier shift (sign confirmed across orientation, site, and
+> cell size), and biaxial strain reproduces the expected trend. **Strict
+> literature reproduction and quantitative screening-readiness remain pending**
+> DFT benchmarking and explicit charge-state validation. Two of the review's
+> DFT-free next-steps are now closed: **GA configurational sampling** and the
+> **γ-phase finite-size check** (below). This is *"the pipeline runs, the trends
+> are physical, and the signs are robust,"* not *"the method is fully validated."*
 
 ![Strain and GA⁺ anchors]({{artifact:art_9be8ff94-ed02-435e-9cc6-5e856c5e11b2}})
+
+![GA configurational robustness and γ-phase finite-size check]({{artifact:art_65e6a74b-ed60-429b-a7e3-bfc9fd7757e2}})
 
 | # | Anchor (literature system) | Status | Zero-shot result |
 |---|--------|:------:|--------|
 | a | undoped E_a magnitude — Eames 2015 (**MAPbI₃**) | sanity check ✓ | 0.259 eV — inside the broad lead-halide-perovskite spread, **not** an Eames reproduction |
 | b | V_I⁺ vs V_I⁰ ordering — Tyagi 2025 | **protocol ready, calc pending** | not computable zero-shot (charge-agnostic model) |
-| c | GA⁺ ΔE_a sign — A-site pinning (**hybrid MA/GA** perovskites) | **preliminary qualitative pass** | ΔE_a = +70 meV, sign correct, **one configuration** |
-| d | strain–E_a trend — CsPbI₂Br / CsPbI₃ strain lit. | **trend reproduced (biaxial)** | dE_a/dε = −2.25 eV/strain, r = −0.98 |
+| c | GA⁺ ΔE_a sign — A-site pinning (**hybrid MA/GA** perovskites) | **sign robust, magnitude not converged** | pins in all 3 orientations (+70…+278 meV) + far control ≈ 0; magnitude configuration- **and** size-dependent |
+| d | strain–E_a trend — CsPbI₂Br / CsPbI₃ strain lit. | **trend reproduced (biaxial), size-robust** | dE_a/dε = −2.25 eV/strain, r = −0.98; ΔE_a size-converged (−41 meV at 2×2×2 = 3×3×3) |
 
 **Why the language is careful.** An earlier draft of this report labelled (a),
 (c), (d) as "MET" and called the biaxial branch "monotonic." Both overstate the
@@ -36,7 +40,7 @@ The γ-CsPbI₃ tracer-bullet barrier, recomputed in **float64** (production dty
 is **E_a = 0.259 eV forward / 0.230 eV reverse** — reproducing the float32
 baseline to ~0.05 meV. It lies inside the **broad** range reported for
 iodide-vacancy migration across lead-halide perovskites (~0.1–0.6 eV across many
-NEB studies; individual reports span roughly 0.08–0.68 eV).
+NEB studies; individual reports span roughly 0.08–0.58 eV).
 
 **This is a sanity check, not a reproduction of Eames et al. (2015).** Eames
 studied **MAPbI₃** (a different composition) and reported **≈0.6 eV** for iodide
@@ -83,18 +87,43 @@ reasons that must be closed before it counts as validated:
 3. **Charge is a label, not a physical +1.** MACE-MP-0 has no electron-count
    input, so "GA⁺" here is a stoichiometric/geometric substitution, not an
    explicitly charged molecular cation.
-4. **Configurational bias (n = 1).** One GA position and one orientation only —
-   no near/far or orientation sampling, so the +70 meV could shift with
-   configuration.
-5. **Mechanism is a hypothesis.** The H-bond-stiffening picture is untested here;
-   it needs N–H···I distances/angles, Pb–I bond-length and octahedral-distortion
-   changes at the saddle, and ≥2 orientations to support.
+4. **Configurational bias.** *Now tested* (was n = 1).
+5. **Mechanism.** *Now probed* with structural fingerprints (below).
+
+**Configurational sampling (post-review).** The GA anchor was re-run over **three
+distinct orientations** of the rigid cation at the Cs site nearest the hop, plus
+a **far-site control** (GA ~16 Å from the hop). The `--mode ga` driver records
+ΔE_a and mechanistic fingerprints (N–H···I contact, Pb–I bonds, octahedral
+distortion) at the initial and saddle images for each.
+
+| configuration | GA–hop distance | ΔE_a (meV) | closest N–H···I at saddle |
+|---|---:|---:|---:|
+| near, xy-plane | 3.36 Å | **+70** | 2.41 Å |
+| near, xz-plane | 3.36 Å | **+278** | 2.63 Å |
+| near, tilted 60° | 3.36 Å | **+182** | 2.66 Å |
+| **far (control)** | 16.12 Å | **−23** | 2.67 Å |
+
+Two findings, one reassuring and one cautionary:
+
+- **The pinning sign is robust; it is a genuinely *local* effect.** All three near
+  orientations pin (ΔE_a > 0), and the far control gives ΔE_a ≈ 0 (−23 meV) — a GA
+  far from the migration path does not change the barrier, exactly as a local
+  pinning mechanism requires. The N–H···I contacts of 2.4–2.7 Å at the saddle
+  (well inside a hydrogen-bond length) support the H-bond-stiffening picture.
+- **The magnitude is *not* configuration-converged.** Across orientations ΔE_a
+  spans **+70 to +278 meV — a 207 meV spread, ~4× variation**. My original
+  single-configuration +70 meV was the *smallest* of the three, so it understated
+  the effect. A single NEB configuration cannot be trusted for a *rankable*
+  pinning magnitude; that needs orientation/position averaging on the fine-tuned
+  model.
 
 **Concentration.** One Cs of 32 A-sites ⇒ **x_GA = 1/32 = 3.125 %**. The GA cell
 with the vacancy has **168 atoms** (159 undoped + 10-atom GA − 1 Cs), not 159.
 
-Status: **preliminary qualitative pass; DFT + configurational validation
-pending.** Saddle geometry saved (`ga_saddle_path.extxyz`).
+Status: **preliminary qualitative pass — sign confirmed robust (orientation +
+site + control), magnitude configuration-dependent.** Quantitative pinning
+strength remains DFT- and averaging-gated. Data: `ga.json` (all configs +
+fingerprints), saddle geometry `ga_saddle_path.extxyz`.
 
 ## Anchor (d) — strain–E_a trend: reproduced (biaxial); hydrostatic branch unresolved
 
@@ -166,20 +195,48 @@ allocation — not yet in hand.**
 
 ---
 
-## Finite-size sensitivity (open, not closed)
+## Finite-size check (now tested directly in the γ phase)
 
-The cubic screen found a large gap between 2×2×2 (0.461 eV) and 3×3×3 (0.119 eV)
-cells. This signals **strong finite-size sensitivity**, but two cautions apply:
+The cubic screen had shown a large 2×2×2→3×3×3 gap (0.461 → 0.119 eV), raising
+the worry that all these barriers are finite-size-dominated. That check has now
+been run **in the γ phase, on the same V_I edge-hop** (`--mode finite_size`):
+the identical path in a **3×3×3 (~540-atom)** cell versus the production
+**2×2×2 (159-atom)** cell, for undoped / GA-near / biaxial-tensile.
 
-- The mechanism is **elastic / defect-concentration** (the vacancy's strain field
-  overlapping its periodic images), **not** the charged-defect electrostatic
-  self-image — these cells are charge-neutral, so the self-image framing used in
-  an earlier draft is the wrong one.
-- Partial cancellation in *relative* quantities (ΔE_a, strain slopes) is
-  *expected* but **not demonstrated** for the γ phase, and especially not for the
-  GA case (GA changes the local elastic field) or the strain case (strain changes
-  long-range relaxation). It **must be tested explicitly** with a γ-phase 3×3×3
-  check on representative undoped / GA / strained cells.
+| quantity | 2×2×2 | 3×3×3 | change | verdict |
+|---|---:|---:|---:|---|
+| **undoped E_a (absolute)** | 0.259 eV | 0.258 eV | −1 meV | **size-converged** |
+| **tensile +1 % ΔE_a** | −41 meV | −41 meV | 0 meV | **cancels cleanly** |
+| **GA-near ΔE_a** | +70 meV | +335 meV | **+264 meV** | **does *not* cancel** |
+
+Three distinct outcomes:
+
+1. **The γ undoped barrier is size-converged.** Unlike the cubic screen, the γ
+   2×2×2 and 3×3×3 give the same absolute barrier to 1 meV. The cubic
+   0.461→0.119 collapse is a property of that (different phase, different hop)
+   setup, **not** a general defect of the 2×2×2 cell — the γ production cell is
+   fine for the undoped anchor.
+2. **The strain slope is finite-size robust.** The tensile ΔE_a is identical
+   (−41 meV) at both sizes, so anchor (d)'s deliverable — the *relative* strain
+   response — is trustworthy at 2×2×2. Cancellation holds here.
+3. **The GA pinning shift is *not* size-converged.** ΔE_a grows from +70 meV
+   (2×2×2) to +335 meV (3×3×3). Combined with the 207 meV orientation spread
+   above, this means the GA *magnitude* is converged in **neither** configuration
+   **nor** cell size. The GA substitution changes the long-range elastic field
+   (168/548-atom cells with a bulky molecular cation), and that interacts with
+   the vacancy's periodic images differently at each size.
+
+**Mechanism note.** These cells are charge-neutral, so the size dependence is
+**elastic / defect-concentration** (overlapping strain fields of the periodic
+vacancy and, for GA, the cation), **not** a charged-defect electrostatic
+self-image — the "self-image cancels" framing in an earlier draft named the
+wrong mechanism. Data: `finite_size.json`.
+
+**Consequence for the anchors.** (a) undoped and (d) strain-slope are
+finite-size-safe at 2×2×2; (c) GA magnitude is not, reinforcing that GA needs
+configurational **and** size averaging (or a large-cell reference) before a
+number is quoted. None of this changes the *signs*, which are the qualitative
+deliverables here.
 
 ---
 
@@ -211,28 +268,32 @@ saddle paths (`*_saddle_path.extxyz`), and this figure (`strain_Ea.png`).
 
 ## Next steps (to convert "trends physical" → "method validated")
 
-Before the ~50-dopant Objective 2 ranking, in priority order:
+The two DFT-free items (2, 4) are now **done** (this update); the remaining three
+are DFT-gated and wait on an allocation.
 
 1. **DFT check the undoped and GA paths** — at minimum the endpoints, the MLIP
-   saddle, and the two images flanking it, for both.
-2. **GA configurational sampling** — 2–3 GA orientations and a near/far GA–path
-   distance pair, to test whether the +70 meV is robust or configuration-dependent.
+   saddle, and the two images flanking it, for both. *(DFT-gated.)*
+2. ~~**GA configurational sampling**~~ — **DONE.** 3 orientations at the near site
+   + far-site control: sign robust (all near pin, far ≈ 0), magnitude spans
+   +70…+278 meV (207 meV spread). See Anchor (c) and `ga.json`.
 3. **Biaxial DFT 3-point** — −1.5 %, 0, +1.5 % DFT check against the zero-shot
-   slope.
-4. **γ-phase finite-size check** — same phase, same path, 3×3×3 vs 2×2×2, for
-   undoped and one strained/GA case.
+   slope. *(DFT-gated.)*
+4. ~~**γ-phase finite-size check**~~ — **DONE.** 3×3×3 vs 2×2×2 for undoped / GA /
+   tensile: undoped + strain-slope size-converged, GA magnitude is not. See the
+   finite-size section and `finite_size.json`.
 5. **V_I⁺ vs V_I⁰ (anchor b)** — the charged-DFT + per-charge-state fine-tune, as
    soon as a DFT allocation lands; it gates whether the pipeline can rank charged
-   defects at all.
+   defects at all. *(DFT-gated — `CHARGE_STATE_PROTOCOL.md`.)*
 
 ## Files
 
-- `strain_Ea.png` — anchors (c) & (d) figure
+- `strain_Ea.png` — anchors (c) & (d) figure (strain sweep + GA barrier overlay)
+- `obj1_refine.png` — post-review figure: GA configurational robustness + γ finite-size
 - `anchors_summary.json` — consolidated, analysis-ready results (with honest status flags)
-- `regression.json`, `strain.json`, `strain_tight.json`, `ga.json` — raw per-anchor data
+- `regression.json`, `strain.json`, `strain_tight.json`, `ga.json`, `finite_size.json` — raw per-anchor data
 - `regression_saddle_path.extxyz`, `ga_saddle_path.extxyz` — NEB image trajectories
 - `CHARGE_STATE_PROTOCOL.md` — anchor (b) ready-to-run DFT + fine-tune recipe
-- `../../scripts/04_objective1_anchors.py` — the driver
+- `../../scripts/04_objective1_anchors.py` — the driver (`--mode` regression/strain/ga/finite_size/all)
 
 ## Caveats (summary)
 

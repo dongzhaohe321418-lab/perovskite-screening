@@ -71,28 +71,44 @@ Host autodl
   在 AutoDL 实例上用 network_turbo 即可。
 - MACE checkpoint 首次运行会自动下载到 `~/.cache/mace/`。
 
-## Objective 1 进展(2026-07-22,Mac mini 会话)
+## Objective 1 进展(2026-07-22,Mac mini 会话;经同行评审下调 + DFT-free 下一步补全)
 
-四锚点里三个已在 γ-P1 相 + float64 零样本管线上复现,详见
-`results/objective1/REPORT_objective1.md`(+ `strain_Ea.png`、`anchors_summary.json`):
+**定位诚实版**:管线跑通、三个趋势物理合理、**符号稳健**;但严格文献复现和"可
+排名的量级"仍待 DFT + 电荷态验证。详见 `results/objective1/REPORT_objective1.md`
+(+ `strain_Ea.png`、`obj1_refine.png`、`anchors_summary.json`)。
 
-- **(a) 未掺杂 E_a ∈ 0.1–0.6 eV(Eames 2015)——已达标**:γ 相 float64 = 0.259 eV
-  (与 float32 基线差 ~0.05 meV),cubic 3×3×3 = 0.119 eV,都在窗口内。
-- **(c) GA⁺ 的 ΔE_a 符号与量级——已达标**:胍(planar C(NH₂)₃⁺)替 A 位 Cs →
-  E_a 0.259→0.329 eV,**ΔE_a = +70 meV,钉扎(符号正确)**。
-- **(d) 应变–E_a 关联——已达标**:**双轴(面内)** dE_a/dε = **−2.25 eV/strain
-  (r = −0.98)**,拉伸降、压缩升,单调;各向同性(静水压)确认拉伸符号,但压缩端
-  有真实 PES 粗糙度(fmax 收紧后逐位一致 → 非收敛问题,是 γ 相八面体倾斜软模)。
+- **(a) 未掺杂 E_a——物理合理性检查(非 Eames 复现)**:γ float64 = 0.259 eV
+  (与 float32 差 ~0.05 meV)。⚠️ Eames 2015 做的是 **MAPbI₃ ≈0.6 eV**,不是
+  γ-CsPbI₃;0.1–0.6 eV 是跨文献范围而非 Eames 单值。0.259 eV 落在铅卤钙钛矿碘空位
+  迁移的宽范围内,是 sanity check + float32/64 回归基准。端点前/后差 29 meV(γ-P1
+  两个 I 位点非等价)。
+- **(c) GA⁺ ΔE_a——符号稳健,量级未收敛**(本轮补做构型采样):3 个胍取向 @ 近位
+  全部钉扎(**+70/+278/+182 meV**,展布 207 meV),远位对照 **−23 meV ≈ 0**(证明是
+  *局域*效应);鞍点 N–H···I 接触 2.4–2.7 Å 支持氢键钉扎机制。原来的单构型 +70 meV
+  是三者里最小的。**量级对构型和尺寸都敏感**(见有限尺寸),单构型不能用于排名。
+- **(d) 应变–E_a——趋势复现(双轴),且尺寸稳健**:双轴 dE_a/dε = **−2.25 eV/strain
+  (r = −0.98)**,拉伸降、压缩升。⚠️ **非严格单调**——−3%→+2% 单调下降,+3% 有
+  +3 meV 上翘(自己的 monotone=no 诊断已打印)。各向同性压缩端散(tight-rerun 逐位
+  一致 → *数值可复现*,但**机制未定**:可能是路径切换/局域极小/模型 artefact,**不是
+  已证实的 PES 粗糙度**)。应变位移尺寸收敛:−41 meV 在 2×2×2 = 3×3×3。
 - **(b) V_I⁺ vs V_I⁰ 排序(Tyagi 2025)——DFT 门控,只出协议**:MACE 电荷不可知,
-  零样本无法给这个数;完整可执行方案(带电超胞 DFT + FNV + per-charge-state 微调 +
-  主动学习)写在 `results/objective1/CHARGE_STATE_PROTOCOL.md`,待 CSD3 落地即可跑。
+  所有势垒是 *charge-unspecified neutral-reference*(不能叫 "V_I⁰-like");这是整个
+  方法**最重要的未验证环节**。完整方案(带电超胞 DFT + FNV + per-charge-state 微调 +
+  主动学习)在 `results/objective1/CHARGE_STATE_PROTOCOL.md`,待 CSD3 落地即可跑。
 
-驱动脚本:`scripts/04_objective1_anchors.py`(可复用的 γ V_I NEB 驱动,支持
-regression/strain/ga 三模式、strain 支持 iso/biax、收敛阈值可调)。
+**有限尺寸检查(本轮补做,γ 相直接测)**:3×3×3(~540 原子)vs 2×2×2 同一 V_I 边跳——
+未掺杂绝对值尺寸收敛(0.259→0.258 eV,不像 cubic screen 那样塌);应变位移干净抵消
+(−41=−41 meV);**GA 量级不抵消**(+70→+335 meV)。→ (a)(d) 在 2×2×2 尺寸安全,(c)
+量级需构型 + 尺寸平均。数据 `finite_size.json`。
+
+驱动脚本:`scripts/04_objective1_anchors.py`(γ V_I NEB 驱动,`--mode`
+regression/strain/ga/finite_size/all;strain 支持 iso/biax + 可调收敛阈值;ga 支持
+取向采样 + near/far 站点 + 机制指纹)。
 
 ## 尚未完成 / 下一步
 
-- [ ] proposal 加入 preliminary results 小节(曳光弹数字,等 GPU 复跑后一起写)
-- [ ] CSD3 算力申请(DFT 腿,GPU 云替代不了)——**Objective 1(b) 的唯一门控项**
-- [x] Objective 1 锚点 (a)(c)(d) 已复现;(b) 已出可执行协议(DFT 门控)
+- [x] Objective 1 DFT-free 下一步全部补完:GA 构型采样 (#2) + γ 有限尺寸 (#4)
+- [ ] proposal 加入 preliminary results 小节(数字已齐,等写)
+- [ ] CSD3 算力申请(DFT 腿,GPU 云替代不了)——门控 (b)、以及 #1 undoped/GA DFT 校核、
+      #3 双轴 DFT 三点这三个下一步
 - [ ] 精读三篇论文的复现笔记(Eames 2015 / Tyagi 2025 / Arber 2025)

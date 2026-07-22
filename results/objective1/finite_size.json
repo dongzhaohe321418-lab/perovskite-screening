@@ -1,0 +1,51 @@
+{
+  "note": "3x3x3 vs 2x2x2, same gamma V_I edge-hop",
+  "cases": [
+    {
+      "case": "undoped",
+      "2x2x2": {
+        "n_atoms": 159,
+        "Ea_forward_eV": 0.2589571081950339,
+        "converged": true
+      },
+      "3x3x3": {
+        "n_atoms": 539,
+        "Ea_forward_eV": 0.25849509474937804,
+        "converged": true
+      }
+    },
+    {
+      "case": "GA_near",
+      "2x2x2": {
+        "n_atoms": 168,
+        "Ea_forward_eV": 0.32929089619125307,
+        "converged": true
+      },
+      "3x3x3": {
+        "n_atoms": 548,
+        "Ea_forward_eV": 0.5932719626794096,
+        "converged": true
+      }
+    },
+    {
+      "case": "tensile_1pct",
+      "2x2x2": {
+        "n_atoms": 159,
+        "Ea_forward_eV": 0.2174926699812545,
+        "converged": true
+      },
+      "3x3x3": {
+        "n_atoms": 539,
+        "Ea_forward_eV": 0.21771364622213696,
+        "converged": true
+      }
+    }
+  ],
+  "dEa_GA_2x": 0.07033378799621914,
+  "dEa_tensile1pct_2x": -0.04146443821377943,
+  "dEa_GA_3x": 0.3347768679300316,
+  "dEa_tensile1pct_3x": -0.04078144852724108,
+  "_runtime_s": 507.83633065223694,
+  "_fmax_ep": 0.03,
+  "_fmax_neb": 0.05
+}

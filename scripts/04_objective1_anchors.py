@@ -4,13 +4,22 @@
 Reproduces, with the zero-shot MACE-MP-0 pipeline in the *production* gamma phase
 (P-1, 159-atom 2x2x2 V_I cell, float64), three of the four Objective-1 anchors:
 
-  (a) undoped E_a in the literature band 0.1-0.6 eV (Eames 2015)   -> `regression`
+  (a) undoped E_a — physical sanity check vs the broad literature   -> `regression`
   (c) sign & magnitude of the GA+ (guanidinium) A-site dEa          -> `ga`
   (d) strain-E_a correlation: tensile lowers, compressive raises    -> `strain`
 
+Post-review DFT-free refinements (see results/objective1/REPORT_objective1.md
+"Next steps"):
+  (c+) GA configurational robustness — 3 orientations x {near,far} Cs site, plus
+       mechanistic fingerprints (N-H...I, Pb-I, octahedral distortion) at initial
+       and saddle                                                    -> `ga`
+  (fs) gamma-phase finite-size: same V_I edge-hop in 3x3x3 vs 2x2x2 for
+       undoped / GA / tensile, testing the cancellation assumption   -> `finite_size`
+
 Anchor (b) — the V_I+ vs V_I0 charge-state ordering (Tyagi 2025) — is NOT here:
 MACE is charge-agnostic, so it requires charged-supercell DFT + per-charge-state
-fine-tuning (DFT-gated). See results/objective1/CHARGE_STATE_PROTOCOL.md.
+fine-tuning (DFT-gated). Likewise the undoped/GA DFT check and the biaxial DFT
+3-point remain DFT-gated. See results/objective1/CHARGE_STATE_PROTOCOL.md.
 
 Design notes (from the RTX 5090 benchmark, results/gpu/BENCHMARK.md):
   * per-image calculators (one MACE object per NEB image) are 3.4x faster than a
@@ -45,6 +54,25 @@ FMAX_EP = 0.03
 FMAX_NEB = 0.05
 
 
+def _rot(axis, angle_deg):
+    """Rodrigues rotation matrix about `axis` by `angle_deg`."""
+    a = np.deg2rad(angle_deg)
+    x, y, z = np.asarray(axis, float) / np.linalg.norm(axis)
+    c, s, C = np.cos(a), np.sin(a), 1 - np.cos(a)
+    return np.array([[c + x * x * C, x * y * C - z * s, x * z * C + y * s],
+                     [y * x * C + z * s, c + y * y * C, y * z * C - x * s],
+                     [z * x * C - y * s, z * y * C + x * s, c + z * z * C]])
+
+
+# Three distinct guanidinium orientations to test configurational robustness of
+# the GA+ pinning shift: planar cation in xy, rotated into xz, and a tilted case.
+GA_ORIENTS = [
+    ("xy_plane", np.eye(3)),
+    ("xz_plane", _rot([1.0, 0.0, 0.0], 90.0)),
+    ("tilted_60", _rot([1.0, 1.0, 0.0], 60.0)),
+]
+
+
 # ---------------- geometry helpers ----------------
 def pick_hop_pair(atoms):
     """Indices (i_vac, i_hop) of two cis iodides on the Pb octahedron nearest the
@@ -67,9 +95,10 @@ def pick_hop_pair(atoms):
     return best
 
 
-def make_guanidinium(center):
-    """Planar guanidinium cation C(NH2)3+ (10 atoms) centred at `center` (Cartesian),
-    molecular plane = global xy. C-N 1.33 A, N-H 1.01 A, all angles ~120 deg."""
+def make_guanidinium(center, rot=None):
+    """Planar guanidinium cation C(NH2)3+ (10 atoms) centred at `center` (Cartesian).
+    Base molecular plane = global xy (C-N 1.33 A, N-H 1.01 A, all angles ~120 deg);
+    `rot` (3x3) optionally rotates the rigid cation to a different orientation."""
     dCN, dNH = 1.33, 1.01
     syms, pos = ["C"], [np.array([0.0, 0.0, 0.0])]
     for k in range(3):
@@ -83,12 +112,15 @@ def make_guanidinium(center):
             R = np.array([[np.cos(a), -np.sin(a), 0], [np.sin(a), np.cos(a), 0], [0, 0, 1]])
             uH = R @ back
             syms.append("H"); pos.append(N + dNH * uH)
-    pos = np.array(pos) + np.asarray(center)
+    pos = np.array(pos)
+    if rot is not None:
+        pos = pos @ np.asarray(rot).T             # rotate rigid cation about its C
+    pos = pos + np.asarray(center)
     return syms, pos
 
 
-def build_supercell(bulk, eps_iso=0.0, eps_biax=0.0):
-    sc = bulk.repeat((2, 2, 2))
+def build_supercell(bulk, eps_iso=0.0, eps_biax=0.0, size=2):
+    sc = bulk.repeat((size, size, size))
     if eps_iso:
         sc.set_cell(sc.cell.array * (1.0 + eps_iso), scale_atoms=True)
     elif eps_biax:
@@ -98,10 +130,14 @@ def build_supercell(bulk, eps_iso=0.0, eps_biax=0.0):
     return sc
 
 
-def make_endpoints(sc, dopant=None):
+def make_endpoints(sc, dopant=None, ga_rot=None, ga_site="near"):
     """Build (initial, final) V_I edge-hop endpoints with identical atom ordering.
-    If dopant=='GA', replace the Cs nearest the hop midpoint with guanidinium in
-    BOTH endpoints via the identical operation sequence (ordering stays matched)."""
+    If dopant=='GA', replace a Cs with guanidinium in BOTH endpoints via the
+    identical operation sequence (ordering stays matched).
+
+    ga_site: 'near' picks the Cs nearest the hop midpoint (pinning test); 'far'
+    picks the farthest Cs (control — expect dEa ~ 0). ga_rot: 3x3 rotation of the
+    rigid GA cation, for orientation sampling."""
     i_vac, i_hop = pick_hop_pair(sc)
     hop_d = sc.get_distance(i_vac, i_hop, mic=True)
 
@@ -110,7 +146,8 @@ def make_endpoints(sc, dopant=None):
         sym = np.array(sc.get_chemical_symbols())
         cs_idx = np.flatnonzero(sym == "Cs")
         mid = (sc.positions[i_vac] + sc.positions[i_hop]) / 2
-        cs_pick = cs_idx[np.argmin(np.linalg.norm(sc.positions[cs_idx] - mid, axis=1))]
+        dists = np.linalg.norm(sc.positions[cs_idx] - mid, axis=1)
+        cs_pick = cs_idx[np.argmin(dists) if ga_site == "near" else np.argmax(dists)]
         cs_pos = sc.positions[cs_pick].copy()
         dopant_d = float(np.linalg.norm(cs_pos - mid))
     else:
@@ -124,7 +161,7 @@ def make_endpoints(sc, dopant=None):
         j = int(np.argmin(d))
         assert atoms.get_chemical_symbols()[j] == "Cs" and d[j] < 1e-6, "Cs match failed"
         del atoms[j]
-        syms, pos = make_guanidinium(cs_pos)
+        syms, pos = make_guanidinium(cs_pos, rot=ga_rot)
         atoms += Atoms(syms, positions=pos)
         return atoms
 
@@ -140,7 +177,7 @@ def make_endpoints(sc, dopant=None):
 
     assert initial.get_chemical_symbols() == final.get_chemical_symbols(), "ordering mismatch"
     meta = {"i_vac": int(i_vac), "i_hop": int(i_hop), "hop_distance_A": float(hop_d),
-            "n_atoms": len(initial), "dopant_distance_A": dopant_d}
+            "n_atoms": len(initial), "dopant_distance_A": dopant_d, "ga_site": ga_site}
     return initial, final, meta
 
 
@@ -177,6 +214,44 @@ def run_neb(initial, final, calcs, n_images=N_IMAGES, fmax_ep=FMAX_EP, fmax_neb=
             "Ea_backward_eV": float((energies - energies[-1]).max()),
             "dE_endpoints_eV": float(e_f - e_i),
             "converged": bool(conv1 and conv2)}, images
+
+
+# ---------------- mechanistic fingerprints ----------------
+def octahedral_distortion(atoms, pb, cutoff=3.8):
+    """Bond-length distortion index of the PbI6 octahedron around atom `pb`:
+    Delta_d = mean( (d_i - d_mean)/d_mean )^2 over coordinating iodides."""
+    sym = np.array(atoms.get_chemical_symbols())
+    i_idx = np.flatnonzero(sym == "I")
+    d = atoms.get_distances(pb, i_idx, mic=True)
+    d = d[d < cutoff]
+    if len(d) == 0:
+        return None, 0
+    dm = d.mean()
+    return float(np.mean(((d - dm) / dm) ** 2)), int(len(d))
+
+
+def fingerprint(atoms, i_migrating, dopant=None):
+    """Structural fingerprint at one geometry: Pb-I environment of the migrating
+    iodide + (if GA present) closest N-H...I contact, to test the H-bond-
+    stiffening pinning hypothesis. Returns a JSON-able dict."""
+    sym = np.array(atoms.get_chemical_symbols())
+    pb_idx = np.flatnonzero(sym == "Pb")
+    # Pb neighbours of the migrating iodide (the two octahedra it bridges)
+    d_pb = atoms.get_distances(i_migrating, pb_idx, mic=True)
+    near_pb = pb_idx[np.argsort(d_pb)[:2]]
+    fp = {
+        "PbI_bonds_migrating_A": sorted(float(x) for x in d_pb[d_pb < 4.0]),
+        "octa_distortion": [octahedral_distortion(atoms, int(p))[0] for p in near_pb],
+    }
+    if dopant == "GA":
+        h_idx = np.flatnonzero(sym == "H")
+        i_idx = np.flatnonzero(sym == "I")
+        if len(h_idx):
+            # closest H...I contact (N-H...I hydrogen bond to the iodide sublattice)
+            alld = np.concatenate([atoms.get_distances(h, i_idx, mic=True) for h in h_idx])
+            fp["NH_I_closest_A"] = float(alld.min())
+            fp["NH_I_within_3A"] = int((alld < 3.0).sum())
+    return fp
 
 
 # ---------------- anchors ----------------
@@ -221,32 +296,111 @@ def anchor_strain(bulk, calcs):
             "sign_convention": "tensile (+eps) expected to LOWER Ea (negative slope)"}
 
 
+def _migrating_index(images):
+    """Index of the migrating iodide = atom with the largest initial->final
+    displacement (robust to vacancy reindexing and to the GA substitution)."""
+    d = np.linalg.norm(images[-1].positions - images[0].positions, axis=1)
+    return int(np.argmax(d))
+
+
+def _fps(images, dopant):
+    """Fingerprints at the initial image and the (energy-max) saddle image."""
+    imig = _migrating_index(images)
+    energies = np.array([im.get_potential_energy() for im in images])
+    saddle = images[int(np.argmax(energies))]
+    return {"initial": fingerprint(images[0], imig, dopant),
+            "saddle": fingerprint(saddle, imig, dopant)}
+
+
 def anchor_ga(bulk, calcs):
+    """GA+ pinning anchor with configurational sampling: 3 GA orientations at the
+    Cs site NEAREST the hop (pinning test) + 1 FAR-site control (expect dEa~0).
+    Records dEa per config and mechanistic fingerprints (N-H...I, Pb-I, octa
+    distortion) at initial and saddle."""
     sc0 = build_supercell(bulk)
-    initial0, final0, meta0 = make_endpoints(sc0)                 # undoped reference
-    und, _ = run_neb(initial0, final0, calcs)
-    sc = build_supercell(bulk)
-    initial, final, meta = make_endpoints(sc, dopant="GA")
-    try:
-        ga, images = run_neb(initial, final, calcs)
-        write(OUTDIR / "ga_saddle_path.extxyz", images)
-        dEa = ga["Ea_forward_eV"] - und["Ea_forward_eV"]
-        out = {**meta, "Ea_undoped_eV": und["Ea_forward_eV"], "Ea_GA_eV": ga["Ea_forward_eV"],
-               "dEa_eV": float(dEa), "effect": "pins (+)" if dEa > 0 else "de-pins (-)",
-               "converged": ga["converged"],
-               "GA_E_images_eV": ga["E_images_eV"], "undoped_E_images_eV": und["E_images_eV"]}
-        print(f"  [ga] Ea_undoped={und['Ea_forward_eV']:.3f}  Ea_GA={ga['Ea_forward_eV']:.3f}  "
-              f"dEa={dEa:+.3f} eV  conv={ga['converged']}", flush=True)
-    except Exception as e:
-        out = {**meta, "Ea_undoped_eV": und["Ea_forward_eV"], "error": repr(e)[:300]}
-        print(f"  [ga] FAILED: {e!r}", flush=True)
+    initial0, final0, _ = make_endpoints(sc0)                     # undoped reference
+    und, und_images = run_neb(initial0, final0, calcs)
+    Ea_und = und["Ea_forward_eV"]
+    print(f"  [ga] Ea_undoped={Ea_und:.3f} eV", flush=True)
+
+    configs = [("near", name, R) for name, R in GA_ORIENTS] + [("far", GA_ORIENTS[0][0], GA_ORIENTS[0][1])]
+    rows, saved = [], False
+    for site, oname, R in configs:
+        sc = build_supercell(bulk)
+        initial, final, meta = make_endpoints(sc, dopant="GA", ga_rot=R, ga_site=site)
+        try:
+            ga, images = run_neb(initial, final, calcs)
+            dEa = ga["Ea_forward_eV"] - Ea_und
+            row = {"site": site, "orientation": oname, "dopant_distance_A": meta["dopant_distance_A"],
+                   "n_atoms": meta["n_atoms"], "Ea_GA_eV": ga["Ea_forward_eV"], "dEa_eV": float(dEa),
+                   "effect": "pins (+)" if dEa > 0 else "de-pins (-)", "converged": ga["converged"],
+                   "fingerprints": _fps(images, "GA"), "GA_E_images_eV": ga["E_images_eV"]}
+            if site == "near" and oname == GA_ORIENTS[0][0] and not saved:
+                write(OUTDIR / "ga_saddle_path.extxyz", images); saved = True
+            print(f"  [ga] {site:4s}/{oname:9s} d={meta['dopant_distance_A']:.2f}A  "
+                  f"Ea_GA={ga['Ea_forward_eV']:.3f}  dEa={dEa:+.3f} eV  conv={ga['converged']}", flush=True)
+        except Exception as e:
+            row = {"site": site, "orientation": oname, "error": repr(e)[:200]}
+            print(f"  [ga] {site}/{oname} FAILED: {e!r}", flush=True)
+        rows.append(row)
+
+    near = [r for r in rows if r.get("site") == "near" and "dEa_eV" in r]
+    dEas = [r["dEa_eV"] for r in near]
+    summary = {"Ea_undoped_eV": Ea_und, "undoped_E_images_eV": und["E_images_eV"],
+               "undoped_fingerprints": _fps(und_images, None), "configs": rows}
+    if dEas:
+        summary["dEa_near_mean_eV"] = float(np.mean(dEas))
+        summary["dEa_near_spread_eV"] = float(np.ptp(dEas))
+        summary["dEa_near_all_positive"] = bool(all(d > 0 for d in dEas))
+    far = [r for r in rows if r.get("site") == "far" and "dEa_eV" in r]
+    if far:
+        summary["dEa_far_eV"] = far[0]["dEa_eV"]
+    return summary
+
+
+def anchor_finite_size(bulk, calcs):
+    """gamma-phase finite-size check: same V_I edge-hop path in 3x3x3 (~540-atom)
+    vs the 2x2x2 (159-atom) cell, for undoped / GA-near / biaxial-tensile(+1%).
+    Tests the finite-size-cancellation assumption directly in the gamma phase
+    (the cubic screen's 2x2x2-vs-3x3x3 gap motivated this). Absolute E_a is
+    expected to move; the RELATIVE quantities (dEa_GA, strain shift) should be
+    more stable if cancellation holds. Reuses the SAME pick_hop_pair logic."""
+    cases = [("undoped", {}, None), ("GA_near", {}, "GA"), ("tensile_1pct", {"eps_biax": 0.01}, None)]
+    out = {"note": "3x3x3 vs 2x2x2, same gamma V_I edge-hop", "cases": []}
+    for label, strain_kw, dopant in cases:
+        rec = {"case": label}
+        for size in (2, 3):
+            sc = build_supercell(bulk, size=size, **strain_kw)
+            initial, final, meta = make_endpoints(sc, dopant=dopant, ga_site="near")
+            try:
+                res, _ = run_neb(initial, final, calcs)
+                rec[f"{size}x{size}x{size}"] = {"n_atoms": meta["n_atoms"],
+                    "Ea_forward_eV": res["Ea_forward_eV"], "converged": res["converged"]}
+                print(f"  [fs] {label:14s} {size}x{size}x{size} n={meta['n_atoms']:3d}  "
+                      f"Ea={res['Ea_forward_eV']:.3f}  conv={res['converged']}", flush=True)
+            except Exception as e:
+                rec[f"{size}x{size}x{size}"] = {"error": repr(e)[:200]}
+                print(f"  [fs] {label} {size}x{size}x{size} FAILED: {e!r}", flush=True)
+        out["cases"].append(rec)
+    # relative-quantity stability: dEa_GA and strain shift at each size
+    def ea(case, size):
+        for r in out["cases"]:
+            if r["case"] == case:
+                return r.get(f"{size}x{size}x{size}", {}).get("Ea_forward_eV")
+    for size in (2, 3):
+        und, ga, ten = ea("undoped", size), ea("GA_near", size), ea("tensile_1pct", size)
+        if None not in (und, ga):
+            out[f"dEa_GA_{size}x"] = float(ga - und)
+        if None not in (und, ten):
+            out[f"dEa_tensile1pct_{size}x"] = float(ten - und)
     return out
 
 
 def main():
     global FMAX_EP, FMAX_NEB
     p = argparse.ArgumentParser()
-    p.add_argument("--mode", default="all", choices=["all", "regression", "strain", "ga"])
+    p.add_argument("--mode", default="all",
+                   choices=["all", "regression", "strain", "ga", "finite_size"])
     p.add_argument("--model", default="medium")
     p.add_argument("--device", default="cuda")
     p.add_argument("--dtype", default="float64")
@@ -266,9 +420,13 @@ def main():
 
     combined = {"phase": "gamma-P1", "dtype": args.dtype, "model": args.model,
                 "device": args.device}
-    stages = [("regression", anchor_regression), ("strain", anchor_strain), ("ga", anchor_ga)]
+    stages = [("regression", anchor_regression), ("strain", anchor_strain),
+              ("ga", anchor_ga), ("finite_size", anchor_finite_size)]
+    # finite_size uses 3x3x3 (~540-atom) cells — run it only when named explicitly,
+    # not under the "all" bundle, so the main anchor sweep stays fast.
     for name, fn in stages:
-        if args.mode not in ("all", name):
+        run_it = args.mode == name or (args.mode == "all" and name != "finite_size")
+        if not run_it:
             continue
         print(f"=== anchor: {name} ===", flush=True)
         ts = time.time()
