@@ -1,0 +1,121 @@
+{
+  "rows": [
+    {
+      "mode": "iso",
+      "strain": -0.03,
+      "Ea_forward_eV": 0.2176060219293845,
+      "Ea_backward_eV": 0.14868559724601482,
+      "converged": true,
+      "cell_volume_A3": 7374.7932775332265
+    },
+    {
+      "mode": "iso",
+      "strain": -0.02,
+      "Ea_forward_eV": 0.15920470211347038,
+      "Ea_backward_eV": 0.2220935748181887,
+      "converged": true,
+      "cell_volume_A3": 7605.239154076061
+    },
+    {
+      "mode": "iso",
+      "strain": -0.01,
+      "Ea_forward_eV": 0.3606934881941015,
+      "Ea_backward_eV": 0.3578157940199276,
+      "converged": true,
+      "cell_volume_A3": 7840.4363253840265
+    },
+    {
+      "mode": "iso",
+      "strain": 0.0,
+      "Ea_forward_eV": 0.25895710819509077,
+      "Ea_backward_eV": 0.23008040345996505,
+      "converged": true,
+      "cell_volume_A3": 8080.43327405678
+    },
+    {
+      "mode": "iso",
+      "strain": 0.01,
+      "Ea_forward_eV": 0.2377043053692205,
+      "Ea_backward_eV": 0.21586451065974188,
+      "converged": true,
+      "cell_volume_A3": 8325.278482693991
+    },
+    {
+      "mode": "iso",
+      "strain": 0.02,
+      "Ea_forward_eV": 0.21671801697277715,
+      "Ea_backward_eV": 0.20821466227909013,
+      "converged": true,
+      "cell_volume_A3": 8575.020433895248
+    },
+    {
+      "mode": "iso",
+      "strain": 0.03,
+      "Ea_forward_eV": 0.1915462411409976,
+      "Ea_backward_eV": 0.18354806598438245,
+      "converged": true,
+      "cell_volume_A3": 8829.70761026025
+    },
+    {
+      "mode": "biax",
+      "strain": -0.03,
+      "Ea_forward_eV": 0.32892121490311865,
+      "Ea_backward_eV": 0.15388303826233596,
+      "converged": true,
+      "cell_volume_A3": 7602.879667560031
+    },
+    {
+      "mode": "biax",
+      "strain": -0.02,
+      "Ea_forward_eV": 0.3050598807632241,
+      "Ea_backward_eV": 0.1722003724436263,
+      "converged": true,
+      "cell_volume_A3": 7760.4481164041445
+    },
+    {
+      "mode": "biax",
+      "strain": -0.01,
+      "Ea_forward_eV": 0.2777594210748475,
+      "Ea_backward_eV": 0.2046610508679123,
+      "converged": true,
+      "cell_volume_A3": 7919.6326519030545
+    },
+    {
+      "mode": "biax",
+      "strain": 0.0,
+      "Ea_forward_eV": 0.2589571081949771,
+      "Ea_backward_eV": 0.2300804034599082,
+      "converged": true,
+      "cell_volume_A3": 8080.43327405678
+    },
+    {
+      "mode": "biax",
+      "strain": 0.01,
+      "Ea_forward_eV": 0.2174926699811408,
+      "Ea_backward_eV": 0.20794601608542962,
+      "converged": true,
+      "cell_volume_A3": 8242.849982865331
+    },
+    {
+      "mode": "biax",
+      "strain": 0.02,
+      "Ea_forward_eV": 0.2035922054733419,
+      "Ea_backward_eV": 0.2088323852607914,
+      "converged": true,
+      "cell_volume_A3": 8406.882778328674
+    },
+    {
+      "mode": "biax",
+      "strain": 0.03,
+      "Ea_forward_eV": 0.20681333432656857,
+      "Ea_backward_eV": 0.19885959319827862,
+      "converged": true,
+      "cell_volume_A3": 8572.531660446846
+    }
+  ],
+  "dEa_dstrain_iso_eV_per_unit_strain": -0.30764962668367135,
+  "sign_convention": "tensile (+eps) expected to LOWER Ea (negative slope)",
+  "_runtime_s": 261.3765525817871,
+  "_fmax_ep": 0.02,
+  "_fmax_neb": 0.03
+}

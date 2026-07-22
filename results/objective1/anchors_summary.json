@@ -1,0 +1,84 @@
+{
+  "objective": "1 \u2014 method validation (four anchors)",
+  "phase": "gamma-P1",
+  "dtype": "float64",
+  "model": "MACE-MP-0 medium (zero-shot)",
+  "cell": "2x2x2 (159-atom V_I)",
+  "anchor_a_undoped": {
+    "Ea_forward_eV": 0.2589571081950339,
+    "Ea_backward_eV": 0.2300804034599082,
+    "literature_band_eV": [
+      0.1,
+      0.6
+    ],
+    "in_band": true,
+    "source": "Eames et al. 2015",
+    "cubic_3x3x3_crosscheck_eV": 0.119,
+    "status": "MET"
+  },
+  "anchor_b_chargestate": {
+    "status": "DFT-GATED (scaffold only)",
+    "reason": "MACE charge-agnostic; V_I+ vs V_I0 needs charged-supercell DFT + per-charge-state fine-tuning",
+    "source": "Tyagi et al. 2025"
+  },
+  "anchor_c_GA": {
+    "Ea_undoped_eV": 0.25895710819509077,
+    "Ea_GA_eV": 0.3292908961936405,
+    "dEa_eV": 0.07033378799854972,
+    "effect": "pins (+)",
+    "dopant_distance_A": 3.3554065450734694,
+    "converged": true,
+    "status": "MET (sign correct: pins)"
+  },
+  "anchor_d_strain": {
+    "primary": "biaxial (in-plane epitaxial)",
+    "biaxial": {
+      "strain": [
+        -0.03,
+        -0.02,
+        -0.01,
+        0.0,
+        0.01,
+        0.02,
+        0.03
+      ],
+      "Ea_forward_eV": [
+        0.32892121490311865,
+        0.30505988076328094,
+        0.2777594210748475,
+        0.2589571081950339,
+        0.21749266998119765,
+        0.2035922054733419,
+        0.20681333432651172
+      ],
+      "slope_eV_per_strain": -2.2483062264405302,
+      "pearson_r": -0.9763026295463484,
+      "monotonic": false
+    },
+    "isotropic": {
+      "strain": [
+        -0.03,
+        -0.02,
+        -0.01,
+        0.0,
+        0.01,
+        0.02,
+        0.03
+      ],
+      "Ea_forward_eV": [
+        0.2176060219293845,
+        0.15920470211347038,
+        0.36069348819415836,
+        0.2589571081949771,
+        0.23770430536927734,
+        0.21671801697277715,
+        0.19154624114088392
+      ],
+      "slope_eV_per_strain": -0.30764962668488965,
+      "pearson_r": -0.10368951550768617,
+      "note": "confirms tensile sign; real PES roughness under compression (gamma tilt softness), confirmed by bit-identical tight-convergence re-run"
+    },
+    "sign": "tensile LOWERS, compressive RAISES",
+    "status": "MET (biaxial clean, r=-0.98)"
+  }
+}

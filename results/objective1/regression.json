@@ -1,0 +1,32 @@
+{
+  "i_vac": 71,
+  "i_hop": 128,
+  "hop_distance_A": 4.527436724858869,
+  "n_atoms": 159,
+  "dopant_distance_A": null,
+  "E_images_eV": [
+    -454.0670788534573,
+    -454.03187996236426,
+    -453.87643845012144,
+    -453.80812174526227,
+    -453.88244393010615,
+    -454.0083679783117,
+    -454.0382021487222
+  ],
+  "Ea_forward_eV": 0.2589571081950339,
+  "Ea_backward_eV": 0.2300804034599082,
+  "dE_endpoints_eV": 0.028876704735125713,
+  "converged": true,
+  "phase": "gamma-P1",
+  "dtype": "float64",
+  "Ea_target_band_eV": [
+    0.2,
+    0.32
+  ],
+  "regression_ok": true,
+  "literature_band_eV": [
+    0.1,
+    0.6
+  ],
+  "_runtime_s": 20.169356107711792
+}

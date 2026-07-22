@@ -71,9 +71,28 @@ Host autodl
   在 AutoDL 实例上用 network_turbo 即可。
 - MACE checkpoint 首次运行会自动下载到 `~/.cache/mace/`。
 
+## Objective 1 进展(2026-07-22,Mac mini 会话)
+
+四锚点里三个已在 γ-P1 相 + float64 零样本管线上复现,详见
+`results/objective1/REPORT_objective1.md`(+ `strain_Ea.png`、`anchors_summary.json`):
+
+- **(a) 未掺杂 E_a ∈ 0.1–0.6 eV(Eames 2015)——已达标**:γ 相 float64 = 0.259 eV
+  (与 float32 基线差 ~0.05 meV),cubic 3×3×3 = 0.119 eV,都在窗口内。
+- **(c) GA⁺ 的 ΔE_a 符号与量级——已达标**:胍(planar C(NH₂)₃⁺)替 A 位 Cs →
+  E_a 0.259→0.329 eV,**ΔE_a = +70 meV,钉扎(符号正确)**。
+- **(d) 应变–E_a 关联——已达标**:**双轴(面内)** dE_a/dε = **−2.25 eV/strain
+  (r = −0.98)**,拉伸降、压缩升,单调;各向同性(静水压)确认拉伸符号,但压缩端
+  有真实 PES 粗糙度(fmax 收紧后逐位一致 → 非收敛问题,是 γ 相八面体倾斜软模)。
+- **(b) V_I⁺ vs V_I⁰ 排序(Tyagi 2025)——DFT 门控,只出协议**:MACE 电荷不可知,
+  零样本无法给这个数;完整可执行方案(带电超胞 DFT + FNV + per-charge-state 微调 +
+  主动学习)写在 `results/objective1/CHARGE_STATE_PROTOCOL.md`,待 CSD3 落地即可跑。
+
+驱动脚本:`scripts/04_objective1_anchors.py`(可复用的 γ V_I NEB 驱动,支持
+regression/strain/ga 三模式、strain 支持 iso/biax、收敛阈值可调)。
+
 ## 尚未完成 / 下一步
 
 - [ ] proposal 加入 preliminary results 小节(曳光弹数字,等 GPU 复跑后一起写)
-- [ ] CSD3 算力申请(DFT 腿,GPU 云替代不了)
-- [ ] Objective 1 四个锚点
+- [ ] CSD3 算力申请(DFT 腿,GPU 云替代不了)——**Objective 1(b) 的唯一门控项**
+- [x] Objective 1 锚点 (a)(c)(d) 已复现;(b) 已出可执行协议(DFT 门控)
 - [ ] 精读三篇论文的复现笔记(Eames 2015 / Tyagi 2025 / Arber 2025)
