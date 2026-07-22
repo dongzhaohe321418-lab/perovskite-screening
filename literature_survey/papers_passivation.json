@@ -1,0 +1,242 @@
+[
+  {
+    "title": "One-Year stable perovskite solar cells by 2D/3D interface engineering",
+    "authors": "Grancini et al.",
+    "year": 2017,
+    "venue": "Nature Communications",
+    "doi": "10.1038/ncomms15684",
+    "citations": 2040,
+    "subtheme": "2D capping & 2D/3D interfaces",
+    "finding": "Seminal 2D/3D interface engineering with aminovaleric-acid template yields one-year-stable devices; the 2D layer acts as a moisture-tolerant protective capping."
+  },
+  {
+    "title": "Deterministic fabrication of 3D/2D perovskite bilayer stacks for durable and efficient solar cells",
+    "authors": "Sidhik et al.",
+    "year": 2022,
+    "venue": "Science",
+    "doi": "10.1126/science.abq7652",
+    "citations": 531,
+    "subtheme": "2D capping & 2D/3D interfaces",
+    "finding": "Deterministically grown 3D/2D bilayer stacks provide durable operation under heat, light and bias by stabilizing the 3D surface with an epitaxial 2D cap."
+  },
+  {
+    "title": "Synergy of 3D and 2D Perovskites for Durable, Efficient Solar Cells and Beyond",
+    "authors": "Metcalf et al.",
+    "year": 2023,
+    "venue": "Chemical Reviews",
+    "doi": "10.1021/acs.chemrev.3c00214",
+    "citations": 231,
+    "subtheme": "2D capping & 2D/3D interfaces",
+    "finding": "Chemical Reviews synthesis of how 3D+2D synergy delivers durability: the 2D capping suppresses ion migration and moisture ingress while passivating the surface."
+  },
+  {
+    "title": "How machine learning can help select capping layers to suppress perovskite degradation",
+    "authors": "Hartono et al.",
+    "year": 2020,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-020-17945-4",
+    "citations": 178,
+    "subtheme": "2D capping & 2D/3D interfaces",
+    "finding": "Data-driven screening of A-site cations for capping layers identifies molecular descriptors that predict which capping molecules best suppress degradation."
+  },
+  {
+    "title": "Rethinking the A cation in halide perovskites",
+    "authors": "Lee et al.",
+    "year": 2022,
+    "venue": "Science",
+    "doi": "10.1126/science.abj1186",
+    "citations": 541,
+    "subtheme": "A-site pinning cations (guanidinium)",
+    "finding": "Perspective reframing the A cation's role: A-site chemistry (H-bonding, size) governs lattice dynamics, ion migration and phase stability, guiding cation choice."
+  },
+  {
+    "title": "Large guanidinium cation mixed with methylammonium in lead iodide perovskites for 19% efficient solar cells",
+    "authors": "Jodlowski et al.",
+    "year": 2017,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-017-0054-3",
+    "citations": 526,
+    "subtheme": "A-site pinning cations (guanidinium)",
+    "finding": "Seminal guanidinium incorporation into MAPbI3: GA+ H-bonds to the iodide cage, raising carrier lifetimes and materially improving thermal/operational stability."
+  },
+  {
+    "title": "Inhibiting Ion Migration by Guanidinium Cation Doping for Efficient Perovskite Solar Cells with Enhanced Operational Stability",
+    "authors": "Li et al.",
+    "year": 2022,
+    "venue": "Solar RRL",
+    "doi": "10.1002/solr.202200003",
+    "citations": 14,
+    "subtheme": "A-site pinning cations (guanidinium)",
+    "finding": "Guanidinium doping directly suppresses ion migration (higher activation energy) via strong hydrogen bonding, reducing hysteresis and improving stability."
+  },
+  {
+    "title": "Incorporation of rubidium cations into perovskite solar cells improves photovoltaic performance",
+    "authors": "Saliba et al.",
+    "year": 2016,
+    "venue": "Science",
+    "doi": "10.1126/science.aah5557",
+    "citations": 3663,
+    "subtheme": "Alkali-halide additives (K/Rb)",
+    "finding": "Rubidium added to triple-cation perovskite yields RbCsMAFA compositions with suppressed phase impurities and improved thermal/operational stability at 20%+ efficiency."
+  },
+  {
+    "title": "Maximizing and stabilizing luminescence from halide perovskites with potassium passivation",
+    "authors": "Abdi-Jalebi et al.",
+    "year": 2018,
+    "venue": "Nature",
+    "doi": "10.1038/nature25989",
+    "citations": 1703,
+    "subtheme": "Alkali-halide additives (K/Rb)",
+    "finding": "Potassium passivation immobilizes excess halides at grain boundaries/surfaces, eliminating halide-vacancy-mediated hysteresis and stabilizing luminescence — a mechanistic keystone."
+  },
+  {
+    "title": "Universal Approach toward Hysteresis-Free Perovskite Solar Cell via Defect Engineering",
+    "authors": "Son et al.",
+    "year": 2018,
+    "venue": "Journal of the American Chemical Society",
+    "doi": "10.1021/jacs.7b10430",
+    "citations": 886,
+    "subtheme": "Alkali-halide additives (K/Rb)",
+    "finding": "KI addition gives hysteresis-free devices by having K+/I- fill halide vacancies and immobilize mobile iodide, improving operational stability."
+  },
+  {
+    "title": "Interstitial Occupancy by Extrinsic Alkali Cations in Perovskites and Its Impact on Ion Migration",
+    "authors": "Cao et al.",
+    "year": 2018,
+    "venue": "Advanced Materials",
+    "doi": "10.1002/adma.201707350",
+    "citations": 356,
+    "subtheme": "Alkali-halide additives (K/Rb)",
+    "finding": "Extrinsic alkali cations (K/Rb) occupy interstitial sites rather than A-sites, explaining their defect-immobilizing action and stabilization of the lattice."
+  },
+  {
+    "title": "Ammonium cations with high pKa in perovskite solar cells for improved high-temperature photostability",
+    "authors": "Wang et al.",
+    "year": 2023,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-023-01362-0",
+    "citations": 240,
+    "subtheme": "Ammonium-salt additives",
+    "finding": "High-pKa ammonium cations resist deprotonation, giving more robust surface passivation and markedly improved operational and thermal stability in inverted cells."
+  },
+  {
+    "title": "Dopant-additive synergism enhances perovskite solar modules",
+    "authors": "Ding et al.",
+    "year": 2024,
+    "venue": "Nature",
+    "doi": "10.1038/s41586-024-07228-z",
+    "citations": 283,
+    "subtheme": "Dopant/additive synergy & modules",
+    "finding": "Dopant-additive synergism translates to perovskite solar modules with enhanced stability, showing molecular passivation scales beyond small cells."
+  },
+  {
+    "title": "Managing grains and interfaces via ligand anchoring enables 22.3%-efficiency inverted perovskite solar cells",
+    "authors": "Zheng et al.",
+    "year": 2020,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-019-0538-4",
+    "citations": 1238,
+    "subtheme": "Grain & interface ligand anchoring",
+    "finding": "Long-chain ligand anchoring manages grains and interfaces, passivating boundary defects to reach 22.3% with improved stability."
+  },
+  {
+    "title": "Two birds with one stone: dual grain-boundary and interface passivation enables &gt;22% efficient inverted methylammonium-free perovskite solar cells",
+    "authors": "Gharibzadeh et al.",
+    "year": 2021,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/d1ee01508g",
+    "citations": 286,
+    "subtheme": "Grain & interface ligand anchoring",
+    "finding": "Dual grain-boundary and interface passivation ('two birds, one stone') with a single additive suppresses recombination and improves wide-bandgap-cell stability."
+  },
+  {
+    "title": "Surface passivation of perovskite film for efficient solar cells",
+    "authors": "Jiang et al.",
+    "year": 2019,
+    "venue": "Nature Photonics",
+    "doi": "10.1038/s41566-019-0398-2",
+    "citations": 4695,
+    "subtheme": "Lewis-base & molecular surface passivation",
+    "finding": "PEAI surface treatment on FA-rich films passivates surface defects, boosting Voc and certified efficiency while improving ambient stability — the canonical ammonium-halide surface passivation."
+  },
+  {
+    "title": "Constructive molecular configurations for surface-defect passivation of perovskite photovoltaics",
+    "authors": "Wang et al.",
+    "year": 2019,
+    "venue": "Science",
+    "doi": "10.1126/science.aay9698",
+    "citations": 1305,
+    "subtheme": "Lewis-base & molecular surface passivation",
+    "finding": "Theophylline/caffeine/theobromine passivators: an optimal molecular configuration (carbonyl + amine H-bond donors) maximizes binding to undercoordinated Pb and defect passivation."
+  },
+  {
+    "title": "Rational design of Lewis base molecules for stable and efficient inverted perovskite solar cells",
+    "authors": "Li et al.",
+    "year": 2023,
+    "venue": "Science",
+    "doi": "10.1126/science.ade3970",
+    "citations": 635,
+    "subtheme": "Lewis-base & molecular surface passivation",
+    "finding": "Rational design of Lewis-base molecules for inverted cells; tuning donor atom and steric profile optimizes defect binding for simultaneously high efficiency and stability."
+  },
+  {
+    "title": "Atomic-level passivation mechanism of ammonium salts enabling highly efficient perovskite solar cells",
+    "authors": "Alharbi et al.",
+    "year": 2019,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-019-10985-5",
+    "citations": 360,
+    "subtheme": "Lewis-base & molecular surface passivation",
+    "finding": "Combined experiment/DFT shows ammonium salts passivate via hydrogen bonding of NH-groups to surface halides, suppressing halide-vacancy states and improving stability."
+  },
+  {
+    "title": "Engineering ligand reactivity enables high-temperature operation of stable perovskite solar cells",
+    "authors": "Park et al.",
+    "year": 2023,
+    "venue": "Science",
+    "doi": "10.1126/science.adi4107",
+    "citations": 464,
+    "subtheme": "Ligand reactivity & operation",
+    "finding": "Engineering ligand reactivity yields surface layers stable at high temperature, enabling durable operation under thermal stress."
+  },
+  {
+    "title": "Cation and anion immobilization through chemical bonding enhancement with fluorides for stable halide perovskite solar cells",
+    "authors": "Li et al.",
+    "year": 2019,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-019-0382-6",
+    "citations": 1165,
+    "subtheme": "Multivalent interstitial doping",
+    "finding": "Chemical-bonding enhancement immobilizes both cations and anions, sharply reducing ion migration and delivering high operational stability."
+  },
+  {
+    "title": "Suppressing ion migration in metal halide perovskite via interstitial doping with a trace amount of multivalent cations",
+    "authors": "Zhao et al.",
+    "year": 2022,
+    "venue": "Nature Materials",
+    "doi": "10.1038/s41563-022-01390-3",
+    "citations": 269,
+    "subtheme": "Multivalent interstitial doping",
+    "finding": "Trace multivalent cations occupy interstitial sites and bind iodide, raising the ion-migration barrier and suppressing halide migration — direct doping-for-immobilization."
+  },
+  {
+    "title": "Imperfections and their passivation in halide perovskite solar cells",
+    "authors": "Chen et al.",
+    "year": 2019,
+    "venue": "Chemical Society Reviews",
+    "doi": "10.1039/c8cs00853a",
+    "citations": 1918,
+    "subtheme": "Reviews & framing",
+    "finding": "Foundational review classifying perovskite defects and their passivation; frames undercoordinated Pb/I and halide vacancies as the dominant non-radiative and instability centers."
+  },
+  {
+    "title": "Tailoring passivators for highly efficient and stable perovskite solar cells",
+    "authors": "Zhang et al.",
+    "year": 2023,
+    "venue": "Nature Reviews Chemistry",
+    "doi": "10.1038/s41570-023-00510-0",
+    "citations": 373,
+    "subtheme": "Reviews & framing",
+    "finding": "Recent review systematizing passivator design rules (Lewis base/acid, ionic, multifunctional) linking molecular structure to both efficiency and operational stability."
+  }
+]
