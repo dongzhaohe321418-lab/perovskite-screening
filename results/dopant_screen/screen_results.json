@@ -1,0 +1,72 @@
+{
+  "undoped": {
+    "Ea_well": 0.46068736834148183,
+    "Ea_endpoint": 0.14932675267755258,
+    "dE": 2.842170943040401e-14,
+    "nsteps": 67,
+    "converged": true,
+    "site_type": "-",
+    "note": "baseline",
+    "dEa": 0.0
+  },
+  "Sr@Pb": {
+    "Ea_well": 0.32977957221064,
+    "Ea_endpoint": 0.07827132645003587,
+    "dE": 1.4210854715202004e-14,
+    "nsteps": 78,
+    "converged": true,
+    "dEa": -0.1309077961308418,
+    "site_type": "B-site",
+    "note": "isovalent 2+",
+    "dopant": "Sr",
+    "site": 6
+  },
+  "Ca@Pb": {
+    "Ea_well": 0.3508204641260022,
+    "Ea_endpoint": 0.08806497452073359,
+    "dE": 0.0,
+    "nsteps": 77,
+    "converged": true,
+    "dEa": -0.10986690421547962,
+    "site_type": "B-site",
+    "note": "isovalent 2+",
+    "dopant": "Ca",
+    "site": 6
+  },
+  "Ba@Pb": {
+    "Ea_well": 0.42408366905195294,
+    "Ea_endpoint": 0.062350529144552524,
+    "dE": 1.4210854715202004e-14,
+    "nsteps": 75,
+    "converged": true,
+    "dEa": -0.03660369928952889,
+    "site_type": "B-site",
+    "note": "isovalent 2+",
+    "dopant": "Ba",
+    "site": 6
+  },
+  "Bi@Pb": {
+    "Ea_well": 0.4043318300382879,
+    "Ea_endpoint": 0.1450278717655209,
+    "dE": 0.0,
+    "nsteps": 73,
+    "converged": true,
+    "dEa": -0.05635553830319395,
+    "site_type": "B-site",
+    "note": "aliovalent 3+ (NO charge comp.)",
+    "dopant": "Bi",
+    "site": 6
+  },
+  "Br@I": {
+    "Ea_well": 0.24097054464819223,
+    "Ea_endpoint": 0.1393759826930392,
+    "dE": 1.4210854715202004e-14,
+    "nsteps": null,
+    "converged": true,
+    "dEa": -0.2197168236932896,
+    "site_type": "X-site",
+    "note": "isovalent 1- (re-run, two-stage)",
+    "dopant": "Br",
+    "site": 28
+  }
+}

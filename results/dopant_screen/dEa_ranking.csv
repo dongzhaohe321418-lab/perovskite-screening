@@ -1,0 +1,7 @@
+config,site,valence,Ea_2x2x2_eV,dEa_eV,effect,saddle_dopant_I_A,saddle_migI_bonds_A,converged
+undoped,-,baseline,0.461,0.0,baseline,,3.10/4.75,True
+Ba@Pb,B-site,isovalent 2+,0.424,-0.037,de-pins (–),3.28,3.28/4.53,True
+Bi@Pb,B-site,aliovalent 3+ (NO charge comp.),0.404,-0.056,de-pins (–),2.99,2.99/4.81,True
+Ca@Pb,B-site,isovalent 2+,0.351,-0.11,de-pins (–),3.03,3.03/4.83,True
+Sr@Pb,B-site,isovalent 2+,0.33,-0.131,de-pins (–),3.16,3.16/4.68,True
+Br@I,X-site,"isovalent 1- (re-run, two-stage)",0.241,-0.22,de-pins (–),4.47,3.09/4.75,True

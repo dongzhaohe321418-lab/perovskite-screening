@@ -1,0 +1,25 @@
+{
+  "series": [
+    {
+      "dist": 2.26,
+      "Ea_well": 0.338,
+      "shell": "1st-neighbour",
+      "dEa": -0.1226873683414818
+    },
+    {
+      "dist": 6.79,
+      "Ea_well": 0.528,
+      "shell": "mid",
+      "dEa": 0.0673126316585182
+    },
+    {
+      "dist": 9.33,
+      "Ea_well": 0.546,
+      "shell": "far (cell max)",
+      "dEa": 0.08531263165851821
+    }
+  ],
+  "Ea0": 0.46068736834148183,
+  "excluded": "d=5.06,8.16 A: NEB numerical non-convergence on those I-I pairs",
+  "note": "2x2x2 cell: even 'far' hop is <1 cell from a periodic dopant image, so far-Ea plateaus above the isolated-undoped 0.461 eV"
+}
