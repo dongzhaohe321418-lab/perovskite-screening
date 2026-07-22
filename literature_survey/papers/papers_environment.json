@@ -1,0 +1,202 @@
+[
+  {
+    "title": "Reversible Hydration of CH3NH3PbI3 in Films, Single Crystals, and Solar Cells",
+    "authors": "Leguy et al.",
+    "year": 2015,
+    "venue": "Chemistry of Materials",
+    "doi": "10.1021/acs.chemmater.5b00660",
+    "citations": 1342,
+    "subtheme": "Moisture ingress & hydrate intermediates",
+    "finding": "MAPbI3 reversibly forms mono- then dihydrate on humidity exposure; prolonged water drives irreversible decomposition to PbI2."
+  },
+  {
+    "title": "Investigation of CH3NH3PbI3 Degradation Rates and Mechanisms in Controlled Humidity Environments Using in Situ Techniques",
+    "authors": "Yang et al.",
+    "year": 2015,
+    "venue": "ACS Nano",
+    "doi": "10.1021/nn506864k",
+    "citations": 1336,
+    "subtheme": "Moisture ingress & hydrate intermediates",
+    "finding": "Direct real-time imaging of MAPbI3 hydrate formation and PbI2 conversion, resolving humidity-dependent degradation rates and pathways."
+  },
+  {
+    "title": "Transformation of the Excited State and Photovoltaic Efficiency of CH3NH3PbI3 Perovskite upon Controlled Exposure to Humidified Air",
+    "authors": "Christians et al.",
+    "year": 2015,
+    "venue": "Journal of the American Chemical Society",
+    "doi": "10.1021/ja511132a",
+    "citations": 1349,
+    "subtheme": "Moisture ingress & hydrate intermediates",
+    "finding": "Moderate humidified air can transiently boost then degrade MAPbI3 performance; water intercalation is initially reversible before hydrate/PbI2 formation."
+  },
+  {
+    "title": "Scaling behavior of moisture-induced grain degradation in polycrystalline hybrid perovskite thin films",
+    "authors": "Wang et al.",
+    "year": 2016,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c6ee02941h",
+    "citations": 880,
+    "subtheme": "Moisture ingress & hydrate intermediates",
+    "finding": "Moisture-induced degradation nucleates at grain boundaries and scales with grain-boundary density, identifying microstructure as a moisture-stability lever."
+  },
+  {
+    "title": "The Role of Oxygen in the Degradation of Methylammonium Lead Trihalide Perovskite Photoactive Layers",
+    "authors": "Aristidou et al.",
+    "year": 2015,
+    "venue": "Angewandte Chemie International Edition",
+    "doi": "10.1002/anie.201503153",
+    "citations": 957,
+    "subtheme": "Photo-oxidation & superoxide",
+    "finding": "Molecular O2 plus light generates superoxide that deprotonates MA+ and decomposes MAPbI3; establishes photo-oxidation as a distinct O2-driven channel."
+  },
+  {
+    "title": "Fast oxygen diffusion and iodide defects mediate oxygen-induced degradation of perovskite solar cells",
+    "authors": "Aristidou et al.",
+    "year": 2017,
+    "venue": "Nature Communications",
+    "doi": "10.1038/ncomms15218",
+    "citations": 1276,
+    "subtheme": "Photo-oxidation & superoxide",
+    "finding": "Iodide vacancies mediate fast O2 diffusion and superoxide formation; defect density controls photo-oxidation rate, linking defects to environmental attack."
+  },
+  {
+    "title": "Light and oxygen induced degradation limits the operational stability of methylammonium lead triiodide perovskite solar cells",
+    "authors": "Bryant et al.",
+    "year": 2016,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c6ee00409a",
+    "citations": 1013,
+    "subtheme": "Photo-oxidation & superoxide",
+    "finding": "Combined light + O2 (not moisture alone) limits operational MAPbI3 device stability; superoxide-driven decomposition dominates in air under illumination."
+  },
+  {
+    "title": "Water-Accelerated Photooxidation of CH3NH3PbI3 Perovskite",
+    "authors": "Siegler et al.",
+    "year": 2022,
+    "venue": "Journal of the American Chemical Society",
+    "doi": "10.1021/jacs.2c00391",
+    "citations": 87,
+    "subtheme": "Photo-oxidation & superoxide",
+    "finding": "Trace water dramatically accelerates photo-oxidation of MAPbI3, revealing a light+O2+H2O synergy beyond either agent alone."
+  },
+  {
+    "title": "Intrinsic Thermal Instability of Methylammonium Lead Trihalide Perovskite",
+    "authors": "Conings et al.",
+    "year": 2015,
+    "venue": "Advanced Energy Materials",
+    "doi": "10.1002/aenm.201500477",
+    "citations": 2211,
+    "subtheme": "Thermal decomposition & cation volatilization",
+    "finding": "MAPbI3 is intrinsically thermally unstable, decomposing at ~85 C even under inert atmosphere, independent of moisture/oxygen."
+  },
+  {
+    "title": "Photodecomposition and thermal decomposition in methylammonium halide lead perovskites and inferred design principles to increase photovoltaic device stability",
+    "authors": "Juárez‐Pérez et al.",
+    "year": 2018,
+    "venue": "Journal of Materials Chemistry A",
+    "doi": "10.1039/c8ta03501f",
+    "citations": 618,
+    "subtheme": "Thermal decomposition & cation volatilization",
+    "finding": "Distinguishes thermal from photochemical decomposition of MA perovskites; identifies gaseous products (CH3NH2, HI vs. NH3, CH3I) diagnostic of each route."
+  },
+  {
+    "title": "Thermal degradation of formamidinium based lead halide perovskites into sym -triazine and hydrogen cyanide observed by coupled thermogravimetry-mass spectrometry analysis",
+    "authors": "Juárez‐Pérez et al.",
+    "year": 2019,
+    "venue": "Journal of Materials Chemistry A",
+    "doi": "10.1039/c9ta06058h",
+    "citations": 282,
+    "subtheme": "Thermal decomposition & cation volatilization",
+    "finding": "FA-based perovskites thermally decompose via sym-triazine and other volatile products, showing FA is not immune to cation-loss pathways."
+  },
+  {
+    "title": "Formamidinium and Cesium Hybridization for Photo‐ and Moisture‐Stable Perovskite Solar Cell",
+    "authors": "Lee et al.",
+    "year": 2015,
+    "venue": "Advanced Energy Materials",
+    "doi": "10.1002/aenm.201501310",
+    "citations": 1648,
+    "subtheme": "Compositional route to intrinsic stability",
+    "finding": "FA/Cs cation mixing yields perovskites with improved photo- and moisture-stability versus MA-based analogues, a compositional route to durability."
+  },
+  {
+    "title": "Improved air stability of perovskite solar cells via solution-processed metal oxide transport layers",
+    "authors": "You et al.",
+    "year": 2015,
+    "venue": "Nature Nanotechnology",
+    "doi": "10.1038/nnano.2015.230",
+    "citations": 2105,
+    "subtheme": "Contact/interface engineering for ambient stability",
+    "finding": "Metal-oxide charge-transport layers markedly improve air stability of perovskite cells, implicating interfaces/contacts in environmental degradation."
+  },
+  {
+    "title": "Overcoming ultraviolet light instability of sensitized TiO2 with meso-superstructured organometal tri-halide perovskite solar cells",
+    "authors": "Leijtens et al.",
+    "year": 2013,
+    "venue": "Nature Communications",
+    "doi": "10.1038/ncomms3885",
+    "citations": 1839,
+    "subtheme": "UV-induced degradation & photocatalysis",
+    "finding": "UV illumination of TiO2 electron-transport layers triggers photocatalytic degradation; replacing/insulating TiO2 mitigates UV instability."
+  },
+  {
+    "title": "Reversible photo-induced trap formation in mixed-halide hybrid perovskites for photovoltaics",
+    "authors": "Hoke et al.",
+    "year": 2014,
+    "venue": "Chemical Science",
+    "doi": "10.1039/c4sc03141e",
+    "citations": 2235,
+    "subtheme": "Photoinduced halide segregation (Hoke effect)",
+    "finding": "Illuminated mixed I/Br perovskites reversibly segregate into I-rich (low-gap) and Br-rich domains (the 'Hoke effect'), pinning photovoltage below the alloy gap."
+  },
+  {
+    "title": "Origin of Reversible Photoinduced Phase Separation in Hybrid Perovskites",
+    "authors": "Bischak et al.",
+    "year": 2017,
+    "venue": "Nano Letters",
+    "doi": "10.1021/acs.nanolett.6b04453",
+    "citations": 725,
+    "subtheme": "Photoinduced halide segregation (Hoke effect)",
+    "finding": "Polaron-strain model for reversible photoinduced phase separation: carrier-lattice coupling drives halide demixing, explaining reversibility."
+  },
+  {
+    "title": "Rationalizing the light-induced phase separation of mixed halide organic–inorganic perovskites",
+    "authors": "Draguta et al.",
+    "year": 2017,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-017-00284-2",
+    "citations": 546,
+    "subtheme": "Photoinduced halide segregation (Hoke effect)",
+    "finding": "Photoinduced halide segregation is governed by carrier density/thermodynamics; illumination intensity and composition set the segregation threshold."
+  },
+  {
+    "title": "The role of halide oxidation in perovskite halide phase separation",
+    "authors": "Kerner et al.",
+    "year": 2021,
+    "venue": "Joule",
+    "doi": "10.1016/j.joule.2021.07.011",
+    "citations": 214,
+    "subtheme": "Photoinduced halide segregation (Hoke effect)",
+    "finding": "Halide (iodide) oxidation to I2/I3- is a chemical driver of light-induced phase separation, coupling redox chemistry to segregation."
+  },
+  {
+    "title": "Triple-halide wide–band gap perovskites with suppressed phase segregation for efficient tandems",
+    "authors": "Xu et al.",
+    "year": 2020,
+    "venue": "Science",
+    "doi": "10.1126/science.aaz5074",
+    "citations": 1060,
+    "subtheme": "Photoinduced halide segregation (Hoke effect)",
+    "finding": "Adding Cl to wide-gap I/Br perovskites suppresses photoinduced segregation, enabling stable ~1.67 eV tandem top cells."
+  },
+  {
+    "title": "Consensus statement for stability assessment and reporting for perovskite photovoltaics based on ISOS procedures",
+    "authors": "Khenkin et al.",
+    "year": 2020,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-019-0529-5",
+    "citations": 1739,
+    "subtheme": "Synthesis: reporting standards & synergy",
+    "finding": "ISOS consensus protocols standardize how moisture, thermal, light and operational stress tests are run and reported for perovskite devices."
+  }
+]

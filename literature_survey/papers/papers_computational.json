@@ -1,0 +1,222 @@
+[
+  {
+    "title": "Fully Ab Initio Finite-Size Corrections for Charged-Defect Supercell Calculations",
+    "authors": "Freysoldt et al.",
+    "year": 2009,
+    "venue": "Physical Review Letters",
+    "doi": "10.1103/physrevlett.102.016402",
+    "citations": 1564,
+    "subtheme": "Charged-defect DFT & finite-size corrections",
+    "finding": "Introduces the ab initio (FNV) electrostatic correction removing spurious periodic-image interactions for charged defects."
+  },
+  {
+    "title": "First-principles calculations for point defects in solids",
+    "authors": "Freysoldt et al.",
+    "year": 2014,
+    "venue": "Reviews of Modern Physics",
+    "doi": "10.1103/revmodphys.86.253",
+    "citations": 2931,
+    "subtheme": "Charged-defect DFT & finite-size corrections",
+    "finding": "Authoritative review of first-principles charged-defect formalism: formation energies, chemical potentials, corrections, functional/SOC choices."
+  },
+  {
+    "title": "Electrostatics-based finite-size corrections for first-principles point defect calculations",
+    "authors": "Kumagai et al.",
+    "year": 2014,
+    "venue": "Physical Review B",
+    "doi": "10.1103/physrevb.89.195205",
+    "citations": 505,
+    "subtheme": "Charged-defect DFT & finite-size corrections",
+    "finding": "Kumagai-Oba extension of FNV to anisotropic systems using atomic-site potential alignment \u2014 widely used for perovskites."
+  },
+  {
+    "title": "Unusual defect physics in CH3NH3PbI3 perovskite solar cell absorber",
+    "authors": "Yin et al.",
+    "year": 2014,
+    "venue": "Applied Physics Letters",
+    "doi": "10.1063/1.4864778",
+    "citations": 2667,
+    "subtheme": "Charged-defect DFT & finite-size corrections",
+    "finding": "Foundational DFT showing MAPbI3 has only shallow, low-formation-energy defects \u2014 the origin of perovskite 'defect tolerance'."
+  },
+  {
+    "title": "Accelerated discovery of stable lead-free hybrid organic-inorganic perovskites via machine learning",
+    "authors": "Lu et al.",
+    "year": 2018,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-018-05761-w",
+    "citations": 721,
+    "subtheme": "High-throughput & ML stability screening",
+    "finding": "ML-accelerated HT screening of hybrid double perovskites for thermodynamic stability and band gap."
+  },
+  {
+    "title": "New tolerance factor to predict the stability of perovskite oxides and halides",
+    "authors": "Bartel et al.",
+    "year": 2019,
+    "venue": "Science Advances",
+    "doi": "10.1126/sciadv.aav0693",
+    "citations": 1742,
+    "subtheme": "High-throughput & ML stability screening",
+    "finding": "New tolerance-factor descriptor (tau) predicting perovskite formability with ~92% accuracy across 576 compounds."
+  },
+  {
+    "title": "Latent Ewald summation for machine learning of long-range interactions",
+    "authors": "Cheng",
+    "year": 2025,
+    "venue": "npj Computational Materials",
+    "doi": "10.1038/s41524-025-01577-7",
+    "citations": 72,
+    "subtheme": "Long-range electrostatics in MLIPs",
+    "finding": "Latent Ewald summation captures long-range electrostatics in MLIPs at near-linear cost \u2014 critical for charged defects."
+  },
+  {
+    "title": "Multi-fidelity Machine Learning Interatomic Potentials for Charged Point Defects",
+    "authors": "Wang et al.",
+    "year": 2026,
+    "venue": "arXiv preprint",
+    "doi": "arXiv:2603.05238",
+    "citations": 0,
+    "subtheme": "Long-range electrostatics in MLIPs",
+    "finding": "Multi-fidelity MLIP scheme injecting charged-defect electrostatics to fix long-range errors for defect migration."
+  },
+  {
+    "title": "Ionic transport in hybrid lead iodide perovskite solar cells",
+    "authors": "Eames et al.",
+    "year": 2015,
+    "venue": "Nature Communications",
+    "doi": "10.1038/ncomms8497",
+    "citations": 2814,
+    "subtheme": "MD / defect migration in perovskites",
+    "finding": "DFT+NEB establishing iodide-vacancy migration (~0.6 eV) as the dominant ionic-transport channel driving hysteresis."
+  },
+  {
+    "title": "How fast do defects migrate in halide perovskites: insights from on-the-fly machine-learned force fields",
+    "authors": "Pols et al.",
+    "year": 2023,
+    "venue": "Chemical Communications",
+    "doi": "10.1039/d3cc00953j",
+    "citations": 30,
+    "subtheme": "MD / defect migration in perovskites",
+    "finding": "MLIP-driven MD quantifying how fast vacancies migrate in halide perovskites at finite temperature."
+  },
+  {
+    "title": "Tracing Ion Migration in Halide Perovskites with Machine Learned Force Fields",
+    "authors": "Tyagi et al.",
+    "year": 2025,
+    "venue": "The Journal of Physical Chemistry Letters",
+    "doi": "10.1021/acs.jpclett.5c01139",
+    "citations": 18,
+    "subtheme": "MD / defect migration in perovskites",
+    "finding": "Neural-network-potential MD tracing cation and anion migration pathways/barriers in halide perovskites."
+  },
+  {
+    "title": "E(3)-equivariant graph neural networks for data-efficient and accurate interatomic potentials",
+    "authors": "Batzner et al.",
+    "year": 2022,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-022-29939-5",
+    "citations": 1718,
+    "subtheme": "MLIP architectures & foundation models",
+    "finding": "NequIP: E(3)-equivariant GNN achieving DFT accuracy with orders-of-magnitude less training data."
+  },
+  {
+    "title": "A universal graph deep learning interatomic potential for the periodic table",
+    "authors": "Chen et al.",
+    "year": 2022,
+    "venue": "Nature Computational Science",
+    "doi": "10.1038/s43588-022-00349-3",
+    "citations": 881,
+    "subtheme": "MLIP architectures & foundation models",
+    "finding": "M3GNet universal potential covering the periodic table, enabling relaxation/MD of arbitrary crystals."
+  },
+  {
+    "title": "MACE: Higher Order Equivariant Message Passing Neural Networks for Fast and Accurate Force Fields",
+    "authors": "Batatia et al.",
+    "year": 2022,
+    "venue": "arXiv preprint",
+    "doi": "arXiv:2206.07697",
+    "citations": 0,
+    "subtheme": "MLIP architectures & foundation models",
+    "finding": "MACE higher-order equivariant message passing \u2014 the architecture underlying the perovskite MLIP spine."
+  },
+  {
+    "title": "CHGNet as a pretrained universal neural network potential for charge-informed atomistic modelling",
+    "authors": "Deng et al.",
+    "year": 2023,
+    "venue": "Nature Machine Intelligence",
+    "doi": "10.1038/s42256-023-00716-3",
+    "citations": 801,
+    "subtheme": "MLIP architectures & foundation models",
+    "finding": "CHGNet: charge-informed universal potential encoding magnetic moments/charge states for redox-active MD."
+  },
+  {
+    "title": "A foundation model for atomistic materials chemistry",
+    "authors": "Batatia et al.",
+    "year": 2025,
+    "venue": "The Journal of Chemical Physics",
+    "doi": "10.1063/5.0297006",
+    "citations": 206,
+    "subtheme": "MLIP architectures & foundation models",
+    "finding": "MACE-MP-0 foundation model: one pretrained MLIP for MD across the periodic table."
+  },
+  {
+    "title": "The Open Materials 2024 (OMat24) inorganic materials dataset and models",
+    "authors": "Barroso-Luque et al.",
+    "year": 2026,
+    "venue": "Nature Computational Science",
+    "doi": "10.1038/s43588-026-00996-w",
+    "citations": 5,
+    "subtheme": "MLIP architectures & foundation models",
+    "finding": "OMat24: >100M-structure dataset with non-equilibrium/rattled configs improving foundation-model force accuracy."
+  },
+  {
+    "title": "Performance Assessment of Universal Machine Learning Interatomic Potentials: Challenges and Directions for Materials\u2019 Surfaces",
+    "authors": "Focassio et al.",
+    "year": 2024,
+    "venue": "ACS Applied Materials & Interfaces",
+    "doi": "10.1021/acsami.4c03815",
+    "citations": 103,
+    "subtheme": "MLIP benchmarking & systematic softening",
+    "finding": "Assessment showing universal MLIPs (M3GNet, CHGNet, MACE) reproduce trends but with systematic errors on defect/surface energetics."
+  },
+  {
+    "title": "Systematic softening in universal machine learning interatomic potentials",
+    "authors": "Deng et al.",
+    "year": 2025,
+    "venue": "npj Computational Materials",
+    "doi": "10.1038/s41524-024-01500-6",
+    "citations": 120,
+    "subtheme": "MLIP benchmarking & systematic softening",
+    "finding": "Systematic softening: universal MLIPs underestimate forces and energy barriers; fine-tuning/loss reweighting mitigates it."
+  },
+  {
+    "title": "A framework to evaluate machine learning crystal stability predictions",
+    "authors": "Riebesell et al.",
+    "year": 2025,
+    "venue": "Nature Machine Intelligence",
+    "doi": "10.1038/s42256-025-01055-1",
+    "citations": 121,
+    "subtheme": "MLIP benchmarking & systematic softening",
+    "finding": "Matbench Discovery: community benchmark ranking universal MLIPs on stability prediction; exposes over-stabilization biases."
+  },
+  {
+    "title": "Evaluation of Foundational Machine Learned Interatomic Potentials for Migration Barrier Predictions",
+    "authors": "Bheemaguli et al.",
+    "year": 2025,
+    "venue": "Digital Discovery",
+    "doi": "10.1039/D5DD00534E",
+    "citations": 0,
+    "subtheme": "MLIP benchmarking & systematic softening",
+    "finding": "Benchmarks five foundation MLIPs (MACE-MP-0, Orb-v3, SevenNet, CHGNet, M3GNet) coupled to NEB against DFT-NEB migration barriers across battery/ionic-conductor chemistries; MACE-MP-0 and Orb-v3 lowest-error, and barrier accuracy found uncorrelated with geometry accuracy."
+  },
+  {
+    "title": "A climbing image nudged elastic band method for finding saddle points and minimum energy paths",
+    "authors": "Henkelman et al.",
+    "year": 2000,
+    "venue": "The Journal of Chemical Physics",
+    "doi": "10.1063/1.1329672",
+    "citations": 21370,
+    "subtheme": "NEB / migration-barrier methods",
+    "finding": "Climbing-image NEB locates saddle points and migration barriers; the standard method for computing E_a in solids."
+  }
+]

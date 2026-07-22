@@ -1,0 +1,232 @@
+[
+  {
+    "title": "Consensus statement for stability assessment and reporting for perovskite photovoltaics based on ISOS procedures",
+    "authors": "Khenkin et al.",
+    "year": 2020,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-019-0529-5",
+    "citations": 1739,
+    "subtheme": "Protocols & reporting",
+    "finding": "ISOS consensus protocols standardize perovskite stability testing (shelf/light/thermal/cycling/outdoor) and reporting, making cross-lab results comparable."
+  },
+  {
+    "title": "An open-access database and analysis tool for perovskite solar cells based on the FAIR data principles",
+    "authors": "Jacobsson et al.",
+    "year": 2021,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-021-00941-3",
+    "citations": 349,
+    "subtheme": "Protocols & reporting",
+    "finding": "Open-access Perovskite Database (>42k devices) enables data-driven meta-analysis of stability trends and exposes reporting inconsistencies."
+  },
+  {
+    "title": "Towards linking lab and field lifetimes of perovskite solar cells",
+    "authors": "Jiang et al.",
+    "year": 2023,
+    "venue": "Nature",
+    "doi": "10.1038/s41586-023-06610-7",
+    "citations": 270,
+    "subtheme": "Lab-to-field gap",
+    "finding": "Combined accelerated indoor protocols are shown to predict field degradation, beginning to bridge the lab-to-field lifetime gap."
+  },
+  {
+    "title": "Long-term operating stability in perovskite photovoltaics",
+    "authors": "Zhu et al.",
+    "year": 2023,
+    "venue": "Nature Reviews Materials",
+    "doi": "10.1038/s41578-023-00582-w",
+    "citations": 700,
+    "subtheme": "Operational stability review",
+    "finding": "Review separating intrinsic operational (light+bias) degradation from shelf/thermal stability and mapping dominant MPP-operation loss channels."
+  },
+  {
+    "title": "Towards commercialization: the operational stability of perovskite solar cells",
+    "authors": "Li et al.",
+    "year": 2020,
+    "venue": "Chemical Society Reviews",
+    "doi": "10.1039/d0cs00573h",
+    "citations": 626,
+    "subtheme": "Operational stability review",
+    "finding": "Frames operational stability as the commercialization bottleneck; catalogues bias/light/thermal degradation and stack-wide mitigations."
+  },
+  {
+    "title": "Ion-induced field screening as a dominant factor in perovskite solar cell operational stability",
+    "authors": "Thiesbrummel et al.",
+    "year": 2024,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-024-01487-w",
+    "citations": 232,
+    "subtheme": "Operational mechanism",
+    "finding": "Mobile-ion accumulation screens the built-in field under operation — a dominant, partly reversible performance-loss factor distinct from recombination."
+  },
+  {
+    "title": "Understanding Degradation Mechanisms and Improving Stability of Perovskite Photovoltaics",
+    "authors": "Boyd et al.",
+    "year": 2018,
+    "venue": "Chemical Reviews",
+    "doi": "10.1021/acs.chemrev.8b00336",
+    "citations": 1740,
+    "subtheme": "Degradation mechanisms",
+    "finding": "Comprehensive mechanistic review connecting intrinsic/extrinsic degradation pathways to concrete device stabilization strategies."
+  },
+  {
+    "title": "Not All That Glitters Is Gold: Metal-Migration-Induced Degradation in Perovskite Solar Cells",
+    "authors": "Domanski et al.",
+    "year": 2016,
+    "venue": "ACS Nano",
+    "doi": "10.1021/acsnano.6b02613",
+    "citations": 1225,
+    "subtheme": "Electrode/contact degradation",
+    "finding": "Gold electrode migrates through the HTL into the absorber under thermal stress, causing irreversible metal-migration degradation."
+  },
+  {
+    "title": "Barrier Design to Prevent Metal-Induced Degradation and Improve Thermal Stability in Perovskite Solar Cells",
+    "authors": "Boyd et al.",
+    "year": 2018,
+    "venue": "ACS Energy Letters",
+    "doi": "10.1021/acsenergylett.8b00926",
+    "citations": 267,
+    "subtheme": "Electrode/contact degradation",
+    "finding": "Inserting a diffusion-barrier interlayer blocks metal-electrode-induced degradation and improves thermal stability."
+  },
+  {
+    "title": "Lessons learned from spiro-OMeTAD and PTAA in perovskite solar cells",
+    "authors": "Rombach et al.",
+    "year": 2021,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/d1ee02095a",
+    "citations": 699,
+    "subtheme": "Charge-transport-layer degradation",
+    "finding": "Ionic dopants/additives in spiro-OMeTAD and PTAA drive instability; guides design of durable organic hole contacts."
+  },
+  {
+    "title": "Tailored interfaces of unencapsulated perovskite solar cells for &gt;1,000 hour operational stability",
+    "authors": "Christians et al.",
+    "year": 2018,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-017-0067-y",
+    "citations": 825,
+    "subtheme": "Interface engineering / long-life",
+    "finding": "Tailored transport-layer interfaces sustain >1,000 h operation in unencapsulated cells, isolating interfacial degradation as decisive."
+  },
+  {
+    "title": "Monolithic perovskite/silicon tandem solar cell with &gt;29% efficiency by enhanced hole extraction",
+    "authors": "Al‐Ashouri et al.",
+    "year": 2020,
+    "venue": "Science",
+    "doi": "10.1126/science.abd4016",
+    "citations": 2024,
+    "subtheme": "SAM hole-selective contacts",
+    "finding": "2PACz-family self-assembled-monolayer hole contacts enable >29% inverted tandems and became the standard stable p-i-n contact."
+  },
+  {
+    "title": "Reinforcing self-assembly of hole transport molecules for stable inverted perovskite solar cells",
+    "authors": "Tang et al.",
+    "year": 2024,
+    "venue": "Science",
+    "doi": "10.1126/science.adj9602",
+    "citations": 511,
+    "subtheme": "SAM hole-selective contacts",
+    "finding": "Anti-desorption anchoring reinforces SAM self-assembly, suppressing the SAM-detachment failure mode of inverted cells."
+  },
+  {
+    "title": "Stabilized hole-selective layer for high-performance inverted p-i-n perovskite solar cells",
+    "authors": "Li et al.",
+    "year": 2023,
+    "venue": "Science",
+    "doi": "10.1126/science.ade9637",
+    "citations": 780,
+    "subtheme": "Inverted p-i-n stability",
+    "finding": "Stabilized hole-selective layer delivers high-performance, operationally stable inverted p-i-n cells."
+  },
+  {
+    "title": "Improved charge extraction in inverted perovskite solar cells with dual-site-binding ligands",
+    "authors": "Chen et al.",
+    "year": 2024,
+    "venue": "Science",
+    "doi": "10.1126/science.adm9474",
+    "citations": 1301,
+    "subtheme": "Inverted p-i-n stability",
+    "finding": "Dual-site-binding ligands improve charge extraction and operational stability of inverted cells."
+  },
+  {
+    "title": "Design and understanding of encapsulated perovskite solar cells to withstand temperature cycling",
+    "authors": "Cheacharoen et al.",
+    "year": 2017,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c7ee02564e",
+    "citations": 444,
+    "subtheme": "Encapsulation",
+    "finding": "Rationally designed encapsulation lets cells survive IEC 61215 damp-heat and thermal-cycling accelerated aging."
+  },
+  {
+    "title": "Gas chromatography–mass spectrometry analyses of encapsulated stable perovskite solar cells",
+    "authors": "Shi et al.",
+    "year": 2020,
+    "venue": "Science",
+    "doi": "10.1126/science.aba2412",
+    "citations": 488,
+    "subtheme": "Encapsulation / lead containment",
+    "finding": "GC-MS-guided encapsulation controls outgassing for stable operation and limits lead leakage under mechanical damage."
+  },
+  {
+    "title": "Damp heat–stable perovskite solar cells with tailored-dimensionality 2D/3D heterojunctions",
+    "authors": "Azmi et al.",
+    "year": 2022,
+    "venue": "Science",
+    "doi": "10.1126/science.abm5784",
+    "citations": 819,
+    "subtheme": "Damp-heat stability",
+    "finding": "Tailored-dimensionality 2D/3D heterojunctions yield damp-heat-stable cells passing the IEC 61215:2016 damp-heat test."
+  },
+  {
+    "title": "Engineering ligand reactivity enables high-temperature operation of stable perovskite solar cells",
+    "authors": "Park et al.",
+    "year": 2023,
+    "venue": "Science",
+    "doi": "10.1126/science.adi4107",
+    "citations": 464,
+    "subtheme": "High-temperature operation",
+    "finding": "Engineering ligand reactivity enables stable operation at elevated temperatures (~85 C) in inverted cells."
+  },
+  {
+    "title": "Interplay between temperature and bandgap energies on the outdoor performance of perovskite/silicon tandem solar cells",
+    "authors": "Aydın et al.",
+    "year": 2020,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-020-00687-4",
+    "citations": 317,
+    "subtheme": "Outdoor / field stability",
+    "finding": "Outdoor field data reveal temperature-bandgap interplay governs real energy yield and degradation of perovskite and tandem devices."
+  },
+  {
+    "title": "Taming Lattice Strain via Buried Interface Engineering for Reverse-Bias Resilient Perovskite Solar Cells",
+    "authors": "Du et al.",
+    "year": 2026,
+    "venue": "Nano-Micro Letters",
+    "doi": "10.1007/s40820-026-02244-2",
+    "citations": 0,
+    "subtheme": "Reverse-bias resilience",
+    "finding": "Buried-interface lattice-strain engineering confers reverse-bias resilience against the shading/partial-shadow failure mode."
+  },
+  {
+    "title": "The long road to outdoor stability: real-world challenges for controlling perovskite materials for solar cells",
+    "authors": "López et al.",
+    "year": 2026,
+    "venue": "Chemical Society Reviews",
+    "doi": "10.1039/d5cs01085c",
+    "citations": 3,
+    "subtheme": "Outdoor stability review",
+    "finding": "2026 review of real-world outdoor-stability challenges and the persistent gap between accelerated indoor tests and field deployment."
+  },
+  {
+    "title": "Development of encapsulation strategies towards the commercialization of perovskite solar cells",
+    "authors": "Ma et al.",
+    "year": 2021,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/d1ee02882k",
+    "citations": 382,
+    "subtheme": "Encapsulation / commercialization",
+    "finding": "Reviews encapsulation-barrier strategies (edge seals, desiccants, barrier films) required to move perovskite cells toward commercial module stability."
+  }
+]

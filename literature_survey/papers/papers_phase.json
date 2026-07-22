@@ -1,0 +1,262 @@
+[
+  {
+    "title": "Formability of <i>ABX</i> <sub>3</sub> (<i>X</i> = F, Cl, Br, I) halide perovskites",
+    "authors": "Li et al.",
+    "year": 2008,
+    "venue": "Acta Crystallographica Section B Structural Science",
+    "doi": "10.1107/s0108768108032734",
+    "citations": 1114,
+    "subtheme": "Tolerance & octahedral factors",
+    "finding": "Maps ABX3 (X=F,Cl,Br,I) halide formability in the tolerance-factor/octahedral-factor plane, showing both geometric factors bound the perovskite-forming region."
+  },
+  {
+    "title": "Stabilizing Perovskite Structures by Tuning Tolerance Factor: Formation of Formamidinium and Cesium Lead Iodide Solid-State Alloys",
+    "authors": "Li et al.",
+    "year": 2015,
+    "venue": "Chemistry of Materials",
+    "doi": "10.1021/acs.chemmater.5b04107",
+    "citations": 2227,
+    "subtheme": "Tolerance & octahedral factors",
+    "finding": "Shows FA and Cs sit near opposite edges of the tolerance-factor window, so FA-Cs alloying tunes an effective t back into the stable range."
+  },
+  {
+    "title": "On the application of the tolerance factor to inorganic and hybrid halide perovskites: a revised system",
+    "authors": "Travis et al.",
+    "year": 2016,
+    "venue": "Chemical Science",
+    "doi": "10.1039/c5sc04845a",
+    "citations": 1124,
+    "subtheme": "Tolerance & octahedral factors",
+    "finding": "Revises the tolerance factor specifically for inorganic and hybrid halides, improving prediction of which ABX3 halides adopt the perovskite structure."
+  },
+  {
+    "title": "New tolerance factor to predict the stability of perovskite oxides and halides",
+    "authors": "Bartel et al.",
+    "year": 2019,
+    "venue": "Science Advances",
+    "doi": "10.1126/sciadv.aav0693",
+    "citations": 1742,
+    "subtheme": "Tolerance & octahedral factors",
+    "finding": "A data-driven single-parameter tolerance factor tau classifies 576 ABX3 solids at ~92% accuracy, outperforming the classic Goldschmidt t for halides."
+  },
+  {
+    "title": "Formamidinium lead trihalide: a broadly tunable perovskite for efficient planar heterojunction solar cells",
+    "authors": "Eperon et al.",
+    "year": 2014,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c3ee43822h",
+    "citations": 4080,
+    "subtheme": "FAPbI3 black-phase stabilization",
+    "finding": "Introduces FA lead trihalide with a near-ideal ~1.48 eV gap but flags its room-temperature drift to the photoinactive hexagonal delta phase."
+  },
+  {
+    "title": "Methylammonium Chloride Induces Intermediate Phase Stabilization for Efficient Perovskite Solar Cells",
+    "authors": "Kim et al.",
+    "year": 2019,
+    "venue": "Joule",
+    "doi": "10.1016/j.joule.2019.06.014",
+    "citations": 1726,
+    "subtheme": "FAPbI3 black-phase stabilization",
+    "finding": "Methylammonium chloride works through an intermediate phase that templates oriented, phase-pure alpha-FAPbI3 crystallization."
+  },
+  {
+    "title": "Efficient, stable solar cells by using inherent bandgap of \u03b1-phase formamidinium lead iodide",
+    "authors": "Min et al.",
+    "year": 2019,
+    "venue": "Science",
+    "doi": "10.1126/science.aay7044",
+    "citations": 1255,
+    "subtheme": "FAPbI3 black-phase stabilization",
+    "finding": "MDACl2-assisted growth stabilizes phase-pure alpha-FAPbI3 with a near-ideal gap, giving 23.7% cells without Br/Cs bandgap widening."
+  },
+  {
+    "title": "Pseudo-halide anion engineering for \u03b1-FAPbI3 perovskite solar cells",
+    "authors": "Jeong et al.",
+    "year": 2021,
+    "venue": "Nature",
+    "doi": "10.1038/s41586-021-03406-5",
+    "citations": 3071,
+    "subtheme": "FAPbI3 black-phase stabilization",
+    "finding": "Pseudo-halide (formate) anion engineering suppresses defects and stabilizes alpha-FAPbI3, delivering certified >25% efficiency."
+  },
+  {
+    "title": "Bypassing the yellow phase for extremely stable formamidinium lead iodide perovskite solar cells",
+    "authors": "Garai et al.",
+    "year": 2026,
+    "venue": "Science",
+    "doi": "10.1126/science.aeb7992",
+    "citations": 2,
+    "subtheme": "FAPbI3 black-phase stabilization",
+    "finding": "Bypasses the yellow delta-phase intermediate during crystallization to yield extremely stable formamidinium perovskite cells (2026 frontier)."
+  },
+  {
+    "title": "Inorganic caesium lead iodide perovskite solar cells",
+    "authors": "Eperon et al.",
+    "year": 2015,
+    "venue": "Journal of Materials Chemistry A",
+    "doi": "10.1039/c5ta06398a",
+    "citations": 1822,
+    "subtheme": "CsPbI3 & nanocrystal phase stabilization",
+    "finding": "Demonstrates all-inorganic CsPbI3 cells and documents the facile black-to-yellow (alpha->delta) transition that limits inorganic absorbers."
+  },
+  {
+    "title": "Quantum dot\u2013induced phase stabilization of \u03b1-CsPbI <sub>3</sub> perovskite for high-efficiency photovoltaics",
+    "authors": "Swarnkar et al.",
+    "year": 2016,
+    "venue": "Science",
+    "doi": "10.1126/science.aag2700",
+    "citations": 2758,
+    "subtheme": "CsPbI3 & nanocrystal phase stabilization",
+    "finding": "Quantum-dot surface energy kinetically stabilizes cubic alpha-CsPbI3 at room temperature, establishing nanocrystal size as a phase-control lever."
+  },
+  {
+    "title": "Anharmonicity and Disorder in the Black Phases of Cesium Lead Iodide Used for Stable Inorganic Perovskite Solar Cells",
+    "authors": "Marronnier et al.",
+    "year": 2018,
+    "venue": "ACS Nano",
+    "doi": "10.1021/acsnano.8b00267",
+    "citations": 742,
+    "subtheme": "CsPbI3 & nanocrystal phase stabilization",
+    "finding": "First-principles + scattering study shows anharmonic octahedral tilting underlies the metastability of the CsPbI3 alpha/beta/gamma black polymorphs."
+  },
+  {
+    "title": "Preserving a robust CsPbI3 perovskite phase via pressure-directed octahedral tilt",
+    "authors": "Ke et al.",
+    "year": 2021,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-020-20745-5",
+    "citations": 170,
+    "subtheme": "CsPbI3 & nanocrystal phase stabilization",
+    "finding": "Pressure-directed octahedral tilting preserves a robust black CsPbI3 phase, linking lattice compression/strain directly to polymorph retention."
+  },
+  {
+    "title": "Compositional engineering of perovskite materials for high-performance solar cells",
+    "authors": "Jeon et al.",
+    "year": 2015,
+    "venue": "Nature",
+    "doi": "10.1038/nature14133",
+    "citations": 6390,
+    "subtheme": "A-site cation mixing & entropy",
+    "finding": "Compositional FA-MA engineering optimizes bandgap and crystallinity, establishing mixed A-site cations as the route to high, stable efficiency."
+  },
+  {
+    "title": "Entropic stabilization of mixed A-cation ABX <sub>3</sub> metal halide perovskites for high performance perovskite solar cells",
+    "authors": "Yi et al.",
+    "year": 2015,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c5ee03255e",
+    "citations": 1258,
+    "subtheme": "A-site cation mixing & entropy",
+    "finding": "Frames mixed A-cation halides as entropically stabilized, giving a thermodynamic rationale for why cation alloys resist phase separation."
+  },
+  {
+    "title": "Cesium-containing triple cation perovskite solar cells: improved stability, reproducibility and high efficiency",
+    "authors": "Saliba et al.",
+    "year": 2016,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c5ee03874j",
+    "citations": 5376,
+    "subtheme": "A-site cation mixing & entropy",
+    "finding": "Triple-cation Cs/MA/FA absorbers are more reproducible, thermally stable and phase-robust than double-cation baselines."
+  },
+  {
+    "title": "Incorporation of rubidium cations into perovskite solar cells improves photovoltaic performance",
+    "authors": "Saliba et al.",
+    "year": 2016,
+    "venue": "Science",
+    "doi": "10.1126/science.aah5557",
+    "citations": 3663,
+    "subtheme": "A-site cation mixing & entropy",
+    "finding": "Adding Rb to Cs/MA/FA gives a quadruple-cation absorber with suppressed yellow-phase impurities and improved operational stability."
+  },
+  {
+    "title": "Methylammonium-free, high-performance, and stable perovskite solar cells on a planar architecture",
+    "authors": "Turren\u2010Cruz et al.",
+    "year": 2018,
+    "venue": "Science",
+    "doi": "10.1126/science.aat3583",
+    "citations": 1047,
+    "subtheme": "A-site cation mixing & entropy",
+    "finding": "MA-free Cs/FA compositions retain high efficiency while removing the most thermally labile cation, improving intrinsic stability."
+  },
+  {
+    "title": "Inactive (PbI <sub>2</sub> ) <sub>2</sub> RbCl stabilizes perovskite films for efficient solar cells",
+    "authors": "Zhao et al.",
+    "year": 2022,
+    "venue": "Science",
+    "doi": "10.1126/science.abp8873",
+    "citations": 1412,
+    "subtheme": "A-site cation mixing & entropy",
+    "finding": "An inactive (PbI2)2RbCl secondary phase pins the lattice and stabilizes the photoactive perovskite for efficient, stable cells."
+  },
+  {
+    "title": "Reversible photo-induced trap formation in mixed-halide hybrid perovskites for photovoltaics",
+    "authors": "Hoke et al.",
+    "year": 2014,
+    "venue": "Chemical Science",
+    "doi": "10.1039/c4sc03141e",
+    "citations": 2235,
+    "subtheme": "Mixed-halide alloying & segregation",
+    "finding": "Identifies reversible light-induced halide segregation (the Hoke effect) splitting mixed I/Br films into I-rich and Br-rich domains."
+  },
+  {
+    "title": "A mixed-cation lead mixed-halide perovskite absorber for tandem solar cells",
+    "authors": "McMeekin et al.",
+    "year": 2016,
+    "venue": "Science",
+    "doi": "10.1126/science.aad5845",
+    "citations": 3030,
+    "subtheme": "Mixed-halide alloying & segregation",
+    "finding": "Mixed-cation mixed-halide (FA/Cs, I/Br) widens the gap for tandems while Cs/FA entropic mixing suppresses halide segregation and phase instability."
+  },
+  {
+    "title": "Triple-halide wide\u2013band gap perovskites with suppressed phase segregation for efficient tandems",
+    "authors": "Xu et al.",
+    "year": 2020,
+    "venue": "Science",
+    "doi": "10.1126/science.aaz5074",
+    "citations": 1060,
+    "subtheme": "Mixed-halide alloying & segregation",
+    "finding": "Triple-halide (Cl-alloyed) wide-bandgap perovskites suppress photoinduced halide segregation, stabilizing 1.67 eV absorbers under illumination."
+  },
+  {
+    "title": "High-efficiency two-dimensional Ruddlesden\u2013Popper perovskite solar cells",
+    "authors": "Tsai et al.",
+    "year": 2016,
+    "venue": "Nature",
+    "doi": "10.1038/nature18306",
+    "citations": 3342,
+    "subtheme": "2D / Ruddlesden-Popper phase stabilization",
+    "finding": "High-efficiency 2D Ruddlesden-Popper cells show layered spacer cations trade some transport for markedly improved moisture/phase stability."
+  },
+  {
+    "title": "2D perovskite stabilized phase-pure formamidinium perovskite solar cells",
+    "authors": "Lee et al.",
+    "year": 2018,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-018-05454-4",
+    "citations": 744,
+    "subtheme": "2D / Ruddlesden-Popper phase stabilization",
+    "finding": "A thin 2D perovskite layer templates and stabilizes phase-pure 3D formamidinium perovskite, bridging 2D capping with alpha-phase retention."
+  },
+  {
+    "title": "Two-dimensional perovskite templates for durable, efficient formamidinium perovskite solar cells",
+    "authors": "Sidhik et al.",
+    "year": 2024,
+    "venue": "Science",
+    "doi": "10.1126/science.abq6993",
+    "citations": 178,
+    "subtheme": "2D / Ruddlesden-Popper phase stabilization",
+    "finding": "2D perovskite templates give durable, efficient 3D cells, showing epitaxial 2D layers lock in the black phase under operational stress."
+  },
+  {
+    "title": "Intrinsic Thermal Instability of Methylammonium Lead Trihalide Perovskite",
+    "authors": "Conings et al.",
+    "year": 2015,
+    "venue": "Advanced Energy Materials",
+    "doi": "10.1002/aenm.201500477",
+    "citations": 2211,
+    "subtheme": "Intrinsic compositional/thermal instability",
+    "finding": "Documents intrinsic thermal instability of MAPbI3 below 85 C, motivating the shift to FA/Cs compositions for phase durability."
+  }
+]

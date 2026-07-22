@@ -1,0 +1,232 @@
+[
+  {
+    "title": "Impact of strain relaxation on performance of α-formamidinium lead iodide perovskite solar cells",
+    "authors": "Kim et al.",
+    "year": 2020,
+    "venue": "Science",
+    "doi": "10.1126/science.abc4417",
+    "citations": 1332,
+    "subtheme": "phase-stability",
+    "finding": "Relaxing residual strain in α-FAPbI₃ suppresses the transition to the photoinactive δ-phase, stabilizing the black perovskite and boosting device performance."
+  },
+  {
+    "title": "Strain engineering in perovskite solar cells and its impacts on carrier dynamics",
+    "authors": "Zhu et al.",
+    "year": 2019,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-019-08507-4",
+    "citations": 1021,
+    "subtheme": "tensile-defects",
+    "finding": "Depth-dependent GIXRD reveals a gradient of in-plane residual strain; strain-induced band bending (DFT) governs carrier dynamics, and controlled strain modulation yields 20.7% certified PCE."
+  },
+  {
+    "title": "Strained hybrid perovskite thin films and their impact on the intrinsic stability of perovskite solar cells",
+    "authors": "Zhao et al.",
+    "year": 2017,
+    "venue": "Science Advances",
+    "doi": "10.1126/sciadv.aao5616",
+    "citations": 951,
+    "subtheme": "origins",
+    "finding": "Landmark demonstration that MAPbI₃ films are residually strained relative to substrates from thermal-expansion mismatch during annealing, degrading intrinsic stability."
+  },
+  {
+    "title": "Band Gap Tuning via Lattice Contraction and Octahedral Tilting in Perovskite Materials for Photovoltaics",
+    "authors": "Prasanna et al.",
+    "year": 2017,
+    "venue": "Journal of the American Chemical Society",
+    "doi": "10.1021/jacs.7b04981",
+    "citations": 878,
+    "subtheme": "phase-stability",
+    "finding": "Lattice contraction and octahedral tilting (via A/B-cation size) tune bandgap and phase behaviour, establishing the composition→lattice→property link underpinning strain design."
+  },
+  {
+    "title": "Light-induced lattice expansion leads to high-efficiency perovskite solar cells",
+    "authors": "Tsai et al.",
+    "year": 2018,
+    "venue": "Science",
+    "doi": "10.1126/science.aap8671",
+    "citations": 761,
+    "subtheme": "origins",
+    "finding": "Light-soaking drives a reversible ~0.1–0.3% lattice expansion that relaxes local strain at grain boundaries/interfaces, uniformly raising efficiency across architectures."
+  },
+  {
+    "title": "Strain engineering and epitaxial stabilization of halide perovskites",
+    "authors": "Chen et al.",
+    "year": 2020,
+    "venue": "Nature",
+    "doi": "10.1038/s41586-019-1868-x",
+    "citations": 703,
+    "subtheme": "ctl-substrate-regulation",
+    "finding": "Epitaxial growth on lattice-mismatched single-crystal substrates imposes controllable compressive/tensile strain and stabilizes otherwise-metastable halide-perovskite phases."
+  },
+  {
+    "title": "Regulating strain in perovskite thin films through charge-transport layers",
+    "authors": "Xue et al.",
+    "year": 2020,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-020-15338-1",
+    "citations": 655,
+    "subtheme": "ctl-substrate-regulation",
+    "finding": "Compressive strain injected from a high-thermal-expansion HTL compensates residual tensile strain, raising the ion-migration activation energy; 16.4% wide-bandgap cell keeps 96% after 85 °C/1000 h."
+  },
+  {
+    "title": "Strain analysis and engineering in halide perovskite photovoltaics",
+    "authors": "Liu et al.",
+    "year": 2021,
+    "venue": "Nature Materials",
+    "doi": "10.1038/s41563-021-01097-x",
+    "citations": 510,
+    "subtheme": "review",
+    "finding": "Reference review defining strain analysis (GIWAXS, XRD sin²ψ, Williamson–Hall) and engineering routes; frames residual strain as an intrinsic, encapsulation-immune instability channel."
+  },
+  {
+    "title": "Lattice strain causes non-radiative losses in halide perovskites",
+    "authors": "Jones et al.",
+    "year": 2019,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c8ee02751j",
+    "citations": 495,
+    "subtheme": "tensile-defects",
+    "finding": "Spatially-resolved strain patterns across films correlate with shortened carrier lifetimes, directly tying local lattice strain to non-radiative recombination losses."
+  },
+  {
+    "title": "Interfacial Residual Stress Relaxation in Perovskite Solar Cells with Improved Stability",
+    "authors": "Wang et al.",
+    "year": 2019,
+    "venue": "Advanced Materials",
+    "doi": "10.1002/adma.201904408",
+    "citations": 483,
+    "subtheme": "origins",
+    "finding": "Interfacial residual tensile stress relaxed by a strain-releasing interlayer, improving both efficiency and operational/thermal stability of the device stack."
+  },
+  {
+    "title": "Synergistic strain engineering of perovskite single crystals for highly stable and sensitive X-ray detectors with low-bias imaging and monitoring",
+    "authors": "Jiang et al.",
+    "year": 2022,
+    "venue": "Nature Photonics",
+    "doi": "10.1038/s41566-022-01024-9",
+    "citations": 393,
+    "subtheme": "operational-reverse-bias",
+    "finding": "Synergistic strain engineering in perovskite single crystals reduces defect density and enhances stability, extending strain control beyond polycrystalline films."
+  },
+  {
+    "title": "Strain effects on halide perovskite solar cells",
+    "authors": "Yang et al.",
+    "year": 2022,
+    "venue": "Chemical Society Reviews",
+    "doi": "10.1039/d2cs00278g",
+    "citations": 326,
+    "subtheme": "review",
+    "finding": "Comprehensive review linking tensile/compressive strain to ion migration, defect formation, halide segregation and phase stability across the strain-effect landscape."
+  },
+  {
+    "title": "Strain in perovskite solar cells: origins, impacts and regulation",
+    "authors": "Wu et al.",
+    "year": 2021,
+    "venue": "National Science Review",
+    "doi": "10.1093/nsr/nwab047",
+    "citations": 275,
+    "subtheme": "review",
+    "finding": "Review establishing that residual tensile strain — unlike moisture/heat — cannot be countered by encapsulation, and surveys origins, characterization and regulation."
+  },
+  {
+    "title": "Elimination of Interfacial Lattice Mismatch and Detrimental Reaction by Self‐Assembled Layer Dual‐Passivation for Efficient and Stable Inverted Perovskite Solar Cells",
+    "authors": "Zhang et al.",
+    "year": 2022,
+    "venue": "Advanced Energy Materials",
+    "doi": "10.1002/aenm.202103674",
+    "citations": 204,
+    "subtheme": "buried-interface",
+    "finding": "Eliminating interfacial lattice mismatch removes a strain source and a detrimental interfacial reaction, improving stability of the perovskite/charge-transport junction."
+  },
+  {
+    "title": "Revealing the strain-associated physical mechanisms impacting the performance and stability of perovskite solar cells",
+    "authors": "Meng et al.",
+    "year": 2022,
+    "venue": "Joule",
+    "doi": "10.1016/j.joule.2022.01.011",
+    "citations": 198,
+    "subtheme": "compressive-migration-segregation",
+    "finding": "Resolves the microscopic mechanisms by which residual strain degrades performance, connecting lattice distortion to defect populations and transport."
+  },
+  {
+    "title": "Revealing Steric‐Hindrance‐Dependent Buried Interface Defect Passivation Mechanism in Efficient and Stable Perovskite Solar Cells with Mitigated Tensile Stress",
+    "authors": "Zhou et al.",
+    "year": 2022,
+    "venue": "Advanced Functional Materials",
+    "doi": "10.1002/adfm.202205507",
+    "citations": 195,
+    "subtheme": "buried-interface",
+    "finding": "Steric-hindrance-tuned molecular passivation at the buried interface simultaneously relieves interfacial lattice strain and passivates defects."
+  },
+  {
+    "title": "Lattice Compression Increases the Activation Barrier for Phase Segregation in Mixed-Halide Perovskites",
+    "authors": "Muscarella et al.",
+    "year": 2020,
+    "venue": "ACS Energy Letters",
+    "doi": "10.1021/acsenergylett.0c01474",
+    "citations": 153,
+    "subtheme": "compressive-migration-segregation",
+    "finding": "Hydrostatic lattice compression raises the activation barrier for photoinduced halide segregation in mixed-halide films — direct evidence that compressive strain suppresses phase separation."
+  },
+  {
+    "title": "Strain regulation retards natural operation decay of perovskite solar cells",
+    "authors": "Shen et al.",
+    "year": 2024,
+    "venue": "Nature",
+    "doi": "10.1038/s41586-024-08161-x",
+    "citations": 151,
+    "subtheme": "operational-reverse-bias",
+    "finding": "Under day/night cycling, periodic thermal strain (absent in continuous-mode tests) drives trap accumulation and chemical decay; phenylselenenyl chloride regulates strain for 26.3% certified PCE and 10× T80 improvement."
+  },
+  {
+    "title": "Strain Engineering in Halide Perovskites",
+    "authors": "Moloney et al.",
+    "year": 2020,
+    "venue": "ACS Materials Letters",
+    "doi": "10.1021/acsmaterialslett.0c00308",
+    "citations": 137,
+    "subtheme": "review",
+    "finding": "Early framing review cataloguing strain sources (thermal-mismatch, lattice-mismatch, composition) and their coupling to optoelectronic and stability properties."
+  },
+  {
+    "title": "Strain Modulation for Light‐Stable n–i–p Perovskite/Silicon Tandem Solar Cells",
+    "authors": "Wang et al.",
+    "year": 2022,
+    "venue": "Advanced Materials",
+    "doi": "10.1002/adma.202201315",
+    "citations": 137,
+    "subtheme": "ctl-substrate-regulation",
+    "finding": "Strain modulation produces light-stable n–i–p perovskite/silicon tandem sub-cells, mitigating photoinduced strain-driven degradation in wide-bandgap tops."
+  },
+  {
+    "title": "Strain Control to Stabilize Perovskite Solar Cells",
+    "authors": "Zhang et al.",
+    "year": 2022,
+    "venue": "Angewandte Chemie International Edition",
+    "doi": "10.1002/anie.202212268",
+    "citations": 115,
+    "subtheme": "compressive-migration-segregation",
+    "finding": "Demonstrates strain control as a general handle to stabilize perovskite solar cells against operational stressors."
+  },
+  {
+    "title": "The influence of strain on phase stability in mixed-halide perovskites",
+    "authors": "Muscarella et al.",
+    "year": 2022,
+    "venue": "Joule",
+    "doi": "10.1016/j.joule.2022.07.005",
+    "citations": 100,
+    "subtheme": "compressive-migration-segregation",
+    "finding": "Systematic study showing applied strain shifts the thermodynamics/kinetics of halide phase separation in mixed-halide perovskites, coupling strain state to compositional stability."
+  },
+  {
+    "title": "Taming Lattice Strain via Buried Interface Engineering for Reverse-Bias Resilient Perovskite Solar Cells",
+    "authors": "Du et al.",
+    "year": 2026,
+    "venue": "Nano-Micro Letters",
+    "doi": "10.1007/s40820-026-02244-2",
+    "citations": 0,
+    "subtheme": "buried-interface",
+    "finding": "Identifies the buried HTL/perovskite interface as the principal strain-accumulation site; a fluorinated anchor (3F-2TC) relieves strain (GIWAXS-confirmed), giving 26.10% PCE and 91.58% retention after 200 h at −1.0 V reverse bias."
+  }
+]

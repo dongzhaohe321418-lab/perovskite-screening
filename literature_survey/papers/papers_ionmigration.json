@@ -1,0 +1,222 @@
+[
+  {
+    "title": "Ionic transport in hybrid lead iodide perovskite solar cells",
+    "authors": "Eames et al.",
+    "year": 2015,
+    "venue": "Nature Communications",
+    "doi": "10.1038/ncomms8497",
+    "citations": 2814,
+    "subtheme": "Vacancy-mediated mechanism",
+    "finding": "DFT+experiment establish iodide vacancy migration (~0.58 eV) as the dominant transport channel in MAPbI3, seeding the field's mechanistic picture."
+  },
+  {
+    "title": "Defect migration in methylammonium lead iodide and its role in perovskite solar cell operation",
+    "authors": "Azpiroz et al.",
+    "year": 2015,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c5ee01265a",
+    "citations": 1616,
+    "subtheme": "Vacancy-mediated mechanism",
+    "finding": "First-principles defect migration in MAPbI3 finds iodide the most mobile species and links its motion to hysteresis."
+  },
+  {
+    "title": "First-Principles Study of Ion Diffusion in Perovskite Solar Cell Sensitizers",
+    "authors": "Haruyama et al.",
+    "year": 2015,
+    "venue": "Journal of the American Chemical Society",
+    "doi": "10.1021/jacs.5b03615",
+    "citations": 723,
+    "subtheme": "Vacancy-mediated mechanism",
+    "finding": "First-principles ion-diffusion study confirms the iodide vacancy as lowest-barrier migrating defect and maps concerted pathways."
+  },
+  {
+    "title": "Iodine chemistry determines the defect tolerance of lead-halide perovskites",
+    "authors": "Meggiolaro et al.",
+    "year": 2018,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c8ee00124c",
+    "citations": 645,
+    "subtheme": "Point-defect chemistry & tolerance",
+    "finding": "Iodine redox chemistry (I-rich vs I-poor) governs which deep vs shallow defects form, explaining perovskite defect tolerance."
+  },
+  {
+    "title": "Self‐Regulation Mechanism for Charged Point Defects in Hybrid Halide Perovskites",
+    "authors": "Walsh et al.",
+    "year": 2014,
+    "venue": "Angewandte Chemie International Edition",
+    "doi": "10.1002/anie.201409740",
+    "citations": 611,
+    "subtheme": "Point-defect chemistry & tolerance",
+    "finding": "Self-regulation of charged point defects keeps Fermi level pinned and native defects mostly shallow — the basis of defect tolerance."
+  },
+  {
+    "title": "Intrinsic Point Defects in Inorganic Cesium Lead Iodide Perovskite CsPbI3",
+    "authors": "Huang et al.",
+    "year": 2017,
+    "venue": "The Journal of Physical Chemistry C",
+    "doi": "10.1021/acs.jpcc.7b10045",
+    "citations": 206,
+    "subtheme": "Point-defect chemistry & tolerance",
+    "finding": "Intrinsic point-defect calculations in inorganic CsPbI3 identify dominant vacancies/interstitials and their charge states — directly the project's system."
+  },
+  {
+    "title": "Anomalous Hysteresis in Perovskite Solar Cells",
+    "authors": "Snaith et al.",
+    "year": 2014,
+    "venue": "The Journal of Physical Chemistry Letters",
+    "doi": "10.1021/jz500113x",
+    "citations": 2448,
+    "subtheme": "Hysteresis signature",
+    "finding": "Identifies anomalous J-V hysteresis in perovskite cells and proposes slow ionic/defect processes as a leading cause."
+  },
+  {
+    "title": "Ion Migration in Organometal Trihalide Perovskite and Its Impact on Photovoltaic Efficiency and Stability",
+    "authors": "Yuan et al.",
+    "year": 2016,
+    "venue": "Accounts of Chemical Research",
+    "doi": "10.1021/acs.accounts.5b00420",
+    "citations": 1811,
+    "subtheme": "Hysteresis signature",
+    "finding": "Review synthesizing evidence that mobile ions drive hysteresis, switchable photovoltaics, and giant dielectric response."
+  },
+  {
+    "title": "Quantification of ion migration in CH 3 NH 3 PbI 3 perovskite solar cells by transient capacitance measurements",
+    "authors": "Futscher et al.",
+    "year": 2019,
+    "venue": "Materials Horizons",
+    "doi": "10.1039/c9mh00445a",
+    "citations": 400,
+    "subtheme": "Quantification of migration",
+    "finding": "Transient ion-drift measurements quantify densities and activation energies of migrating species, separating cation from anion motion."
+  },
+  {
+    "title": "Grain boundary dominated ion migration in polycrystalline organic–inorganic halide perovskite films",
+    "authors": "Shao et al.",
+    "year": 2016,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c6ee00413j",
+    "citations": 1205,
+    "subtheme": "Grain boundary vs bulk",
+    "finding": "Direct imaging shows ion migration is dominated by grain boundaries in polycrystalline films, far faster than through bulk grains."
+  },
+  {
+    "title": "A multiscale ion diffusion framework sheds light on the diffusion–stability–hysteresis nexus in metal halide perovskites",
+    "authors": "Ghasemi et al.",
+    "year": 2023,
+    "venue": "Nature Materials",
+    "doi": "10.1038/s41563-023-01488-2",
+    "citations": 129,
+    "subtheme": "Grain boundary vs bulk",
+    "finding": "Multiscale framework reconciles wide barrier scatter by showing grain boundaries and morphology set effective diffusion, not single-crystal barriers."
+  },
+  {
+    "title": "Reversible photo-induced trap formation in mixed-halide hybrid perovskites for photovoltaics",
+    "authors": "Hoke et al.",
+    "year": 2014,
+    "venue": "Chemical Science",
+    "doi": "10.1039/c4sc03141e",
+    "citations": 2235,
+    "subtheme": "Halide segregation",
+    "finding": "Discovers reversible light-induced halide segregation (the Hoke effect) in mixed-halide perovskites, a migration-driven instability."
+  },
+  {
+    "title": "Phase segregation due to ion migration in all-inorganic mixed-halide perovskite nanocrystals",
+    "authors": "Zhang et al.",
+    "year": 2019,
+    "venue": "Nature Communications",
+    "doi": "10.1038/s41467-019-09047-7",
+    "citations": 433,
+    "subtheme": "Halide segregation",
+    "finding": "Demonstrates ion-migration-driven phase segregation in all-inorganic mixed-halide CsPb(I/Br)3, linking it to vacancy motion."
+  },
+  {
+    "title": "Migration of cations induces reversible performance losses over day/night cycling in perovskite solar cells",
+    "authors": "Domanski et al.",
+    "year": 2017,
+    "venue": "Energy & Environmental Science",
+    "doi": "10.1039/c6ee03352k",
+    "citations": 710,
+    "subtheme": "Long-timescale consequences",
+    "finding": "Distinguishes fast reversible from slow cation-migration-induced performance losses over hours of operation, an interfacial-accumulation signature."
+  },
+  {
+    "title": "Cation and anion immobilization through chemical bonding enhancement with fluorides for stable halide perovskite solar cells",
+    "authors": "Li et al.",
+    "year": 2019,
+    "venue": "Nature Energy",
+    "doi": "10.1038/s41560-019-0382-6",
+    "citations": 1165,
+    "subtheme": "Immobilization strategies",
+    "finding": "Cation and anion immobilization via chemical-bond enhancement suppresses migration and boosts operational stability."
+  },
+  {
+    "title": "Suppressing ion migration in metal halide perovskite via interstitial doping with a trace amount of multivalent cations",
+    "authors": "Zhao et al.",
+    "year": 2022,
+    "venue": "Nature Materials",
+    "doi": "10.1038/s41563-022-01390-3",
+    "citations": 269,
+    "subtheme": "Immobilization strategies",
+    "finding": "Interstitial doping immobilizes mobile halides, raising migration barriers and suppressing ion transport (project anchor)."
+  },
+  {
+    "title": "Rethinking the A cation in halide perovskites",
+    "authors": "Lee et al.",
+    "year": 2022,
+    "venue": "Science",
+    "doi": "10.1126/science.abj1186",
+    "citations": 541,
+    "subtheme": "A-site pinning cations",
+    "finding": "Rethinking the A-cation: bulky guanidinium-type cations raise the iodide-migration barrier, the 'pinning' concept central to the project."
+  },
+  {
+    "title": "Ion Migration at Metal Halide Perovskite Grain Boundaries Elucidated with a Machine Learning Force Field",
+    "authors": "Samatov et al.",
+    "year": 2024,
+    "venue": "The Journal of Physical Chemistry Letters",
+    "doi": "10.1021/acs.jpclett.4c03332",
+    "citations": 32,
+    "subtheme": "MLIP / force-field studies",
+    "finding": "Machine-learning force field resolves ion migration at perovskite grain boundaries with near-DFT accuracy at MD length/time scales."
+  },
+  {
+    "title": "Tracing Ion Migration in Halide Perovskites with Machine Learned Force Fields",
+    "authors": "Tyagi et al.",
+    "year": 2025,
+    "venue": "The Journal of Physical Chemistry Letters",
+    "doi": "10.1021/acs.jpclett.5c01139",
+    "citations": 18,
+    "subtheme": "MLIP / force-field studies",
+    "finding": "Machine-learned force field traces ion-migration trajectories and barrier distributions in halide perovskites across charge states."
+  },
+  {
+    "title": "Ion Migration and Dopant Effects in the Gamma-CsPbI3 Perovskite Photovoltaic Material: Atomistic Insights through Ab Initio and Machine Learning Methods",
+    "authors": "Arber et al.",
+    "year": 2025,
+    "venue": "Chemistry of Materials",
+    "doi": "10.1021/acs.chemmater.5c00503",
+    "citations": 9,
+    "subtheme": "MLIP / force-field studies",
+    "finding": "MLIP-driven NEB quantifies dopant effects on iodide-vacancy migration in gamma-CsPbI3 — the project's exact methodology and system."
+  },
+  {
+    "title": "Ion migration in perovskite solar cells",
+    "authors": "Thiesbrummel et al.",
+    "year": 2026,
+    "venue": "Nature Reviews Chemistry",
+    "doi": "10.1038/s41570-025-00790-8",
+    "citations": 15,
+    "subtheme": "Synthesis / review",
+    "finding": "Recent review consolidating ion-migration mechanisms, measurement, and mitigation in perovskite solar cells."
+  },
+  {
+    "title": "A Unified microscopic picture of cation and anion migration in MAPbI$_3$",
+    "authors": "Tyagi et al.",
+    "year": 2026,
+    "venue": "arXiv (preprint)",
+    "doi": "arXiv:2605.02685",
+    "citations": 0,
+    "subtheme": "MLIP / force-field studies",
+    "finding": "Unified MLIP picture of both cation and anion migration in MAPbI3, extending force-field migration studies to full ion inventory."
+  }
+]
