@@ -112,3 +112,31 @@ regression/strain/ga/finite_size/all;strain 支持 iso/biax + 可调收敛阈值
 - [ ] CSD3 算力申请(DFT 腿,GPU 云替代不了)——门控 (b)、以及 #1 undoped/GA DFT 校核、
       #3 双轴 DFT 三点这三个下一步
 - [ ] 精读三篇论文的复现笔记(Eames 2015 / Tyagi 2025 / Arber 2025)
+
+
+---
+
+## 文献调研:钙钛矿稳定性全景 (Literature Survey — completed 2026-07-22)
+
+对钙钛矿稳定性做了一个广义全景文献调研,产物在 `literature_survey/`,已推送 GitHub (commit 7bdce37)。
+
+**方法**:OpenAlex + arXiv 系统检索(2020–2026 重点窗口 + 奠基工作回溯到 2000),按七个
+稳定性通道分七路并行 sub-agent 检索,每路对最高被引论文做一步引文图扩展。所有 DOI 经
+CrossRef 核验(146 篇全部解析成功,0 撤稿)。
+
+**语料**:去重后 **146 篇**(原始 160,按归一化 DOI 去重),73/146(50%)为 2020 年后;
+13 篇跨主题。七通道:相/成分稳定性、环境降解(水/氧/热/光)、离子迁移与缺陷、应变工程、
+钝化/添加剂/掺杂、器件运行稳定性与封装、计算/ML 方法。
+
+**核心论点**(与本项目直接相关):离子迁移是机制枢纽——迁移激活能升高 ~0.2 eV 即可在室温
+下把迁移速率压低 ~1000×;应变、成分、钝化策略多半是**通过**抬高迁移势垒来兑现稳定性收益,
+且离子迁移是封装唯一无法排除的通道。这正是本仓库掺杂筛选计划(γ-CsPbI₃ 中抑制离子迁移的
+掺杂剂)的立论核心。
+
+**产物** (`literature_survey/`):
+- `perovskite_stability_review.md` — ~16,000 词全文综述,行内 DOI 引用 + 146 条参考文献附录
+- `perovskite_stability_review.pdf` — 5 页presentation精简版(含两张图)
+- `perovskite_stability_references.csv` — 主参考表(去重、已核验)
+- `figures/` — 发表时间线 + 主题景观图;`sections/` — 七篇分主题综述;`papers/` — 七个分主题 JSON
+
+**说明**:被引数取自检索时的 OpenAlex,存在年龄偏差(近期工作累积被引时间短)。
