@@ -1,0 +1,22 @@
+{
+  "model": "medium",
+  "device": "cpu",
+  "n_atoms": 159,
+  "hop_distance_A": 4.527436724858869,
+  "i_vac": 71,
+  "i_hop": 128,
+  "E_images_eV": [
+    -454.06707763671875,
+    -454.0318908691406,
+    -453.87646484375,
+    -453.80810546875,
+    -453.8824157714844,
+    -454.00836181640625,
+    -454.03814697265625
+  ],
+  "Ea_forward_eV": 0.25897216796875,
+  "Ea_backward_eV": 0.23004150390625,
+  "dE_endpoints_eV": 0.0289306640625,
+  "caveat": "zero-shot, charge-agnostic (quasi-neutral) PES; path-seeding quality only",
+  "runtime_s": 34.45489478111267
+}
