@@ -205,9 +205,11 @@ the identical path in a **3×3×3 (~540-atom)** cell versus the production
 
 | quantity | 2×2×2 | 3×3×3 | change | verdict |
 |---|---:|---:|---:|---|
-| **undoped E_a (absolute)** | 0.259 eV | 0.258 eV | −1 meV | **size-converged** |
-| **tensile +1 % ΔE_a** | −41 meV | −41 meV | 0 meV | **cancels cleanly** |
+| **undoped E_a (absolute)** | 0.2590 eV | 0.2585 eV | −0.5 meV | **size-converged** |
+| **tensile +1 % ΔE_a** | −41.5 meV | −40.8 meV | +0.7 meV | **cancels cleanly** |
 | **GA-near ΔE_a** | +70 meV | +335 meV | **+264 meV** | **does *not* cancel** |
+
+*(Change column computed from the raw `finite_size.json` values, not the rounded display columns; both non-GA deltas are <1 meV.)*
 
 Three distinct outcomes:
 
