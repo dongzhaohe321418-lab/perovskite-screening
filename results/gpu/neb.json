@@ -1,0 +1,22 @@
+{
+  "model": "medium",
+  "device": "cuda",
+  "n_atoms": 159,
+  "hop_distance_A": 4.5274358450757,
+  "i_vac": 71,
+  "i_hop": 128,
+  "E_images_eV": [
+    -454.0670471191406,
+    -454.0318908691406,
+    -453.87640380859375,
+    -453.80804443359375,
+    -453.8824157714844,
+    -454.0083312988281,
+    -454.03814697265625
+  ],
+  "Ea_forward_eV": 0.259002685546875,
+  "Ea_backward_eV": 0.2301025390625,
+  "dE_endpoints_eV": 0.028900146484375,
+  "caveat": "zero-shot, charge-agnostic (quasi-neutral) PES; path-seeding quality only",
+  "runtime_s": 17.589024782180786
+}

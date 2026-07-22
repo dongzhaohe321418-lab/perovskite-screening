@@ -19,7 +19,10 @@ MACE 机器学习势主动学习)。完整方案见 `proposal/proposal_v2.pdf`(1
 
 ## GPU 资源(AutoDL,已租)
 
-- 实例:RTX 4090,`ssh -p 27745 root@connect.westc.seetacloud.com`
+- 实例:**RTX 5090(32 GB,Blackwell sm_120,driver 580.142)**,`ssh -p 27745 root@connect.westc.seetacloud.com`
+  > ⚠️ 更正(2026-07-22,Mac mini 会话):原交接误写为 4090,实际本次租用的是 **5090**。
+  > 已用真实 GPU matmul(非仅 `cuda.is_available()`)核实 Blackwell sm_120 kernel 可正常执行。
+  > 实例关机重开后 GPU 型号也可能变,接手时先 `nvidia-smi` 核对。
 - 本机 `~/.ssh/config` 需要有别名(若无请创建,见下),并完成密钥授权:
 
 ```
@@ -38,12 +41,15 @@ Host autodl
 ## Mac mini 接手后的第一批任务
 
 1. `ssh autodl "nvidia-smi"` 验证连通和 4090;
-2. 远端装环境:
+2. 远端装环境(base conda 已自带 torch 2.8.0+cu128、py3.12,已核实 Blackwell 可跑
+   ——**只需补装 mace/ase/pymatgen,且切勿让 pip 动 torch**,否则会被换成 CPU 轮子):
    ```bash
    ssh autodl
-   source /etc/network_turbo    # AutoDL 学术加速(GitHub/HuggingFace)
-   pip install mace-torch ase pymatgen
-   python -c "import torch; print(torch.cuda.is_available())"   # 须为 True
+   echo "torch==2.8.0+cu128" > /tmp/c.txt          # 约束文件钉住现有 GPU torch
+   pip install -c /tmp/c.txt mace-torch ase pymatgen spglib matplotlib \
+       --index-url https://pypi.tuna.tsinghua.edu.cn/simple
+   source /etc/network_turbo    # 之后再开学术加速,给 MACE checkpoint 下载(HF/GitHub)提速
+   python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))"  # True, RTX 5090
    ```
 3. 同步本仓库上去(排除 .venv):
    ```bash

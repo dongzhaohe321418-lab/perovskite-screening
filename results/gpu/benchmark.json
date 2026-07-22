@@ -1,0 +1,192 @@
+{
+  "env": {
+    "mace": "0.3.16",
+    "torch": "2.8.0+cu128",
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 5090",
+    "capability": [
+      12,
+      0
+    ],
+    "cueq_installed": true,
+    "ncores": 208,
+    "T_lo": 16,
+    "T_hi": 64
+  },
+  "single_point": {
+    "cpu_threads": 64,
+    "ncores": 208,
+    "cueq_installed": true,
+    "rows": [
+      {
+        "reps": 2,
+        "n_atoms": 160,
+        "cpu": {
+          "mean_s": 0.6351297821849584,
+          "std_s": 0.05754521683319231,
+          "cueq_applied": false
+        },
+        "cuda": {
+          "mean_s": 0.03244521375745535,
+          "std_s": 0.008781669078086985,
+          "cueq_applied": false
+        },
+        "cuda+cueq": {
+          "error": "AttributeError(\"'SegmentedPolynomialNaive' object has no attribute 'buffer_num_segments'\")"
+        },
+        "speedup_cpu_over_cuda": 19.575453776722817
+      },
+      {
+        "reps": 3,
+        "n_atoms": 540,
+        "cpu": {
+          "mean_s": 1.9226801259443165,
+          "std_s": 0.1113662571079572,
+          "cueq_applied": false
+        },
+        "cuda": {
+          "mean_s": 0.04184806328266859,
+          "std_s": 0.012219254723113542,
+          "cueq_applied": false
+        },
+        "cuda+cueq": {
+          "error": "AttributeError(\"'SegmentedPolynomialNaive' object has no attribute 'buffer_num_segments'\")"
+        },
+        "speedup_cpu_over_cuda": 45.94430363377404
+      },
+      {
+        "reps": 4,
+        "n_atoms": 1280,
+        "cpu": {
+          "mean_s": 3.758763071335852,
+          "std_s": 0.1669292874128036,
+          "cueq_applied": false
+        },
+        "cuda": {
+          "mean_s": 0.06149930208921432,
+          "std_s": 0.011751052102606602,
+          "cueq_applied": false
+        },
+        "cuda+cueq": {
+          "error": "AttributeError(\"'SegmentedPolynomialNaive' object has no attribute 'buffer_num_segments'\")"
+        },
+        "speedup_cpu_over_cuda": 61.11879230569447
+      },
+      {
+        "reps": 5,
+        "n_atoms": 2500,
+        "cpu": {
+          "mean_s": 6.657714537158609,
+          "std_s": 0.1644335981102949,
+          "cueq_applied": false
+        },
+        "cuda": {
+          "mean_s": 0.09192580580711365,
+          "std_s": 0.0050647695633828345,
+          "cueq_applied": false
+        },
+        "cuda+cueq": {
+          "error": "AttributeError(\"'SegmentedPolynomialNaive' object has no attribute 'buffer_num_segments'\")"
+        },
+        "speedup_cpu_over_cuda": 72.42487002102953
+      }
+    ]
+  },
+  "warm_path": {
+    "shared@16t": {
+      "cold_s": 41.02286379225552,
+      "warm_mean_s": 46.19507511177411,
+      "warm_std_s": 2.5018890824570517,
+      "all_s": [
+        41.02286379225552,
+        47.43490884639323,
+        48.44505069963634,
+        42.70526578929275
+      ],
+      "Ea_eV": [
+        0.258941650390625,
+        0.25897216796875,
+        0.25897216796875,
+        0.2589111328125
+      ],
+      "peak_gb": 4.180224512,
+      "Ea_ok": true
+    },
+    "shared@64t": {
+      "cold_s": 46.68422350101173,
+      "warm_mean_s": 46.23618608247489,
+      "warm_std_s": 3.283731856011244,
+      "all_s": [
+        46.68422350101173,
+        48.77278405427933,
+        41.59911945834756,
+        48.336654734797776
+      ],
+      "Ea_eV": [
+        0.258941650390625,
+        0.258941650390625,
+        0.2589111328125,
+        0.25897216796875
+      ],
+      "peak_gb": 4.180224512,
+      "Ea_ok": true
+    },
+    "per-image@64t": {
+      "cold_s": 14.345440052449703,
+      "warm_mean_s": 13.735100001407167,
+      "warm_std_s": 0.4384361142627181,
+      "all_s": [
+        14.345440052449703,
+        13.50035792030394,
+        13.355468571186066,
+        14.349473512731493
+      ],
+      "Ea_eV": [
+        0.258941650390625,
+        0.2589111328125,
+        0.258941650390625,
+        0.25897216796875
+      ],
+      "peak_gb": 4.180224512,
+      "Ea_ok": true
+    },
+    "_best_strategy": {
+      "shared": false,
+      "name": "per-image@64t",
+      "warm_mean_s": 13.735100001407167
+    }
+  },
+  "throughput": {
+    "paths_per_worker": 3,
+    "shared_strategy": false,
+    "levels": [
+      {
+        "K": 1,
+        "threads_per_worker": 208,
+        "paths_completed": 3,
+        "slowest_worker_s": 35.05832267086953,
+        "paths_per_hour": 308.0580922650323,
+        "per_path_s": 11.68610755695651,
+        "peak_gb_per_worker": 0.444898816
+      },
+      {
+        "K": 8,
+        "threads_per_worker": 26,
+        "paths_completed": 24,
+        "slowest_worker_s": 63.126974526792765,
+        "paths_per_hour": 1368.6700597908355,
+        "per_path_s": 21.042324842264254,
+        "peak_gb_per_worker": 0.444898816
+      },
+      {
+        "K": 12,
+        "threads_per_worker": 17,
+        "paths_completed": 36,
+        "slowest_worker_s": 85.88166890386492,
+        "paths_per_hour": 1509.053115223843,
+        "per_path_s": 28.627222967954975,
+        "peak_gb_per_worker": 0.444898816
+      }
+    ]
+  }
+}
