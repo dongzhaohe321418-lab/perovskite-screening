@@ -75,19 +75,34 @@ rotation** (Shoemake quaternion) about its own C, and each config is relaxed
 | as-built (ordered) | −1064.33 | **1208** | ✓ | ✓ |
 | 7 random orientations | −1064.7 … −1065.5 | 0 … 780 | ✓ | ✓ |
 
-**Ensemble energy spread ≈ 1208 meV.** The as-built ordered orientation is the
-*highest-energy* configuration — direct confirmation that a single ordered
-orientation is unacceptable. The lowest-energy config (seed 2) is carried forward as
-the production pristine cell. All 8 configs relaxed with every Pb 6-fold coordinated
-and every FA intact (no dissociation).
+**Ensemble energy spread ≈ 1208 meV per 20-f.u. cell = 60.4 meV/f.u.** The as-built
+ordered orientation is the *highest-energy* configuration — direct confirmation that
+a single ordered orientation is unacceptable. The lowest-energy config (seed 2) is
+carried forward as the candidate pristine cell. Every Pb has 6 I neighbours under PBC
+in all 8 configs, and every FA is intact (no dissociation).
 
-*Caveat:* this is a static-relaxation ensemble of random initial orientations, not
+**These are relaxed energies, not raw single-points — and the spread is not a
+close-contact artifact.** The ensemble was validated on both counts the review
+raised:
+- **Identical protocol:** all 8 configs share the same cell (to 1e-6 Å), the same
+  composition (C₁₉H₉₅CsI₆₀N₃₈Pb₂₀, 233 atoms), the same calculator (MACE-MP-0 medium
+  float64), and the same convergence criterion; each was **independently relaxed**
+  (positions, fixed cell) and re-checked to have max|F| < 0.05 eV/Å. So the bars are
+  relaxed-energy differences of independent orientations, not single-points of
+  rotated geometries.
+- **No H–I clash:** the shortest intermolecular H⋯I contact in the ensemble is
+  2.51–2.65 Å — the normal N–H⋯I hydrogen-bond window (a pathological clash would be
+  < 2.0 Å) — and the correlation between shortest contact and energy is weak
+  (Pearson r = −0.27). The spread therefore reflects genuine orientation-dependent
+  hydrogen-bonding energetics, not steric artifacts.
+
+*Caveat:* this is a static-relaxation ensemble of random *initial* orientations, not
 a thermally decorrelated MD ensemble. The MD ensemble (W2-2) needs the GPU and is
 deferred. What this establishes now: (i) the framework is robust across orientations
-(Pb₆, FA intact everywhere), and (ii) orientation is energetically first-order, so
-the Stage-4 migration matrix must sample it, not fix it.
+(6-fold Pb under PBC, FA intact everywhere), and (ii) orientation is energetically
+first-order (60 meV/f.u.), so the Stage-4 migration matrix must sample it, not fix it.
 
-## W2-1d — Production cells
+## W2-1d — Candidate cells (exploratory)
 
 | cell | formula | atoms | notes |
 |---|---|---|---|
@@ -96,7 +111,7 @@ the Stage-4 migration matrix must sample it, not fix it.
 
 `x_Cs = 1/20 = 5%`. Element-count asserts enforced in the driver and passing.
 
-![FA host structures: corner-sharing PbI6 framework (left), production 233-atom cell (centre), FA orientation ensemble energies (right)]({{artifact:art_cf7fb785-e29d-4dc7-99fa-717dd66edf3d}})
+![FA host structures: corner-sharing PbI6 framework (left), candidate 233-atom cell (centre), FA orientation ensemble energies (right)]({{artifact:art_cf7fb785-e29d-4dc7-99fa-717dd66edf3d}})
 
 ## DFT follow-ups required before this cell enters a formal calculation
 
@@ -117,7 +132,7 @@ the Stage-4 migration matrix must sample it, not fix it.
 ## Files
 
 - `fa_parent_relaxed.extxyz` / `.cif`, `fa_parent_2x2x2.cif` — MACE-relaxed parent
-- `fa19cs1_pb20i60_233.extxyz` / `.cif` — production pristine cell (lowest-E orientation)
+- `fa19cs1_pb20i60_233.extxyz` / `.cif` — candidate pristine cell (lowest-E orientation)
 - `fa19cspb20i59_232_vI.extxyz` / `.cif` — V_I cell, FA₁₉CsPb₂₀I₅₉ (232 atoms)
 - `fa_ensemble_00..07.extxyz` — the 8 relaxed orientation configs
 - `fa_host_build.json` — full record (HNF table, d_min, ensemble, asserts, coordination)
