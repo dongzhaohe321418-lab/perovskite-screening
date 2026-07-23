@@ -91,15 +91,25 @@ Host autodl
   +3 meV 上翘(自己的 monotone=no 诊断已打印)。各向同性压缩端散(tight-rerun 逐位
   一致 → *数值可复现*,但**机制未定**:可能是路径切换/局域极小/模型 artefact,**不是
   已证实的 PES 粗糙度**)。应变位移尺寸收敛:−41 meV 在 2×2×2 = 3×3×3。
-- **(b) V_I⁺ vs V_I⁰ 排序(Tyagi 2025)——DFT 部分跑通,带电鞍点待补**:MACE 电荷不可知,
-  所有势垒是 *charge-unspecified neutral-reference*(不能叫 "V_I⁰-like");这是整个
-  方法**最重要的未验证环节**。完整方案(带电超胞 DFT + FNV + per-charge-state 微调 +
-  主动学习)在 `results/objective1/CHARGE_STATE_PROTOCOL.md`。**用户已决定不等 CSD3,直接在
-  5090 盒子上跑 CPU QE。带电初态 img0_q1 已收敛,但带电鞍点 img3_q1 未收敛——盒子被其他租户
-  占满(load 50–68 / 25 核),节流 ~14×:第一次跑到墙钟超时,第二次我看到同样被节流后主动取消
-  (不再烧被占满节点的机时)。输入已备好,盒子空闲时补一个 job(~2 个带电 SCF)即完成。**
+- **(b) V_I⁺ vs V_I⁰ 排序(Tyagi 2025)——DFT 单点跑通(2026-07-23,ehpc 集群)**:
+  完整 8-SCF 矩阵(4 image × 2 电荷态)在 ehpc Slurm 集群上干净跑完。**V_I⁰ = 141 meV,
+  V_I⁺ = 127 meV,比值 0.90**(带电势垒低 ~14 meV / 10%),两者鞍点都在 image 3。
+  **关键注意**:这是**同一个(MACE 弛豫的中性)几何**上的单点,只反映固定核坐标下去掉一个电子的
+  电子能响应,**不是** Tyagi 报的数量级分离——那来自**带电超胞的几何弛豫**(带电空位弛豫到不同结构)。
+  所以 (b) 现状:带电 DFT 全链路已跑通并给出收敛自洽的首个数字(最重要的未验证环节不再是"未测"),
+  **但**要复现 Tyagi 量级需要**弛豫的带电路径**(每个 image 做带电几何优化,或带电 NEB)——这是明确的下一步,
+  在 ehpc 上很便宜(~5 h)。方案细节仍在 `results/objective1/CHARGE_STATE_PROTOCOL.md`。
 
-## DFT benchmark(2026-07-22,5090 盒子 CPU QE)—— 锚点 (a) 完成
+## DFT benchmark —— 锚点 (a)+(b) 完成(2026-07-22 AutoDL 起,2026-07-23 ehpc 完成)
+
+**更新(2026-07-23)**:用户加了 ehpc Slurm 集群(比 AutoDL 好得多,专用 32 核节点、不被抢占)。
+完整 8-SCF 矩阵在 ehpc 上干净跑完,中性能量与 AutoDL 逐位复现(img0_q0 到 8 位小数一致),
+锚点 (a)(b) 全部完成。图 `dft_benchmark.png` 已升级为双面板(a: DFT-vs-MACE;b: 电荷态)。
+ehpc 装机细节见 compute_details(ssh:ehpc):QE 装在共享 home 的 conda env `qe`,计算节点无外网
+(只 login 节点有,装机走 login),GLIBC 2.17 要用旧版 miniconda(py38_4.12.0),MPI 用 conda 的
+`mpirun` 不能用 `srun`(PMIx 不匹配)。
+
+原始记录(2026-07-22,AutoDL,锚点 a):
 
 第一次用第一性原理校核了 Objective 1 全程使用的 zero-shot MACE-MP-0 势垒。**QE 7.5 / PBE /
 US 赝势(pslibrary 1.0.0)/ ecut 50-400 Ry / Γ 点 / 高斯展宽**,在 **MACE 弛豫的完全相同的
@@ -127,10 +137,11 @@ regression/strain/ga/finite_size/all;strain 支持 iso/biax + 可调收敛阈值
 ## 尚未完成 / 下一步
 
 - [x] Objective 1 DFT-free 下一步全部补完:GA 构型采样 (#2) + γ 有限尺寸 (#4)
-- [x] **DFT 校核锚点 (a) 完成(5090 盒子 CPU QE):MACE 高估 1.84× vs PBE**
-- [ ] **补带电鞍点 img3_q1(盒子空闲时,~2 SCF)→ 完成锚点 (b) V_I⁺/V_I⁰ 分离**
+- [x] **DFT 校核锚点 (a) 完成(ehpc CPU QE):MACE 高估 1.84× vs PBE**
+- [x] **DFT 锚点 (b) 单点完成(ehpc):V_I⁰ 141 / V_I⁺ 127 meV,比值 0.90(固定几何)**
+- [ ] **锚点 (b) 弛豫版:带电几何优化 / 带电 NEB → 复现 Tyagi 数量级分离(ehpc,~5 h)**
 - [ ] proposal 加入 preliminary results 小节(数字已齐,等写)
-- [ ] #3 双轴应变 DFT 三点(可同样在盒子上跑,盒子空闲时);#1 undoped/GA DFT 校核已由本轮 (a) 覆盖大部
+- [ ] #3 双轴应变 DFT 三点(可同样在 ehpc 上跑)
 - [ ] CSD3 若落地可做更大胞/SOC 复核,但不再是 (b) 的门控
 - [ ] 精读三篇论文的复现笔记(Eames 2015 / Tyagi 2025 / Arber 2025)
 
