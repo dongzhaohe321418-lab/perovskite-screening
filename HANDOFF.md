@@ -96,7 +96,8 @@ Host autodl
   方法**最重要的未验证环节**。完整方案(带电超胞 DFT + FNV + per-charge-state 微调 +
   主动学习)在 `results/objective1/CHARGE_STATE_PROTOCOL.md`。**用户已决定不等 CSD3,直接在
   5090 盒子上跑 CPU QE。带电初态 img0_q1 已收敛,但带电鞍点 img3_q1 未收敛——盒子被其他租户
-  占满(load 50–68 / 25 核),两次超时。输入已备好,盒子空闲时补一个 job(~2 个带电 SCF)即完成。**
+  占满(load 50–68 / 25 核),节流 ~14×:第一次跑到墙钟超时,第二次我看到同样被节流后主动取消
+  (不再烧被占满节点的机时)。输入已备好,盒子空闲时补一个 job(~2 个带电 SCF)即完成。**
 
 ## DFT benchmark(2026-07-22,5090 盒子 CPU QE)—— 锚点 (a) 完成
 

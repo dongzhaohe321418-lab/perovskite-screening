@@ -76,7 +76,9 @@ Two caveats on the DFT reference itself, for honesty:
 The V_I⁺ (charge +1) path was attempted on the same box. The **charged initial state
 converged** (img0_q1), but the **charged saddle (img3_q1) did not** — the AutoDL instance
 became heavily oversubscribed by other tenants (load average 50–68 on 25 cores), throttling
-SCF iterations ~14× and timing out two attempts.
+SCF iterations ~14×. The first attempt hit its wall-clock timeout; the second I cancelled
+manually after observing the same throttling (2 SCF iterations in ~3 min) rather than burn
+more billed time on a saturated node.
 
 - Charged initial (img0_q1): converged, E = −9245.219 Ry.
 - Charged saddle (img3_q1): **not converged** — needs a re-run when the box is quiet.

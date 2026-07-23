@@ -37,7 +37,7 @@
     "mace_over_dft_ratio": 1.84
   },
   "anchor_b_chargestate": {
-    "status": "INCOMPLETE - charged saddle (img3_q1) not converged; box CPU contention (load ~50-68 on 25 cores) timed out 2 attempts",
+    "status": "INCOMPLETE - charged saddle (img3_q1) not converged; box CPU contention (load ~50-68 on 25 cores) throttled SCF ~14x: attempt 1 hit wall-clock timeout, attempt 2 cancelled manually to avoid burning billed time on a saturated node",
     "img0_q1_converged": true,
     "img0_q1_E_eV": -125787.6089,
     "note": "charged initial done; barrier E(saddle,q+1)-E(init,q+1) needs img3_q1. Inputs staged, re-run when box is quiet.",
