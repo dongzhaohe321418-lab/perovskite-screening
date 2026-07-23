@@ -1,0 +1,60 @@
+{
+  "system": "gamma-CsPbI3 2x2x2 V_I (159 atoms, Cs32I95Pb32)",
+  "method": {
+    "code": "Quantum ESPRESSO 7.5",
+    "xc": "PBE",
+    "pseudo": "pslibrary 1.0.0 US scalar-rel (Cs.pbe-spn z=9, Pb.pbe-dn z=14, I.pbe-n z=7)",
+    "ecutwfc_Ry": 50,
+    "ecutrho_Ry": 400,
+    "kpoints": "Gamma",
+    "smearing": "gaussian 0.01 Ry",
+    "conv_thr_Ry": 1e-06
+  },
+  "geometry_source": "MACE-MP-0 float64 CI-NEB band (results/objective1/regression_saddle_path.extxyz)",
+  "images_evaluated": [
+    0,
+    2,
+    3,
+    4
+  ],
+  "anchor_a_undoped": {
+    "dft_profile_meV": {
+      "0": 0.0,
+      "2": 91.8,
+      "3": 140.6,
+      "4": 60.8
+    },
+    "mace_profile_meV": {
+      "0": 0.0,
+      "2": 190.6,
+      "3": 259.0,
+      "4": 184.6
+    },
+    "dft_barrier_meV": 140.6,
+    "mace_barrier_meV": 259.0,
+    "saddle_image_dft": 3,
+    "saddle_image_mace": 3,
+    "mace_over_dft_ratio": 1.84
+  },
+  "anchor_b_chargestate": {
+    "status": "INCOMPLETE - charged saddle (img3_q1) not converged; box CPU contention (load ~50-68 on 25 cores) timed out 2 attempts",
+    "img0_q1_converged": true,
+    "img0_q1_E_eV": -125787.6089,
+    "note": "charged initial done; barrier E(saddle,q+1)-E(init,q+1) needs img3_q1. Inputs staged, re-run when box is quiet.",
+    "background_correction": "neutral background auto-added by QE for tot_charge; cancels in barrier difference (both geoms same cell) so no FNV needed for barrier heights"
+  },
+  "raw_energies_Ry": {
+    "img0_q0": -9244.9089544,
+    "img2_q0": -9244.90220542,
+    "img3_q0": -9244.89861763,
+    "img4_q0": -9244.90448435,
+    "img0_q1": -9245.21873058
+  },
+  "scf_iterations": {
+    "img0_q0": 31,
+    "img2_q0": 34,
+    "img3_q0": 32,
+    "img4_q0": 33,
+    "img0_q1": 36
+  }
+}

@@ -91,10 +91,28 @@ Host autodl
   +3 meV 上翘(自己的 monotone=no 诊断已打印)。各向同性压缩端散(tight-rerun 逐位
   一致 → *数值可复现*,但**机制未定**:可能是路径切换/局域极小/模型 artefact,**不是
   已证实的 PES 粗糙度**)。应变位移尺寸收敛:−41 meV 在 2×2×2 = 3×3×3。
-- **(b) V_I⁺ vs V_I⁰ 排序(Tyagi 2025)——DFT 门控,只出协议**:MACE 电荷不可知,
+- **(b) V_I⁺ vs V_I⁰ 排序(Tyagi 2025)——DFT 部分跑通,带电鞍点待补**:MACE 电荷不可知,
   所有势垒是 *charge-unspecified neutral-reference*(不能叫 "V_I⁰-like");这是整个
   方法**最重要的未验证环节**。完整方案(带电超胞 DFT + FNV + per-charge-state 微调 +
-  主动学习)在 `results/objective1/CHARGE_STATE_PROTOCOL.md`,待 CSD3 落地即可跑。
+  主动学习)在 `results/objective1/CHARGE_STATE_PROTOCOL.md`。**用户已决定不等 CSD3,直接在
+  5090 盒子上跑 CPU QE。带电初态 img0_q1 已收敛,但带电鞍点 img3_q1 未收敛——盒子被其他租户
+  占满(load 50–68 / 25 核),两次超时。输入已备好,盒子空闲时补一个 job(~2 个带电 SCF)即完成。**
+
+## DFT benchmark(2026-07-22,5090 盒子 CPU QE)—— 锚点 (a) 完成
+
+第一次用第一性原理校核了 Objective 1 全程使用的 zero-shot MACE-MP-0 势垒。**QE 7.5 / PBE /
+US 赝势(pslibrary 1.0.0)/ ecut 50-400 Ry / Γ 点 / 高斯展宽**,在 **MACE 弛豫的完全相同的
+NEB 几何**上做单点(不重新弛豫,只测能量模型)。
+
+- **未掺杂 V_I 势垒:DFT = 141 meV,MACE = 259 meV,MACE 高估 1.84×**(+118 meV)。
+- 两者鞍点都在 image 3,机制/过渡态位置一致;MACE 只是整条曲线更陡。
+- 结论:zero-shot 基础模型**机制对、量级不对**(高 ~1.8 倍 vs PBE)——这正是 proposal 里
+  排名 ΔE_a 需要 per-charge-state **微调**而非 zero-shot 的量化理由。
+- 诚实注:PBE 本身不是真值(通常*低估*卤化物迁移垒,无 SOC),真值大概在 141–259 meV 之间;
+  这是 MACE-vs-PBE 比,不是 MACE-vs-实验。且是单点非 DFT-NEB。
+- 每个 SCF:1401 价电子,~33 迭代,~35 min(12–24 核)。8-SCF 矩阵原计划 ~4.5 h,但盒子严重
+  超订导致带电腿超时(见上)。数据/图:`results/objective1/dft_benchmark.{json,png}`、
+  说明 `DFT_BENCHMARK.md`。QE 装在盒子 conda env `qe`,赝势在 `/root/autodl-tmp/pseudo`。
 
 **有限尺寸检查(本轮补做,γ 相直接测)**:3×3×3(~540 原子)vs 2×2×2 同一 V_I 边跳——
 未掺杂绝对值尺寸收敛(0.259→0.258 eV,不像 cubic screen 那样塌);应变位移干净抵消
@@ -108,9 +126,11 @@ regression/strain/ga/finite_size/all;strain 支持 iso/biax + 可调收敛阈值
 ## 尚未完成 / 下一步
 
 - [x] Objective 1 DFT-free 下一步全部补完:GA 构型采样 (#2) + γ 有限尺寸 (#4)
+- [x] **DFT 校核锚点 (a) 完成(5090 盒子 CPU QE):MACE 高估 1.84× vs PBE**
+- [ ] **补带电鞍点 img3_q1(盒子空闲时,~2 SCF)→ 完成锚点 (b) V_I⁺/V_I⁰ 分离**
 - [ ] proposal 加入 preliminary results 小节(数字已齐,等写)
-- [ ] CSD3 算力申请(DFT 腿,GPU 云替代不了)——门控 (b)、以及 #1 undoped/GA DFT 校核、
-      #3 双轴 DFT 三点这三个下一步
+- [ ] #3 双轴应变 DFT 三点(可同样在盒子上跑,盒子空闲时);#1 undoped/GA DFT 校核已由本轮 (a) 覆盖大部
+- [ ] CSD3 若落地可做更大胞/SOC 复核,但不再是 (b) 的门控
 - [ ] 精读三篇论文的复现笔记(Eames 2015 / Tyagi 2025 / Arber 2025)
 
 
