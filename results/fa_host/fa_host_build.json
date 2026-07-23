@@ -1,0 +1,176 @@
+{
+  "tag": "EXPLORATORY / QUARANTINED \u2014 Lane 2 W2-1",
+  "note": "zero-shot MACE; structures only, no barrier/dynamics claims",
+  "a_pseudocubic_guess_A": 6.35,
+  "parent_formula": "CH5I3N2Pb",
+  "parent_natoms": 12,
+  "parent_elements": {
+    "Pb": 1,
+    "I": 3,
+    "C": 1,
+    "H": 5,
+    "N": 2
+  },
+  "relax": {
+    "E_initial_eV": -55.037479232029966,
+    "E_relaxed_eV": -55.26169193960946,
+    "converged": true,
+    "fmax": 0.05
+  },
+  "parent_cell_relaxed_A": [
+    6.5188418493124045,
+    6.5107176035022505,
+    6.508979794378622
+  ],
+  "parent_cell_angles_relaxed": [
+    90.0,
+    90.0,
+    88.60532445292415
+  ],
+  "det20_candidates": [
+    {
+      "label": "optimal_fcc",
+      "P": [
+        [
+          -2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          2,
+          -1
+        ]
+      ],
+      "det": 20,
+      "target_shape": "fcc",
+      "deviation": 0.023188252495889537
+    },
+    {
+      "label": "optimal_sc",
+      "P": [
+        [
+          2,
+          0,
+          -2
+        ],
+        [
+          -2,
+          2,
+          -1
+        ],
+        [
+          0,
+          2,
+          2
+        ]
+      ],
+      "det": 20,
+      "target_shape": "sc",
+      "deviation": 0.11074351864031957
+    },
+    {
+      "label": "naive_2x2x5",
+      "P": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          5
+        ]
+      ],
+      "det": 20,
+      "target_shape": "sc",
+      "deviation": 0.9196151154361689
+    },
+    {
+      "label": "naive_1x4x5",
+      "P": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          5
+        ]
+      ],
+      "det": 20,
+      "target_shape": "sc",
+      "deviation": 1.1532075646529378
+    }
+  ],
+  "det20_chosen": {
+    "label": "optimal_fcc",
+    "P": [
+      [
+        -2,
+        1,
+        2
+      ],
+      [
+        2,
+        1,
+        2
+      ],
+      [
+        2,
+        2,
+        -1
+      ]
+    ],
+    "det": 20,
+    "target_shape": "fcc",
+    "deviation": 0.023188252495889537
+  },
+  "supercell_P": [
+    [
+      -2,
+      1,
+      2
+    ],
+    [
+      2,
+      1,
+      2
+    ],
+    [
+      2,
+      2,
+      -1
+    ]
+  ],
+  "supercell_formula": "C19H95CsI60N38Pb20",
+  "supercell_natoms": 233,
+  "supercell_elements": {
+    "Pb": 20,
+    "I": 60,
+    "C": 19,
+    "H": 95,
+    "N": 38,
+    "Cs": 1
+  },
+  "vacancy_cell_natoms": 232,
+  "vacancy_removed_I_index": 127
+}

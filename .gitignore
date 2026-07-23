@@ -4,3 +4,8 @@ __pycache__/
 .DS_Store
 .certs/
 perovskite-repo.tar.gz
+tmp/
+# QE run artifacts (never commit wavefunctions / SCF scratch)
+*.save/
+*.wfc*
+out/

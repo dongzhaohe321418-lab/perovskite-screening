@@ -1,153 +1,214 @@
-# 阿里云 E-HPC 配置指南(DFT 腿)
+# 阿里云 E-HPC 实际部署与 Mac mini / Claude Science 连接手册
 
-写于 2026-07-23。目标:为钙钛矿掺杂剂筛选项目搭起 DFT 计算腿(Quantum ESPRESSO
-+ Slurm),与 AutoDL 的 GPU/MLIP 腿并行。执行环境:Mac mini(claudescience)。
+更新日期：2026-07-23。本文记录已经创建的真实环境，不再是创建前的预案。
 
+## 1. 已部署架构
+
+```text
+Mac mini
+ ├── ssh autodl -> AutoDL GPU / MLIP
+ └── ssh ehpc   -> E-HPC 登录节点 -> Slurm comp 队列 -> 2 台计算节点
 ```
-Mac mini(指挥部)
- ├── ssh:autodl → RTX 5090(AutoDL)     MLIP:NEB farm / 微调 / MD
- └── ssh:ehpc   → Slurm CPU 集群(E-HPC)  DFT:QE 单点 / 收敛测试 / HSE 抽查
-```
 
-地域:华东2(上海)。已知决策:按量付费、精简部署、Slurm。
+| 项目 | 实际值 |
+|---|---|
+| 集群名称 | `perovskite-dft` |
+| 集群 ID | `ehpc-sh-j9sajnjxye` |
+| 地域 / 可用区 | 华东 2（上海）/ `cn-shanghai-o` |
+| 部署方式 | 精简 |
+| 调度器 | Slurm 22，分区 `comp` |
+| 镜像 | CentOS 7.9 64 位 |
+| 登录节点 | `ecs.c7nex.large`，2 vCPU / 4 GB |
+| 计算节点 | `2 x ecs.c7nex.8xlarge`，每台 32 vCPU / 64 GB |
+| 计算资源合计 | 64 vCPU / 128 GB，静态节点 2/2 |
+| 公网 IP | `139.224.62.26` |
+| 普通用户 | `ericdft` |
+| VPC | `vpc-uf6o7m3zuf0udt3rdflrp` (`Claudescience`) |
+| 交换机 | `vsw-uf6pecwmx53v2s35a0idi` |
+| 安全组 | `ehpc-sg` |
+| NAS | `031y61oa5ol6dno1zsz-dbn98.cn-shanghai.nas.aliyuncs.com` |
 
----
+原定的单台 `ecs.c7nex.16xlarge` 因上海 O 区无库存而创建失败。最终使用两台
+32 核节点，总核数和总内存保持 64 vCPU / 128 GB。账号原有按量 vCPU 配额为
+50；已申请并获批提升至 66，刚好覆盖 2 核登录节点和 64 核计算节点。
 
-## 0. 前置资源(创建集群前必须存在)
+## 2. 成本和关机纪律
 
-1. **VPC + 交换机**(免费):VPC 网段 `192.168.0.0/16`;交换机**必须在上海
-   可用区 O**(与集群同可用区,选错建不出集群),网段 `192.168.0.0/24`。
-2. **NAS 文件系统**(通用型)+ 挂载点:NAS 控制台创建,**同样选上海可用区 O**。
-   这是所有节点的共享盘,家目录和 scratch 都在上面。
+- 两台计算节点控制台报价约 `¥16.48/小时`；登录节点、NAS 和 EIP 另计。
+- 当前计算节点是静态按量节点，不会在空闲时自动释放；连续运行一天仅计算节点
+  约 `¥395.52`。
+- 不计算时必须在 E-HPC / ECS 控制台停止或释放计算节点。释放前确认数据已写入
+  `/home` 或 `/ehpcdata` 的 NAS；实例本地系统盘不作为科研数据存储。
+- 若以后改为自动伸缩，应设置最小节点数 0，并重新评估抢占式实例、库存和配额。
 
-## 1. 创建集群(E-HPC 控制台)
+## 3. Mac mini SSH（已完成）
 
-硬件配置页:
+`~/.ssh/config` 已加入：
 
-| 项 | 值 | 备注 |
-|---|---|---|
-| 付费类型 | 按量付费 | |
-| 部署方式 | 精简 | 管控节点托管,省钱 |
-| 登录节点 | ecs.c7nex.large(2c4G)×1 | 唯一常开节点,够用 |
-| **计算节点** | **32–64 vCPU 计算型(c8i 档),数量 0** | ⚠️ 2c4G 跑不了 QE;数量填 0,算力全交给弹性伸缩 |
-| 系统盘 | ESSD 40GB PL0 | |
-| 弹性公网IP | 使用 | mini SSH 全靠它 |
-| VPC/交换机 | 选第 0 步建的 | |
-| 安全组 | 新建,名 `ehpc-sg`(英文) | |
-| 共享存储 | 通用型 NAS,NFS v3,远程目录 `/` | 选第 0 步建的文件系统 |
-
-软件配置页:调度器 **Slurm**;镜像 Alibaba Cloud Linux 3 或 Rocky。
-基础配置页:集群名、root 密码(设强密码,之后基本不用)。
-
-**确认提交前核对配置清单总价:改完后应只剩登录节点 ≈¥0.6/小时量级。**
-
-## 2. 建成后立即做的三件事
-
-1. **若向导强制创建了静态计算节点 → 手动释放它**。自动缩容只回收弹性扩出的
-   节点,静态节点会 7×24 烧钱;
-2. **队列自动伸缩**:队列管理 → 打开自动伸缩,最小节点数 **0**、最大 4,
-   扩容实例规格选 32–64 vCPU 计算型,**计费方式选抢占式(Spot)**;
-3. **安全组收紧**:`ehpc-sg` 的 22 端口授权对象从 `0.0.0.0/0` 改成家庭宽带
-   出口 IP(IP 变了回来改)。
-
-> ⚠️ 配额陷阱:新账号的按量/抢占式 vCPU 配额可能低于 64。若扩容时报配额错误,
-> 去「配额中心」把对应实例族的按量 + 抢占式 vCPU 配额提到 ≥128(免费,秒批)。
-
-## 3. 集群用户
-
-控制台 → 集群 → 用户 → 创建用户 `eric`(普通权限,设一次性密码)。
-**跑作业用 eric,不用 root。**
-
-## 4. Mac mini 打通 SSH(mini 终端整段粘贴,`<EIP>` 换成登录节点公网 IP)
-
-```bash
-grep -q "Host ehpc" ~/.ssh/config 2>/dev/null || cat >> ~/.ssh/config <<'EOF'
+```sshconfig
 Host ehpc
-    HostName <EIP>
+    HostName 139.224.62.26
     Port 22
-    User eric
+    User ericdft
+    IdentityFile /Users/ericdong/.ssh/id_ed25519
+    IdentitiesOnly yes
     ServerAliveInterval 60
+    ServerAliveCountMax 3
     StrictHostKeyChecking accept-new
-EOF
-chmod 600 ~/.ssh/config
-ssh-copy-id -i ~/.ssh/id_ed25519.pub ehpc      # 输一次 eric 的密码
-ssh ehpc "sinfo && df -h | grep -v tmpfs"       # 验证 Slurm + NAS 挂载路径
 ```
 
-记下 `df -h` 里 NAS 的实际挂载路径(下称 `<NAS>`,如 `/ehpcdata`)。
-
-## 5. claudescience 注册计算后端
-
-Customize → Compute → 添加 `ssh:ehpc`,**注册时当场填 scratch/working
-directory**(AutoDL 的教训):
-
-```
-<NAS>/eric/scratch        # 先 ssh ehpc "mkdir -p <NAS>/eric/scratch"
-```
-
-必须放 NAS——计算节点是弹性临时机,本地盘不共享不持久。
-
-## 6. 安装 Quantum ESPRESSO(登录节点,装进家目录=装在 NAS 上,全节点可见)
+公钥已经复制到集群。验证命令：
 
 ```bash
-ssh ehpc
-wget -q https://mirrors.tuna.tsinghua.edu.cn/github-release/conda-forge/miniforge/LatestRelease/Miniforge3-Linux-x86_64.sh
-bash Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3 && ~/miniforge3/bin/conda init bash && source ~/.bashrc
-conda create -n qe -c conda-forge qe openmpi -y
-conda activate qe && pw.x -h | head -3
+ssh ehpc 'whoami; hostname; sinfo'
 ```
 
-**赝势**:下载 SSSP PBE Efficiency 赝势库(Materials Cloud;国内慢就逐个从
-QE 官网/GBRV 补 Cs/Pb/I 及掺杂剂元素),放 `<NAS>/eric/pseudos/`,输入文件里
-`pseudo_dir` 指向它。
+期望结果包含 `ericdft`、登录节点 `manager`，以及 `compute[001-002]` 为 `idle`。
 
-性能说明:conda-forge 预编译 QE 足够收敛测试;后期要压性能再用 Intel oneAPI
-重编译,不要现在做。
+## 4. NAS 与工作目录
 
-## 7. Slurm 作业模板
+实际共享挂载：
 
-`<NAS>/eric/scratch/job_template.sbatch`:
+```text
+/home     <- NAS:/ehpc-sh-j9sajnjxye/home
+/opt      <- NAS:/ehpc-sh-j9sajnjxye/opt
+/ehpcdata <- NAS:/
+```
+
+推荐目录：
+
+```text
+/home/ericdft/scratch   计算工作目录 / Claude Science scratch
+/home/ericdft/jobs      Slurm 脚本
+/home/ericdft/pseudos   SSSP / 元素赝势
+/home/ericdft/mamba     micromamba 根目录和 QE 环境
+```
+
+所有输入、赝势、检查点和输出都应放在这些 NAS 路径中。
+
+## 5. Quantum ESPRESSO 环境
+
+QE 安装为共享环境：
+
+```text
+/home/ericdft/mamba/envs/qe
+```
+
+登录后激活：
+
+```bash
+export MAMBA_ROOT_PREFIX="$HOME/mamba"
+eval "$("$HOME/miniforge3/micromamba" shell hook -s bash)"
+micromamba activate qe
+pw.x -h | head
+```
+
+或在脚本中直接使用：
+
+```bash
+QE_ENV="$HOME/mamba/envs/qe"
+"$QE_ENV/bin/pw.x" -h | head
+```
+
+## 6. Slurm 作业模板
+
+单节点 32 MPI rank：
 
 ```bash
 #!/bin/bash
-#SBATCH -J qe-VI-charged
-#SBATCH -p comp                # 分区名以 sinfo 为准
+#SBATCH -J qe-test
+#SBATCH -p comp
 #SBATCH -N 1
-#SBATCH --ntasks=32            # 与扩容实例 vCPU 一致
+#SBATCH --ntasks-per-node=32
 #SBATCH -t 04:00:00
-source ~/miniforge3/etc/profile.d/conda.sh && conda activate qe
-cd $SLURM_SUBMIT_DIR
-mpirun -np $SLURM_NTASKS pw.x -in input.pwi > output.pwo
+#SBATCH -o %x-%j.out
+#SBATCH -e %x-%j.err
+
+set -euo pipefail
+export LC_ALL=C
+QE_ENV="$HOME/mamba/envs/qe"
+export PATH="$QE_ENV/bin:$PATH"
+export LD_LIBRARY_PATH="$QE_ENV/lib:${LD_LIBRARY_PATH:-}"
+export OMP_NUM_THREADS=1
+cd "$SLURM_SUBMIT_DIR"
+mpirun -np "$SLURM_NTASKS" "$QE_ENV/bin/pw.x" -in input.pwi > output.pwo
 ```
 
-`sbatch` 提交 → 自动伸缩现开抢占式节点(2–5 分钟)→ 跑完闲置几分钟自动释放。
-常用:`squeue`(排队)、`sacct`(历史)、`scancel <id>`(杀作业)。
-抢占式节点偶尔会被回收,作业重提即可——单点计算无状态,天然耐抢占。
+跨两节点总计 64 rank 时改为：
 
-## 8. 首批科学任务(衔接 proposal 第 1–2 月)
+```bash
+#SBATCH -N 2
+#SBATCH --ntasks-per-node=32
+```
 
-1. γ-CsPbI₃ 原胞:截断能 / k 点收敛曲线(PBE+D3);
-2. 2×2×2 超胞 V_I⁺ 带电单点:FNV 修正(用 `doped` 包生成与分析),
-   对照文献 ~0.1 eV 修正量级;
-3. 超胞尺寸外推测试(2×2×2 → 3×3×3);
-4. 产出的 DFT 数据即是 MLIP 微调训练集的第一批原料(回流到 AutoDL 腿)。
+当前 Conda OpenMPI 已通过 `mpirun` 在 Slurm 分配内验证；不要在登录节点直接运行
+大规模 `mpirun`。常用命令：
 
-## 9. 成本与纪律
+```bash
+sinfo
+squeue -u "$USER"
+sbatch job.sbatch
+sacct -j JOB_ID --format=JobID,State,Elapsed,ExitCode
+scancel JOB_ID
+```
 
-- 常开:登录节点(≈¥0.6/时)+ NAS(几十 GB≈每月几元)+ EIP(按流量,可忽略)
-  → **每天约十几元**;
-- 计算:只在作业运行时发生;抢占式 64 vCPU ≈ ¥2–4/时。全部 DFT 腿预算估
-  **¥1000–2000**(比 MLIP 腿贵一个量级是正常结构);
-- 三条铁律:① 确认队列最小节点数=0;② 静态计算节点清零;③ 连续几天不用时
-  登录节点也停机(停机不收计算费,数据在 NAS 不丢)。
-- E-HPC 是 CSD3 批复前的过渡:Slurm 脚本改个分区名即可整体迁移。
+## 7. Claude Science 在 Mac mini 上注册
 
-## 10. 故障速查
+1. 先在终端验证 `ssh ehpc 'sinfo'` 成功且不再询问密码。
+2. Claude Science 打开 `Customize -> Compute`。
+3. 新增 SSH 计算后端，地址填写 `ssh:ehpc`（若界面拆分字段，Host 填
+   `ehpc`，连接方式选 SSH）。
+4. 用户名由 `~/.ssh/config` 提供，为 `ericdft`；不要在 Claude Science 中保存
+   root 密码。
+5. Working / scratch directory 填：
 
-| 症状 | 第一嫌疑 |
-|---|---|
-| ssh 连不上 | 安全组 22 端口源 IP 不含当前网络;EIP 填错 |
-| 提交作业不扩容 | vCPU 配额不足(配额中心);队列伸缩开关没开 |
-| 节点上找不到文件 | 文件放了本地盘而非 NAS;`df -h` 核对 |
-| 作业半途消失 | 抢占式被回收,`sacct` 确认后重提 |
-| pw.x 报赝势缺失 | `pseudo_dir` 路径或元素赝势文件缺 |
+   ```text
+   /home/ericdft/scratch
+   ```
+
+6. 初始化或探测命令可用：
+
+   ```bash
+   export MAMBA_ROOT_PREFIX="$HOME/mamba"
+   export PATH="$HOME/mamba/envs/qe/bin:$PATH"
+   ```
+
+7. 保存后做最小测试：运行 `hostname`、`sinfo`、`pw.x -h | head`。
+
+## 8. 赝势与首批 DFT 任务
+
+SSSP 1.3.0 PBE Efficiency 已下载并通过官方 MD5 校验，目录为：
+
+```text
+/home/ericdft/pseudos/SSSP_1.3.0_PBE_efficiency
+```
+
+钙钛矿主体元素文件：
+
+```text
+Cs_pbe_v1.uspp.F.UPF
+Pb.pbe-dn-kjpaw_psl.0.2.2.UPF
+I.pbe-n-kjpaw_psl.0.2.UPF
+```
+
+输入文件中的 `pseudo_dir` 必须指向上述绝对路径，并按候选掺杂元素补齐
+`ATOMIC_SPECIES`。归档包保留在 `/home/ericdft/pseudos/`，官方 MD5 为
+`a58f1b3373f330179fd0832c48bb9a52`。
+
+首批任务：
+
+1. gamma-CsPbI3 截断能和 k 点收敛；
+2. 2x2x2 超胞中的带电 `V_I+` 单点；
+3. FNV 修正与超胞尺寸外推；
+4. 将结构、能量、力和应力回流到 AutoDL 的 MLIP 数据集。
+
+## 9. 安全与故障检查
+
+- 将 `ehpc-sg` 的 TCP 22 来源收紧到可信公网 IP；家庭出口 IP 变化后同步更新。
+- SSH 不通：检查 EIP、安全组和 `ssh -vv ehpc`。
+- Slurm 节点异常：`sinfo -R`、`scontrol show node compute001`。
+- MPI 作业失败：先用 1 节点 2 rank 最小测试，再扩到 32/64 rank。
+- `pw.x` 缺赝势：检查 `pseudo_dir`、文件名和元素覆盖。
+- 磁盘文件在计算节点不可见：确认路径位于 `/home`、`/opt` 或 `/ehpcdata`。
+
+密码不写入本文件、SSH 配置、脚本或 Git 仓库。

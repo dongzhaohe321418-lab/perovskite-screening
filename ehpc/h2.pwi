@@ -1,0 +1,26 @@
+&CONTROL
+  calculation = 'scf'
+  prefix = 'h2-smoke'
+  pseudo_dir = '/home/ericdft/pseudos'
+  outdir = '/home/ericdft/scratch/qe-tmp'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 2
+  ntyp = 1
+  ecutwfc = 50
+  ecutrho = 250
+/
+&ELECTRONS
+  conv_thr = 1.0d-8
+/
+ATOMIC_SPECIES
+H 1.00794 H.pbe-kjpaw_psl.1.0.0.UPF
+ATOMIC_POSITIONS angstrom
+H 0.0 0.0 0.0
+H 0.0 0.0 0.74
+K_POINTS gamma
+CELL_PARAMETERS angstrom
+10.0 0.0 0.0
+0.0 10.0 0.0
+0.0 0.0 10.0

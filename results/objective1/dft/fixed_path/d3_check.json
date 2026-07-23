@@ -1,0 +1,40 @@
+{
+  "method": "PBE",
+  "damping": "d3bj",
+  "note": "D3 is charge-independent (geometry-only); shift applies to both q=0 and q=+1 identically",
+  "images": {
+    "0": {
+      "E_D3_eV": -38.19272997124314,
+      "dE_D3_meV_vs_img0": 0.0
+    },
+    "1": {
+      "E_D3_eV": -38.17966309310938,
+      "dE_D3_meV_vs_img0": 13.066878133756177
+    },
+    "2": {
+      "E_D3_eV": -38.1687069993926,
+      "dE_D3_meV_vs_img0": 24.022971850541808
+    },
+    "3": {
+      "E_D3_eV": -38.16740127138379,
+      "dE_D3_meV_vs_img0": 25.328699859350934
+    },
+    "4": {
+      "E_D3_eV": -38.1759901921202,
+      "dE_D3_meV_vs_img0": 16.739779122936227
+    },
+    "5": {
+      "E_D3_eV": -38.19260506624659,
+      "dE_D3_meV_vs_img0": 0.12490499654660425
+    },
+    "6": {
+      "E_D3_eV": -38.202235891124964,
+      "dE_D3_meV_vs_img0": -9.50591988182481
+    }
+  },
+  "d3_barrier_shift_meV": 25.328699859350934,
+  "pbe_barrier_q0_meV": 140.6,
+  "pbe_d3_barrier_q0_meV": 165.92869985935093,
+  "pbe_barrier_q1_meV": 126.6,
+  "pbe_d3_barrier_q1_meV": 151.92869985935093
+}

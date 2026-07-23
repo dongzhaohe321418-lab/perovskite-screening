@@ -1,7 +1,12 @@
 # DFT Benchmark of the MACE V_I Migration Barrier
 
 **Anchor (a) — undoped DFT-vs-MACE barrier — DONE.
-Anchor (b) — V_I⁺/V_I⁰ charge-state separation — DONE (single-point; caveat below).**
+Anchor (b) — V_I⁺/V_I⁰ charge-state separation:**
+
+```
+FIXED-GEOMETRY ELECTRONIC COMPARISON:        COMPLETE
+RELAXED-CHARGE-STATE MIGRATION BARRIER:      PENDING
+```
 
 The first *ab initio* check of the zero-shot MACE-MP-0 barriers used throughout
 Objective 1. It answers the two methodological questions the peer review raised:
@@ -70,9 +75,10 @@ as an absolute barrier.
 
 Two caveats on the DFT reference itself:
 - **PBE is not ground truth.** PBE typically *underestimates* halide-perovskite
-  migration barriers (no SOC, no exact exchange, GGA delocalisation). The true
-  barrier likely sits between PBE (141 meV) and MACE (259 meV); the 1.84× ratio is
-  MACE-vs-PBE, not MACE-vs-experiment.
+  migration barriers (no SOC, no exact exchange, GGA delocalisation). PBE and MACE
+  disagree by 118 meV at fixed geometry; neither is the converged physical barrier
+  (spin state, path relaxation, SOC and finite-T effects unresolved). The 1.84×
+  ratio is MACE-vs-PBE, not MACE-vs-experiment.
 - **Single-point, not DFT-relaxed.** Geometries are MACE's. This isolates the
   energy model on fixed structures — the correct test for "is the MACE energy
   surface right" — but is not a full DFT-NEB.
