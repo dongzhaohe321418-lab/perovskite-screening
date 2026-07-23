@@ -15,11 +15,13 @@ are the MACE numbers quantitatively trustworthy, and does the charge state matte
 Both anchors were computed on the **ehpc Slurm cluster** (dedicated 32-core nodes),
 which replaced the contended AutoDL box. The full 8-SCF matrix (4 images × 2 charge
 states) completed cleanly on one machine, so neutral and charged barriers are
-mutually consistent, and the neutral energies reproduce the earlier AutoDL run
-**bit-for-bit** (img0_q0 identical to all 8 decimals; img0_q1 agrees to 6 decimals,
-differing by ~2×10⁻⁸ Ry at the 8th) — the DFT numbers are machine-independent.
+mutually consistent, and the neutral energies reproduce the earlier AutoDL run to
+**~6 significant decimals** (img0_q1 agrees to 6 decimals; residual differences are
+at the SCF-convergence / I/O-rounding floor, ≲10⁻⁶ Ry) — well below the ~1 meV
+regression tolerance, i.e. the DFT numbers are machine-independent for all practical
+purposes (not literally bit-identical).
 
-![DFT benchmark: undoped DFT-vs-MACE (a) and charge-state separation (b)]({{artifact:art_272dbdff-70de-4cad-858a-06fd435631b6}})
+![DFT benchmark: undoped DFT-vs-MACE (a) and charge-state separation (b)](dft_benchmark.png)
 
 ## Method
 
