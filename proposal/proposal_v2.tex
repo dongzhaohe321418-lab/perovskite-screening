@@ -48,7 +48,7 @@
 \textbf{Candidate:} & Eric \\
 \textbf{Programme:} & Natural Sciences (Materials Science \& Chemistry) \\
 \textbf{Institution:} & University of Cambridge \\
-\textbf{Date:} & July 2026 (rev.~2) \\
+\textbf{Date:} & July 2026 (rev.~3) \\
 \end{tabular}
 \end{center}
 \vfill
@@ -56,7 +56,8 @@
 \textbf{One-sentence summary.} This project converts perovskite stability design from
 empirical trial-and-error into a white-box computational screening problem: it ranks
 $\sim$50 candidate ``pinning'' dopants by their first-principles effect on the
-iodide-vacancy migration barrier, attributes every effect to a physical mechanism, and
+iodide-vacancy migration barrier in the production absorber composition
+FA$_{0.95}$Cs$_{0.05}$PbI$_3$, attributes every effect to a physical mechanism, and
 introduces the \emph{pinning radius} --- the spatial range of a dopant's protection ---
 as a computable design metric, the whole campaign accelerated four orders of magnitude
 by an actively-learned machine-learned interatomic potential.
@@ -85,7 +86,15 @@ theory, climbing-image nudged elastic band calculations, density functional theo
 charged-defect corrections, and \emph{per-charge-state} fine-tuned MACE machine-learned
 interatomic potentials (MLIPs) --- to compute the dopant-induced shift $\Delta E_a$ for
 iodide-vacancy migration across a combinatorial space of $\sim$50 substitutional and
-interstitial dopants. The deliverables are (i) the first \emph{mechanism-annotated}
+interstitial dopants. Screening targets the \emph{production absorber composition}
+FA$_{0.95}$Cs$_{0.05}$PbI$_3$, with the fully inorganic CsPbI$_3$ lattice retained as
+the method-validation platform on which all literature anchors and the charge-state
+protocol are established; because the FA-rich host is orientationally disordered,
+every FA-host barrier is an ensemble statistic over MD-sampled cation orientations,
+not a single-configuration number. The pipeline is already operational: a
+cross-platform regression baseline (0.259~eV), a DFT calibration of the foundation
+model, a strain anchor, and a first five-dopant screen are reported as preliminary
+results (Section~6). The deliverables are (i) the first \emph{mechanism-annotated}
 dopant ranking at this scale, (ii) the \emph{pinning radius}: a new metric extracted in
 MLIP-scale supercells that converts each dopant's spatial range of action into the
 minimum concentration required for lattice-wide protection, and (iii) an open-source,
@@ -211,16 +220,27 @@ iodide-vacancy migration in the undoped lattice (Eames et al., 2015); (b) the
 charge-state ordering of defect mobilities --- in particular the order-of-magnitude
 separation between $V_{\mathrm{I}}^{+}$ and $V_{\mathrm{I}}^{0}$ --- reported by Tyagi
 et al.\ (2025), which serves as a like-for-like computational anchor; (c) the sign and
-magnitude of the GA$^+$-induced $\Delta E_a$; (d) the strain--$E_a$ correlation
-(tensile lowers, compressive raises).
+magnitude of the GA$^+$-induced $\Delta E_a$, computed \emph{natively in the FA-rich
+host} where the experimental pinning record lives; (d) the strain--$E_a$ correlation
+(tensile lowers, compressive raises). Anchors (a), (b) and (d) live on the CsPbI$_3$
+validation lattice; anchor (c) moves with the production host.
 
 \textbf{Objective 2 (High-throughput screening).} Compute mechanism-annotated
-$\Delta E_a$ values for $\sim$50 candidate dopants spanning A-site substitution
-(GA$^+$, dimethylammonium, acetamidinium), B-site substitution (Sr$^{2+}$, Ca$^{2+}$,
-Bi$^{3+}$, La$^{3+}$) --- retained deliberately as a \emph{negative-control class}
-anchored to the published null result of Arber et al.\ (2025) --- X-site substitution
-(Cl$^-$, SCN$^-$), and interstitials (K$^+$, Rb$^+$, multivalent cations), each over
-symmetry-inequivalent migration paths binned by dopant--vacancy distance.
+$\Delta E_a$ \emph{distributions} for $\sim$50 candidate dopants in the production
+host FA$_{0.95}$Cs$_{0.05}$PbI$_3$ --- represented by $2\times2\times5$ supercells
+whose 20 A-sites give exactly one Cs at $x=0.05$, with FA orientations drawn from
+thermalised MLIP-MD snapshots --- spanning A-site substitution (GA$^+$,
+dimethylammonium, acetamidinium; natively comparable to the hybrid-lattice pinning
+literature), B-site substitution (Sr$^{2+}$, Ca$^{2+}$, Bi$^{3+}$, La$^{3+}$) ---
+retained deliberately as a \emph{negative-control class} anchored to the published
+null result of Arber et al.\ (2025) and to our own preliminary screen --- X-site
+substitution (Cl$^-$, SCN$^-$), and interstitials (K$^+$, Rb$^+$, multivalent
+cations), each over symmetry-inequivalent migration paths binned by dopant--vacancy
+distance. The first screened candidate is Cs$^+$ itself: whether the 5\% Cs of the
+workhorse formulation stabilises only the phase or also pins the iodide sublattice is
+an open question this pipeline answers as a by-product. A CsPbI$_3$ pre-screen tier
+is retained as a cheap funnel, and the CsPbI$_3\!\to$FA rank correlation is reported
+as an explicit \emph{transferability deliverable}.
 
 \textbf{Objective 3 (Mechanistic resolution).} For every screened dopant, extract the
 saddle-point atomic configuration and quantify the pinning mechanism --- hydrogen-bond
@@ -295,7 +315,12 @@ observable is the \emph{difference} $\Delta E_a$ between doped and undoped latti
 which anharmonic and entropic corrections cancel to first order --- the ranking is
 more robust than any absolute barrier. Second, for the top-ranked candidates the
 harmonic-TST picture is cross-checked by transition-state-theory-free molecular
-dynamics (Section~5.3).
+dynamics (Section~5.3). In the FA-rich production host a third safeguard applies:
+orientational disorder makes $E_a$ itself a distribution, so every FA-host barrier is
+reported as an ensemble statistic (mean $\pm$ spread over MD-sampled FA orientations
+and Cs placements) --- a protocol forced by our own preliminary finding that a
+single-configuration GA$^+$ barrier shift varies by over 200~meV with cation
+orientation (Section~6).
 
 \subsection{Layer 3: Saddle-point location by CI-NEB}
 The climbing-image nudged elastic band method (Henkelman, Uberuaga and J\'onsson, 2000)
@@ -306,10 +331,14 @@ then climbs against the parallel component of the true force to converge exactly
 the saddle point. CI-NEB (rather than plain NEB) is mandatory for quantitative $E_a$.
 
 \subsection{Layer 4: DFT reference energies}
-Kohn--Sham DFT provides the ground-truth PES at $\mathcal{O}(N^3)$ cost. All production
-cells use the room-temperature photoactive orthorhombic $\gamma$-phase of CsPbI$_3$
-(consistent with Arber et al., 2025), whose broken symmetry is handled by explicit
-enumeration of inequivalent hop directions. Four system-specific corrections are
+Kohn--Sham DFT provides the ground-truth PES at $\mathcal{O}(N^3)$ cost. Two lattices
+divide the labour. Method development and the literature anchors use the fully
+inorganic room-temperature $\gamma$-phase of CsPbI$_3$ (consistent with Arber et al.,
+2025), whose broken symmetry is handled by explicit enumeration of inequivalent hop
+directions and which decouples methodology from organic-cation degrees of freedom.
+Production screening uses pseudo-cubic FA$_{0.95}$Cs$_{0.05}$PbI$_3$ supercells with
+FA orientations drawn from thermalised MLIP-MD snapshots; dispersion correction (D3)
+is mandatory once organic cations are present. Four system-specific corrections are
 essential: (i) spin--orbit coupling for Pb is included in electronic-structure checks,
 while migration barriers --- governed chiefly by ionic electrostatics and bond strength
 --- are computed at the PBE(+D3) level after explicit SOC-sensitivity tests; (ii) the
@@ -324,10 +353,7 @@ image--image interactions; (iv) PBE self-interaction error can artificially delo
 charge around charged defects, so the top-three candidates receive HSE(+SOC)
 single-point spot checks --- whose density of states doubles as the
 electronic-benignity screen of Objective 3, one calculation serving two gates ---
-before experimental hand-off. Method development is performed
-first on the fully inorganic CsPbI$_3$ lattice to decouple methodology from the
-organic-cation orientational degrees of freedom, which are subsequently sampled by
-averaging over several cation orientations.
+before experimental hand-off.
 
 \subsection{Layer 5: MLIP acceleration with active learning}
 A single CI-NEB ($\sim$7 images $\times$ $\sim$100 ionic steps) costs thousands of
@@ -341,14 +367,19 @@ receptive field beyond the local cutoff. The starting checkpoint will be selecte
 MACE-MP-0, MACE-MPA-0 and OMat24-trained models (Barroso-Luque et al., 2024) by
 validation against the migration-barrier benchmark of Bheemaguli, Xiao and Sai Gautam
 (2025), which identifies MACE-family models as the most accurate foundation MLIPs for
-NEB barriers while confirming that MPtrj-trained models systematically
-\emph{underestimate} barriers through PES softening (Deng et al., 2025).
+NEB barriers. Zero-shot \emph{absolute} barriers nonetheless carry errors of order
+0.1~eV whose sign is system-dependent: PES softening biases many benchmarks low (Deng
+et al., 2025), whereas our own DFT calibration on the CsPbI$_3$ $V_{\mathrm{I}}$ hop
+finds a 1.84$\times$ \emph{overestimate} against PBE at fixed geometry, with the
+saddle position and mechanism exactly reproduced (Section~6). Both observations point
+the same way: zero-shot output seeds paths and identifies mechanisms; it never ranks.
 
 \begin{riskbox}
 \textbf{The central methodological risk --- and its remedy.} Foundation MLIPs are
 trained predominantly on near-equilibrium configurations, whereas saddle points are
 far-from-equilibrium structures lying precisely in the model's extrapolation regime ---
-and softening biases zero-shot barriers systematically low (Deng et al., 2025).
+with absolute errors of order 0.1~eV in a system-dependent direction (measured at
+1.84$\times$ high on this system; Section~6).
 Zero-shot barriers are therefore never ranked: they serve only as \emph{path seeding},
 a role in which foundation-model images outperform conventional interpolation in
 $>$71\% of NEB setups (Bheemaguli et al., 2025). The remedy is a Bayesian
@@ -397,9 +428,12 @@ across the four structural classes of Objective~2; pre-filter by computed dopant
 formation energy to exclude synthetically implausible candidates.
 
 \item \textbf{Phase 1 --- Structure generation} (pymatgen/ASE). Substitutional and
-interstitial injection into $2\times2\times2$ $\gamma$-CsPbI$_3$ supercells;
-symmetry-inequivalent configuration enumeration; generation of iodide-vacancy hop pairs
-binned by dopant--vacancy distance (first shell, second shell, remote bulk reference).
+interstitial injection into FA$_{0.95}$Cs$_{0.05}$PbI$_3$ $2\times2\times5$
+production cells (20 A-sites $\Rightarrow$ one Cs at exactly 5\%; FA orientations
+from thermalised MLIP-MD snapshots) and $\gamma$-CsPbI$_3$ $2\times2\times2$
+pre-screen cells; symmetry-inequivalent configuration enumeration; generation of
+iodide-vacancy hop ensembles binned by dopant--vacancy distance (first shell, second
+shell, remote bulk reference).
 
 \item \textbf{Phase 2 --- MLIP relaxation and CI-NEB farm} (ASE + MACE). Foundation-model
 IDPP-refined seeding of seven images; FIRE optimisation to
@@ -436,11 +470,12 @@ catalogue then yields macroscopic diffusion coefficients from two independent ro
 1--2 & Minimal viable pipeline: undoped $\gamma$-CsPbI$_3$, single $V_{\mathrm{I}}$
 CI-NEB, zero-shot path seeding, DFT convergence and charged-defect correction budget &
 Pipeline runs end-to-end; $E_a$ within literature range \\
-3--4 & Objective 1 anchors: charge-state ordering vs Tyagi et al.; GA$^+$
-$\Delta E_a$; strain--$E_a$ curve under imposed lattice strain & Four anchors
-reproduced \\
-5--7 & Phases 1--2 at scale: full candidate enumeration; MLIP-NEB farm ($\sim$2000
-paths) with first-cycle fine-tuned models & Fine-tuned $\Delta E_a$ pre-screen \\
+3--4 & Objective 1 completion: relaxed charged paths (anchor b); FA-host bring-up
+($\alpha$-FAPbI$_3$ + $2\times2\times5$ cells, orientational-ensemble protocol);
+GA$^+$ natively in FA & Four anchors closed; FA baseline distribution \\
+5--7 & Phases 1--2 at scale in the FA$_{0.95}$Cs$_{0.05}$ host (ensemble protocol);
+CsPbI$_3$ pre-screen funnel; MLIP-NEB farm ($\sim$2000 paths) with first-cycle
+fine-tuned models & Fine-tuned $\Delta E_a$ pre-screen \\
 8--9 & Phase 3: active-learning closure; per-charge-state model validation &
 $|E_a^{\mathrm{MLIP}}-E_a^{\mathrm{DFT}}|<0.05$~eV \\
 10--11 & Phase 4: final ranking, pinning radii in large supercells, mechanism
@@ -460,7 +495,59 @@ top-ranked candidates (Layer 4), MLIP-vs-DFT barrier validation on a held-out pa
 the physics level, the four anchors of Objective 1 --- three experimental, one
 computational. No new-dopant prediction is reported unless all anchors are reproduced.
 
-% ================= 6 RISK =================
+% ================= 6 PRELIMINARY RESULTS =================
+\section{Preliminary Results}
+
+The pipeline of Section~5 is not a plan on paper: it is running. In July 2026 the
+MLIP leg (single RTX 5090) and the DFT leg (32-core Slurm nodes, Quantum ESPRESSO
+7.5) were commissioned, and every result below is version-controlled with raw data
+and one-command reproduction scripts in the project repository.
+
+\begin{enumerate}[leftmargin=1.6em]
+\item \textbf{Regression baseline.} $\gamma$-CsPbI$_3$ (159-atom $2\times2\times2$)
+$V_{\mathrm{I}}$ edge hop: $E_a = 0.259$~eV forward / 0.230~eV reverse (zero-shot
+MACE-MP-0, float64 CI-NEB), reproduced across CPU/GPU platforms and float32/64 to
+$<0.1$~meV, and size-converged ($3\times3\times3$ agrees to 1~meV). This path is the
+permanent cross-platform regression test for every future environment change.
+
+\item \textbf{DFT calibration of the foundation model.} PBE single points on the
+identical NEB geometries give a 141~meV barrier versus MACE's 259~meV --- a
+1.84$\times$ overestimate with the saddle position and mechanism exactly reproduced.
+This quantifies the zero-shot failure mode that Layer 5 anticipates and measures the
+fine-tuning requirement rather than assuming it. The charged-cell DFT machinery also
+runs end-to-end (fixed-geometry $V_{\mathrm{I}}^{+}$ barrier 127~meV vs
+$V_{\mathrm{I}}^{0}$ 141~meV; relaxed charged paths are the immediate next step
+toward the Tyagi-scale separation, which is a structural-relaxation effect).
+
+\item \textbf{Strain anchor reproduced.} Biaxial strain from $-3\%$ to $+3\%$:
+tensile lowers, compressive raises, slope $dE_a/d\varepsilon = -2.25$~eV per unit
+strain ($r=-0.98$), and the strain response is finite-size robust (identical
+$\Delta E_a$ at $2\times2\times2$ and $3\times3\times3$).
+
+\item \textbf{GA$^+$ anchor: sign robust, magnitude ensemble-dependent.} All three
+near-site cation orientations pin ($+70$ to $+278$~meV); a 16~\AA{} far-site control
+gives $\approx 0$ --- the signature of a genuinely local mechanism, with
+N--H$\cdots$I saddle contacts of 2.4--2.7~\AA{} supporting the hydrogen-bond-anchoring
+picture. The magnitude, however, converges in neither orientation (207~meV spread)
+nor cell size ($+70 \to +335$~meV at $3\times3\times3$): the empirical finding that
+forces the ensemble-and-large-cell protocol now built into Objectives 2--3.
+
+\item \textbf{Five-dopant zero-shot screen with mechanism labels.} Every first-shell
+substitutional candidate tested (Sr$^{2+}$, Ca$^{2+}$, Ba$^{2+}$, Bi$^{3+}$ on Pb;
+Br$^-$ on I) \emph{lowers} the barrier --- an honest negative result independently
+consistent with the B-site null result of Arber et al.\ (2025), with saddle-geometry
+fingerprints separating direct edge-contact from remote bond-modulation mechanisms,
+and a first pinning-radius curve (Sr: perturbation radius $\approx 5$~\AA). This
+redirects screening priority toward interstitial and channel-blocking chemistries,
+exactly as Section 2.1(4) anticipated.
+
+\item \textbf{Measured throughput.} $\sim$1500 CI-NEB paths/hour on one GPU (after
+per-image-calculator and batching fixes) and $\approx$33~min per 159-atom DFT single
+point on 32 cores: the Phase-2 farm size and the DFT budget of Section~5 are measured
+quantities, not estimates.
+\end{enumerate}
+
+% ================= 7 RISK =================
 \section{Risk Assessment}
 
 Table~2 ranks the principal risks by severity. Both High-severity risks carry
@@ -498,6 +585,12 @@ Migration-optimal dopant degrades optoelectronic performance & Medium & HSE
 density-of-states benignity gate in Phase 4 (band edges are Pb--I-derived, so A-site
 and interstitial dopants are low-risk a priori); pinning radius minimises the required
 concentration \\
+Composition transferability (CsPbI$_3$ pre-screen $\to$ FA-rich host) & Medium &
+Two-tier funnel with the rank correlation reported as an explicit deliverable;
+anchors re-established per host; GA anchor computed natively in the FA lattice \\
+FA orientational disorder inflates per-dopant cost ($\sim$10--30$\times$) & Medium &
+Ensemble sizes set by the measured orientation spread; 1500 paths/hr farm absorbs
+the multiplier; distributions, not single numbers, are the deliverable \\
 HPC allocation shortfall & Low & MLIP carries $>$95\% of force evaluations; DFT budget
 is bounded and front-loaded \\
 \bottomrule
