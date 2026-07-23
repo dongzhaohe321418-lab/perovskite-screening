@@ -4,87 +4,144 @@
 > building. It does **not** enter any production claim or ranking. Per
 > EXECUTION_GUIDE Part 3, Lane-2 products are inputs to Stage 4 only, after a DFT
 > audit. No barrier, mobility, or dynamics claim is made in this document.
+>
+> **Model type: this is a PERIODIC 5% Cs substitution model** of the
+> FA₀.₉₅Cs₀.₀₅PbI₃ composition — one Cs on the A-site of a 20-formula-unit
+> supercell, repeating through the periodic boundary. It is **not** a random alloy
+> and **not** an SQS (no special-quasirandom-structure optimisation was done). The
+> composition is correct; the Cs sublattice is ordered by construction.
 
-Built 2026-07-23 by `scripts/07_fa_host_cell.py`. Driver produces the parent cell,
-the det=20 supercell enumeration with scoring, and the V_I-carved cell; all
-structures are in this directory.
+Built 2026-07-23 by `scripts/07_fa_host_cell.py`. This document supersedes an
+earlier draft that used a single FA orientation and a length-isotropy cell score;
+both were corrected after structural review (see "Review responses" below).
 
 ## W2-1a — Pseudo-cubic FAPbI₃ parent
 
-12-atom black α/pseudo-cubic parent: Pb at the origin, I at the three Pb–I–Pb
-edge midpoints, one formamidinium cation FA⁺ = [CH(NH₂)₂]⁺ (CH₅N₂, 8 atoms) at the
-A-site body centre, hand-placed and tilted 35° off the mirror plane. Relaxed
-(cell + positions) with zero-shot MACE-MP-0 medium, float64, on CPU.
+12-atom black α/pseudo-cubic parent: Pb at the origin, I at the three Pb–I–Pb edge
+midpoints, one formamidinium cation FA⁺ = [CH(NH₂)₂]⁺ (CH₅N₂, 8 atoms) at the
+A-site body centre. Relaxed (cell + positions) with zero-shot MACE-MP-0 medium,
+float64, CPU.
 
 | quantity | value |
 |---|---|
 | parent formula | CH₅I₃N₂Pb (12 atoms) |
-| relaxed lattice a,b,c (Å) | 6.519, 6.511, 6.509 |
+| relaxed a, b, c (Å) | 6.519, 6.511, 6.509 |
 | relaxed angles (°) | 90.0, 90.0, 88.6 |
-| E relax (eV) | −55.037 → −55.262 (converged, fmax 0.05) |
+| Pb–I coordination (min-image) | 6 (I at 3.25–3.27 Å along ±x, ±y, ±z) |
 | FA integrity | C–N 1.316–1.320 Å, N–H 1.016–1.022 Å (intact) |
-| Pb–I bonds | 3.25–3.27 Å |
 
-The relaxed a ≈ 6.51 Å sits ~2.6% above the experimental α-FAPbI₃ pseudo-cubic
-a ≈ 6.35 Å (Weller et al. 2015) — consistent with MACE-MP-0's known lattice
-over-softening, and acceptable for a structure-seeding parent. FA did not
-dissociate; the PbI₆ framework is intact.
+Relaxed a ≈ 6.51 Å is ~2.6% above experimental α-FAPbI₃ (a ≈ 6.35 Å, Weller 2015),
+consistent with MACE-MP-0 lattice over-softening — acceptable for a seeding parent.
 
-## W2-1b — det=20 supercell enumeration (scored, not defaulted)
+## W2-1b — det=20 supercell: full HNF sweep ranked by defect isolation
 
-Per the guide's explicit instruction **not to default to 2×2×5**, we enumerate
-integer transformation matrices with |det| = 20 and score each by its
-deviation-from-cubic (ASE `find_optimal_cell_shape` / length-deviation metric;
-lower = more isotropic).
+The supercell was **not** chosen by cell-vector-length alone and **not** defaulted
+to 2×2×5. All 1085 index-20 sublattices (Hermite Normal Form) were enumerated and
+scored by the physically correct quantity for a one-defect cell:
 
-| candidate | det | deviation ↓ | transformation matrix P |
+> **d_min = shortest periodic lattice vector = nearest-image distance = Cs–Cs
+> distance = V_I–V_I distance = defect-isolation radius.**
+
+This is what controls vacancy self-interaction; maximising it (while keeping the
+cell isotropic so no single direction is short) is the goal.
+
+| candidate | d_min (Å) | anisotropy | lengths (Å) | angles (°) |
+|---|---|---|---|---|
+| **chosen (optimal-fcc)** | **19.33** | **1.02** | 19.44, 19.65, 19.75 | 63.0, 116.6, 83.7 |
+| best-isolation HNF | 19.43 | 1.78 | 19.6, 35.1, 26.0 | 68, 48, 30 |
+| optimal-sc | 18.41 | 1.05 | 18.4, 19.3, 18.4 | 77, 119, 103 |
+| naive 2×2×5 | 13.02 | 2.50 | 13.0, 13.0, 32.5 | 90, 90, 89 |
+| naive 1×4×5 | 6.52 | 4.99 | 6.5, 26.0, 32.5 | 90, 90, 89 |
+
+Transformation matrix (rows): **P = [[−2, 1, 2], [2, 1, 2], [2, 2, −1]]**.
+
+**Why this cell:** every sublattice with higher d_min than the chosen one (max 19.43
+Å, a 0.5% edge) achieves it only by stretching one axis to ~35 Å (anisotropy
+1.7–3.2) — a short remaining axis that is exactly the vacancy-image-interaction
+problem to avoid. The chosen fcc cell has all three vectors 19.4–19.8 Å (anisotropy
+1.02) with essentially tied isolation (**Cs–Cs / V_I–V_I = 19.33 Å**). The skewed
+angles (63/117/84°) are intrinsic to an fcc-type sublattice of a cubic parent and
+are harmless — d_min, not the angles, sets the defect self-interaction.
+
+## W2-1c — FA orientation ensemble (dipole-order control)
+
+A single FA orientation imposes an artificial dipole order. We therefore build an
+ensemble: FA in each of the 20 A-sites is rotated by an **independent uniform-random
+rotation** (Shoemake quaternion) about its own C, and each config is relaxed
+(positions, fixed cell). Result over n = 8 configs:
+
+| config | E (eV) | ΔE above min (meV) | all Pb 6-fold | FA intact |
+|---|---|---|---|---|
+| as-built (ordered) | −1064.33 | **1208** | ✓ | ✓ |
+| 7 random orientations | −1064.7 … −1065.5 | 0 … 780 | ✓ | ✓ |
+
+**Ensemble energy spread ≈ 1208 meV.** The as-built ordered orientation is the
+*highest-energy* configuration — direct confirmation that a single ordered
+orientation is unacceptable. The lowest-energy config (seed 2) is carried forward as
+the production pristine cell. All 8 configs relaxed with every Pb 6-fold coordinated
+and every FA intact (no dissociation).
+
+*Caveat:* this is a static-relaxation ensemble of random initial orientations, not
+a thermally decorrelated MD ensemble. The MD ensemble (W2-2) needs the GPU and is
+deferred. What this establishes now: (i) the framework is robust across orientations
+(Pb₆, FA intact everywhere), and (ii) orientation is energetically first-order, so
+the Stage-4 migration matrix must sample it, not fix it.
+
+## W2-1d — Production cells
+
+| cell | formula | atoms | notes |
 |---|---|---|---|
-| **optimal_fcc (chosen)** | 20 | **0.0232** | [[−2, 1, 2], [2, 1, 2], [2, 2, −1]] |
-| optimal_sc | 20 | 0.1107 | [[2, 0, −2], [−2, 2, −1], [0, 2, 2]] |
-| naive 2×2×5 | 20 | 0.9196 | diag(2, 2, 5) |
-| naive 1×4×5 | 20 | 1.1532 | diag(1, 4, 5) |
+| pristine | C₁₉H₉₅CsI₆₀N₃₈Pb₂₀ | 233 | lowest-E orientation; all 20 Pb 6-fold |
+| V_I carved | C₁₉H₉₅CsI₅₉N₃₈Pb₂₀ = **FA₁₉CsPb₂₀I₅₉** | **232** | one I removed; exactly 2 Pb become 5-fold (flanking V_I) |
 
-The chosen fcc-target transform is **~40× more isotropic** than the naive 2×2×5
-slab (0.023 vs 0.92). Its cell-vector lengths are nearly equal (19.4/19.6/19.8 Å),
-which minimises the periodic self-interaction of a point defect — the property
-that matters for a migration-barrier supercell — at the cost of skewed cell
-angles (an expected feature of a non-diagonal supercell, not a defect).
+`x_Cs = 1/20 = 5%`. Element-count asserts enforced in the driver and passing.
 
-## W2-1c — Target composition FA₁₉Cs₁Pb₂₀I₆₀ + vacancy
+![FA host structures: corner-sharing PbI6 framework (left), production 233-atom cell (centre), FA orientation ensemble energies (right)]({{artifact:art_cf7fb785-e29d-4dc7-99fa-717dd66edf3d}})
 
-From the chosen supercell (20 formula units), one A-site FA is replaced by Cs
-(the FA whose C is nearest the cell centre — a reproducible pick), giving 5% Cs:
+## DFT follow-ups required before this cell enters a formal calculation
 
-| cell | formula | atoms | asserts |
-|---|---|---|---|
-| pristine | C₁₉H₉₅CsI₆₀N₃₈Pb₂₀ | 233 | 20 Pb, 60 I, 1 Cs, 19 FA (C₁₉N₃₈H₉₅) ✓ |
-| V_I carved | (−1 I nearest centre) | 232 | one iodide removed ✓ |
-
-`x_Cs = 1/20 = 5%`, matching the FA₀.₉₅Cs₀.₀₅PbI₃ target. All element-count
-asserts are enforced in the driver and pass.
-
-![FA host structures: relaxed pseudo-cubic parent (left) and the 233-atom det=20 FA19Cs1Pb20I60 supercell (right)]({{artifact:art_cf7fb785-e29d-4dc7-99fa-717dd66edf3d}})
+1. **Vacancy charge state** — decide q = 0 vs q = +1 (and the neutral-background
+   handling) explicitly, as for γ-CsPbI₃. Neutral FA₁₉CsPb₂₀I₅₉ has an odd/even
+   electron count to be checked (spin scan, as in Stage 1.1).
+2. **Compensating background + finite-size (FNV) correction** for the charged cell.
+   d_min = 19.3 Å is large but the FNV term must still be quantified.
+3. **NEB endpoint discipline** — the two migration endpoints MUST share the
+   identical cell and identical atom ordering (the γ driver enforces this; the FA
+   driver inherits `make_endpoints`).
+4. **Cell vs fixed-lattice** — current relaxation is **fixed-lattice
+   (positions-only)**, matching the DFT protocol (fixed cell, ionic relaxation). A
+   `--relax-cell` flag exists for a zero-pressure model if that is preferred; the
+   choice (model zero pressure vs fixed experimental lattice) should be fixed
+   project-wide before Stage 4.
 
 ## Files
 
-- `fa_parent_relaxed.extxyz` — MACE-relaxed 12-atom pseudo-cubic parent
-- `fa19cs1_pb20i60_233.extxyz` — pristine 233-atom det=20 supercell
-- `fa19cs1_pb20i60_232_vI.extxyz` — V_I-carved 232-atom cell
-- `fa_host_build.json` — full build record (candidates, scores, matrices, asserts)
-- `fa_host_structures.png` — parent + supercell render
+- `fa_parent_relaxed.extxyz` / `.cif`, `fa_parent_2x2x2.cif` — MACE-relaxed parent
+- `fa19cs1_pb20i60_233.extxyz` / `.cif` — production pristine cell (lowest-E orientation)
+- `fa19cspb20i59_232_vI.extxyz` / `.cif` — V_I cell, FA₁₉CsPb₂₀I₅₉ (232 atoms)
+- `fa_ensemble_00..07.extxyz` — the 8 relaxed orientation configs
+- `fa_host_build.json` — full record (HNF table, d_min, ensemble, asserts, coordination)
+- `fa_host_structures.png` — 3-panel figure
+
+## Review responses (2026-07-23)
+
+All six review points were addressed:
+1. **Not a random alloy/SQS** → relabelled "periodic 5% Cs substitution model".
+2. **det=20 shape** → full HNF sweep + d_min metric; matrix, lengths, angles, and
+   Cs–Cs distance (19.33 Å) reported above.
+3. **Periodic Pb coordination** → min-image check, all 20 Pb 6-fold (2 → 5-fold on
+   vacancy carve, as expected).
+4. **FA orientation** → 8-config random-orientation ensemble; 1208 meV spread;
+   lowest-E config used; orientation shown to be first-order.
+5. **Relaxation** → parent and all supercell configs relaxed (fixed lattice;
+   `--relax-cell` available).
+6. **Vacancy composition** → corrected to FA₁₉CsPb₂₀I₅₉ (232 atoms); charge-state /
+   background / FNV / NEB-endpoint requirements listed above.
 
 ## Deferred (GPU-gated — pending 5090 availability)
 
-The RTX 5090 (AutoDL) is unavailable (multiple-demand contention). The two
-GPU-dependent Lane-2 sub-tasks are **not started** and are explicitly pending:
-
-- **W2-2 FA orientation ensemble** — 2×2×2 (96-atom) pure-FA MLIP-MD at 300 K NVT,
-  20–50 ps, frame extraction + quench → ≥8 decorrelated orientation configs with
-  structure checks. Needs GPU (MD throughput).
-- **W2-3 zero-shot FA baseline distribution** — one V_I octahedron-edge CI-NEB per
-  orientation config → the Eₐ distribution (N, mean, std, range) that sizes the
-  Stage 4/5 sampling budget. Needs the W2-2 ensemble.
-
-When the 5090 returns: `ssh autodl nvidia-smi` to re-confirm the GPU, rsync the
-repo, and run these on GPU. Until then the parent + supercell here are the
-GPU-free deliverable.
+- **W2-2 FA orientation ensemble via MD** — 300 K NVT, 20–50 ps, decorrelated frame
+  extraction + quench → ≥8 thermally-decorrelated configs. (The static ensemble
+  here is the GPU-free stand-in.)
+- **W2-3 zero-shot FA baseline Eₐ distribution** — one V_I octahedron-edge CI-NEB
+  per config → the Eₐ distribution that sizes the Stage 4/5 sampling budget.

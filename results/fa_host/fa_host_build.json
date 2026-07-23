@@ -1,17 +1,11 @@
 {
   "tag": "EXPLORATORY / QUARANTINED \u2014 Lane 2 W2-1",
-  "note": "zero-shot MACE; structures only, no barrier/dynamics claims",
+  "note": "zero-shot MACE; structures only, no barrier/dynamics claims. The Cs cell is a PERIODIC 5% Cs substitution model, NOT a random alloy or SQS \u2014 one Cs repeats through the periodic boundary.",
   "a_pseudocubic_guess_A": 6.35,
+  "model_label": "periodic 5% Cs substitution model (FA0.95Cs0.05PbI3 composition)",
   "parent_formula": "CH5I3N2Pb",
   "parent_natoms": 12,
-  "parent_elements": {
-    "Pb": 1,
-    "I": 3,
-    "C": 1,
-    "H": 5,
-    "N": 2
-  },
-  "relax": {
+  "parent_relax": {
     "E_initial_eV": -55.037479232029966,
     "E_relaxed_eV": -55.26169193960946,
     "converged": true,
@@ -27,9 +21,9 @@
     90.0,
     88.60532445292415
   ],
-  "det20_candidates": [
+  "det20_table": [
     {
-      "label": "optimal_fcc",
+      "label": "chosen",
       "P": [
         [
           -2,
@@ -48,8 +42,51 @@
         ]
       ],
       "det": 20,
-      "target_shape": "fcc",
-      "deviation": 0.023188252495889537
+      "lengths_A": [
+        19.435,
+        19.646,
+        19.753
+      ],
+      "angles_deg": [
+        62.99,
+        116.62,
+        83.7
+      ],
+      "aniso": 1.016,
+      "d_min_A": 19.33
+    },
+    {
+      "label": "best_isolation",
+      "P": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          5,
+          2
+        ],
+        [
+          0,
+          0,
+          4
+        ]
+      ],
+      "det": 20,
+      "lengths_A": [
+        19.638,
+        35.06,
+        26.036
+      ],
+      "angles_deg": [
+        68.2,
+        48.48,
+        29.62
+      ],
+      "aniso": 1.785,
+      "d_min_A": 19.435
     },
     {
       "label": "optimal_sc",
@@ -71,8 +108,18 @@
         ]
       ],
       "det": 20,
-      "target_shape": "sc",
-      "deviation": 0.11074351864031957
+      "lengths_A": [
+        18.424,
+        19.33,
+        18.413
+      ],
+      "angles_deg": [
+        76.9,
+        119.17,
+        103.17
+      ],
+      "aniso": 1.05,
+      "d_min_A": 18.413
     },
     {
       "label": "naive_2x2x5",
@@ -94,8 +141,18 @@
         ]
       ],
       "det": 20,
-      "target_shape": "sc",
-      "deviation": 0.9196151154361689
+      "lengths_A": [
+        13.038,
+        13.021,
+        32.545
+      ],
+      "angles_deg": [
+        90.0,
+        90.0,
+        88.61
+      ],
+      "aniso": 2.499,
+      "d_min_A": 13.021
     },
     {
       "label": "naive_1x4x5",
@@ -117,12 +174,22 @@
         ]
       ],
       "det": 20,
-      "target_shape": "sc",
-      "deviation": 1.1532075646529378
+      "lengths_A": [
+        6.519,
+        26.043,
+        32.545
+      ],
+      "angles_deg": [
+        90.0,
+        90.0,
+        88.61
+      ],
+      "aniso": 4.992,
+      "d_min_A": 6.519
     }
   ],
   "det20_chosen": {
-    "label": "optimal_fcc",
+    "label": "chosen",
     "P": [
       [
         -2,
@@ -141,8 +208,18 @@
       ]
     ],
     "det": 20,
-    "target_shape": "fcc",
-    "deviation": 0.023188252495889537
+    "lengths_A": [
+      19.435,
+      19.646,
+      19.753
+    ],
+    "angles_deg": [
+      62.99,
+      116.62,
+      83.7
+    ],
+    "aniso": 1.016,
+    "d_min_A": 19.33
   },
   "supercell_P": [
     [
@@ -171,6 +248,128 @@
     "N": 38,
     "Cs": 1
   },
+  "supercell_lengths_A": [
+    19.435,
+    19.646,
+    19.753
+  ],
+  "supercell_angles_deg": [
+    62.99,
+    116.62,
+    83.7
+  ],
+  "cs_cs_min_distance_A": 19.33,
+  "fa_ensemble": [
+    {
+      "seed": 0,
+      "orientation": "as_built",
+      "E_relaxed_eV": -1064.324905511833,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 1208.073727980718
+    },
+    {
+      "seed": 1,
+      "orientation": "random_1",
+      "E_relaxed_eV": -1065.2433585370698,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 289.6207027440596
+    },
+    {
+      "seed": 2,
+      "orientation": "random_2",
+      "E_relaxed_eV": -1065.5329792398138,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 0.0
+    },
+    {
+      "seed": 3,
+      "orientation": "random_3",
+      "E_relaxed_eV": -1064.7493796182484,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 783.5996215653722
+    },
+    {
+      "seed": 4,
+      "orientation": "random_4",
+      "E_relaxed_eV": -1065.0714100590017,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 461.56918081214826
+    },
+    {
+      "seed": 5,
+      "orientation": "random_5",
+      "E_relaxed_eV": -1065.3371672330038,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 195.81200681000155
+    },
+    {
+      "seed": 6,
+      "orientation": "random_6",
+      "E_relaxed_eV": -1065.0406727650516,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 492.30647476224476
+    },
+    {
+      "seed": 7,
+      "orientation": "random_7",
+      "E_relaxed_eV": -1065.227228973329,
+      "converged": true,
+      "pb_all_6fold": true,
+      "pb_cn_min": 6,
+      "pb_cn_max": 6,
+      "fa_intact": true,
+      "dE_above_min_meV": 305.75026648489256
+    }
+  ],
+  "fa_ensemble_summary": {
+    "n": 8,
+    "E_spread_meV": 1208.073727980718,
+    "E_min_eV": -1065.5329792398138,
+    "lowest_seed": 2,
+    "all_pb_6fold": true,
+    "all_fa_intact": true
+  },
+  "vacancy_cell_formula": "C19H95CsI59N38Pb20",
   "vacancy_cell_natoms": 232,
-  "vacancy_removed_I_index": 127
+  "vacancy_removed_I_index": 127,
+  "vacancy_elements": {
+    "Pb": 20,
+    "I": 59,
+    "C": 19,
+    "H": 95,
+    "N": 38,
+    "Cs": 1
+  },
+  "production_pb_coordination": {
+    "6": 20
+  },
+  "production_all_pb_6fold": true
 }
