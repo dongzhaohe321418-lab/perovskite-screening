@@ -1,0 +1,40 @@
+{
+  "description": "gamma-CsPbI3 2x2x2 V_I fixed-path (MACE-relaxed CI-NEB band) DFT single-point profile",
+  "method": "QE 7.5 PBE, US pslibrary-1.0.0 scalar-rel, ecutwfc 50 / ecutrho 400 Ry, Gamma, gauss 0.01 Ry",
+  "treatment": "non-spin (nspin=1) for the 7-point profile; spin scan (nspin=2) done separately at img0/img3",
+  "n_images": 7,
+  "profile_q0_meV": {
+    "0": 0.0,
+    "1": -25.0,
+    "2": 91.8,
+    "3": 140.6,
+    "4": 60.8,
+    "5": -37.7,
+    "6": -29.7
+  },
+  "profile_q1_meV": {
+    "0": 0.0,
+    "1": -30.5,
+    "2": 75.0,
+    "3": 126.6,
+    "4": 63.8,
+    "5": -11.0,
+    "6": 1.6
+  },
+  "saddle_image": {
+    "q0": 3,
+    "q1": 3
+  },
+  "barrier_from_img0_meV": {
+    "q0": 140.6,
+    "q1": 126.6
+  },
+  "barrier_from_global_min_meV": {
+    "q0": 178.4,
+    "q1": 157.1
+  },
+  "spin_effect_q0_meV": 12.3,
+  "spin_barrier_q0_meV": 152.9,
+  "d3_barrier_shift_meV": 25.328699859350934,
+  "notes": "imgs 1,5,6 sit below img0; the NEB endpoints (0,6) are metastable but not the deepest points on the MACE path. img3 is the saddle (highest point) for BOTH charge states \u2014 confirms the benchmark barrier was not missing a hidden maximum."
+}

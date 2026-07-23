@@ -1,0 +1,120 @@
+{
+  "indir": "hpc/673e904d-e08f-4775-afa3-70c5cecc44cd",
+  "n_files": 6,
+  "runs": [
+    {
+      "file": "img1_q0.out",
+      "image": 1,
+      "charge": 0,
+      "case": "A",
+      "energy_Ry": -9244.91079489,
+      "energy_eV": -125783.41922472787,
+      "nelec": 1401.0,
+      "scf_iterations": 11,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.579512324938671,
+      "wall_s": 40.68,
+      "converged": true
+    },
+    {
+      "file": "img1_q1.out",
+      "image": 1,
+      "charge": 1,
+      "case": "A",
+      "energy_Ry": -9245.22097413,
+      "energy_eV": -125787.63942828041,
+      "nelec": 1400.0,
+      "scf_iterations": 10,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.579512324938671,
+      "wall_s": 6.25,
+      "converged": true
+    },
+    {
+      "file": "img5_q0.out",
+      "image": 5,
+      "charge": 0,
+      "case": "A",
+      "energy_Ry": -9244.91172862,
+      "energy_eV": -125783.4319287717,
+      "nelec": 1401.0,
+      "scf_iterations": 11,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.7244561409778605,
+      "wall_s": 33.92,
+      "converged": true
+    },
+    {
+      "file": "img5_q1.out",
+      "image": 5,
+      "charge": 1,
+      "case": "A",
+      "energy_Ry": -9245.21953901,
+      "energy_eV": -125787.61990247812,
+      "nelec": 1400.0,
+      "scf_iterations": 10,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.7244561409778605,
+      "wall_s": 12.73,
+      "converged": true
+    },
+    {
+      "file": "img6_q0.out",
+      "image": 6,
+      "charge": 0,
+      "case": "A",
+      "energy_Ry": -9244.91113492,
+      "energy_eV": -125783.42385107168,
+      "nelec": 1401.0,
+      "scf_iterations": 11,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.598181201909095,
+      "wall_s": 37.6,
+      "converged": true
+    },
+    {
+      "file": "img6_q1.out",
+      "image": 6,
+      "charge": 1,
+      "case": "A",
+      "energy_Ry": -9245.21860983,
+      "energy_eV": -125787.60726034018,
+      "nelec": 1400.0,
+      "scf_iterations": 10,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.598181201909095,
+      "wall_s": 8.12,
+      "converged": true
+    }
+  ],
+  "profiles": {
+    "q0_A": {
+      "error": "no image 0 reference",
+      "images": [
+        1,
+        5,
+        6
+      ]
+    },
+    "q1_A": {
+      "error": "no image 0 reference",
+      "images": [
+        1,
+        5,
+        6
+      ]
+    }
+  }
+}

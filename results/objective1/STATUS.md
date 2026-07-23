@@ -24,7 +24,8 @@ order-of-magnitude separation — that requires *relaxed* charged geometries
 | a-zs | 2026-07-22 | `anchors.json:regression` | local CPU / γ-P1 / 2×2×2 (159 at) | MACE-MP-0 medium zero-shot, float64, charge-agnostic | MACE-relaxed CI-NEB | E_a = **0.259 eV** fwd / 0.230 eV bwd; saddle img3 | ✅ pipeline sanity (in 0.1–0.6 eV band) |
 | a-dft | 2026-07-23 | `dft_benchmark.json:anchor_a` | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, US psl-1.0.0, Γ, ecut 50/400, non-spin | fixed-path single-point (MACE geom) | DFT **140.6 meV** vs MACE 259.0 meV (**1.84×**); both saddle img3 | ✅ fixed-geometry complete |
 | b-fix | 2026-07-23 | `dft_benchmark.json:anchor_b` | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, q=0 (1401 e⁻) vs q=+1 (1400 e⁻), non-spin | fixed-path single-point (same neutral geom) | V_I⁰ **140.6** / V_I⁺ **126.6 meV** (ratio 0.90) | ⚠️ FIXED-GEOMETRY COMPLETE / RELAXED PENDING |
-| b-spin | 2026-07-23 | job `b520e71a` (spin_scan; 2 nodes/64 ranks) | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, q=0 nspin 1/2, tot_mag=1, localized-Pb | fixed-path single-point | *in progress* — 3/8 SCFs done (q0 A/B) | 🔄 running |
+| b-spin | 2026-07-23 | job `b520e71a` (spin_scan; 2 nodes/64 ranks) | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, q=0 nspin 1/2, tot_mag=1, localized-Pb | fixed-path single-point | V_I⁰ non-spin **140.6** → spin **152.9 meV** (+12.3, borderline); B≡C (no polaron); q+1 mag→0 unchanged | ✅ spin scan complete |
+| b-prof | 2026-07-23 | job `673e904d` (all-images; 2 nodes) | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, imgs 1/5/6 both q, non-spin | fixed-path single-point | full 7-image profile; **img3 is the saddle for both q** (not a hidden max) | ✅ Stage 1.3 profile complete |
 | c-GA | 2026-07-22 | `anchors_summary.json:anchor_c` | local CPU / γ-P1 / 2×2×2 (168 at) | MACE-MP-0 zero-shot, GA⁺ for Cs, 3 orient × near/far | MACE-relaxed CI-NEB | near +70/+278/+182 meV (spread 207); far −23 meV | ✅ sign robust / magnitude NOT converged |
 | d-strain | 2026-07-22 | `anchors_summary.json:anchor_d` | local CPU / γ-P1 / 2×2×2 | MACE-MP-0 zero-shot, biaxial + isotropic strain | MACE-relaxed CI-NEB per strain | biaxial dE_a/dε = **−2.25 eV/strain** (r=−0.98) | ✅ trend reproduced (biaxial); iso branch unresolved |
 | fs | 2026-07-22 | `finite_size.json` | local CPU / γ-P1 / 3×3×3 (540 at) | MACE-MP-0 zero-shot vs 2×2×2 | MACE-relaxed CI-NEB | undoped 0.259→0.258 eV; strain −41=−41; GA +70→+335 | ✅ undoped+strain size-converged; GA not |
@@ -51,22 +52,26 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
 - **Next step:** relaxed charged endpoints + charged NEB (Stage 2), after Stage 1 locks the theory level.
 - **Actual cost:** shared with a-dft (8-SCF matrix).
 
-### b-spin — Stage 1.1 odd-electron spin scan (running)
+### b-spin — Stage 1.1 odd-electron spin scan (COMPLETE) + Stage 1.3 full profile (COMPLETE)
 - **Reproduction gate PASSED (2026-07-23, job b520e71a, 2 nodes/64 ranks):** the
   regenerated inputs reproduce the archived benchmark to ~6 significant decimals —
   img0_q0_A = −9244.90895455 Ry (archived −9244.9089544; Δ ≈ 1.5×10⁻⁷ Ry), img3_q0_A =
   −9244.89861800 Ry (archived −9244.89861758; Δ ≈ 4.2×10⁻⁷ Ry) → **barrier 140.6 meV**
-  (matches the archived 140.6 meV to <0.1 meV). Δ is at the SCF-convergence /
-  I/O-rounding floor, i.e. physically identical, not bit-identical. Confirms the QE
-  generator (`scripts/05`) and that the 64-rank run reproduces the 32-rank energy at
-  this precision.
-- **Limits:** spin cases (B/C) in progress. If nspin=2 differs from non-spin by
-  >10–20 meV, the 141 meV value is downgraded to "preliminary non-spin fixed-path value."
-- **Allowed claim:** "the fixed-path benchmark is reproducible from the repo to <1 meV."
-- **Next step:** parse magnetization + defect-state occupation of Cases B/C; decide
-  production spin setting for Stage 2.
-- **Actual cost:** non-spin SCF ~26 min, spin SCF ~65 min WALL; 8-SCF scan ≈ 6–8 h ×
-  2 nodes ≈ 0.5–0.7 node-days (~¥100–130 at ¥16.48/node-hr), within the ≤¥400 Stage-1 cap.
+  (matches the archived 140.6 meV to <0.1 meV). Confirms the QE generator (`scripts/05`)
+  and that the 64-rank run reproduces the 32-rank energy at this precision.
+- **Spin result (8/8 SCFs):** spin RAISES the q=0 barrier by **+12.3 meV** (140.6 →
+  **152.9 meV**, mag 1.0 μB) — in the 10–20 meV BORDERLINE band. Case B ≡ Case C
+  (localized guess relaxes to same solution, Δ<0.01 meV) → **no distinct localized
+  polaron at PBE**. q=+1 is closed-shell (mag→0), barrier unchanged at **126.6 meV**.
+- **Full 7-image profile (Stage 1.3, job 673e904d):** all 7 images evaluated for both
+  charge states; **image 3 is the saddle (highest point) for both** — the benchmark
+  barrier was not missing a hidden maximum. See `dft/fixed_path/FIXED_PATH_BENCHMARK.md`.
+- **Allowed claim:** "the fixed-path benchmark reproduces from the repo to <0.1 meV;
+  image 3 is the fixed-path saddle; the q=0 barrier is spin-sensitive (141 non-spin /
+  153 spin)." NOT allowed: "DFT found the true saddle" (fixed MACE path, not DFT-relaxed).
+- **Production spin setting:** nspin=2 for q=0 (odd e⁻); nspin=1 acceptable for q=+1.
+- **Actual cost:** spin scan (8 SCFs) ~7.5 h + all-images (6 SCFs) ~2.5 h, both on
+  2 nodes ≈ **0.83 node-days total (~¥165)**, within the ≤¥400 Stage-1 cap.
 
 ### d3 — D3(BJ) dispersion correction (Stage 1.2, COMPLETE)
 - **Result:** D3(BJ) computed from geometry alone (charge-independent) raises the
