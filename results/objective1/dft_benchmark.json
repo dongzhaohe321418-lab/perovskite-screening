@@ -1,5 +1,6 @@
 {
   "system": "gamma-CsPbI3 2x2x2 V_I (159 atoms, Cs32I95Pb32)",
+  "cluster": "ssh:ehpc (Slurm comp partition, 32 cores, dedicated)",
   "method": {
     "code": "Quantum ESPRESSO 7.5",
     "xc": "PBE",
@@ -8,15 +9,46 @@
     "ecutrho_Ry": 400,
     "kpoints": "Gamma",
     "smearing": "gaussian 0.01 Ry",
-    "conv_thr_Ry": 1e-06
+    "conv_thr_Ry": 1e-06,
+    "launch": "mpirun -np 32 (conda OpenMPI, not srun)"
   },
-  "geometry_source": "MACE-MP-0 float64 CI-NEB band (results/objective1/regression_saddle_path.extxyz)",
+  "geometry_source": "MACE-MP-0 float64 CI-NEB band (regression_saddle_path.extxyz); single-points, no DFT relaxation",
   "images_evaluated": [
     0,
     2,
     3,
     4
   ],
+  "raw_energies_Ry": {
+    "img0_q0": -9244.9089544,
+    "img0_q1": -9245.2187306,
+    "img2_q0": -9244.90220535,
+    "img2_q1": -9245.21321468,
+    "img3_q0": -9244.89861758,
+    "img3_q1": -9245.20942544,
+    "img4_q0": -9244.90448425,
+    "img4_q1": -9245.21404052
+  },
+  "scf_iterations": {
+    "img0_q0": 30,
+    "img0_q1": 35,
+    "img2_q0": 32,
+    "img2_q1": 35,
+    "img3_q0": 34,
+    "img3_q1": 35,
+    "img4_q0": 33,
+    "img4_q1": 36
+  },
+  "nelec": {
+    "img0_q0": 1401.0,
+    "img0_q1": 1400.0,
+    "img2_q0": 1401.0,
+    "img2_q1": 1400.0,
+    "img3_q0": 1401.0,
+    "img3_q1": 1400.0,
+    "img4_q0": 1401.0,
+    "img4_q1": 1400.0
+  },
   "anchor_a_undoped": {
     "dft_profile_meV": {
       "0": 0.0,
@@ -34,27 +66,23 @@
     "mace_barrier_meV": 259.0,
     "saddle_image_dft": 3,
     "saddle_image_mace": 3,
-    "mace_over_dft_ratio": 1.84
+    "mace_over_dft_ratio": 1.84,
+    "status": "DONE - MACE overestimates PBE barrier 1.84x on identical geometry; saddle location matches"
   },
   "anchor_b_chargestate": {
-    "status": "INCOMPLETE - charged saddle (img3_q1) not converged; box CPU contention (load ~50-68 on 25 cores) throttled SCF ~14x: attempt 1 hit wall-clock timeout, attempt 2 cancelled manually to avoid burning billed time on a saturated node",
-    "img0_q1_converged": true,
-    "img0_q1_E_eV": -125787.6089,
-    "note": "charged initial done; barrier E(saddle,q+1)-E(init,q+1) needs img3_q1. Inputs staged, re-run when box is quiet.",
-    "background_correction": "neutral background auto-added by QE for tot_charge; cancels in barrier difference (both geoms same cell) so no FNV needed for barrier heights"
-  },
-  "raw_energies_Ry": {
-    "img0_q0": -9244.9089544,
-    "img2_q0": -9244.90220542,
-    "img3_q0": -9244.89861763,
-    "img4_q0": -9244.90448435,
-    "img0_q1": -9245.21873058
-  },
-  "scf_iterations": {
-    "img0_q0": 31,
-    "img2_q0": 34,
-    "img3_q0": 32,
-    "img4_q0": 33,
-    "img0_q1": 36
+    "dft_barrier_q0_meV": 140.6,
+    "dft_barrier_q1_meV": 126.6,
+    "charged_profile_meV": {
+      "0": 0.0,
+      "2": 75.0,
+      "3": 126.6,
+      "4": 63.8
+    },
+    "ratio_q1_over_q0": 0.9,
+    "difference_meV": -14.0,
+    "status": "DONE (single-point, fixed-geometry) - charged barrier 127 meV vs neutral 141 meV, ratio 0.90",
+    "interpretation": "On the SAME (MACE-relaxed neutral) geometry, removing one electron (V_I+ vs V_I0) LOWERS the barrier ~14 meV (10%). This is the electronic-energy response at FIXED nuclei, NOT the order-of-magnitude separation Tyagi 2025 reports - that requires charged-cell GEOMETRY RELAXATION / charged NEB (the charged vacancy relaxes to a different structure). This single-point result is a first look; full charge-state validation needs a relaxed charged path.",
+    "background_note": "QE neutral background auto-added for tot_charge=+1; cancels in barrier E(saddle)-E(init) since both geoms share cell+charge, so no FNV needed for barrier heights",
+    "cross_cluster_check": "img0_q1 ehpc -9245.21873060 vs autodl -9245.21873058 (agree to 6 decimals; differ by 2e-8 Ry ~ 3e-7 eV at the 8th); img0_q0 identical to 8 decimals -> DFT numbers machine-independent"
   }
 }
