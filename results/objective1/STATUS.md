@@ -52,10 +52,29 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
 - **Actual cost:** shared with a-dft (8-SCF matrix).
 
 ### b-spin — Stage 1.1 odd-electron spin scan (running)
-- **Limits:** in progress. If nspin=2 (Case B/C) differs from non-spin (Case A) by >10–20 meV, the 141 meV value is downgraded to "preliminary non-spin fixed-path value."
-- **Allowed claim:** none yet (running).
-- **Next step:** parse magnetization + defect-state occupation; decide production spin setting for Stage 2.
-- **Actual cost:** budgeted ≤2 node-days for all of Stage 1 (≤¥400).
+- **Reproduction gate PASSED (2026-07-23, job b520e71a, 2 nodes/64 ranks):** the
+  regenerated inputs reproduce the archived benchmark bit-for-bit —
+  img0_q0_A = −9244.90895455 Ry (archived −9244.9089544), img3_q0_A =
+  −9244.89861800 Ry (archived −9244.89861758) → **barrier 140.6 meV** exact.
+  Confirms both the QE generator (`scripts/05`) and that 64-rank = 32-rank energy.
+- **Limits:** spin cases (B/C) in progress. If nspin=2 differs from non-spin by
+  >10–20 meV, the 141 meV value is downgraded to "preliminary non-spin fixed-path value."
+- **Allowed claim:** "the fixed-path benchmark is reproducible from the repo to <1 meV."
+- **Next step:** parse magnetization + defect-state occupation of Cases B/C; decide
+  production spin setting for Stage 2.
+- **Actual cost:** ~40 min/SCF × 2 nodes; 8-SCF scan ≈ 2 node-days-equivalent, within the ≤¥400 Stage-1 cap.
+
+### d3 — D3(BJ) dispersion correction (Stage 1.2, COMPLETE)
+- **Result:** D3(BJ) computed from geometry alone (charge-independent) raises the
+  fixed-path barrier by **+25.3 meV**: PBE+D3 = **165.9 meV** (q=0) / **151.9 meV**
+  (q=+1). File `dft/fixed_path/d3_check.json`.
+- **Limits:** additive dispersion term on the fixed MACE path (not a self-consistent
+  PBE+D3 relaxation). ~18% of the barrier — well above noise.
+- **Allowed claim:** "D3 is a non-negligible (+25 meV) contribution; project-wide
+  functional locked to **PBE+D3** for γ-CsPbI₃ and FA host (per EXECUTION_GUIDE 1.2)."
+- **SOC:** deferred — pseudopotentials are scalar-relativistic (pslibrary US
+  scalar-rel); full-relativistic SOC single-points require a separate PP set and are
+  recorded here as **SOC DEFERRED** (reason: scalar-rel PP; SOC is a Stage-2+ refinement).
 
 ### c-GA — guanidinium A-site pinning
 - **Limits:** magnitude NOT converged — configuration-dependent (207 meV spread across 3 orientations) AND size-dependent (+70 meV at 2×2×2 → +335 meV at 3×3×3). n=1 per orientation; H-bond-stiffening mechanism inferred from N–H···I contacts (2.4–2.7 Å), not proven. GA⁺ is a stoichiometric label (MACE charge-agnostic).
