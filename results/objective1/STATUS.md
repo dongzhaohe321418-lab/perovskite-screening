@@ -70,8 +70,10 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
   image 3 is the fixed-path saddle; the q=0 barrier is spin-sensitive (141 non-spin /
   153 spin)." NOT allowed: "DFT found the true saddle" (fixed MACE path, not DFT-relaxed).
 - **Production spin setting:** nspin=2 for q=0 (odd e⁻); nspin=1 acceptable for q=+1.
-- **Actual cost:** spin scan (8 SCFs) ~7.5 h + all-images (6 SCFs) ~2.5 h, both on
-  2 nodes ≈ **0.83 node-days total (~¥165)**, within the ≤¥400 Stage-1 cap.
+- **Actual cost (measured PWSCF wall):** spin scan 8 SCFs = 7.52 h wall; all-images
+  6 SCFs = 2.49 h wall → **10.0 h wall × 2 nodes = 20 node-hours = 0.83 node-days**.
+  At the ¥16.48/hr E-HPC 2-node allocation rate that is **~¥165**, within the ≤¥400
+  Stage-1 cap. (Per-SCF: non-spin ~25 min, spin ~55–93 min.)
 
 ### d3 — D3(BJ) dispersion correction (Stage 1.2, COMPLETE)
 - **Result:** D3(BJ) computed from geometry alone (charge-independent) raises the
