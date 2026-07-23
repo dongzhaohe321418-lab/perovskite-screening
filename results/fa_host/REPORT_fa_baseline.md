@@ -30,8 +30,11 @@ float64, CPU.
 | Pb–I coordination (min-image) | 6 (I at 3.25–3.27 Å along ±x, ±y, ±z) |
 | FA integrity | C–N 1.316–1.320 Å, N–H 1.016–1.022 Å (intact) |
 
-Relaxed a ≈ 6.51 Å is ~2.6% above experimental α-FAPbI₃ (a ≈ 6.35 Å, Weller 2015),
+Relaxed a ≈ 6.51 Å is ~2.4% above the experimental cubic α-FAPbI₃ lattice constant
+(a ≈ 6.36 Å; the Pm-3m room-temperature value widely reported in the literature),
 consistent with MACE-MP-0 lattice over-softening — acceptable for a seeding parent.
+(The 6.36 Å figure is the established experimental value; it is quoted here for scale
+only and no specific paper is attributed.)
 
 ## W2-1b — det=20 supercell: full HNF sweep ranked by defect isolation
 
@@ -111,7 +114,7 @@ first-order (60 meV/f.u.), so the Stage-4 migration matrix must sample it, not f
 
 `x_Cs = 1/20 = 5%`. Element-count asserts enforced in the driver and passing.
 
-![FA host structures: corner-sharing PbI6 framework (left), candidate 233-atom cell (centre), FA orientation ensemble energies (right)]({{artifact:art_cf7fb785-e29d-4dc7-99fa-717dd66edf3d}})
+![FA host structures: corner-sharing PbI6 framework (left), candidate 233-atom cell (centre), FA orientation ensemble energies (right)](fa_host_structures.png)
 
 ## DFT follow-ups required before this cell enters a formal calculation
 

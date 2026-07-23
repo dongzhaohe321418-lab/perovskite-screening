@@ -53,16 +53,20 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
 
 ### b-spin — Stage 1.1 odd-electron spin scan (running)
 - **Reproduction gate PASSED (2026-07-23, job b520e71a, 2 nodes/64 ranks):** the
-  regenerated inputs reproduce the archived benchmark bit-for-bit —
-  img0_q0_A = −9244.90895455 Ry (archived −9244.9089544), img3_q0_A =
-  −9244.89861800 Ry (archived −9244.89861758) → **barrier 140.6 meV** exact.
-  Confirms both the QE generator (`scripts/05`) and that 64-rank = 32-rank energy.
+  regenerated inputs reproduce the archived benchmark to ~6 significant decimals —
+  img0_q0_A = −9244.90895455 Ry (archived −9244.9089544; Δ ≈ 1.5×10⁻⁷ Ry), img3_q0_A =
+  −9244.89861800 Ry (archived −9244.89861758; Δ ≈ 4.2×10⁻⁷ Ry) → **barrier 140.6 meV**
+  (matches the archived 140.6 meV to <0.1 meV). Δ is at the SCF-convergence /
+  I/O-rounding floor, i.e. physically identical, not bit-identical. Confirms the QE
+  generator (`scripts/05`) and that the 64-rank run reproduces the 32-rank energy at
+  this precision.
 - **Limits:** spin cases (B/C) in progress. If nspin=2 differs from non-spin by
   >10–20 meV, the 141 meV value is downgraded to "preliminary non-spin fixed-path value."
 - **Allowed claim:** "the fixed-path benchmark is reproducible from the repo to <1 meV."
 - **Next step:** parse magnetization + defect-state occupation of Cases B/C; decide
   production spin setting for Stage 2.
-- **Actual cost:** ~40 min/SCF × 2 nodes; 8-SCF scan ≈ 2 node-days-equivalent, within the ≤¥400 Stage-1 cap.
+- **Actual cost:** non-spin SCF ~26 min, spin SCF ~65 min WALL; 8-SCF scan ≈ 6–8 h ×
+  2 nodes ≈ 0.5–0.7 node-days (~¥100–130 at ¥16.48/node-hr), within the ≤¥400 Stage-1 cap.
 
 ### d3 — D3(BJ) dispersion correction (Stage 1.2, COMPLETE)
 - **Result:** D3(BJ) computed from geometry alone (charge-independent) raises the
