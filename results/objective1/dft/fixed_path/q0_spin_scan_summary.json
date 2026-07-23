@@ -1,0 +1,9 @@
+{
+  "q0_nonspin_barrier_meV": 140.6,
+  "q0_spin_barrier_meV": 152.9,
+  "q0_spin_localized_barrier_meV": 152.9,
+  "q1_spin_barrier_meV": 126.6,
+  "spin_effect_q0_meV": 12.3,
+  "verdict": "Spin raises the q=0 fixed-path barrier by +12.3 meV (140.6->152.9), in the 10-20 meV BORDERLINE band. 141 meV NOT discarded but flagged spin-sensitive; report both. Case B==C: no distinct localized polaron at PBE. q=+1 is closed-shell (mag~0), barrier 126.6 meV unchanged by spin.",
+  "production_recommendation": "Use nspin=2 for q=0 (V_I0, odd e-) going forward; q=+1 may stay nspin=1 (closed-shell). Report the q=0 fixed-path barrier as 152.9 meV (spin) with the 140.6 non-spin value noted."
+}

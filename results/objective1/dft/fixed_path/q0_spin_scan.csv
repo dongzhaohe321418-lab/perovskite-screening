@@ -1,0 +1,5 @@
+case,description,charge,E_init_Ry,E_saddle_Ry,barrier_meV,init_totmag_muB,saddle_totmag_muB,init_absmag_muB,saddle_scf_iter
+q0_A_nonspin,non-spin (nspin=1),0,-9244.90895455,-9244.898618,140.6,,,,11
+q0_B_spin,"spin, delocalized start",0,-9244.90545454,-9244.89421505,152.9,1.0,1.0,1.17,15
+q0_C_spin_loc,"spin, localized-Pb start",0,-9244.90545507,-9244.89421469,152.9,1.0,1.0,1.18,18
+q1_B_spin,"spin, +1 charge",1,-9245.21854713,-9245.20924149,126.6,-0.0,-0.0,0.02,14

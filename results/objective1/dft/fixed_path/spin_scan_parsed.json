@@ -1,0 +1,172 @@
+{
+  "indir": "hpc/b520e71a-bf41-4a26-81c3-9ae642e067ca",
+  "n_files": 8,
+  "runs": [
+    {
+      "file": "img0_q0_A.out",
+      "image": 0,
+      "charge": 0,
+      "case": "A",
+      "energy_Ry": -9244.90895455,
+      "energy_eV": -125783.39418562657,
+      "nelec": 1401.0,
+      "scf_iterations": 11,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.58717608086958,
+      "wall_s": 44.53,
+      "converged": true
+    },
+    {
+      "file": "img0_q0_B.out",
+      "image": 0,
+      "charge": 0,
+      "case": "B",
+      "energy_Ry": -9244.90545454,
+      "energy_eV": -125783.34656556459,
+      "nelec": 1401.0,
+      "scf_iterations": 17,
+      "nspin": 1,
+      "total_magnetization": 1.0,
+      "absolute_magnetization": 1.17,
+      "max_force_Ry_bohr": 5.58717608086958,
+      "wall_s": null,
+      "converged": true
+    },
+    {
+      "file": "img0_q0_C.out",
+      "image": 0,
+      "charge": 0,
+      "case": "C",
+      "energy_Ry": -9244.90545507,
+      "energy_eV": -125783.34657277561,
+      "nelec": 1401.0,
+      "scf_iterations": 27,
+      "nspin": 1,
+      "total_magnetization": 1.0,
+      "absolute_magnetization": 1.18,
+      "max_force_Ry_bohr": 5.58717608086958,
+      "wall_s": null,
+      "converged": true
+    },
+    {
+      "file": "img0_q1_B.out",
+      "image": 0,
+      "charge": 1,
+      "case": "B",
+      "energy_Ry": -9245.21854713,
+      "energy_eV": -125787.60640726321,
+      "nelec": 1400.0,
+      "scf_iterations": 14,
+      "nspin": 1,
+      "total_magnetization": -0.0,
+      "absolute_magnetization": 0.02,
+      "max_force_Ry_bohr": 5.58717608086958,
+      "wall_s": 0.11,
+      "converged": true
+    },
+    {
+      "file": "img3_q0_A.out",
+      "image": 3,
+      "charge": 0,
+      "case": "A",
+      "energy_Ry": -9244.898618,
+      "energy_eV": -125783.25354969932,
+      "nelec": 1401.0,
+      "scf_iterations": 11,
+      "nspin": 1,
+      "total_magnetization": null,
+      "absolute_magnetization": null,
+      "max_force_Ry_bohr": 5.233256176896117,
+      "wall_s": 8.02,
+      "converged": true
+    },
+    {
+      "file": "img3_q0_B.out",
+      "image": 3,
+      "charge": 0,
+      "case": "B",
+      "energy_Ry": -9244.89421505,
+      "energy_eV": -125783.19364451281,
+      "nelec": 1401.0,
+      "scf_iterations": 15,
+      "nspin": 1,
+      "total_magnetization": 1.0,
+      "absolute_magnetization": 1.18,
+      "max_force_Ry_bohr": 5.233256176896117,
+      "wall_s": null,
+      "converged": true
+    },
+    {
+      "file": "img3_q0_C.out",
+      "image": 3,
+      "charge": 0,
+      "case": "C",
+      "energy_Ry": -9244.89421469,
+      "energy_eV": -125783.19363961475,
+      "nelec": 1401.0,
+      "scf_iterations": 18,
+      "nspin": 1,
+      "total_magnetization": 1.0,
+      "absolute_magnetization": 1.18,
+      "max_force_Ry_bohr": 5.233256176896117,
+      "wall_s": null,
+      "converged": true
+    },
+    {
+      "file": "img3_q1_B.out",
+      "image": 3,
+      "charge": 1,
+      "case": "B",
+      "energy_Ry": -9245.20924149,
+      "energy_eV": -125787.47979758107,
+      "nelec": 1400.0,
+      "scf_iterations": 14,
+      "nspin": 1,
+      "total_magnetization": -0.0,
+      "absolute_magnetization": 0.01,
+      "max_force_Ry_bohr": 5.233256176896117,
+      "wall_s": 25.46,
+      "converged": true
+    }
+  ],
+  "profiles": {
+    "q0_A": {
+      "profile_meV": {
+        "0": 0.0,
+        "3": 140.6359272493945
+      },
+      "barrier_meV": 140.6359272493945,
+      "saddle_image": 3,
+      "n_images": 2
+    },
+    "q0_B": {
+      "profile_meV": {
+        "0": 0.0,
+        "3": 152.9210517832188
+      },
+      "barrier_meV": 152.9210517832188,
+      "saddle_image": 3,
+      "n_images": 2
+    },
+    "q0_C": {
+      "profile_meV": {
+        "0": 0.0,
+        "3": 152.93316085815738
+      },
+      "barrier_meV": 152.93316085815738,
+      "saddle_image": 3,
+      "n_images": 2
+    },
+    "q1_B": {
+      "profile_meV": {
+        "0": 0.0,
+        "3": 126.60968215432678
+      },
+      "barrier_meV": 126.60968215432678,
+      "saddle_image": 3,
+      "n_images": 2
+    }
+  }
+}
