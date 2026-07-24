@@ -108,8 +108,9 @@ self-consistent spin+D3 calculation:
 
 All are *fixed-geometry on the MACE path*. None is the converged physical barrier
 (path relaxation at the DFT level and SOC are still open). The MACE barrier on the
-same path is 259 meV; PBE and MACE disagree by ~118 meV at fixed geometry, and the
-1.84× ratio is MACE-vs-PBE, not MACE-vs-experiment.
+same path is 259 meV — 118 meV above the selected scalar-relativistic PBE reference.
+This is a MODEL-LEVEL difference (MACE-MP-0 PBE+U-like/no-D3/no-SOC vs QE scalar-rel
+PBE), not a MACE error against a ground truth, and not MACE-vs-experiment.
 
 ## Standing claim bans still in force
 

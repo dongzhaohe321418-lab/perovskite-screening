@@ -64,23 +64,26 @@ both charge states.
 | 4 | 60.8 | 184.6 |
 
 - **DFT barrier = 141 meV. MACE-MP-0 barrier = 259 meV.**
-- **MACE overestimates the barrier by 1.84×** (+118 meV) on identical geometries.
+- **The two differ by +118 meV on identical geometries** — a MODEL-LEVEL difference,
+  not a MACE "error": the comparison is MACE-MP-0 (PBE+U-like, no D3, no SOC,
+  zero-shot) vs QE (scalar-relativistic PBE, no U, no D3, no SOC), so neither is a
+  ground-truth barrier that would let us call the other "wrong".
 - **Both place the saddle at image 3** — MACE gets the mechanism and transition-state
   location right; the profile is the same shape, MACE just steeper.
 
 The zero-shot foundation model reproduces the **mechanism** (octahedron-edge hop,
-saddle position) but **not the barrier height** — high by ~1.8× against PBE. This
-quantifies the failure mode the proposal anticipates and is the concrete reason
-Objective 1's ranked ΔE_a values need a **fine-tuned** MACE model rather than the
-zero-shot base: close enough to seed paths and rank mechanisms, too high to report
-as an absolute barrier.
+saddle position); its fixed-path barrier sits 118 meV above the selected
+scalar-relativistic PBE reference. That model-level gap is the concrete reason
+Objective 1's ranked ΔE_a values need a MACE model **fine-tuned to a single, consistent
+theory level (PBE+D3)** rather than the zero-shot base: close enough to seed paths and
+rank mechanisms, but not yet at a common level for absolute barriers.
 
 Two caveats on the DFT reference itself:
 - **PBE is not ground truth.** PBE typically *underestimates* halide-perovskite
   migration barriers (no SOC, no exact exchange, GGA delocalisation). PBE and MACE
   disagree by 118 meV at fixed geometry; neither is the converged physical barrier
-  (spin state, path relaxation, SOC and finite-T effects unresolved). The 1.84×
-  ratio is MACE-vs-PBE, not MACE-vs-experiment.
+  (spin state, path relaxation, SOC and finite-T effects unresolved). The gap is
+  MACE-vs-PBE (two different theory levels), not MACE-vs-experiment.
 - **Single-point, not DFT-relaxed.** Geometries are MACE's. This isolates the
   energy model on fixed structures — the correct test for "is the MACE energy
   surface right" — but is not a full DFT-NEB.

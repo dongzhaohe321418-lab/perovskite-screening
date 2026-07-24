@@ -2,7 +2,14 @@
 
 **This file is the single authoritative status source for Objective 1 (method
 validation).** Where README / HANDOFF / DFT_BENCHMARK / anchors_summary disagree
-about a completion state, this table wins. Last updated 2026-07-23.
+about a completion state, this table wins. Last updated 2026-07-24.
+
+**Host definition (used identically across all DFT / MACE / strain / charge-state
+comparisons).** "γ-P1" denotes a **P1 tilted γ-like CsPbI₃ model** — a 2×2×2 (159-atom
+with V_I) supercell obtained by MACE-MP-0 zero-shot relaxation from a perturbed start
+under **no symmetry constraint**. It is a consistent computational host, **not** a
+DFT- or experiment-validated Pnma γ-CsPbI₃ equilibrium phase; do not describe it as the
+"real" γ phase. Every anchor below shares this exact host.
 
 ## Anchor (b) headline status — READ THIS FIRST
 
@@ -22,7 +29,7 @@ order-of-magnitude separation — that requires *relaxed* charged geometries
 | # | date | calc ID | host / phase / supercell | method / model / charge / spin | geometry state | result | status |
 |---|---|---|---|---|---|---|---|
 | a-zs | 2026-07-22 | `anchors.json:regression` | local CPU / γ-P1 / 2×2×2 (159 at) | MACE-MP-0 medium zero-shot, float64, charge-agnostic | MACE-relaxed CI-NEB | E_a = **0.259 eV** fwd / 0.230 eV bwd; saddle img3 | ✅ pipeline sanity (in 0.1–0.6 eV band) |
-| a-dft | 2026-07-23 | `dft_benchmark.json:anchor_a` | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, US psl-1.0.0, Γ, ecut 50/400, non-spin | fixed-path single-point (MACE geom) | DFT **140.6 meV** vs MACE 259.0 meV (**1.84×**); both saddle img3 | ✅ fixed-geometry complete |
+| a-dft | 2026-07-23 | `dft_benchmark.json:anchor_a` | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, US psl-1.0.0, Γ, ecut 50/400, non-spin | fixed-path single-point (MACE geom) | DFT **140.6 meV** vs MACE 259.0 meV (**+118 meV model-level gap**); both saddle img3 | ✅ fixed-geometry complete |
 | b-fix | 2026-07-23 | `dft_benchmark.json:anchor_b` | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, q=0 (1401 e⁻) vs q=+1 (1400 e⁻), non-spin | fixed-path single-point (same neutral geom) | V_I⁰ **140.6** / V_I⁺ **126.6 meV** (ratio 0.90) | ⚠️ FIXED-GEOMETRY COMPLETE / RELAXED PENDING |
 | b-spin | 2026-07-23 | job `b520e71a` (spin_scan; 2 nodes/64 ranks) | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, q=0 nspin 1/2, tot_mag=1, localized-Pb | fixed-path single-point | V_I⁰ non-spin **140.6** → spin **152.9 meV** (+12.3, borderline); B≡C (no polaron); q+1 mag→0 unchanged | ✅ spin scan complete |
 | b-prof | 2026-07-23 | job `673e904d` (all-images; 2 nodes) | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, imgs 1/5/6 both q, non-spin | fixed-path single-point | full 7-image profile; **img3 is the saddle for both q** (not a hidden max) | ✅ Stage 1.3 profile complete |
@@ -35,14 +42,15 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
 ## Per-calculation detail (limits / allowed claim / next step / actual cost)
 
 ### a-zs — undoped zero-shot MACE E_a
-- **Limits:** zero-shot MACE-MP-0 overestimates the PBE barrier 1.84× (see a-dft); charge-agnostic (quasi-neutral PES). NOT an Eames 2015 reproduction — Eames studied MAPbI₃ (~0.6 eV); 0.1–0.6 eV is the cross-literature band.
+- **Limits:** zero-shot MACE-MP-0 sits 118 meV above the scalar-relativistic PBE reference at fixed geometry (a model-level difference, see a-dft — NOT a MACE error vs ground truth); charge-agnostic (quasi-neutral PES). NOT an Eames 2015 reproduction — Eames studied MAPbI₃ (~0.6 eV); 0.1–0.6 eV is the cross-literature band.
 - **Allowed claim:** "the zero-shot pipeline gives an E_a in the literature band and reproduces the octahedron-edge mechanism; usable for path seeding and float32/64 regression, not for absolute barriers."
+- **Caveat:** this is an **exploratory tracer** NEB — the original driver (`scripts/01`) did not record production-quality convergence metadata (FIRE convergence return, final max NEB force, image-count densification), so 0.259 eV is a stable tracer number, not a production-converged barrier. The Stage-1.3 fixed path (b-prof) is the production-metadata reference.
 - **Next step:** superseded by fine-tuned models (Stage 3).
 - **Actual cost:** ~20 s/path (local CPU), negligible.
 
 ### a-dft — undoped DFT-vs-MACE benchmark
 - **Limits:** PBE is not ground truth (typically underestimates halide migration barriers; no SOC, GGA delocalization). Single-point on MACE geometry, not a DFT-NEB. Γ-only, one supercell size, non-spin.
-- **Allowed claim:** "PBE and MACE-MP-0 disagree by 118 meV at fixed geometry on identical structures; MACE gets the mechanism and saddle location right but is 1.84× too high vs PBE."
+- **Allowed claim:** "MACE-MP-0 gives a fixed-path barrier 118 meV higher than the selected scalar-relativistic PBE reference on identical structures — a model-level difference (different functional/dispersion/SOC/charge treatment), not a MACE error; MACE gets the mechanism and saddle location right."
 - **Next step:** completed by the all-images fixed path (Stage 1.3) + spin/cutoff/k convergence (Stage 1.2).
 - **Actual cost:** part of the 8-SCF matrix, ~33 min × 8 SCF on 32 cores ≈ 4.4 core-node-hours (~¥70).
 
