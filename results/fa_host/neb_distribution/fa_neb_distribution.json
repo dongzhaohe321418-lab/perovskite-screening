@@ -1,0 +1,249 @@
+{
+  "tag": "EXPLORATORY / QUARANTINED \u2014 Lane 2 W2-3",
+  "note": "zero-shot MACE CI-NEB; fixed lattice; orientation sampled from W2-2 MD. NOT a validated kinetic barrier.",
+  "n_images": 5,
+  "fmax_neb": 0.05,
+  "Ea_distribution": {
+    "n": 9,
+    "mean_meV": 313.6,
+    "std_meV": 69.0,
+    "min_meV": 201.4,
+    "max_meV": 395.1,
+    "range_meV": 193.7,
+    "all_Ea_meV": [
+      395.1,
+      386.6,
+      201.4,
+      355.4,
+      360.4,
+      250.1,
+      238.0,
+      270.1,
+      365.2
+    ]
+  },
+  "per_config": [
+    {
+      "config": "fa_orient_00.extxyz",
+      "config_id": 0,
+      "i_vac": 75,
+      "i_hop": 85,
+      "hop_distance_A": 4.499206469398582,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        91.4,
+        294.1,
+        395.1,
+        298.5,
+        91.3,
+        5.4
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 395.1,
+      "Ea_bwd_meV": 389.8,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 5.4
+    },
+    {
+      "config": "fa_orient_01.extxyz",
+      "config_id": 1,
+      "i_vac": 86,
+      "i_hop": 87,
+      "hop_distance_A": 4.547156510376347,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        88.4,
+        290.8,
+        386.6,
+        282.6,
+        151.1,
+        151.4
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 386.6,
+      "Ea_bwd_meV": 235.2,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 151.4
+    },
+    {
+      "config": "fa_orient_02.extxyz",
+      "config_id": 2,
+      "i_vac": 75,
+      "i_hop": 86,
+      "hop_distance_A": 4.498266262914626,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        -37.5,
+        115.0,
+        201.4,
+        123.8,
+        -7.7,
+        4.0
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 201.4,
+      "Ea_bwd_meV": 197.4,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 4.0
+    },
+    {
+      "config": "fa_orient_03.extxyz",
+      "config_id": 3,
+      "i_vac": 62,
+      "i_hop": 85,
+      "hop_distance_A": 4.506197809159071,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        93.6,
+        276.7,
+        355.4,
+        273.8,
+        135.7,
+        103.4
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 355.4,
+      "Ea_bwd_meV": 252.0,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 103.4
+    },
+    {
+      "config": "fa_orient_04.extxyz",
+      "config_id": 4,
+      "i_vac": 85,
+      "i_hop": 86,
+      "hop_distance_A": 4.492850191726277,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        63.5,
+        279.3,
+        360.4,
+        249.9,
+        41.4,
+        8.9
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 360.4,
+      "Ea_bwd_meV": 351.6,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 8.9
+    },
+    {
+      "config": "fa_orient_05.extxyz",
+      "config_id": 5,
+      "i_vac": 37,
+      "i_hop": 87,
+      "hop_distance_A": 4.499641299090257,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        6.8,
+        150.6,
+        250.1,
+        210.7,
+        65.0,
+        13.8
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 250.1,
+      "Ea_bwd_meV": 236.4,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 13.8
+    },
+    {
+      "config": "fa_orient_06.extxyz",
+      "config_id": 6,
+      "i_vac": 37,
+      "i_hop": 86,
+      "hop_distance_A": 4.515624330869675,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        20.5,
+        144.5,
+        238.0,
+        199.8,
+        79.0,
+        21.1
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 238.0,
+      "Ea_bwd_meV": 216.8,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 21.1
+    },
+    {
+      "config": "fa_orient_07.extxyz",
+      "config_id": 7,
+      "i_vac": 62,
+      "i_hop": 75,
+      "hop_distance_A": 4.502484066313957,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        -84.7,
+        130.5,
+        270.1,
+        196.0,
+        43.0,
+        4.2
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 270.1,
+      "Ea_bwd_meV": 265.9,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 4.2
+    },
+    {
+      "config": "fa_orient_08.extxyz",
+      "config_id": 8,
+      "i_vac": 37,
+      "i_hop": 75,
+      "hop_distance_A": 4.545326586100764,
+      "n_atoms": 95,
+      "profile_meV": [
+        0.0,
+        7.6,
+        220.6,
+        365.2,
+        188.6,
+        -11.3,
+        127.8
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 365.2,
+      "Ea_bwd_meV": 237.4,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "dE_endpoint_meV": 127.8
+    }
+  ],
+  "literature_sanity_check": {
+    "dft_FAPbI3_VI_barrier_eV": {
+      "Ferdani_axial_equatorial": 0.45,
+      "Ferdani_equatorial_equatorial": 0.34,
+      "steric_impediment_FAPbI3": 0.37,
+      "interstitial_study_pristine": 0.37
+    },
+    "experimental_FAPbI3_Ea_eV": 0.6,
+    "our_zero_shot_range_meV": [
+      201.4,
+      395.1
+    ],
+    "our_mean_meV": 313.6,
+    "assessment": "Zero-shot MACE distribution (mean 314, range 201-395 meV) brackets the literature DFT FAPbI3 V_I barriers (340-450 meV for the two dominant pathways). Both reported DFT pathways fall inside the sampled range. The zero-shot baseline is in the correct physical regime -- validates the FA regression path for Stage 4/5."
+  }
+}

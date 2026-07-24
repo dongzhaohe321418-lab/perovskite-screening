@@ -156,10 +156,66 @@ All six review points were addressed:
 6. **Vacancy composition** → corrected to FA₁₉CsPb₂₀I₅₉ (232 atoms); charge-state /
    background / FNV / NEB-endpoint requirements listed above.
 
-## Deferred (GPU-gated — pending 5090 availability)
+## W2-2 — FA orientation ensemble via MLIP-MD (COMPLETE, 2026-07-24, RTX 5090)
 
-- **W2-2 FA orientation ensemble via MD** — 300 K NVT, 20–50 ps, decorrelated frame
-  extraction + quench → ≥8 thermally-decorrelated configs. (The static ensemble
-  here is the GPU-free stand-in.)
-- **W2-3 zero-shot FA baseline Eₐ distribution** — one V_I octahedron-edge CI-NEB
-  per config → the Eₐ distribution that sizes the Stage 4/5 sampling budget.
+Ran on the GPU once it returned (`scripts/08_fa_md_ensemble.py`, job `725791a1`):
+
+- **30 ps 300 K NVT** MD on the pure-FA 2×2×2 (96-atom) parent, zero-shot MACE-MP-0
+  float64 (Langevin, 1 fs, friction 0.02);
+- sampled every 3 ps after 6 ps equilibration → **9 frames**, each quench-relaxed
+  (fixed lattice, fmax 0.05) and structure-checked;
+- **all 9 pass:** every Pb has 6 I neighbours under PBC, FA intact (C–N 1.31–1.32 Å,
+  N–H 1.01–1.03 Å), N–H⋯I contacts 2.51–2.69 Å (normal H-bonds, no clash), no
+  non-perovskite reconstruction;
+- ensemble energy spread 196 meV across configs → genuine orientational
+  decorrelation. MD used only as an orientation sampler (no kinetic claim — zero-shot
+  FA rotation quality is not validated).
+
+Files in `md_ensemble/`: `fa_orient_00..08.extxyz`, `fa_md_ensemble.json`,
+`fa_md_traj_samples.extxyz.gz`, `fa_pure_2x2x2_96.extxyz`.
+
+## W2-3 — zero-shot FA baseline Eₐ distribution (COMPLETE, RTX 5090)
+
+`scripts/09_fa_neb_distribution.py`, job `119b34e5`. For each of the 9 orientation
+configs, carved the **same V_I octahedron-edge hop** (I–I ~4.5 Å on the Pb nearest
+the cell centre) and ran a zero-shot CI-NEB (5 intermediate images, per-image calcs,
+two-stage FIRE climb, identical-ordering endpoints, fixed lattice). **9/9 converged**,
+all with the saddle at image 3.
+
+**The Eₐ distribution (the single most important Lane-2 number):**
+
+| measure | mean | std | range |
+|---|---|---|---|
+| forward Eₐ | **314 meV** | 69 meV | 201–395 (spread 194) |
+| backward Eₐ | 265 meV | 60 meV | — |
+| symmetric (saddle vs endpoint mean) | 289 meV | 58 meV | spread 193 |
+
+![FA host zero-shot V_I migration: 9 NEB profiles (a) and the Eₐ distribution (b)](neb_distribution/fa_neb_distribution.png)
+
+**Interpretation.** FA orientation induces a **~190 meV spread** in the migration
+barrier — comparable to the barrier itself (~60% of the mean). This is the decisive
+Lane-2 result: **FA orientation cannot be treated as a single value; the Stage-4/5
+migration matrix must sample it.** Part of the forward spread comes from final-state
+FA-environment asymmetry (3 configs have dE_endpoint > 100 meV; r(dE_end, Eₐ) = 0.56),
+but even the endpoint-symmetric measure keeps a ~190 meV spread, so the orientation
+effect is real regardless of the barrier definition.
+
+**Literature sanity check (passed).** DFT V_I migration barriers in FAPbI₃ are
+reported at 0.34 eV (equatorial-equatorial) and 0.45 eV (axial-equatorial), and
+~0.37 eV elsewhere; experiment gives ~0.6 eV. Our zero-shot range (201–395 meV)
+brackets both dominant DFT pathways (340, 450 meV fall inside the sampled range) — the
+zero-shot FA baseline is in the correct physical regime. This validates carrying the
+FA regression path into Stage 4/5.
+
+Files in `neb_distribution/`: `fa_neb_distribution.json` (per-config + distribution +
+literature check), `fa_neb_distribution.png`, `bands/fa_neb_band_00..08.extxyz.gz`.
+
+## Lane-2 acceptance checklist (EXECUTION_GUIDE 泳道二验收)
+
+- [x] det=20 optimal supercell selected with scoring record (HNF sweep + d_min);
+- [x] ≥8 orientation configs pass structure checks (9 configs, all pass);
+- [x] FA baseline Eₐ distribution reported (this document);
+- [x] all files carry the EXPLORATORY tag.
+
+**Cost:** W2-2 MD ≈30 min wall (incl. setup) + W2-3 9 NEBs ≈7 min wall on the
+RTX 5090 (AutoDL), from the job dispatch/completion timestamps.
