@@ -1,0 +1,50 @@
+{
+  "theory_level": "PBE + D3(BJ) (vdw_corr=dft-d3, dftd3_version=4), US psl-1.0.0 scalar-rel, nosym",
+  "d3_baseline_barriers_meV": {
+    "q0_spin": 179.1,
+    "q1": 152.8
+  },
+  "d3_baseline_energies_Ry": {
+    "d3base_img0_q0": -9247.6202849,
+    "d3base_img3_q0": -9247.60712039,
+    "d3base_img0_q1": -9247.93356123,
+    "d3base_img3_q1": -9247.92233072
+  },
+  "three_way_comparison_meV": {
+    "note": "SEPARATE theory levels \u2014 do not merge into one row. q0 compares within nspin=2.",
+    "q0": {
+      "bare_PBE_spin": 152.9,
+      "simple_dftd3_estimate": 178.2,
+      "true_QE_D3_spin": 179.1,
+      "estimate_vs_true_meV": 0.9
+    },
+    "q1": {
+      "bare_PBE": 126.6,
+      "simple_dftd3_estimate": 151.9,
+      "true_QE_D3": 152.8
+    }
+  },
+  "rank_gate": {
+    "64": {
+      "wall_s": 3900.0,
+      "wall_min": 65.0,
+      "scf_iterations": 17,
+      "core_hours": 69.33,
+      "energy_Ry": -9247.6202849
+    },
+    "32": {
+      "wall_s": 3900.0,
+      "wall_min": 65.0,
+      "scf_iterations": 18,
+      "core_hours": 34.67,
+      "energy_Ry": -9247.62028481
+    }
+  },
+  "rank_verdict": {
+    "wall_ratio_32_over_64": 1.0,
+    "core_hours_32": 34.67,
+    "core_hours_64": 69.33,
+    "energy_diff_32_minus_64_meV": 0.001,
+    "recommendation": "32 ranks (16/node x2): ~1:1 wall vs 64 but ~half the core-hours -> 64 ranks does NOT help this Gamma-point 159-atom cell; use 32."
+  }
+}

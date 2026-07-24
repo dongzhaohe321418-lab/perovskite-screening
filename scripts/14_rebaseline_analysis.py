@@ -30,7 +30,10 @@ RE_TOTMAG = re.compile(r"total magnetization\s*=\s*(-?\d+\.\d+)\s*Bohr mag")
 
 # reference values from earlier stages (bare-PBE + post-hoc simple-dftd3 estimate)
 BARE_PBE = {"q0_nonspin_meV": 140.6, "q0_spin_meV": 152.9, "q1_meV": 126.6}
-SIMPLE_DFTD3_EST = {"shift_meV": 25.3, "q0_from_nonspin_meV": 165.9, "q1_meV": 151.9}
+# simple-dftd3 additive shift = +25.3 meV. Spin-consistent q0 estimate uses the SPIN
+# base (152.9), not the non-spin (140.6), to match the nspin=2 QE-D3 baseline.
+SIMPLE_DFTD3_EST = {"shift_meV": 25.3, "q0_from_spin_meV": 178.2,
+                    "q0_from_nonspin_meV": 165.9, "q1_meV": 151.9}
 
 
 def energy_ry(path):
@@ -118,8 +121,9 @@ def main():
         "three_way_comparison_meV": {
             "note": "SEPARATE theory levels — do not merge into one row. q0 compares within nspin=2.",
             "q0": {"bare_PBE_spin": BARE_PBE["q0_spin_meV"],
-                   "simple_dftd3_estimate": SIMPLE_DFTD3_EST["q0_from_nonspin_meV"],
-                   "true_QE_D3_spin": d3_q0},
+                   "simple_dftd3_estimate": SIMPLE_DFTD3_EST["q0_from_spin_meV"],
+                   "true_QE_D3_spin": d3_q0,
+                   "estimate_vs_true_meV": round(d3_q0 - SIMPLE_DFTD3_EST["q0_from_spin_meV"], 1)},
             "q1": {"bare_PBE": BARE_PBE["q1_meV"],
                    "simple_dftd3_estimate": SIMPLE_DFTD3_EST["q1_meV"],
                    "true_QE_D3": d3_q1},
@@ -129,7 +133,7 @@ def main():
     json.dump(out, open(args.out, "w"), indent=2)
     print(f"[rebaseline] PBE+D3(BJ): q0(spin) barrier = {d3_q0} meV, q1 = {d3_q1} meV")
     print(f"[rebaseline] q0 three-way: bare-PBE(spin) {BARE_PBE['q0_spin_meV']} | "
-          f"simple-dftd3-est {SIMPLE_DFTD3_EST['q0_from_nonspin_meV']} | true-QE-D3 {d3_q0}")
+          f"simple-dftd3-est(spin) {SIMPLE_DFTD3_EST['q0_from_spin_meV']} | true-QE-D3 {d3_q0}")
     print(f"[rebaseline] q1 three-way: bare-PBE {BARE_PBE['q1_meV']} | "
           f"simple-dftd3-est {SIMPLE_DFTD3_EST['q1_meV']} | true-QE-D3 {d3_q1}")
     if verdict:
