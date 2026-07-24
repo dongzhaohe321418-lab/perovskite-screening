@@ -375,9 +375,13 @@ def gen_relax_endpoints(outdir, **kw):
         for img, role in ((0, "initial"), (6, "final")):
             atoms = load_image(img)
             prefix = f"relax_q{q}_{role}"
+            # conv_thr=1e-8 (tighter than the 1e-6 scf default): QE warned "SCF correction
+            # compared to forces is large" — the fmax≤0.02 target needs forces resolved below
+            # the 1e-6 noise floor, so the electronic convergence is tightened for relaxations.
             metas.append(write_pw_input(atoms, Path(outdir) / f"{prefix}.in", prefix=prefix,
                          calculation="relax", d3=True, nosym=True,
                          mixing_mode="local-TF", mixing_beta=0.2, trust_radius_ini=0.1,
+                         conv_thr=1e-8,
                          **{k: v for k, v in sk.items() if k != "case_label"},
                          case_label=sk["case_label"], **kw))
     return metas
