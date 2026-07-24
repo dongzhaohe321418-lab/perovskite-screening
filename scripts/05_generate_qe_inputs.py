@@ -362,26 +362,35 @@ def gen_conv_gate(outdir, *, ecutwfc=50.0, ecutrho=400.0, degauss=0.01, kpoints=
     return metas
 
 
-def gen_relax_endpoints(outdir, **kw):
+def gen_relax_endpoints(outdir, tier="production", **kw):
     """Fixed-cell ionic relaxation of the 4 charge-state endpoints: q0/q1 x
-    img0(initial)/img6(final). Stage-1-locked spin, PBE+D3(BJ), nosym, fmax<=0.02 eV/A.
+    img0(initial)/img6(final). Stage-1-locked spin, PBE+D3(BJ), nosym.
     Production degauss=0.005 Ry (convergence-gate lock) unless overridden in kw.
     Uses local-TF mixing + mixing_beta=0.2 (charge-sloshing fix for the large
-    odd-electron defect cell) and a 0.1 Bohr initial BFGS trust radius."""
+    odd-electron defect cell) and a 0.1 Bohr initial BFGS trust radius.
+
+    Two tiers (the endpoint relaxation is a shallow, soft-mode surface — see
+    CONVERGENCE_GATE / relaxation notes):
+      * tier='explore'    : conv_thr=1e-6, fmax<=0.05 eV/A (1.945e-3 Ry/Bohr).
+          Fast; endpoints good enough to seed the 3-image explore NEB + d_max check.
+      * tier='production' : conv_thr=1e-8, fmax<=0.02 eV/A (7.8e-4 Ry/Bohr).
+          Clean forces (QE flagged the 1e-6 noise floor); for the final CI-NEB endpoints.
+    """
     kw.setdefault("degauss", PRODUCTION_DEGAUSS)
+    if tier == "explore":
+        conv_thr, forc_conv_thr = 1e-6, 1.945e-3
+    else:  # production
+        conv_thr, forc_conv_thr = 1e-8, 7.8e-4
     metas = []
     for q in (0, 1):
         sk = _spin_kw(q)
         for img, role in ((0, "initial"), (6, "final")):
             atoms = load_image(img)
             prefix = f"relax_q{q}_{role}"
-            # conv_thr=1e-8 (tighter than the 1e-6 scf default): QE warned "SCF correction
-            # compared to forces is large" — the fmax≤0.02 target needs forces resolved below
-            # the 1e-6 noise floor, so the electronic convergence is tightened for relaxations.
             metas.append(write_pw_input(atoms, Path(outdir) / f"{prefix}.in", prefix=prefix,
                          calculation="relax", d3=True, nosym=True,
                          mixing_mode="local-TF", mixing_beta=0.2, trust_radius_ini=0.1,
-                         conv_thr=1e-8,
+                         conv_thr=conv_thr, forc_conv_thr=forc_conv_thr,
                          **{k: v for k, v in sk.items() if k != "case_label"},
                          case_label=sk["case_label"], **kw))
     return metas
@@ -404,6 +413,8 @@ def main():
     p.add_argument("--nspin", type=int, default=1)
     p.add_argument("--tot-magnetization", type=float, default=None)
     p.add_argument("--localize", action="store_true", help="Case C: localise on under-coord Pb")
+    p.add_argument("--relax-tier", choices=["explore", "production"], default="production",
+                   help="relax_endpoints tier: explore (1e-6, fmax<=0.05) or production (1e-8, fmax<=0.02)")
     args = p.parse_args()
 
     outdir = Path(args.outdir)
@@ -430,7 +441,7 @@ def main():
     elif args.mode == "conv_gate":
         metas = gen_conv_gate(outdir, pseudo_dir=args.pseudo_dir)  # sets its own ecut/k/degauss
     elif args.mode == "relax_endpoints":
-        metas = gen_relax_endpoints(outdir, **common)
+        metas = gen_relax_endpoints(outdir, tier=args.relax_tier, **common)
     else:  # one
         atoms = load_image(args.image)
         loc = under_coordinated_pb(atoms) if args.localize else None
