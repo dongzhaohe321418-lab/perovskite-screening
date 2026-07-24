@@ -376,7 +376,8 @@ def main():
     p.add_argument("--outdir", default=str(ROOT / "ehpc" / "inputs"))
     p.add_argument("--ecutwfc", type=float, default=50.0)
     p.add_argument("--ecutrho", type=float, default=400.0)
-    p.add_argument("--degauss", type=float, default=0.01)
+    p.add_argument("--degauss", type=float, default=None,
+                   help="Ry; default 0.005 for relax/neb production (conv-gate lock), 0.01 for legacy scf modes")
     p.add_argument("--kpoints", default="1,1,1")
     p.add_argument("--pseudo-dir", default=DEFAULT_PSEUDO_DIR)
     # 'one' mode
@@ -390,7 +391,14 @@ def main():
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     kp = tuple(int(x) for x in args.kpoints.split(","))
-    common = dict(ecutwfc=args.ecutwfc, ecutrho=args.ecutrho, degauss=args.degauss,
+    # degauss default: 0.005 Ry for production relax (conv-gate lock), 0.01 for legacy scf modes
+    if args.degauss is not None:
+        degauss = args.degauss
+    elif args.mode == "relax_endpoints":
+        degauss = PRODUCTION_DEGAUSS
+    else:
+        degauss = 0.01
+    common = dict(ecutwfc=args.ecutwfc, ecutrho=args.ecutrho, degauss=degauss,
                   kpoints=kp, pseudo_dir=args.pseudo_dir)
 
     if args.mode == "benchmark":
