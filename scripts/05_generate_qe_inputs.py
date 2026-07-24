@@ -101,7 +101,8 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
                    kpoints=(1, 1, 1), conv_thr=1e-6, pseudo_dir=DEFAULT_PSEUDO_DIR,
                    mixing_beta=0.3, electron_maxstep=200, case_label="",
                    calculation="scf", d3=False, dftd3_version=4, nosym=False,
-                   forc_conv_thr=7.8e-4, nstep=200):
+                   forc_conv_thr=7.8e-4, nstep=200,
+                   mixing_mode="plain", trust_radius_ini=0.1):
     """Write one pw.x input (scf or relax). Returns a metadata dict.
 
     localize_pb : list of atom indices to relabel as a distinct species 'Pb1' and
@@ -200,10 +201,19 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
     txt += f"    conv_thr = {conv_thr}\n"
     txt += f"    mixing_beta = {mixing_beta}\n"
     txt += f"    electron_maxstep = {electron_maxstep}\n"
+    if mixing_mode != "plain":
+        # local-TF (Thomas-Fermi screened) mixing suppresses charge-sloshing in large
+        # inhomogeneous defect supercells — the odd-electron q0 cell was taking 30+ SCF
+        # iterations/ionic-step with plain mixing; local-TF converges far faster.
+        txt += f"    mixing_mode = '{mixing_mode}'\n"
     txt += "/\n"
     if calculation == "relax":
         txt += "&ions\n"
         txt += "    ion_dynamics = 'bfgs'\n"
+        # larger initial trust radius so BFGS doesn't collapse to micro-steps from a
+        # MACE-pre-relaxed start; bfgs_ndim=3 uses more history for a better step.
+        txt += f"    trust_radius_ini = {trust_radius_ini}\n"
+        txt += "    bfgs_ndim = 3\n"
         txt += "/\n"
 
     txt += "ATOMIC_SPECIES\n"
@@ -243,8 +253,9 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
             "kpoints": list(kpoints), "conv_thr": conv_thr, "case": case_label or "A",
             "calculation": calculation, "d3": bool(d3),
             "dftd3_version": (dftd3_version if d3 else None),
-            "nosym": bool(nosym),
+            "nosym": bool(nosym), "mixing_mode": mixing_mode, "mixing_beta": mixing_beta,
             "forc_conv_thr": (forc_conv_thr if calculation == "relax" else None),
+            "trust_radius_ini": (trust_radius_ini if calculation == "relax" else None),
             "geometry_sha256": band_sha256()}
     return meta
 
@@ -354,7 +365,9 @@ def gen_conv_gate(outdir, *, ecutwfc=50.0, ecutrho=400.0, degauss=0.01, kpoints=
 def gen_relax_endpoints(outdir, **kw):
     """Fixed-cell ionic relaxation of the 4 charge-state endpoints: q0/q1 x
     img0(initial)/img6(final). Stage-1-locked spin, PBE+D3(BJ), nosym, fmax<=0.02 eV/A.
-    Production degauss=0.005 Ry (convergence-gate lock) unless overridden in kw."""
+    Production degauss=0.005 Ry (convergence-gate lock) unless overridden in kw.
+    Uses local-TF mixing + mixing_beta=0.2 (charge-sloshing fix for the large
+    odd-electron defect cell) and a 0.1 Bohr initial BFGS trust radius."""
     kw.setdefault("degauss", PRODUCTION_DEGAUSS)
     metas = []
     for q in (0, 1):
@@ -364,6 +377,7 @@ def gen_relax_endpoints(outdir, **kw):
             prefix = f"relax_q{q}_{role}"
             metas.append(write_pw_input(atoms, Path(outdir) / f"{prefix}.in", prefix=prefix,
                          calculation="relax", d3=True, nosym=True,
+                         mixing_mode="local-TF", mixing_beta=0.2, trust_radius_ini=0.1,
                          **{k: v for k, v in sk.items() if k != "case_label"},
                          case_label=sk["case_label"], **kw))
     return metas
