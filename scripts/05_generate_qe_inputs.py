@@ -299,6 +299,11 @@ def gen_all_images(outdir, **kw):
     return metas
 
 
+# Stage-2 production degauss LOCKED at 0.005 Ry (convergence gate: 0.01 shifted the q0
+# barrier 15.8 meV — not converged; see CONVERGENCE_GATE.md). Relax/NEB modes use this.
+PRODUCTION_DEGAUSS = 0.005
+
+
 def _spin_kw(q):
     """Stage-1-locked spin/charge setting per charge state."""
     if q == 0:
@@ -348,7 +353,9 @@ def gen_conv_gate(outdir, *, ecutwfc=50.0, ecutrho=400.0, degauss=0.01, kpoints=
 
 def gen_relax_endpoints(outdir, **kw):
     """Fixed-cell ionic relaxation of the 4 charge-state endpoints: q0/q1 x
-    img0(initial)/img6(final). Stage-1-locked spin, PBE+D3(BJ), nosym, fmax<=0.02 eV/A."""
+    img0(initial)/img6(final). Stage-1-locked spin, PBE+D3(BJ), nosym, fmax<=0.02 eV/A.
+    Production degauss=0.005 Ry (convergence-gate lock) unless overridden in kw."""
+    kw.setdefault("degauss", PRODUCTION_DEGAUSS)
     metas = []
     for q in (0, 1):
         sk = _spin_kw(q)
