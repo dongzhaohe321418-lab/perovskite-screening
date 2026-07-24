@@ -99,12 +99,23 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
                    tot_magnetization=None, localize_pb=None, localize_mag=0.5,
                    ecutwfc=50.0, ecutrho=400.0, degauss=0.01, smearing="gaussian",
                    kpoints=(1, 1, 1), conv_thr=1e-6, pseudo_dir=DEFAULT_PSEUDO_DIR,
-                   mixing_beta=0.3, electron_maxstep=200, case_label=""):
-    """Write one pw.x SCF input. Returns a metadata dict.
+                   mixing_beta=0.3, electron_maxstep=200, case_label="",
+                   calculation="scf", d3=False, dftd3_version=4, nosym=False,
+                   forc_conv_thr=7.8e-4, nstep=200):
+    """Write one pw.x input (scf or relax). Returns a metadata dict.
 
     localize_pb : list of atom indices to relabel as a distinct species 'Pb1' and
                   seed with starting_magnetization=localize_mag (Case C). Requires
                   nspin=2. Other species get starting_magnetization tiny/zero.
+    calculation : 'scf' or 'relax' (fixed-cell ionic relaxation; NEVER vc-relax here).
+    d3          : if True add Grimme-D3 via vdw_corr='dft-d3' with dftd3_version
+                  (4 = D3-BJ Becke-Johnson damping; 3 = D3 zero-damping). This is a
+                  post-SCF total-ENERGY + FORCE correction, not a change to the SCF
+                  potential.
+    nosym       : if True set nosym=.true. and noinv=.true. -- do NOT let QE's
+                  auto-symmetry constrain a vacancy/charged/spin-polarized cell's
+                  local distortion or spin density.
+    forc_conv_thr: relax force threshold in Ry/Bohr (7.8e-4 = 0.0201 eV/A).
     """
     atoms = atoms.copy()
     symbols = list(atoms.get_chemical_symbols())
@@ -142,6 +153,12 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
     ]
     if charge:
         sys_lines.append(f"    tot_charge = {charge}")
+    if d3:
+        sys_lines.append("    vdw_corr = 'dft-d3'")
+        sys_lines.append(f"    dftd3_version = {dftd3_version}")
+    if nosym:
+        sys_lines.append("    nosym = .true.")
+        sys_lines.append("    noinv = .true.")
     if nspin == 2:
         sys_lines.append("    nspin = 2")
         if tot_magnetization is not None:
@@ -155,8 +172,8 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
 
     header = [
         f"! gamma-CsPbI3 2x2x2 V_I fixed-path SCF  |  prefix={prefix}",
-        f"! image={prefix.split('img')[-1].split('_')[0]}  charge=+{charge}  "
-        f"nspin={nspin}  case={case_label or 'A'}",
+        f"! prefix={prefix}  charge=+{charge}  "
+        f"nspin={nspin}  case={case_label or 'A'}  calc={calculation}{'  +D3(BJ)' if d3 else ''}",
         f"! nelec={nelec}  ({'ODD -> V_I^0 open-shell' if nelec % 2 else 'EVEN -> V_I^+ closed-shell'})",
         f"! ecutwfc={ecutwfc} ecutrho={ecutrho} degauss={degauss} smearing={smearing} "
         f"kpts={kpoints[0]}x{kpoints[1]}x{kpoints[2]}",
@@ -167,10 +184,14 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
 
     txt = "\n".join(header)
     txt += "&control\n"
-    txt += "    calculation = 'scf'\n"
+    txt += f"    calculation = '{calculation}'\n"
     txt += f"    prefix = '{prefix}'\n"
     txt += "    verbosity = 'high'\n"
     txt += "    tprnfor = .true.\n"
+    txt += "    tstress = .false.\n"
+    if calculation == "relax":
+        txt += f"    forc_conv_thr = {forc_conv_thr}\n"
+        txt += f"    nstep = {nstep}\n"
     txt += f"    pseudo_dir = '{pseudo_dir}'\n"
     txt += "    outdir = './out'\n"
     txt += "/\n"
@@ -180,6 +201,10 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
     txt += f"    mixing_beta = {mixing_beta}\n"
     txt += f"    electron_maxstep = {electron_maxstep}\n"
     txt += "/\n"
+    if calculation == "relax":
+        txt += "&ions\n"
+        txt += "    ion_dynamics = 'bfgs'\n"
+        txt += "/\n"
 
     txt += "ATOMIC_SPECIES\n"
     for lab in species_order:
@@ -200,11 +225,26 @@ def write_pw_input(atoms, out_path, *, prefix, charge=0, nspin=1,
 
     out_path = Path(out_path)
     out_path.write_text(txt)
-    meta = {"prefix": prefix, "file": out_path.name, "image": int(prefix.split('img')[-1].split('_')[0]),
+    def _img_from_prefix(pfx):
+        import re
+        m = re.search(r"img(\d+)", pfx)
+        if m:
+            return int(m.group(1))
+        # relax endpoints: initial->img0, final->img6 (the two path endpoints)
+        if "initial" in pfx:
+            return 0
+        if "final" in pfx:
+            return 6
+        return -1
+    meta = {"prefix": prefix, "file": out_path.name, "image": _img_from_prefix(prefix),
             "charge": charge, "nspin": nspin, "tot_magnetization": tot_magnetization,
             "localize_pb": sorted(localize_pb), "nelec": nelec, "ecutwfc": ecutwfc,
             "ecutrho": ecutrho, "degauss": degauss, "smearing": smearing,
             "kpoints": list(kpoints), "conv_thr": conv_thr, "case": case_label or "A",
+            "calculation": calculation, "d3": bool(d3),
+            "dftd3_version": (dftd3_version if d3 else None),
+            "nosym": bool(nosym),
+            "forc_conv_thr": (forc_conv_thr if calculation == "relax" else None),
             "geometry_sha256": band_sha256()}
     return meta
 
@@ -259,9 +299,73 @@ def gen_all_images(outdir, **kw):
     return metas
 
 
+def _spin_kw(q):
+    """Stage-1-locked spin/charge setting per charge state."""
+    if q == 0:
+        return dict(charge=0, nspin=2, tot_magnetization=1, case_label="B")  # odd e- open-shell
+    return dict(charge=1, nspin=1, case_label="A")                            # even e- closed-shell
+
+
+def gen_d3_baseline(outdir, **kw):
+    """PBE+D3(BJ) single-points on img0+img3 for q=0 (spin) and q=+1 -- the NEW
+    consistent baseline table to compare against old bare-PBE + simple-dftd3 estimate."""
+    metas = []
+    for q in (0, 1):
+        sk = _spin_kw(q)
+        for img in (0, 3):
+            atoms = load_image(img)
+            prefix = f"d3base_img{img}_q{q}"
+            metas.append(write_pw_input(atoms, Path(outdir) / f"{prefix}.in", prefix=prefix,
+                         calculation="scf", d3=True, nosym=True, **{k: v for k, v in sk.items() if k != "case_label"},
+                         case_label=sk["case_label"], **kw))
+    return metas
+
+
+def gen_conv_gate(outdir, *, ecutwfc=50.0, ecutrho=400.0, degauss=0.01, kpoints=(1, 1, 1),
+                  pseudo_dir=DEFAULT_PSEUDO_DIR):
+    """Parameter-convergence sweep on img0+img3, q0 AND q1, all PBE+D3(BJ). One-variable
+    perturbations from the baseline: ecutwfc 50->60, k Gamma->2x2x2, degauss 0.01->0.005.
+    Barrier E(img3)-E(img0) per setting; any >~10 meV shift => baseline not converged."""
+    variants = {
+        "base":   dict(ecutwfc=50.0, ecutrho=400.0, degauss=0.01,  kpoints=(1, 1, 1)),
+        "ecut60": dict(ecutwfc=60.0, ecutrho=480.0, degauss=0.01,  kpoints=(1, 1, 1)),
+        "k222":   dict(ecutwfc=50.0, ecutrho=400.0, degauss=0.01,  kpoints=(2, 2, 2)),
+        "dg005":  dict(ecutwfc=50.0, ecutrho=400.0, degauss=0.005, kpoints=(1, 1, 1)),
+    }
+    metas = []
+    for vname, vk in variants.items():
+        for q in (0, 1):
+            sk = _spin_kw(q)
+            for img in (0, 3):
+                atoms = load_image(img)
+                prefix = f"conv_{vname}_img{img}_q{q}"
+                metas.append(write_pw_input(atoms, Path(outdir) / f"{prefix}.in", prefix=prefix,
+                             calculation="scf", d3=True, nosym=True, pseudo_dir=pseudo_dir,
+                             **{k: v for k, v in sk.items() if k != "case_label"},
+                             case_label=sk["case_label"], **vk))
+    return metas
+
+
+def gen_relax_endpoints(outdir, **kw):
+    """Fixed-cell ionic relaxation of the 4 charge-state endpoints: q0/q1 x
+    img0(initial)/img6(final). Stage-1-locked spin, PBE+D3(BJ), nosym, fmax<=0.02 eV/A."""
+    metas = []
+    for q in (0, 1):
+        sk = _spin_kw(q)
+        for img, role in ((0, "initial"), (6, "final")):
+            atoms = load_image(img)
+            prefix = f"relax_q{q}_{role}"
+            metas.append(write_pw_input(atoms, Path(outdir) / f"{prefix}.in", prefix=prefix,
+                         calculation="relax", d3=True, nosym=True,
+                         **{k: v for k, v in sk.items() if k != "case_label"},
+                         case_label=sk["case_label"], **kw))
+    return metas
+
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("mode", choices=["benchmark", "spin_scan", "all_images", "one"])
+    p.add_argument("mode", choices=["benchmark", "spin_scan", "all_images", "one",
+                                    "d3_baseline", "conv_gate", "relax_endpoints"])
     p.add_argument("--outdir", default=str(ROOT / "ehpc" / "inputs"))
     p.add_argument("--ecutwfc", type=float, default=50.0)
     p.add_argument("--ecutrho", type=float, default=400.0)
@@ -288,6 +392,12 @@ def main():
         metas = gen_spin_scan(outdir, **common)
     elif args.mode == "all_images":
         metas = gen_all_images(outdir, **common)
+    elif args.mode == "d3_baseline":
+        metas = gen_d3_baseline(outdir, **common)
+    elif args.mode == "conv_gate":
+        metas = gen_conv_gate(outdir, pseudo_dir=args.pseudo_dir)  # sets its own ecut/k/degauss
+    elif args.mode == "relax_endpoints":
+        metas = gen_relax_endpoints(outdir, **common)
     else:  # one
         atoms = load_image(args.image)
         loc = under_coordinated_pb(atoms) if args.localize else None
