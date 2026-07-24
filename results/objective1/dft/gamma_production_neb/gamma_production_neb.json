@@ -1,0 +1,54 @@
+{
+  "tag": "production MACE reference (zero-shot MACE-MP-0, charge-agnostic)",
+  "host": "gamma-P1 tilted gamma-like CsPbI3 2x2x2 V_I",
+  "results": {
+    "5_interior": {
+      "n_interior": 5,
+      "n_total": 7,
+      "profile_meV": [
+        0.0,
+        36.2,
+        188.4,
+        253.3,
+        173.5,
+        54.2,
+        36.3
+      ],
+      "saddle_image": 3,
+      "Ea_fwd_meV": 253.3,
+      "Ea_bwd_meV": 217.0,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "final_max_perp_force_eV_A": 0.0321,
+      "final_max_raw_force_eV_A": 0.1595,
+      "fmax_ep": 0.02,
+      "fmax_neb": 0.03
+    },
+    "7_interior": {
+      "n_interior": 7,
+      "n_total": 9,
+      "profile_meV": [
+        0.0,
+        9.0,
+        102.8,
+        212.1,
+        248.7,
+        197.1,
+        96.5,
+        35.1,
+        36.3
+      ],
+      "saddle_image": 4,
+      "Ea_fwd_meV": 248.7,
+      "Ea_bwd_meV": 212.5,
+      "endpoints_converged": true,
+      "neb_converged": true,
+      "final_max_perp_force_eV_A": 0.0387,
+      "final_max_raw_force_eV_A": 0.1828,
+      "fmax_ep": 0.02,
+      "fmax_neb": 0.03
+    }
+  },
+  "densification_shift_5to7_meV": -4.6,
+  "note": "Upgrades the scripts/01 tracer to production convergence + metadata. Charge-agnostic quasi-neutral PES; path/mechanism reference, not a charge-state barrier. Reference path for the Stage-2.2 d_max comparison."
+}
