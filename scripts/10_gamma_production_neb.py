@@ -47,8 +47,22 @@ def run_neb(initial, final, calcs, n_interior, fmax_ep=FMAX_EP, fmax_neb=FMAX_NE
     neb.climb = True
     conv2 = FIRE(neb, logfile=None).run(fmax=fmax_neb, steps=600)
     energies = np.array([im.get_potential_energy() for im in images])
-    # final max NEB force across the band (production metadata scripts/01 lacked)
-    fmax_final = max(np.sqrt((im.get_forces()**2).sum(axis=1).max()) for im in images[1:-1])
+    # Production convergence metric = the max PERPENDICULAR true force across interior
+    # images (what NEB actually converges) — NOT the raw force, which is dominated by
+    # the along-path spring component and would misleadingly read ~0.16 eV/A at a
+    # converged saddle. tangents by the improved-tangent estimate (finite-diff proxy).
+    def perp_fmax(images):
+        pos = [im.get_positions() for im in images]
+        worst = 0.0
+        for i in range(1, len(images) - 1):
+            f = images[i].get_forces()
+            tau = pos[i + 1] - pos[i - 1]
+            tau /= (np.linalg.norm(tau) + 1e-12)
+            fperp = f - np.sum(f * tau) * tau
+            worst = max(worst, float(np.sqrt((fperp**2).sum(axis=1).max())))
+        return worst
+    fmax_perp = perp_fmax(images)
+    fmax_raw = max(np.sqrt((im.get_forces()**2).sum(axis=1).max()) for im in images[1:-1])
     prof = (energies - energies[0]) * 1000
     return {"n_interior": n_interior, "n_total": len(images),
             "profile_meV": [round(float(x), 1) for x in prof],
@@ -57,7 +71,8 @@ def run_neb(initial, final, calcs, n_interior, fmax_ep=FMAX_EP, fmax_neb=FMAX_NE
             "Ea_bwd_meV": round(float((energies.max() - energies[-1]) * 1000), 1),
             "endpoints_converged": bool(c1 and c2),
             "neb_converged": bool(conv2),
-            "final_max_neb_force_eV_A": round(float(fmax_final), 4),
+            "final_max_perp_force_eV_A": round(float(fmax_perp), 4),
+            "final_max_raw_force_eV_A": round(float(fmax_raw), 4),
             "fmax_ep": fmax_ep, "fmax_neb": fmax_neb}, images
 
 
@@ -82,7 +97,8 @@ def main():
         write(outdir / f"gamma_neb_band_{n_int}int.extxyz", images)
         results[f"{n_int}_interior"] = res
         print(f"[neb] {n_int} interior: Ea_fwd={res['Ea_fwd_meV']} meV saddle=img{res['saddle_image']} "
-              f"neb_conv={res['neb_converged']} maxF={res['final_max_neb_force_eV_A']}")
+              f"neb_conv={res['neb_converged']} perpF={res['final_max_perp_force_eV_A']} "
+              f"rawF={res['final_max_raw_force_eV_A']}")
 
     # densification check: barrier shift 5->7
     d = results["7_interior"]["Ea_fwd_meV"] - results["5_interior"]["Ea_fwd_meV"]
