@@ -60,6 +60,32 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
 - **Next step:** relaxed charged endpoints + charged NEB (Stage 2), after Stage 1 locks the theory level.
 - **Actual cost:** shared with a-dft (8-SCF matrix).
 
+### b-relax — Stage 2.1 relaxed-charge-state endpoints (IN PROGRESS, multi-day)
+- **Phase 0 DONE + pushed:** theory level locked/validated — degauss upgraded 0.01→0.005
+  (convergence gate found the q0 odd-electron barrier shifts 15.8 meV; not converged at
+  0.01), in-QE D3(BJ) validated to 0.9 meV vs the geometry-only estimate, 32-rank ≡ 64-rank.
+  New PBE+D3 fixed-path baseline: **q0 = 163.3 meV, q1 = 152.8 meV**. Honest caveat:
+  ecut60 (159 GB) and 2×2×2-k exceed the 124 GB cluster, so cutoff/k convergence is
+  **untested** (documented, user-approved). See `dft/CONVERGENCE_GATE.md`.
+- **Stage 2.1 endpoint relaxation IN PROGRESS:** DFT-relaxing the 4 charge-state endpoints
+  (q0/q1 × initial/final), fixed-cell `relax`, PBE+D3(BJ), degauss=0.005, q0 spin / q1
+  closed-shell. This is the first genuine step past fixed-geometry — it relaxes the nuclei
+  at the DFT level, which is what a validated anchor (b) requires.
+- **Convergence finding (important):** the γ-CsPbI₃ V_I cell has **soft octahedral-tilt
+  modes** — BFGS floors at fmax ≈ 0.04 eV/Å (energy-converged; the residual force is real,
+  not SCF noise, confirmed by QE auto-tightening conv_thr to 1e-8). Fixes applied to the
+  generator: local-TF mixing (charge-sloshing), mixing_beta=0.2, trust_radius_ini=0.1,
+  bfgs_ndim=3, two-tier tolerance (explore fmax≤0.05 / production fmax≤0.02), nstep cap.
+  Relaxed endpoints are taken as the lowest-fmax energy-converged ionic step.
+- **Wall-clock reality:** ~30 min per spin-SCF on the 159-atom cell × ~15-20 ionic steps ×
+  4 endpoints ≈ 25-30 h just for endpoints; the full VALIDATED both-state relaxed CI-NEB
+  campaign is **60-80 h wall (multi-day)**, exactly the guide's "Stage 2 ≈ 4× Stage 1".
+  Budget is NOT the limit (~¥400 / ¥1500 cap); wall-clock is.
+- **Allowed claim (unchanged):** still **FORBIDDEN** to claim reproducing Tyagi's ordering —
+  that gate stays closed until both charge states have a full DFT-relaxed CI-NEB (VALIDATED).
+- **Priority:** q1 (non-spin, ~2× faster) endpoints → q1 explore NEB first, as one complete
+  DFT-relaxed charged NEB, then q0. Pipeline (relax→harvest→neb.x→d_max) built + verified.
+
 ### b-spin — Stage 1.1 odd-electron spin scan (COMPLETE) + Stage 1.3 full profile (COMPLETE)
 - **Reproduction gate PASSED (2026-07-23, job b520e71a, 2 nodes/64 ranks):** the
   regenerated inputs reproduce the archived benchmark to ~6 significant decimals —
