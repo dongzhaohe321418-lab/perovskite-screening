@@ -106,7 +106,11 @@ def main():
     L.append("END_PATH_INPUT")
     L.append("BEGIN_ENGINE_INPUT")
     L.append("&CONTROL")
-    L.append("   calculation = 'relax'")
+    # neb.x drives ionic motion via its own PATH optimizer; the engine (pw.x) does a
+    # single-point SCF-with-forces per image. Must be 'scf' — 'relax' makes pw.x expect
+    # an &IONS namelist that the NEB engine block doesn't provide, and the parser then
+    # misreads the trailing CELL_PARAMETERS rows as bad &ions lines (QE read_namelists err).
+    L.append("   calculation = 'scf'")
     L.append("   prefix = 'neb'")
     L.append("   tprnfor = .true.")
     L.append("   tstress = .false.")
