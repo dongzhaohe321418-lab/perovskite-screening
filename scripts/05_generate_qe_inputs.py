@@ -378,7 +378,11 @@ def gen_relax_endpoints(outdir, tier="production", **kw):
     """
     kw.setdefault("degauss", PRODUCTION_DEGAUSS)
     if tier == "explore":
-        conv_thr, forc_conv_thr = 1e-6, 1.945e-3
+        # nstep=20 cap: this soft octahedral-tilt surface floors BFGS at fmax~0.04 eV/A
+        # (energy-converged); it oscillates without formally hitting 0.05, so cap the ionic
+        # steps and harvest the lowest-fmax geometry. 20 steps reaches the floor for all 4.
+        conv_thr, forc_conv_thr, nstep = 1e-6, 1.945e-3, 20
+        kw.setdefault("nstep", nstep)
     else:  # production
         conv_thr, forc_conv_thr = 1e-8, 7.8e-4
     metas = []
