@@ -63,7 +63,7 @@ intensity ratio cannot be converted to a weight fraction; the honest statement
 is relative: this peak carries **2.7%** of the perovskite Bragg intensity.
 
 **Correction to an earlier figure in this log:** a combined minor-phase total
-of 9.8% was recorded at one point. That wrongly counted the 30.2° substrate
+of 9.65% was recorded at one point (2.71% film + 6.94% substrate). That wrongly counted the 30.2° substrate
 line as a film phase. A substrate reflection is not a secondary phase of the
 film, and the film-only impurity total is **2.7%**. The pipeline now tags every
 non-perovskite reflection `origin='film'` or `'substrate'` and excludes the
@@ -354,8 +354,9 @@ auditable against the file. p-values are written at full precision
   effective dof 2.0–2.9, not 3, so asymptotic p-values are anti-conservative
   (PbI₂ unaffected at p = 6.4×10⁻¹⁴; correction is large in the far tail, ×178–1900,
   but negligible near α, so no call changes);
-  (v) **substrate/film separation fixed** — the 9.8% "minor phase" figure wrongly
-  included the 30.2° substrate line; film-only impurity is **2.7%**.
+  (v) **substrate/film separation fixed** — the 9.65% "minor phase" figure
+  (2.71% film + 6.94% substrate) wrongly counted the 30.2° substrate line as a
+  film phase; film-only impurity is **2.71%**.
   Texture conventions frozen (family, multiplicity, LP, |F|, exclusions,
   normalisation). Packaged as the `perovskite-xrd-protocol` skill with
   single/compare/batch modes and six hard gates, each verified against this
