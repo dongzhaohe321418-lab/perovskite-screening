@@ -97,6 +97,12 @@ no longer drifting — settled at 1.70 ± 0.01 after early swings of 2.50-5.52 (
 first attempt to achieve this**); SCF residual genuinely stable (**fail** — flat at
 3.4×10⁻³ Ry, ~3400× above `conv_thr`, through 116 iterations).
 
+*Caveat on "settled".* |m| was 1.83-1.90 at iteration 47 and 1.69-1.71 at iteration 116 — a
+further 0.16 μ_B (9%) of drift. Calling it settled at iteration 47 would have been
+premature; the 1.70 ± 0.01 figure is the value at **116** iterations, and only the late-run
+plateau supports the "not drifting" verdict. Any |m| quoted from a mid-run snapshot of this
+system should be treated as provisional.
+
 So fixed occupations did what it was chosen to do: it removed the fractional-occupation
 freedom that let the two spin channels equalise, and the spin *density* stopped wandering.
 But the SCF still cannot close. A stationary distribution with a stuck residual is the
