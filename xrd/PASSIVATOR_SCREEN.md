@@ -84,7 +84,7 @@ Robustness checks, all passed:
   highest values come from the best-aligned scans, so the trend is not
   manufactured by geometry.
 
-**Conclusion.** P5 shows ~10% PbI₂, roughly **4× the control** — a substantial
+**Conclusion.** P5 shows ~10% PbI₂, **3.8× the control** — a substantial
 excess. P1 and P2 sit modestly above control (3.9%, 3.4%). P4 is below control
 (1.7%). P3 falls **below the detection threshold** (p = 0.023 against a
 Bonferroni α = 0.0042) — the only sample with no PbI₂-compatible peak.
@@ -106,8 +106,22 @@ surface PbI₂ under nominally similar treatments.
 
 Using the internally-normalised **perovskite/ITO** ratio, P1, P2 and P5 are
 within ±7% of control — no meaningful change. **P3 is down 41%**, the only
-sample outside noise, consistent with its broader peaks and lower total counts
-(26.6 k vs 33–36 k elsewhere). P4 is down 9%, marginal.
+sample outside noise on *this* index, consistent with its broader peaks and lower
+total counts (26.6 k vs 33–36 k elsewhere). P4 is down 9%, marginal.
+
+The three indices do **not** agree on which samples exceed the ±10% band, and
+that disagreement is itself informative:
+
+| index | outside ±10% | corrected for alignment/flux? |
+|---|---|---|
+| perovskite / ITO | P3 only | **yes** — internal reference |
+| Bragg integral (raw) | P2 (−14.5%), P3 (−27.4%) | no |
+| Bragg / total scattered | none | partly |
+
+P2's excursion appears only in the **raw** Bragg integral — the one index with no
+correction for beam intensity or alignment — so it is the least trustworthy of
+the three and should not be read as a change in the film. Only **P3** falls
+outside the band on the alignment-normalised index.
 
 `Bragg/total` is flat (0.213–0.230) across all six, i.e. **no passivator
 measurably amorphised the film.** Degree of crystallinity ranges 41–67% but is
@@ -151,20 +165,21 @@ Numbers behind every panel are in `results/master_figure_data.csv`.
 
 | panel | shows | takeaway |
 |---|---|---|
-| **a** | all six patterns stacked, hkl indexed, ITO and PbI₂ markers | one phase in all six |
-| **b** | PbI₂ 001 window, substrate-referenced | P5 far above; P3 absent |
-| **c** | perovskite 100 as measured | 0.40° spread — looks like a lattice shift |
-| **d** | same peak after ITO referencing | spread collapses — it was not |
-| **e** | perovskite shift vs ITO shift | slope 1.08, r = 0.985 → geometric |
-| **f** | film FWHM vs ITO FWHM | r = +0.87 → width is contaminated |
-| **g** | apparent D vs ITO FWHM | r = −0.79 → "crystallinity" is alignment |
-| **h** | PbI₂ / perovskite Bragg | 1.7–10%, 4× spread, P3 below detection |
-| **i** | PbI₂ under two normalisations | ρ = 1.00 → ranking is real |
-| **j** | three crystallinity indices vs control | only P3 leaves the ±10% band |
-| **k** | texture coefficients, all reflections | every film strongly oriented |
-| **l** | lattice parameter, both error tiers | Δa inside uncertainty |
-| **m** | size with statistical vs systematic bars | flagged NOT comparable |
-| **n** | status of every quantity | what may and may not be concluded |
+| **a** | film stack schematic | the beam sees substrate *and* film — hence an internal reference |
+| **b** | all six patterns stacked, hkl indexed | one phase in all six |
+| **c** | PbI₂ 001 window, substrate-referenced | P5 highest, P3 absent |
+| **d** | perovskite 100 as measured | 0.40° spread — looks like a lattice shift |
+| **e** | same peak after ITO referencing | spread collapses — it was not |
+| **f** | perovskite shift vs ITO shift | slope 1.08, r = 0.985 → geometric |
+| **g** | film FWHM vs ITO FWHM | r = +0.87 → width is contaminated |
+| **h** | apparent size vs ITO FWHM | r = −0.79 → "crystallinity" is alignment |
+| **i** | PbI₂ / perovskite Bragg, ranked | 1.1–10.0%, 3.8× spread; P3 below detection |
+| **j** | PbI₂ under two normalisations | ρ = 1.00 → ranking is real |
+| **k** | three crystallinity indices vs control | P3 exceeds the band on the normalised index; P2 only on the raw one |
+| **l** | texture coefficients, all reflections | every film strongly oriented |
+| **m** | lattice parameter, both error tiers | Δa inside uncertainty |
+| **n** | size with statistical vs systematic bars | flagged not comparable |
+| **o** | status of every quantity | what may and may not be concluded |
 
 Colour is fixed per sample throughout (control black, P1–P5 as in panel a).
 
@@ -177,6 +192,6 @@ results/passivator_peak_tables.csv     every fitted peak, all samples
 results/passivator_texture.csv         texture coefficients
 results/geometry_diagnostics.csv       ITO drift/width evidence
 results/master_figure_data.csv       every number plotted in the master figure
-figures/xrd_passivator_master.png    14-panel master summary
+figures/xrd_passivator_master.png    15-panel A3 master summary (+ .pdf, vector)
 figures/xrd_passivator_comparison.png
 ```
