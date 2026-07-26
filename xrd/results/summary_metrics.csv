@@ -1,14 +1,13 @@
-quantity,value,lo68,hi68,unit,note
-"Volume-weighted domain size D (integral breadth, pure-size model)",43.6259,40.901,46.8868,nm,ADOPTED value
-"D, statistical uncertainty only",43.9,42.0,46.3,nm,counting statistics + profile shape
-"D, robustness to +/-50% instrumental FWHM error",43.7,38.4,50.3,nm,systematic envelope
-"D, Scherrer FWHM (K=0.9), mean of reflections",55.9364,49.0776,67.4026,nm,"per-peak mean, unstable estimator"
-"D, Williamson-Hall intercept",30.8616,27.0271,35.991,nm,biased low; strain term not significant
-Microstrain (WH slope/4),-0.0314,-0.0475,-0.0158,%,-2.3 sigma => not significant
-Lattice parameter a (cubic),6.2969,6.2936,6.3002,A,"8 reflections, zero-shift refined"
-Zero-point offset,-0.0888,-0.1062,-0.0714,deg,sample displacement
-Degree of crystallinity (model-dependent),53.1744,46.0977,60.251,%,halo width degenerate with flat bg
-Bragg / total scattered intensity,21.903,,,%,background-independent relative index
-Total perovskite Bragg intensity,361.661,,,counts*deg,relative crystallinity index
-Minor-phase / perovskite Bragg ratio,9.7766,,,%,PbI2 001 + substrate line
-Peak-to-background (220),67.6844,,,-,data quality
+quantity,value,interval_lo,interval_hi,unit,uncertainty_class,note
+"Domain size D (volume-weighted, integral breadth)",43.74787382921483,41.909721669501316,46.3549776779797,nm,statistical 68% CI,counting + profile shape
+Domain size D — instrument-width sensitivity,43.74787382921483,38.39208645771289,50.3409425604169,nm,systematic,DO NOT merge with statistical CI
+Effective pseudo-cubic a,6.296883911705348,6.295777232423633,6.297990590987062,A,formal fit,weights at face value
+Effective pseudo-cubic a,6.296883911705348,6.2935621369211185,6.300205686489577,A,model discrepancy,"Birge 3.00, chi2r 9.01; NOT a space group"
+Zero-point offset,-0.08880775201946899,-0.10624538366954367,-0.0713701203693943,deg,model discrepancy,sample displacement
+Microstrain,,,,%,suppressed by gate,"WH slope -2.3 sigma, negative"
+Degree of crystallinity,,49.03075193872934,65.21878625874905,%,bounded range,halo width degenerate with flat background
+Bragg / total scattered,21.90300394831509,,,%,comparative index,fixed-protocol only; not background-independent
+Perovskite Bragg integral,361.6610148991323,,,counts*deg,comparative index,fixed-protocol only
+Film impurity / perovskite Bragg,2.7060272529423615,,,%,relative index,PbI2-compatible 001; substrate excluded; no wt% conversion
+Peak-to-background (220),64.01520958831297,,,-,data quality,
+Analysis status,,,,-,PROVISIONAL,Scherrer/integral-breadth size is CONDITIONAL on the assumed instrumental resolution (no standard scan supplied).; Substrate-overlapping reflections stay PROVISIONAL (no bare-substrate scan supplied).
