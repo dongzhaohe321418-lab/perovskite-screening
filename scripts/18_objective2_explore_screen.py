@@ -83,10 +83,24 @@ def run_band(ini, fin, n_images, fmax, steps):
     interior = E[1:-1]
     endpoints_are_minima = bool(interior.min() >= min(E[0], E[-1]) - 1e-6)
     saddle_is_interior = bool(0 < int(E.argmax()) < len(E) - 1)
+    # ENDPOINT CONSISTENCY. The two endpoints must describe the SAME defect
+    # configuration differing only by the migrating ion, otherwise Ea compares two
+    # different structures. Test: exactly one atom moves substantially and the rest of
+    # the framework is static. A dopant placed near the migration channel is more likely
+    # to collapse the local cage into a different basin, so this must gate every path.
+    cell = ini.cell.array
+    disp = np.linalg.norm(mic(images[-1].positions - images[0].positions, cell), axis=1)
+    order = np.argsort(disp)[::-1]
+    n_big = int((disp > 1.0).sum())
+    endpoints_consistent = bool(n_big == 1 and disp[order[1]] < 0.8)
     return images, E, {
-        "valid": endpoints_are_minima and saddle_is_interior,
+        "valid": endpoints_are_minima and saddle_is_interior and endpoints_consistent,
         "endpoints_are_minima": endpoints_are_minima,
         "saddle_is_interior": saddle_is_interior,
+        "endpoints_consistent": endpoints_consistent,
+        "n_atoms_moved_gt_1A": n_big,
+        "largest_disp_A": round(float(disp[order[0]]), 3),
+        "second_disp_A": round(float(disp[order[1]]), 3),
         "band_converged": bool(opt.converged()),
         "band_nsteps": int(opt.get_number_of_steps()),
     }
@@ -171,13 +185,28 @@ def main():
         rows = rows[:args.limit]
     print(f"{len(rows)} ionic configurations selected")
 
-    nf = None
+    # A noise floor is usable ONLY if it came from a run whose bands passed the validity
+    # gate. A rejected run still writes a spread; reading it blindly would silently import
+    # a meaningless number as the significance threshold.
+    nf, nf_status = None, "absent"
     if os.path.exists(args.noise_floor):
         nfj = json.load(open(args.noise_floor))
-        nf = nfj.get("Ea_spread_meV")
-        print(f"noise floor from {args.noise_floor}: {nf} meV (status {nfj.get('status','ok')})")
-    else:
-        print("NO noise floor available -> resolvability cannot be assessed")
+        nf_status = nfj.get("status", "ok")
+        n_valid = nfj.get("n_members_valid")
+        if nf_status == "NO_VALID_BANDS":
+            print(f"noise floor REJECTED at source (status={nf_status}) -> not used")
+        elif n_valid is None:
+            print("noise floor predates the validity gate (no n_members_valid field) "
+                  "-> NOT USED; rerun scripts/17")
+            nf_status = "PRE_GATE_REJECTED"
+        elif n_valid < 2:
+            print(f"noise floor has only {n_valid} valid member(s) -> not usable as a spread")
+            nf_status = "INSUFFICIENT_VALID"
+        else:
+            nf = nfj.get("Ea_spread_meV")
+            print(f"noise floor: {nf:.1f} meV from {n_valid} valid members")
+    if nf is None:
+        print("=> resolvability CANNOT be assessed; dEa values are EXPLORE-only")
 
     out_rows = []
     for k, row in enumerate(rows):
@@ -229,12 +258,37 @@ def main():
         print(f"  [{k+1}/{len(rows)}] {row['dopant']} m{mem} r{row['site_rank']}: "
               f"Ea = {rec['Ea_forward_eV']*1000:7.1f} meV{flag}  ({rec['wall_s']:.0f}s)")
         json.dump({"tier": "EXPLORE", "level": "MACE-MP-0-medium",
-                   "noise_floor_meV": nf, "ten_x_threshold_meV": round(TEN_X_MEV, 1),
+                   "noise_floor_meV": nf, "noise_floor_status": nf_status,
+                   "ten_x_threshold_meV": round(TEN_X_MEV, 1),
                    "n_paths": len(out_rows), "rows": out_rows},
                   open(f"{args.out}/explore_paths.json", "w"), indent=1)
 
     valid = [r for r in out_rows if r["valid"]]
     print(f"\n{len(valid)}/{len(out_rows)} paths passed the validity gate")
+    # Per-dopant failure rate is INFORMATION, not noise: a dopant whose paths repeatedly
+    # fail endpoint consistency is destabilising the local cage, which is a physical
+    # result about that dopant and must be reported rather than silently dropped.
+    from collections import defaultdict
+    agg = defaultdict(lambda: {"n": 0, "valid": 0, "fail_consistency": 0,
+                               "fail_minima": 0, "fail_saddle": 0})
+    for r in out_rows:
+        a = agg[r["dopant"]]
+        a["n"] += 1
+        a["valid"] += int(r["valid"])
+        a["fail_consistency"] += int(not r.get("endpoints_consistent", True))
+        a["fail_minima"] += int(not r["endpoints_are_minima"])
+        a["fail_saddle"] += int(not r["saddle_is_interior"])
+    print("\nper-dopant gate outcome:")
+    for k, a in sorted(agg.items()):
+        print(f"  {k:<8} {a['valid']}/{a['n']} valid  "
+              f"(consistency {a['fail_consistency']}, minima {a['fail_minima']}, "
+              f"saddle {a['fail_saddle']})")
+    json.dump({"tier": "EXPLORE", "level": "MACE-MP-0-medium",
+               "noise_floor_meV": nf, "noise_floor_status": nf_status,
+               "ten_x_threshold_meV": round(TEN_X_MEV, 1),
+               "gate_outcome_by_dopant": {k: dict(v) for k, v in agg.items()},
+               "n_paths": len(out_rows), "rows": out_rows},
+              open(f"{args.out}/explore_paths.json", "w"), indent=1)
     print(f"10x-rate threshold: {TEN_X_MEV:.1f} meV | noise floor: {nf} meV")
     return out_rows
 
