@@ -143,6 +143,31 @@ therefore prohibits converting any intensity ratio to a weight fraction.
 4. Repeat P5 and P3 to confirm the PbI₂ extremes, which are the only
    material-level differences this dataset establishes.
 
+
+## Master figure — panel guide
+
+`figures/xrd_passivator_master.png` carries every comparison in one sheet.
+Numbers behind every panel are in `results/master_figure_data.csv`.
+
+| panel | shows | takeaway |
+|---|---|---|
+| **a** | all six patterns stacked, hkl indexed, ITO and PbI₂ markers | one phase in all six |
+| **b** | PbI₂ 001 window, substrate-referenced | P5 far above; P3 absent |
+| **c** | perovskite 100 as measured | 0.40° spread — looks like a lattice shift |
+| **d** | same peak after ITO referencing | spread collapses — it was not |
+| **e** | perovskite shift vs ITO shift | slope 1.08, r = 0.985 → geometric |
+| **f** | film FWHM vs ITO FWHM | r = +0.87 → width is contaminated |
+| **g** | apparent D vs ITO FWHM | r = −0.79 → "crystallinity" is alignment |
+| **h** | PbI₂ / perovskite Bragg | 1.7–10%, 4× spread, P3 below detection |
+| **i** | PbI₂ under two normalisations | ρ = 1.00 → ranking is real |
+| **j** | three crystallinity indices vs control | only P3 leaves the ±10% band |
+| **k** | texture coefficients, all reflections | every film strongly oriented |
+| **l** | lattice parameter, both error tiers | Δa inside uncertainty |
+| **m** | size with statistical vs systematic bars | flagged NOT comparable |
+| **n** | status of every quantity | what may and may not be concluded |
+
+Colour is fixed per sample throughout (control black, P1–P5 as in panel a).
+
 ## Files
 
 ```
@@ -151,5 +176,7 @@ results/passivator_comparison.csv      per-sample metrics with status flags
 results/passivator_peak_tables.csv     every fitted peak, all samples
 results/passivator_texture.csv         texture coefficients
 results/geometry_diagnostics.csv       ITO drift/width evidence
+results/master_figure_data.csv       every number plotted in the master figure
+figures/xrd_passivator_master.png    14-panel master summary
 figures/xrd_passivator_comparison.png
 ```
