@@ -61,3 +61,56 @@ The seed is a **species relabel only**: `Pb1` carries the identical
 `Pb.pbe-dn-rrkjus_psl.1.0.0.UPF` (verified in the output: `Pb1 14.00 207.20000`), applied
 to exactly one atom, with `starting_magnetization(Pb1) = 0.6`. The Hamiltonian is unchanged
 — this is the escalation step that precedes Hubbard U, per the acceptance gate.
+
+
+---
+
+## Criterion 2, fourth bullet — ANSWERED
+
+Both spatial seeds were run to their plateau and compared.
+
+| | q0C (seed Pb 139) | q0D (seed Pb 70) |
+|---|---|---|
+| total energy | −9247.624645 Ry | −9247.624642 Ry |
+| energy stability | ±0.24 meV | ±0.93 meV |
+| absolute moment | 1.51 | 1.58 |
+| residual floor | 1.56×10⁻³ Ry | 1.65×10⁻³ Ry |
+
+**Energy difference: +0.04 meV**, against a combined energy noise of 0.96 meV and a
+significance threshold of 59.5 meV.
+
+**The two seeds converge to the same state**, not to two orderable metastable states. The
+moments agree to 0.07 μ_B and the residual floors coincide. So criterion 2's fourth bullet
+is satisfied in its *first* form — there is no site-selection ambiguity to order. This is
+consistent with the geometry: Pb 139 and Pb 70 flank the vacancy at 3.45 and 3.51 Å, i.e.
+they are near-equivalent by the symmetry of the vacancy environment, so seeding either one
+reaches the same physical solution.
+
+That reframes what remains. The barrier to a converged q=0 state is **not** a choice
+between competing localisation sites — that question is now closed. It is that the density
+mixer cannot close the residual on a manifold whose *total energy is already stationary to
+sub-meV*. The two facts together — energy stable to 0.24 meV while the residual sits at
+1.6×10⁻³ Ry — say the remaining error lives in a part of the density that barely couples to
+the energy.
+
+### Consolidated criterion-2 scoring
+
+- **PASS** total moment pinned at 1.00 (all fixed-occupation runs)
+- **PASS** absolute magnetisation not drifting (1.51 / 1.58, locked)
+- **PASS** spin density on a definite site, reproducibly
+- **PASS** the two seeds agree — same ground state, to 0.04 meV
+- **FAIL** SCF residual descending to `conv_thr` — plateaus at ~1.6×10⁻³ Ry
+
+Four of five. The single remaining failure is formal SCF convergence, and its practical
+consequence is bounded: for a **static energy** the uncertainty is sub-meV and usable, but
+**forces from an unconverged SCF are unreliable**, and a NEB needs forces. So this state
+supports single-point energetics and does *not* yet support a migration barrier.
+
+### What this means for the escalation path
+
+The acceptance gate's fallback order put spatial seeding before Hubbard U / hybrids / cDFT,
+precisely to avoid a theory-level change if a cheaper fix sufficed. Spatial seeding has now
+been tried and has resolved the *site* question without changing the Hamiltonian — but it
+did not deliver convergence. The next escalation step is therefore live, and it carries the
+consequence the gate already flagged: **any of Hubbard U, hybrid functionals, or cDFT
+changes the theory level, so the q=+1 leg must be recomputed identically.**
