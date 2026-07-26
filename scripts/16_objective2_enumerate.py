@@ -192,6 +192,11 @@ def main():
                     "is_molecular": label in MOLECULAR,
                     "simple_ion": SIMPLE_ION.get(label),
                     "n_host_atoms_replaced": len(idx),
+                    # Persist the actual site coordinates and the host atom indices.
+                    # Downstream screening needs the position to place the dopant; a
+                    # distance alone is ambiguous (many sites share a distance).
+                    "site_pos_A": [round(float(x), 4) for x in p],
+                    "host_atom_indices": idx,
                     "tier": "EXPLORE", "note": note,
                 })
 
