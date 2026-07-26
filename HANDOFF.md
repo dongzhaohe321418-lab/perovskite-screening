@@ -115,7 +115,13 @@ ehpc 装机细节见 compute_details(ssh:ehpc):QE 装在共享 home 的 conda en
 US 赝势(pslibrary 1.0.0)/ ecut 50-400 Ry / Γ 点 / 高斯展宽**,在 **MACE 弛豫的完全相同的
 NEB 几何**上做单点(不重新弛豫,只测能量模型)。
 
-- **未掺杂 V_I 势垒:DFT = 141 meV,MACE = 259 meV,MACE 高估 1.84×**(+118 meV)。
+- **未掺杂 V_I 势垒(固定几何单点,plain PBE):DFT = 141 meV,MACE = 259 meV**。
+  MACE 正确识别了迁移机制(单离子沿八面体棱跳跃,鞍点位置一致),但
+  **鞍点几何偏差超过阈值(d_max = 0.462 Å ≥ 0.4 Å),因此必须使用 DFT CI-NEB**。
+  **目前不存在可引用的收敛倍率**:该 141/259 meV 对比来自固定几何单点(plain PBE,
+  degauss=0.01),与 Stage-2 弛豫计算(PBE+D3(BJ),degauss=0.005)理论水平不同
+  (绝对能量相差 2.722 Ry = 37.03 eV),两者不可比较。详见
+  results/objective1/dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md。
 - 两者鞍点都在 image 3,机制/过渡态位置一致;MACE 只是整条曲线更陡。
 - 结论:zero-shot 基础模型**机制对、量级不对**(高 ~1.8 倍 vs PBE)——这正是 proposal 里
   排名 ΔE_a 需要 per-charge-state **微调**而非 zero-shot 的量化理由。
@@ -137,7 +143,8 @@ regression/strain/ga/finite_size/all;strain 支持 iso/biax + 可调收敛阈值
 ## 尚未完成 / 下一步
 
 - [x] Objective 1 DFT-free 下一步全部补完:GA 构型采样 (#2) + γ 有限尺寸 (#4)
-- [x] **DFT 校核锚点 (a) 完成(ehpc CPU QE):MACE 高估 1.84× vs PBE**
+- [x] **DFT 校核锚点 (a) 完成(ehpc CPU QE):MACE 机制正确,鞍点几何偏差超阈值 → 需 DFT CI-NEB**
+      (不引用倍率;固定几何单点与 Stage-2 弛豫结果理论水平不同,不可比较)
 - [x] **DFT 锚点 (b) 单点完成(ehpc):V_I⁰ 141 / V_I⁺ 127 meV,比值 0.90(固定几何)**
 - [ ] **锚点 (b) 弛豫版:带电几何优化 / 带电 NEB → 复现 Tyagi 数量级分离(ehpc,~5 h)**
 - [ ] proposal 加入 preliminary results 小节(数字已齐,等写)
