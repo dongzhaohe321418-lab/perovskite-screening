@@ -1,0 +1,14 @@
+quantity,value,lo68,hi68,unit,note
+"Volume-weighted domain size D (integral breadth, pure-size model)",43.6259,40.901,46.8868,nm,ADOPTED value
+"D, statistical uncertainty only",43.9,42.0,46.3,nm,counting statistics + profile shape
+"D, robustness to +/-50% instrumental FWHM error",43.7,38.4,50.3,nm,systematic envelope
+"D, Scherrer FWHM (K=0.9), mean of reflections",55.9364,49.0776,67.4026,nm,"per-peak mean, unstable estimator"
+"D, Williamson-Hall intercept",30.8616,27.0271,35.991,nm,biased low; strain term not significant
+Microstrain (WH slope/4),-0.0314,-0.0475,-0.0158,%,-2.3 sigma => not significant
+Lattice parameter a (cubic),6.2969,6.2936,6.3002,A,"8 reflections, zero-shift refined"
+Zero-point offset,-0.0888,-0.1062,-0.0714,deg,sample displacement
+Degree of crystallinity (model-dependent),53.1744,46.0977,60.251,%,halo width degenerate with flat bg
+Bragg / total scattered intensity,21.903,,,%,background-independent relative index
+Total perovskite Bragg intensity,361.661,,,counts*deg,relative crystallinity index
+Minor-phase / perovskite Bragg ratio,9.7766,,,%,PbI2 001 + substrate line
+Peak-to-background (220),67.6844,,,-,data quality
