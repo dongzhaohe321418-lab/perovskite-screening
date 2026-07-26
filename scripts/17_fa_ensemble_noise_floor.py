@@ -63,6 +63,10 @@ def main():
     ap.add_argument("--fmax", type=float, default=0.05)
     ap.add_argument("--steps", type=int, default=80)
     ap.add_argument("--relax-endpoints", action="store_true", default=True)
+    ap.add_argument("--endpoint-fmax", type=float, default=0.02,
+                    help="endpoint force target; MUST be tighter than the band fmax")
+    ap.add_argument("--endpoint-steps", type=int, default=600,
+                    help="endpoint step budget; FA soft rotation modes need many steps")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
 
@@ -89,11 +93,25 @@ def main():
         fin = ini.copy()
         fin.positions[mig] = vpos            # hop into the vacancy
 
+        # ENDPOINT STAGE. The FA host has soft molecular-rotation modes (same class of
+        # problem as the octahedral tilts in the CsPbI3 host), so endpoints need a far
+        # larger budget and a tighter force target than the band. Relaxing them at the
+        # band's own fmax/step budget leaves them ABOVE the first interior image, which
+        # makes Ea a difference from a non-minimum and is meaningless.
         for at in (ini, fin):
             at.calc = mace_mp(model="medium", device="cpu", default_dtype="float64")
+        ep_info = {}
         if args.relax_endpoints:
-            for at in (ini, fin):
-                FIRE(at, logfile=None).run(fmax=args.fmax, steps=args.steps)
+            for nm, at in (("initial", ini), ("final", fin)):
+                opt_e = FIRE(at, logfile=None)
+                opt_e.run(fmax=args.endpoint_fmax, steps=args.endpoint_steps)
+                ep_info[nm] = {
+                    "fmax": float(np.abs(at.get_forces()).max()),
+                    "converged": bool(opt_e.converged()),
+                    "nsteps": int(opt_e.get_number_of_steps()),
+                }
+                print(f"    endpoint {nm}: fmax={ep_info[nm]['fmax']:.4f} "
+                      f"converged={ep_info[nm]['converged']} ({ep_info[nm]['nsteps']} steps)")
 
         images = [ini] + [ini.copy() for _ in range(args.images)] + [fin]
         for im in images:
@@ -107,7 +125,24 @@ def main():
         E = np.array([im.get_potential_energy() for im in images])
         Ea_fwd = float(E.max() - E[0])
         Ea_bwd = float(E.max() - E[-1])
+
+        # VALIDITY GATE. A barrier is only meaningful if both endpoints are local minima
+        # of the band, i.e. no interior image lies below either endpoint, and the maximum
+        # is interior (not at an endpoint). Otherwise Ea is a difference from a
+        # non-minimum reference and must be rejected, not reported.
+        interior = E[1:-1]
+        endpoints_are_minima = bool(interior.min() >= min(E[0], E[-1]) - 1e-6)
+        saddle_is_interior = bool(0 < int(E.argmax()) < len(E) - 1)
+        valid = endpoints_are_minima and saddle_is_interior
+        if not valid:
+            print(f"    REJECTED: endpoints_are_minima={endpoints_are_minima} "
+                  f"saddle_is_interior={saddle_is_interior} "
+                  f"(lowest interior {1000*(interior.min()-E[0]):.0f} meV vs initial)")
         results.append({
+            "valid": valid,
+            "endpoints_are_minima": endpoints_are_minima,
+            "saddle_is_interior": saddle_is_interior,
+            "endpoint_relax": ep_info,
             "member": mem, "removed_I_index": vi, "d_removed_to_ref_A": round(dv, 3),
             "migrating_I_index": mig, "hop_distance_A": round(dm, 3),
             "Ea_forward_eV": Ea_fwd, "Ea_backward_eV": Ea_bwd,
@@ -121,11 +156,24 @@ def main():
               f"(converged={opt.converged()}, {opt.get_number_of_steps()} steps, "
               f"{time.time()-t0:.0f}s)")
 
-    Ea = np.array([r["Ea_forward_eV"] for r in results]) * 1000
+    valid_rows = [r for r in results if r["valid"]]
+    Ea = np.array([r["Ea_forward_eV"] for r in valid_rows]) * 1000
+    if len(Ea) == 0:
+        json.dump({"tier": "EXPLORE", "status": "NO_VALID_BANDS",
+                   "note": ("Every band failed the validity gate (endpoints not local minima, "
+                            "or saddle at an endpoint). No noise floor can be reported."),
+                   "members": results}, open(f"{args.out}/noise_floor.json", "w"), indent=1)
+        print("\nNO VALID BANDS -- no noise floor reported.")
+        return None
     summary = {
         "tier": "EXPLORE", "level": "MACE-MP-0 medium, CPU, float64, CI-NEB improvedtangent",
+        "validity_gate": ("Ea reported only where both endpoints are local minima of the "
+                          "band and the maximum is interior. Rejected members are listed, "
+                          "not silently averaged in."),
         "host": "FA0.95Cs0.05PbI3 233-atom det20 cell, V_I",
-        "n_members": len(results),
+        "n_members_attempted": len(results),
+        "n_members_valid": len(valid_rows),
+        "rejected_members": [r["member"] for r in results if not r["valid"]],
         "Ea_mean_meV": float(Ea.mean()), "Ea_std_meV": float(Ea.std(ddof=1)) if len(Ea) > 1 else None,
         "Ea_min_meV": float(Ea.min()), "Ea_max_meV": float(Ea.max()),
         "Ea_spread_meV": float(Ea.max() - Ea.min()),
