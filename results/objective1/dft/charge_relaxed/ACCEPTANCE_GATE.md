@@ -74,3 +74,38 @@ Do **not** jump to Hubbard U. Escalate in this order:
 Recorded per job as `node count × elapsed × rate`, with job IDs, retaining **both billing
 interpretations** (wall-hour and node-hour). Recorded for the record only — it does not
 gate scientific decisions.
+
+
+---
+
+## Attempt log — q=0 spin localisation
+
+| attempt | setting | total moment | absolute moment | SCF residual | verdict |
+|---|---|---|---|---|---|
+| 1 | `mixing_beta=0.2`, smearing | collapsed | — | stuck ~5×10⁻³ Ry, 57+ iters | charge sloshing |
+| 2 | `beta=0.1`, local-TF, Pb seed 0.05 | **0.87 → 0** | — | stuck ~5×10⁻³ | spin-state collapse |
+| 3 | `tot_magnetization=1.0`, smearing | **1.00 held** | wandered 1.5-2.6 | flat 4-7×10⁻³, 30 iters | moment pinned, distribution not |
+| A | `nspin=1` **probe** | n/a (no spin) | n/a | **converged, 6.1×10⁻⁷ Ry, 27 iters** | isolated half-occupied gap state |
+| B | `occupations='fixed'`, no spatial seed | **1.00 held** | **settled 1.70 ± 0.01** | flat 3.4×10⁻³, 116 iters | **distribution stabilised, SCF still open** |
+| C | fixed occ + seed **Pb 139** | running | | | |
+| D | fixed occ + seed **Pb 70** | running | | | |
+
+### What attempt B established
+
+Against criterion 2's four requirements: total moment pinned (pass); absolute magnetisation
+no longer drifting — settled at 1.70 ± 0.01 after early swings of 2.50-5.52 (**pass, and the
+first attempt to achieve this**); SCF residual genuinely stable (**fail** — flat at
+3.4×10⁻³ Ry, ~3400× above `conv_thr`, through 116 iterations).
+
+So fixed occupations did what it was chosen to do: it removed the fractional-occupation
+freedom that let the two spin channels equalise, and the spin *density* stopped wandering.
+But the SCF still cannot close. A stationary distribution with a stuck residual is the
+signature of two nearly degenerate solutions the density mixer keeps trading between at the
+10⁻³ level — which is why attempt B was stopped at 116 rather than run to its 200-step cap:
+the remaining iterations could only confirm the plateau.
+
+Attempts C and D are the discriminating test. If the Pb 139-seeded and Pb 70-seeded runs
+reach **distinguishable total energies**, the near-degeneracy is resolved and criterion 2's
+fourth bullet is satisfiable (two metastable states, energy-ordered). If they reach the same
+energy, the ground state is genuinely degenerate between the two sites and the escalation
+path in the acceptance gate applies.
