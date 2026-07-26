@@ -49,7 +49,7 @@ Two diagnostics establish the artifact:
 
 After referencing every pattern to its own ITO line, the pseudo-cubic parameter
 spans **6.2987–6.3096 Å** (spread 0.011 Å) against a largest model uncertainty of
-**0.0076 Å** — i.e. comparable to, not clearly exceeding, the uncertainty. **No
+**0.0075 Å** — i.e. comparable to, not clearly exceeding, the uncertainty. **No
 lattice change is established.** Note also that the ITO line sits a nearly
 constant 0.32 ± 0.03° from its literature position in all six scans, so it works
 as a *relative* reference but not as an absolute angle standard.
