@@ -2,7 +2,7 @@
 
 **This file is the single authoritative status source for Objective 1 (method
 validation).** Where README / HANDOFF / DFT_BENCHMARK / anchors_summary disagree
-about a completion state, this table wins. Last updated 2026-07-24.
+about a completion state, this table wins. Last updated 2026-07-26.
 
 **Host definition (used identically across all DFT / MACE / strain / charge-state
 comparisons).** "γ-P1" denotes a **P1 tilted γ-like CsPbI₃ model** — a 2×2×2 (159-atom
@@ -14,15 +14,46 @@ DFT- or experiment-validated Pnma γ-CsPbI₃ equilibrium phase; do not describe
 ## Anchor (b) headline status — READ THIS FIRST
 
 ```
-FIXED-GEOMETRY ELECTRONIC COMPARISON:        COMPLETE
-RELAXED-CHARGE-STATE MIGRATION BARRIER:      PENDING
+FIXED-GEOMETRY ELECTRONIC COMPARISON:        COMPLETE  (plain PBE — see theory-level warning)
+RELAXED-CHARGE-STATE MIGRATION BARRIER:      PROVISIONAL — q=+1 partial, q=0 UNRESOLVED
+★ CI-NEB DECISION:                           DECIDED — full CI-NEB REQUIRED (d_max = 0.462 Å)
 ```
+
+**Theory-level warning (2026-07-26).** The fixed-geometry numbers below were computed with
+**plain PBE, `degauss=0.01`**. Stage-2 relaxed work uses **PBE+D3(BJ), `degauss=0.005`** —
+a **2.722 Ry = 37.03 eV** absolute-energy offset, verified from the QE inputs. The two sets
+**must never be compared, combined, or tabulated together**, and the fixed-geometry pair
+cannot substitute for a missing relaxed leg. See
+`dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md`.
 
 The charged-supercell DFT machinery runs end-to-end and gives a converged,
 self-consistent *fixed-geometry* number (V_I⁰ 141 meV vs V_I⁺ 127 meV on the same
-MACE-relaxed neutral geometry). This is **not** Tyagi et al. (2025)'s
-order-of-magnitude separation — that requires *relaxed* charged geometries
-(charged-cell relaxation at each image, or a charged NEB), which has not been run.
+MACE-relaxed neutral geometry, **plain PBE**). This is **not** Tyagi et al. (2025)'s
+order-of-magnitude separation — that requires *relaxed* charged geometries.
+
+**Stage-2 progress (2026-07-26).**
+
+- **q = +1:** both endpoints relaxed and converged at PBE+D3(BJ). Explore NEB relaxed the
+  barrier 1216 → 431 meV before being stopped deliberately; interior path forces 0.43–0.56
+  eV/Å against a 0.10 threshold. **431 meV is an upper bound, not a result** — it may not be
+  quoted as the barrier. The relaxed band is preserved as the CI-NEB restart
+  (`q1_explore_state.tar.gz`).
+- **q = 0:** **UNRESOLVED.** Stop-loss reached after three diagnosed attempts (~7 h).
+  V_I⁰ has 1401 valence electrons (odd ⇒ one unpaired electron). `tot_magnetization=1.0`
+  completely fixed the spin-collapse failure — the moment held at exactly 1.00 for 30
+  iterations — but the SCF still random-walks at 4–7×10⁻³ Ry while *absolute* magnetisation
+  wanders 1.5–2.6: the moment's magnitude is pinned while its spatial distribution keeps
+  rearranging between the Pb 139 / Pb 70 dangling bonds. Multi-minimum spin localisation,
+  not a mixing problem. Ranked fixes in `dft/charge_relaxed/Q0_SPIN_SCF_UNRESOLVED.md`.
+- **d_max = 0.462 Å** (≥ 0.4 Å threshold, and a *lower* bound since the path was still
+  relaxing): the MACE geometry is not an adequate proxy for the relaxed charged path, so
+  **full CI-NEB is required**. The *mechanism* nonetheless agrees with MACE — single-ion
+  octahedron-edge hop, framework mean deviation 0.044 Å.
+
+**Consequence: no charge-state comparison is possible. Anchor (b) is PROVISIONAL and the
+ban on claiming reproduction of the Tyagi ordering REMAINS IN FORCE.** Even once both legs
+exist, comparing E_a alone is a barrier-level approximation — a *mobility* ordering also
+requires the hop attempt-frequency prefactor, which is not computed here.
 
 ## Status table
 
