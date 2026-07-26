@@ -149,6 +149,25 @@ must not inflate an impurity ratio. Substrate candidates are auto-flagged by
 anomalous width (>1.8× median film FWHM); pass `substrate_tth=[...]`
 explicitly when known.
 
+## Exporting tables (audit trail)
+
+Two traps, both hit in practice:
+
+- **Join detection stats by tolerance, not a rounded key.** A fitted centroid
+  can round differently from its candidate seed (seed 30.05 -> fit 30.199), and
+  a `round(n)` merge key silently drops exactly those rows, leaving blank
+  detection columns. Use `attach_detection(pk, det, tol=0.4)`; it also emits
+  `seed_offset` and `detection_unmatched` so a bad join is visible.
+- **Never round p-value columns.** `.round(6)` collapses 1e-16 to `0.0` and
+  destroys the evidence. Use `write_peak_table(pk, path)`, which rounds only
+  well-conditioned columns and writes floats at `%.10g`.
+
+The bootstrap p-value is floored by draw count at ~1/(n_boot+1); values far
+below that come from the gamma-tail fit, not direct counting. Raise `n_boot`
+before trusting a bootstrap p near alpha. Calibration shifts the FAR tail
+strongly (x10^2-10^3) but is near-neutral close to alpha, so it rarely changes
+a borderline call -- it prevents overstating far-tail significance.
+
 ## Reporting checklist
 
 - [ ] lattice quoted with formal **and** model-scaled uncertainty, "effective

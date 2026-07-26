@@ -28,7 +28,7 @@ Run with `python analysis/xrd_analysis.py data/raw/<file>.txt`.
 | Zero-point offset | −0.089° | ±0.0058° formal / ±0.017° model | sample displacement |
 | Degree of crystallinity | 49 – 65% | bounded range | **not** a point value |
 | Bragg / total scattered | 21.9% | — | fixed-protocol comparative index |
-| PbI₂-compatible peak (001) | **detected** | p ≈ 4×10⁻¹⁴ (bootstrap) | 2.7% of perovskite Bragg intensity |
+| PbI₂-compatible peak (001) | **detected** | p = 6.4×10⁻¹⁴ (bootstrap) | 2.7% of perovskite Bragg intensity |
 | Peak-to-background (220) | 64 | — | data quality |
 
 Two uncertainty classes are reported separately throughout and must not be
@@ -221,28 +221,40 @@ hides real reflections.
 
 Replacing it with a likelihood-ratio test against a local linear background
 (Bonferroni-corrected over the candidate positions) reverses the call
-decisively: PbI₂ (001) gives Δχ² = 75. Two candidates at 21.2° and 26.3°
-survive the raw p < 0.05 cut but fail Bonferroni and are treated as noise.
+decisively: PbI₂ (001) gives Δχ² = 75.0. Two candidates near 21.15° and 26.33°
+survive a raw p < 0.05 cut but fail Bonferroni and are treated as noise.
 
 ### The LRT null needs bootstrap calibration
 
 The asymptotic χ²(3) distribution does **not** strictly apply here: the added
 peak amplitude is bounded at A ≥ 0 and its position is searched over a window,
 which is a boundary-constrained, non-regular problem. A parametric bootstrap
-(Poisson resampling under the fitted local background) recovers an effective
-dof of **2.0–2.9**, not 3 — so asymptotic p-values are **anti-conservative**,
-most consequentially for the weak candidates:
+(Poisson resampling under the fitted local background, 250 draws) recovers an
+effective dof of **1.96–2.96** across candidates, below the nominal 3.
 
-| 2θ | Δχ² | p (asymptotic) | p (bootstrap) | eff. dof | call |
-|---|---|---|---|---|---|
-| 12.59° | 75.0 | 4×10⁻¹⁶ | 4×10⁻¹⁴ | 2.6 | **detected** |
-| 30.20° | 93.8 | 8×10⁻²¹ | 7×10⁻¹⁸ | 2.4 | **detected** |
-| 21.05° | 12.9 | 0.0050 | 0.0053 | 2.5 | fails Bonferroni |
-| 26.35° | 13.3 | 0.0040 | 0.0043 | 2.8 | fails Bonferroni |
+All values below are read from `results/peak_table.csv` (same run). `2θ_seed` is
+the candidate position tested; `2θ_fit` the fitted centroid:
 
-The PbI₂ conclusion is unchanged — p = 4×10⁻¹⁴ is overwhelming either way — but
-the calibration matters for the marginal candidates, and future weak-impurity
-calls should not rely on the asymptotic value.
+| 2θ_seed | 2θ_fit | Δχ² | p (asymptotic) | p (bootstrap) | eff. dof | call |
+|---|---|---|---|---|---|---|
+| 12.60° | 12.5945° | 75.01 | 3.60×10⁻¹⁶ | 6.39×10⁻¹⁴ | 2.71 | **detected** (PbI₂-compatible) |
+| 30.05° | 30.1990° | 93.76 | 3.41×10⁻²⁰ | 6.57×10⁻¹⁷ | 2.26 | **detected** (substrate) |
+| 21.05° | 21.1507° | 12.86 | 4.96×10⁻³ | 5.19×10⁻³ | 2.70 | fails Bonferroni (α = 3.6×10⁻³) |
+| 26.35° | 26.3308° | 13.32 | 3.99×10⁻³ | 3.75×10⁻³ | 2.90 | fails Bonferroni |
+
+**The size of the correction is the opposite of what I first assumed.** The
+bootstrap/asymptotic ratio is ×178 at 12.6° and ×1.9×10³ at 30.05°, but only
+×1.05 and ×0.94 for the two marginal candidates — i.e. the calibration is large
+deep in the tail and negligible near α, where it even goes *both* directions.
+So it does **not** change any call here: the two detections stay overwhelming
+and both marginal candidates still fail Bonferroni on either statistic. The
+reason to keep the bootstrap is that the far-tail p-values would otherwise be
+overstated by 2–3 orders of magnitude, not that it rescues borderline calls.
+
+Note the bootstrap p-value is floored by the number of draws: the empirical
+floor here is 1/(N+1) ≈ 4×10⁻³, so values far below that come from the
+gamma-tail extrapolation fitted to the null, not from direct counting. Raise
+`n_boot` before relying on a bootstrap p-value near α.
 
 **Detection is now by bootstrap-calibrated likelihood-ratio test, never by
 fitted-area SNR.**
@@ -312,9 +324,12 @@ results/           peak_table.csv, summary_metrics.csv, texture_coefficients.csv
 figures/           xrd_summary.png
 ```
 
-`results/peak_table.csv` carries every fitted peak with its likelihood-ratio
-Δχ², p-value and phase label — including the rejected candidates, so the
-detection decisions are auditable.
+`results/peak_table.csv` carries every fitted peak with its candidate seed,
+seed-to-fit offset, likelihood-ratio Δχ², asymptotic **and** bootstrap
+p-values, effective dof, empirical bootstrap floor, and phase label —
+including the rejected candidates, so every detection decision in this log is
+auditable against the file. p-values are written at full precision
+(`%.10g`); do not round them in place, as small values collapse to 0.
 
 ## Progress log
 
@@ -337,7 +352,8 @@ detection decisions are auditable.
   `protocol_key` now blocks absolute-intensity comparison across differing
   acquisition conditions; (iv) LRT calibrated by parametric bootstrap —
   effective dof 2.0–2.9, not 3, so asymptotic p-values are anti-conservative
-  (PbI₂ unaffected at p = 4×10⁻¹⁴; matters for marginal candidates);
+  (PbI₂ unaffected at p = 6.4×10⁻¹⁴; correction is large in the far tail, ×178–1900,
+  but negligible near α, so no call changes);
   (v) **substrate/film separation fixed** — the 9.8% "minor phase" figure wrongly
   included the 30.2° substrate line; film-only impurity is **2.7%**.
   Texture conventions frozen (family, multiplicity, LP, |F|, exclusions,
@@ -346,3 +362,22 @@ detection decisions are auditable.
   dataset (including a deliberate dwell-mismatch and an undeclared-wavelength
   test). DOC range shifted 46–60% → 49–65% after the background model was
   corrected to exclude the substrate peak from the Bragg total.
+- **2026-07-26 (audit fix)** — Two export defects found by review of the saved
+  tables, both now fixed at the source and re-published in the skill.
+  (i) *Merge bug*: detection statistics were joined onto fitted peaks via a
+  `round(1)` key, which silently dropped every row whose fitted centroid crossed
+  a rounding boundary relative to its seed — 21.05→21.151, 26.35→26.331 and
+  30.05→30.199, i.e. the substrate line and both marginal candidates left blank
+  in `peak_table.csv` while the README quoted precise values for them. Replaced
+  with a nearest-seed tolerance join (`attach_detection`) that also exports
+  `seed_offset` and `detection_unmatched`; all 14 rows now populated.
+  (ii) *Precision loss*: `.round(6)` on export flattened p-values like 3.6×10⁻¹⁶
+  to `0.0`. Tables now written via `write_peak_table` at `%.10g`.
+  The README detection table has been replaced with values read back from the
+  saved CSV: 12.60° p_boot = 6.39×10⁻¹⁴ (was quoted 4×10⁻¹⁴), 30.05° seed /
+  30.199° fit p_boot = 6.57×10⁻¹⁷ (was quoted 7×10⁻¹⁸ — an order of magnitude
+  out, and mislabelled by its fitted rather than seed position), effective dof
+  range 1.96–2.96 (was 2.0–2.9). **Interpretation also corrected**: the
+  bootstrap/asymptotic ratio is ×178–1900 deep in the tail but ×0.94–1.05 near
+  α, so calibration does *not* rescue marginal calls — its value is preventing
+  overstated far-tail significance. No detection call changed.

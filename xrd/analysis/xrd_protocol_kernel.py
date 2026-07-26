@@ -708,10 +708,10 @@ def analyse_single(path, meta=None, seeds=None, uvw=None, nmc=6000,
                    if any(abs(s - p) < 0.4 for p in PEROVSKITE_SEEDS)]
     pk_all, curves = fit_xrd_peaks(tth, inten,
                                    sorted(set(list(seeds or (tuple(PEROVSKITE_SEEDS) + tuple(IMPURITY_SEEDS))))))
-    det_map = {round(float(r.seed_tth), 2): bool(r.detected) for _, r in det.iterrows()}
-    pk_all['detected'] = [any(det_map.get(round(s, 2), False)
-                              for s in det.seed_tth.values if abs(s - t) < 0.4)
-                          for t in pk_all.tth.values]
+    # Nearest-seed join by TOLERANCE, never by a rounded key: a fitted centroid
+    # can cross a rounding boundary relative to its seed (e.g. seed 30.05 ->
+    # fit 30.199) and a round(n) key silently drops exactly those rows.
+    pk_all = attach_detection(pk_all, det, tol=0.4)
     pk_all['is_perovskite'] = [bool(any(abs(t - s) < 0.4 for s in PEROVSKITE_SEEDS))
                                for t in pk_all.tth.values]
     pk_all['phase'] = np.where(pk_all.detected & pk_all.is_perovskite, 'perovskite',
@@ -742,6 +742,50 @@ def analyse_single(path, meta=None, seeds=None, uvw=None, nmc=6000,
                protocol_key=protocol_key(meta),
                status=STATUS_VALID if gates['substrate_confirmed'] else STATUS_PROVISIONAL)
     return out
+
+
+def attach_detection(pk, det, tol=0.4):
+    """Join detection statistics onto fitted peaks by NEAREST SEED within `tol`.
+
+    Never join on a rounded 2theta key: a fitted centroid may round differently
+    from its candidate seed, which silently drops those rows and leaves blank
+    detection columns in the exported table.
+    """
+    pk = pk.copy()
+    seeds = np.asarray(det.seed_tth.values, float)
+    cols = ['seed_tth', 'delta_chi2', 'p_asymptotic', 'p_bootstrap',
+            'p_empirical_floor', 'effective_dof', 'detected']
+    idx, gap = [], []
+    for t in pk.tth.values:
+        j = int(np.argmin(np.abs(seeds - t)))
+        idx.append(j)
+        gap.append(float(abs(seeds[j] - t)))
+    sel = det.iloc[idx].reset_index(drop=True)
+    for c in cols:
+        if c in sel.columns:
+            pk[c] = sel[c].values
+    pk['seed_offset'] = gap
+    pk['detection_unmatched'] = [g > tol for g in gap]
+    if 'detected' in pk.columns:
+        pk['detected'] = [bool(d) and g <= tol
+                          for d, g in zip(pk['detected'].values, gap)]
+    return pk
+
+
+def write_peak_table(pk, path, float_format='%.10g'):
+    """Export a peak table WITHOUT flattening small p-values.
+
+    Rounding p-value columns (e.g. .round(6)) collapses 1e-16 to 0.0 and
+    destroys the audit trail, so only well-conditioned columns are rounded.
+    """
+    safe = ['tth', 'e_tth', 'd_A', 'area', 'e_area', 'fwhm', 'e_fwhm', 'eta',
+            'seed_tth', 'seed_offset', 'delta_chi2', 'effective_dof']
+    out = pk.copy()
+    for c in safe:
+        if c in out.columns:
+            out[c] = out[c].astype(float).round(6)
+    out.to_csv(path, index=False, float_format=float_format)
+    return path
 
 
 # =====================  mode: compare  =====================
