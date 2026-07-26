@@ -5,12 +5,21 @@ bookkeeping issue, not a calculation error, and it constrains what may be compar
 
 ## The observation
 
-| quantity | value |
-|---|---|
-| MACE-MP-0 gamma barrier (charge-agnostic) | 259 meV |
-| Fixed-path single-point PBE, V_I0 | 141 meV |
-| Fixed-path single-point PBE, V_I+ | 127 meV |
-| **Stage-2 relaxed NEB, V_I+ (iter 6, UNCONVERGED)** | **431 meV, still descending** |
+| quantity | source band / geometry | value |
+|---|---|---|
+| MACE-MP-0 barrier, anchor-(a) reference | `regression_saddle_path.extxyz` | 259.0 meV |
+| MACE-MP-0 barrier, γ production NEB (5 interior) | `gamma_neb_band_5int.extxyz` | 253.3 meV |
+| MACE-MP-0 barrier, γ production NEB (7 interior) | `gamma_neb_band_7int.extxyz` | 248.7 meV |
+| Fixed-path single-point **plain PBE**, V_I⁰ | on `regression_saddle_path` img3 | 141 meV |
+| Fixed-path single-point **plain PBE**, V_I⁺ | on `regression_saddle_path` img3 | 127 meV |
+| **Stage-2 relaxed NEB (PBE+D3), V_I⁺ (iter 6, UNCONVERGED)** | this work | **431 meV, still descending** |
+
+**On the several MACE numbers.** These are different bands, not disagreeing measurements
+of one quantity: 259.0 meV is the anchor-(a) CI-NEB reference band against which the
+Stage-1 single-points were evaluated, while 253.3 / 248.7 meV are the γ production NEB
+bands at two discretisations. The d_max comparison below uses **`gamma_neb_band_5int`
+(253.3 meV)**, and the figure annotates that band's own value. Quoting 259 meV alongside a
+d_max measured against a different band would be mixing sources.
 
 A relaxed minimum-energy path cannot lie above a single-point barrier through the same
 endpoints, so 431 vs 127 meV demanded an explanation before any further interpretation.
@@ -76,3 +85,7 @@ arc-length reaction coordinate.
   a single-ion octahedron-edge hop, one migrating iodide moving 4.22 A (DFT) vs 4.32 A (MACE).
 - **This d_max is a lower bound** — the path is not converged, so the final value can only
   grow. The >= 0.4 A threshold for "full CI-NEB is required" is therefore already met.
+- **Robust to the choice of reference band.** Repeating the measurement against the finer
+  `gamma_neb_band_7int` band gives d_max = 0.472 A (framework mean at the saddle 0.049 A),
+  against 0.462 A (0.044 A) for `gamma_neb_band_5int`. Both clear the 0.4 A threshold, so
+  the CI-NEB decision does not depend on which production band is used as the reference.
