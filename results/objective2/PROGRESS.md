@@ -22,8 +22,8 @@ against a 0.230 eV gap-state-to-CBM separation is wide enough to place fractiona
 in both spin channels of the defect level at negligible cost.
 
 **q0B is a new outcome, not a repeat.** Against criterion 2: total moment pinned at 1.00
-(pass); absolute magnetisation settled at 1.85 ± 0.04 after early swings of 2.50-5.52
-(pass — this is the first attempt where the spin density stopped wandering); but the SCF
+(pass); absolute magnetisation settled at 1.70 ± 0.01 by iteration 116, after early swings of
+2.50-5.52 (pass — this is the first attempt where the spin density stopped wandering); but the SCF
 residual is flat at ~4×10⁻³ Ry, about 4000× above `conv_thr` (fail). So the distribution
 is now stationary while the SCF still cannot close — consistent with two nearly degenerate
 localisation solutions the mixer keeps trading between.
