@@ -39,8 +39,15 @@ All six valid members place the saddle at the midpoint image with converged band
     10× rate at 300 K = 59.5 meV
 
 The configurational noise is **1.2× larger than the effect size we are trying to
-detect**. A single configuration has a standard error of 73 meV — larger than the entire
-signal. **Single-configuration screening cannot work in this host**, at any level of theory.
+detect** (73.3 / 59.5 = 1.23). A single configuration has a standard error of 73 meV —
+larger than the entire signal. **Single-configuration screening cannot work in this host**,
+at any level of theory.
+
+**Do not conflate the two ratios.** σ = 73.3 meV gives **1.2×** the threshold and is the
+figure that governs resolvability, because the standard error of a mean scales with σ. The
+full-range *spread* of 204.7 meV gives 3.4×, but a range over 6 samples is not an
+uncertainty and must not be quoted as the margin by which the floor exceeds the threshold.
+The 1.2× figure is the one to cite.
 
 ## Consequence 2 — required sampling depth
 
