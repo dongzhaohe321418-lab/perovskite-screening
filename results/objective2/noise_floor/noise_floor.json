@@ -1,0 +1,324 @@
+{
+ "tier": "EXPLORE",
+ "level": "MACE-MP-0 medium, CPU, float64, CI-NEB improvedtangent",
+ "validity_gate": "Ea reported only where both endpoints are local minima of the band and the maximum is interior. Rejected members are listed, not silently averaged in.",
+ "host": "FA0.95Cs0.05PbI3 233-atom det20 cell, V_I",
+ "n_members_attempted": 8,
+ "n_members_valid": 6,
+ "rejected_members": [
+  0,
+  1
+ ],
+ "Ea_mean_meV": 213.42062513110704,
+ "Ea_std_meV": 73.3086277793716,
+ "Ea_min_meV": 105.20923951230543,
+ "Ea_max_meV": 309.9167964096523,
+ "Ea_spread_meV": 204.70755689734688,
+ "note": "Gate-6 noise floor: within-host configurational spread of the UNDOPED barrier. A dopant dEa smaller than this spread is not resolvable in this host at this level.",
+ "members": [
+  {
+   "valid": false,
+   "endpoints_are_minima": false,
+   "saddle_is_interior": false,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.020402598302548036,
+     "converged": false,
+     "nsteps": 800
+    },
+    "final": {
+     "fmax": 0.01876542321010322,
+     "converged": true,
+     "nsteps": 75
+    }
+   },
+   "member": 0,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.464,
+   "migrating_I_index": 126,
+   "hop_distance_A": 4.252,
+   "Ea_forward_eV": 0.7185446518046774,
+   "Ea_backward_eV": 0.0,
+   "dE_endpoints_eV": 0.7185446518046774,
+   "converged": false,
+   "nsteps": 300,
+   "profile_eV": [
+    0.0,
+    -0.003053972588304532,
+    0.17011172810748576,
+    0.08344605626689372,
+    0.3989724115631361,
+    0.7136197603529126,
+    0.7185446518046774
+   ],
+   "wall_s": 1926.1,
+   "tier": "EXPLORE"
+  },
+  {
+   "valid": false,
+   "endpoints_are_minima": true,
+   "saddle_is_interior": false,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.019289057644351626,
+     "converged": true,
+     "nsteps": 266
+    },
+    "final": {
+     "fmax": 0.018526908910191986,
+     "converged": false,
+     "nsteps": 800
+    }
+   },
+   "member": 1,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.478,
+   "migrating_I_index": 137,
+   "hop_distance_A": 4.309,
+   "Ea_forward_eV": 0.0,
+   "Ea_backward_eV": 0.3426174401888602,
+   "dE_endpoints_eV": -0.3426174401888602,
+   "converged": true,
+   "nsteps": 165,
+   "profile_eV": [
+    0.0,
+    -0.12925435209763236,
+    -0.24486966013250822,
+    -0.10323653084492435,
+    -0.12768220764382932,
+    -0.2694168950504263,
+    -0.3426174401888602
+   ],
+   "wall_s": 1590.7,
+   "tier": "EXPLORE"
+  },
+  {
+   "valid": true,
+   "endpoints_are_minima": true,
+   "saddle_is_interior": true,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.017523217891786166,
+     "converged": true,
+     "nsteps": 269
+    },
+    "final": {
+     "fmax": 0.018482249080988167,
+     "converged": true,
+     "nsteps": 254
+    }
+   },
+   "member": 2,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.0,
+   "migrating_I_index": 126,
+   "hop_distance_A": 4.353,
+   "Ea_forward_eV": 0.3099167964096523,
+   "Ea_backward_eV": 0.22969369403153905,
+   "dE_endpoints_eV": 0.08022310237811325,
+   "converged": true,
+   "nsteps": 50,
+   "profile_eV": [
+    0.0,
+    0.04980066194184474,
+    0.19793199685614127,
+    0.3099167964096523,
+    0.2757632240975454,
+    0.13257578889579236,
+    0.08022310237811325
+   ],
+   "wall_s": 645.5,
+   "tier": "EXPLORE"
+  },
+  {
+   "valid": true,
+   "endpoints_are_minima": true,
+   "saddle_is_interior": true,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.017884628628215743,
+     "converged": false,
+     "nsteps": 800
+    },
+    "final": {
+     "fmax": 0.02008646712295866,
+     "converged": false,
+     "nsteps": 800
+    }
+   },
+   "member": 3,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.45,
+   "migrating_I_index": 126,
+   "hop_distance_A": 4.359,
+   "Ea_forward_eV": 0.21035969881086203,
+   "Ea_backward_eV": 0.2246542855152711,
+   "dE_endpoints_eV": -0.014294586704409085,
+   "converged": true,
+   "nsteps": 46,
+   "profile_eV": [
+    0.0,
+    0.02127230867608887,
+    0.13488947059363454,
+    0.21035969881086203,
+    0.16130433763350993,
+    0.0332766608298698,
+    -0.014294586704409085
+   ],
+   "wall_s": 1498.2,
+   "tier": "EXPLORE"
+  },
+  {
+   "valid": true,
+   "endpoints_are_minima": true,
+   "saddle_is_interior": true,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.015596186772379061,
+     "converged": true,
+     "nsteps": 603
+    },
+    "final": {
+     "fmax": 0.013258601169476358,
+     "converged": true,
+     "nsteps": 596
+    }
+   },
+   "member": 4,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.247,
+   "migrating_I_index": 126,
+   "hop_distance_A": 4.154,
+   "Ea_forward_eV": 0.17938413770457373,
+   "Ea_backward_eV": 0.1925086255739643,
+   "dE_endpoints_eV": -0.013124487869390578,
+   "converged": true,
+   "nsteps": 61,
+   "profile_eV": [
+    0.0,
+    0.01753563793158719,
+    0.11065245841518845,
+    0.17938413770457373,
+    0.13977775047442265,
+    0.02625509942390636,
+    -0.013124487869390578
+   ],
+   "wall_s": 1386.0,
+   "tier": "EXPLORE"
+  },
+  {
+   "valid": true,
+   "endpoints_are_minima": true,
+   "saddle_is_interior": true,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.019232923909005106,
+     "converged": true,
+     "nsteps": 234
+    },
+    "final": {
+     "fmax": 0.01863190557914926,
+     "converged": true,
+     "nsteps": 226
+    }
+   },
+   "member": 5,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.628,
+   "migrating_I_index": 126,
+   "hop_distance_A": 4.285,
+   "Ea_forward_eV": 0.19605151931523324,
+   "Ea_backward_eV": 0.23117220278163586,
+   "dE_endpoints_eV": -0.035120683466402625,
+   "converged": true,
+   "nsteps": 31,
+   "profile_eV": [
+    0.0,
+    0.016418044405327237,
+    0.14035347398407794,
+    0.19605151931523324,
+    0.12635907678395597,
+    -0.0032357671234422014,
+    -0.035120683466402625
+   ],
+   "wall_s": 707.6,
+   "tier": "EXPLORE"
+  },
+  {
+   "valid": true,
+   "endpoints_are_minima": true,
+   "saddle_is_interior": true,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.019431419183083408,
+     "converged": true,
+     "nsteps": 424
+    },
+    "final": {
+     "fmax": 0.014320103336221676,
+     "converged": true,
+     "nsteps": 772
+    }
+   },
+   "member": 6,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.43,
+   "migrating_I_index": 126,
+   "hop_distance_A": 4.263,
+   "Ea_forward_eV": 0.10520923951230543,
+   "Ea_backward_eV": 0.3476939080101147,
+   "dE_endpoints_eV": -0.24248466849780925,
+   "converged": true,
+   "nsteps": 113,
+   "profile_eV": [
+    0.0,
+    -0.08409927342518131,
+    -0.023673961188478643,
+    0.10520923951230543,
+    8.827654733067902e-05,
+    -0.19833208028376248,
+    -0.24248466849780925
+   ],
+   "wall_s": 2116.3,
+   "tier": "EXPLORE"
+  },
+  {
+   "valid": true,
+   "endpoints_are_minima": true,
+   "saddle_is_interior": true,
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.014141886712704284,
+     "converged": true,
+     "nsteps": 773
+    },
+    "final": {
+     "fmax": 0.01657754039531631,
+     "converged": true,
+     "nsteps": 666
+    }
+   },
+   "member": 7,
+   "removed_I_index": 127,
+   "d_removed_to_ref_A": 0.375,
+   "migrating_I_index": 126,
+   "hop_distance_A": 4.137,
+   "Ea_forward_eV": 0.27960235903401554,
+   "Ea_backward_eV": 0.24235843547262448,
+   "dE_endpoints_eV": 0.03724392356139106,
+   "converged": true,
+   "nsteps": 77,
+   "profile_eV": [
+    0.0,
+    0.040278748086393534,
+    0.1641081822549495,
+    0.27960235903401554,
+    0.18853203269304686,
+    0.037729914281271704,
+    0.03724392356139106
+   ],
+   "wall_s": 2215.3,
+   "tier": "EXPLORE"
+  }
+ ]
+}
