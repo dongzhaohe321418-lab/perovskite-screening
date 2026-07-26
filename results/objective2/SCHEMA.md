@@ -88,6 +88,20 @@ the tail begins where the cell stops being trustworthy. Radius extraction stays 
 ≥4×4×4 (≥700-atom) cells, as the proposal already specifies.
 
 Note the cell is *not* the proposal's literal 2×2×5. Both are det = 20 with identical
-composition (20 A-sites, one Cs, x = 0.050), but the naive 2×2×5 has anisotropy 2.50 and
-a minimum image distance of only 13.0 Å, versus 1.016 and 19.3 Å for the near-cubic cell
-that was built. The built cell is the better choice and is retained.
+composition (20 A-sites, one Cs, x = 0.050). Compared **like for like on perpendicular
+widths** — the metric that actually governs defect self-interaction in a triclinic cell:
+
+| cell | anisotropy | perpendicular widths (Å) | min-image radius |
+|---|---|---|---|
+| naive 2×2×5 | 2.50 | 13.03 / 13.02 / 32.55 | 6.51 Å |
+| near-cubic det-20 (built) | 1.016 | 15.98 / 16.09 / 14.55 | **7.28 Å** |
+
+The built cell is better, but by **1.12×**, not the 1.48× that edge lengths suggest. The
+`d_min_A` field in `fa_host_build.json` (19.33 Å for the built cell) is an edge-derived
+quantity and must **not** be read as a minimum-image distance — that is the same
+edge-length metric superseded above. The built cell's actual minimum-image distance is
+2 × 7.28 = 14.55 Å.
+
+The built cell is retained on the strength of its much lower anisotropy (1.016 vs 2.50),
+which distributes the available separation evenly in all three directions rather than
+concentrating it along one long axis.
