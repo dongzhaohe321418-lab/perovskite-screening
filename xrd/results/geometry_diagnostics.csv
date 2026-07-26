@@ -1,0 +1,7 @@
+sample,ito_fwhm,perov_fwhm_med,perov_fwhm_100,D_nm,total_counts,sub_shift,ito_tth,ito_area,perov100_shift,perov220_shift,note
+control,0.4588417879,0.2065715379,0.2209047633,46.7313563,36287,0,30.19984105,23.73592623,0,0,ITO is physically identical under every film; its drift/width variation is instrumental
+passivator-01,0.3591320239,0.1566824409,0.1548032009,87.70412448,35031,0.06859796098,30.26843901,21.87583461,0.1246599971,0.09146372468,ITO is physically identical under every film; its drift/width variation is instrumental
+passivator-02,0.4580518298,0.28491474,0.3374428448,32.93105968,33137,0.1373592635,30.33720031,20.52376211,0.1848681786,0.1760948032,ITO is physically identical under every film; its drift/width variation is instrumental
+passivator-03,0.6618729497,0.3803907974,0.4508214224,22.64652281,26614,0.3501589529,30.55,28.53379279,0.4047749873,0.4084690183,ITO is physically identical under every film; its drift/width variation is instrumental
+passivator-04,0.4461354599,0.3188541909,0.3576873489,27.63544456,34479,0.02737917923,30.22722023,24.98946429,0.09704764674,0.07277588175,ITO is physically identical under every film; its drift/width variation is instrumental
+passivator-05,0.3401656689,0.1660452768,0.1438275163,79.0458279,35829,0.03972967275,30.23957072,20.51107588,0.05887634947,0.03366474221,ITO is physically identical under every film; its drift/width variation is instrumental
