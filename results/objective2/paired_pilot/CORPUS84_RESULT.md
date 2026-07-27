@@ -54,18 +54,47 @@ passes. The real distinction is the variance-bound requirement: GA meets its own
 so its equivalence claim survives even if the true σ sits at the top of its confidence
 interval; Sr does not (10 < 16), so its equivalence is provisional pending ~6 more pairs.
 
-## Sr's variance is driven by two configurations — and that is the finding
+## Sr's variance is driven by two configurations — both of them RESCUED, not gate-passing
 
-`m14` gives −139.8 meV and `m20` gives +129.3 meV. Both pass every gate: bands converged,
-endpoints at fmax ≤ 0.02, interior saddles at image 3. Excluding them would drop Sr's sd
-from 65.2 to 16.9 meV — which is exactly why they are **kept**: there is no defensible
-criterion for removing them beyond inconvenience.
+`m14` gives −139.8 meV and `m20` gives +129.3 meV.
 
-The physical reading: Sr's effect on the barrier is strongly **configuration-dependent**
-where GA's is not (GA's largest deviation is +71.7 meV, and its sd is 40.6 across 9 pairs).
-Whether that reflects real Sr–vacancy coupling in particular FA arrangements or MLIP
-sensitivity on those two hosts is not decidable at this level of theory, and is flagged
-rather than claimed.
+**Correction.** An earlier version of this report said both "pass every gate". That was
+false and is retracted. Checking `paired_raw_84.json`: `Sr_m14` has
+`gate_endpoints.passed = False` ("initial endpoint above its adjacent interior image by
+71.2 meV"), and `undoped_m20` likewise ("…by 124.4 meV"). Both entered the statistic through
+the **return-test rescue** route, not the strict gate. My keep/remove argument claimed there
+was no distinction available to justify removing them; there was one, and I missed it.
+
+What the two paths *do* have: converged bands, endpoints relaxed to fmax ≤ 0.02, interior
+saddles at image 3, and a verified-metastable initial endpoint (all four perturbations
+returned). So they are not artefacts — but they are rescued members, and that is where the
+variance concentrates.
+
+### Admission route by pair
+
+| | strict-only pairs | pairs involving ≥1 rescued member |
+|---|---|---|
+| GA | 5 | 4 |
+| Sr | 6 | 4 |
+
+### Sensitivity to the rescue route
+
+| | all pairs | strict-only |
+|---|---|---|
+| GA | n = 9, mean +7.3, sd 40.6 | n = 5, mean −17.9, **sd 16.7**, CI [−38.5, +2.8] |
+| Sr | n = 10, mean −1.8, sd 65.2 | n = 6, mean −1.3, **sd 19.4**, CI [−21.6, +19.0] |
+
+Both means stay well inside the ±59.5 meV band under either treatment, and the strict-only
+subsets are *much* tighter. **The equivalence conclusion is robust to the rescue route** —
+if anything the rescued paths are what inflate the spread, so the all-pairs figures are the
+conservative ones and are what the headline reports.
+
+The two outliers are **kept** — they are verified-metastable paths with converged bands, and
+removing them would be selection on outcome. But the honest statement is that Sr's spread is
+driven by two *rescued* configurations, not that Sr's effect is configuration-dependent in
+some established physical sense. Whether the rescue route systematically admits
+higher-variance paths is a testable question (it has 8 instances here) and is flagged for
+the next expansion, not claimed.
 
 ## What may and may not be said
 
