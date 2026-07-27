@@ -90,6 +90,11 @@ Pure-hop admissible paths: 24 of 54 (0.444, up from 0.352). But the plan must us
 | hosts for n = 10 pairs | 45 | **26** |
 | paths (3 systems) | 135 | **78** ≈ 3.0 GPU-h at 137 s/path |
 
+**Cost correction (self-caught).** The 26-host / 78-path / 3.0 GPU-h figure counts *all* 26
+hosts. Eighteen already exist and their paths are the n = 7 data — they are not recomputed.
+The **incremental** batch is **8 new host members → 24 new paths ≈ 0.9 GPU-h**, plus pool
+generation. The 78-path figure is the total corpus size at n = 10, not the work remaining.
+
 ## Statistics at n = 7 (forward barriers, pure-hop only)
 
 | | GA | Sr |
