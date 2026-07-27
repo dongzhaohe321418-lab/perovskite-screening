@@ -312,13 +312,28 @@ if _os.path.exists(_pr):
         _r = _by[(_m, _s)]
         expect(_r["valid"] is False,
                f"m{_m:02d} {_s} did NOT pass the strict gate (valid={_r['valid']})")
-    # and the report must carry the retraction, not the false claim as an assertion
+    # INCIDENT WITHIN THE INCIDENT: the first fix edited only CORPUS84_RESULT.md while the
+    # canonical index CURRENT_STATUS.md, written in the same window, still asserted the
+    # retracted claim. A retraction must be swept REPO-WIDE, so this scans every document.
+    import glob as _glob
+    _docs = [f for f in _glob.glob("results/**/*.md", recursive=True) if "/hpc/" not in f]
+    _bad = []
+    for _f in _docs:
+        _txt = open(_f).read()
+        _i = _txt.find("pass every gate")
+        while _i != -1:
+            _ctx = _txt[max(0, _i-160):_i]
+            if "An earlier version" not in _ctx and "Correction." not in _ctx:
+                _bad.append(f"{_f}:{_txt[:_i].count(chr(10))+1}")
+            _i = _txt.find("pass every gate", _i+1)
+    expect(not _bad,
+           f"no document asserts 'pass every gate' outside a retraction (offenders: {_bad})")
     _rep84 = open("results/objective2/paired_pilot/CORPUS84_RESULT.md").read()
-    _idx = _rep84.find("pass every gate")
-    expect(_idx == -1 or "An earlier version of this report said" in _rep84[max(0,_idx-120):_idx],
-           "any 'pass every gate' text in the report is inside the retraction, not an assertion")
     expect("RESCUED, not gate-passing" in _rep84,
            "the report distinguishes rescued members from gate-passing ones")
+    _idx84 = open("results/objective2/CURRENT_STATUS.md").read()
+    expect("return-test rescue" in _idx84,
+           "the canonical index names the rescue route for m14/m20")
 
 print("\n" + "=" * 70)
 if FAILS:
