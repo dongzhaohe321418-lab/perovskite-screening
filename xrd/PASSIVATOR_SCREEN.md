@@ -39,6 +39,8 @@ a passivator screen.
 
 Two diagnostics establish the artifact:
 
+**The control is included in these regressions, and belongs there.** Subtracting a reference is a rigid translation of both axes; slope and r are translation-invariant, so regressing shifts and regressing absolute angles give the identical line (verified to ~1e-14). The control sits at (0, 0) because that is where the origin was placed, not because a point was invented. Leave-one-out, re-referencing to another film each time, gives slopes 1.02–1.23 with r > 0.93 and p < 0.023 throughout; dropping the control *strengthens* the result (slope 1.019, r = 0.991). The width test uses absolute FWHM, where the control is not a structural zero at all: r goes +0.873 → +0.906 when it is removed. See `results/regression_robustness.csv` and `results/reference_choice_robustness.csv`.
+
 - **Positions.** Perovskite 100 shift vs ITO shift: **slope 1.08, r = 0.985**
   (220: slope 1.14, r = 0.993). The film peaks move essentially one-for-one with
   the substrate peak. A real lattice change would move the film peaks while
