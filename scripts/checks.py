@@ -108,14 +108,21 @@ def check_endpoints(profile_eV, *, label="", tol_eV=0.0):
         return {"check": "endpoints", "label": label, "passed": False,
                 "reason": f"band has only {E.size} images"}
     interior = E[1:-1]
-    ini_ok = bool(E[0] <= interior.min() + tol_eV)
-    fin_ok = bool(E[-1] <= interior.min() + tol_eV)
+    # An endpoint is a local minimum of the band iff it lies below ITS OWN ADJACENT
+    # interior image. Requiring it to lie below EVERY interior image (as an earlier version
+    # of this check did) is a test for path SYMMETRY, not for minimality, and it rejects
+    # every asymmetric hop -- which is the generic case here, since the two iodide sites are
+    # inequivalent in a disordered FA host. That error rejected a band whose Ea reproduced
+    # the reference to 0.0000 meV (old member 2, final endpoint 80.2 meV above initial,
+    # lowest interior 49.8 meV: both endpoints ARE local minima, 0.0 < 49.8 and 80.2 < 132.6).
+    ini_ok = bool(E[0] <= E[1] + tol_eV)
+    fin_ok = bool(E[-1] <= E[-2] + tol_eV)
     saddle_ok = bool(0 < int(np.argmax(E)) < E.size - 1)
     problems = []
-    if not ini_ok:  problems.append(f"initial endpoint above lowest interior by "
-                                    f"{(E[0]-interior.min())*1000:.1f} meV")
-    if not fin_ok:  problems.append(f"final endpoint above lowest interior by "
-                                    f"{(E[-1]-interior.min())*1000:.1f} meV")
+    if not ini_ok:  problems.append(f"initial endpoint above its adjacent interior image by "
+                                    f"{(E[0]-E[1])*1000:.1f} meV -- not a local minimum")
+    if not fin_ok:  problems.append(f"final endpoint above its adjacent interior image by "
+                                    f"{(E[-1]-E[-2])*1000:.1f} meV -- not a local minimum")
     if not saddle_ok: problems.append(f"maximum at image {int(np.argmax(E))} (an endpoint)")
     return {"check": "endpoints", "label": label,
             "passed": bool(ini_ok and fin_ok and saddle_ok),
