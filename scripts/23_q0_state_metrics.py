@@ -25,10 +25,11 @@ def parse_pw(path):
     occ = [float(x) for x in re.findall(r"\d\.\d{4}", occ_txt)]
     assert len(ev) == len(occ), f"eigenvalue/occupation mismatch: {len(ev)} vs {len(occ)}"
     ef = float(re.search(r"the Fermi energy is\s+([-\d.]+)", seg).group(1))
+    nat = int(re.search(r"number of atoms/cell\s*=\s*(\d+)", t).group(1))
     nit = t.count("iteration #")
     conv = "convergence has been achieved" in t
     etot = re.findall(r"^!\s+total energy\s+=\s+([-\d.]+)", t, re.M)
-    return ev, occ, ef, nit, conv, (float(etot[-1]) if etot else None)
+    return ev, occ, ef, nit, conv, (float(etot[-1]) if etot else None), nat
 
 
 def parse_proj(path):
@@ -47,7 +48,7 @@ def parse_proj(path):
     return states, bands
 
 
-def metrics(states, pairs):
+def metrics(states, pairs, nat):
     agg, per_atom = {}, {}
     for st, wt in pairs:
         if st not in states:
@@ -56,7 +57,9 @@ def metrics(states, pairs):
         agg[f"{sp}-{'spdf'[l]}"] = agg.get(f"{sp}-{'spdf'[l]}", 0.0) + wt
         per_atom[a] = per_atom.get(a, 0.0) + wt
     S = sum(agg.values()) or 1.0
-    pa = np.array([per_atom.get(i, 0.0) for i in range(1, 160)])  # fixed 159-atom vector
+    # nat comes from the pw output ("number of atoms/cell") -- NEVER hardcoded, so the
+    # same tool works on a larger supercell. IPR and the uniform reference both scale with it.
+    pa = np.array([per_atom.get(i, 0.0) for i in range(1, nat + 1)])
     pan = pa / (pa.sum() or 1.0)
     return {"pb_p_frac": agg.get("Pb-p", 0.0) / S,
             "char": {k: round(v / S, 4) for k, v in sorted(agg.items(), key=lambda kv: -kv[1])[:4]},
@@ -74,7 +77,7 @@ def main():
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
 
-    ev, occ, ef, nit, conv, etot = parse_pw(a.pw)
+    ev, occ, ef, nit, conv, etot, nat = parse_pw(a.pw)
     states, bands = parse_proj(a.proj)
 
     frac = [i + 1 for i in range(len(occ)) if 0.2 < occ[i] < 0.8]
@@ -87,19 +90,30 @@ def main():
         cand = [b for b, (E, _) in bands.items() if abs(E - ef) < 0.6]
         best, band = -1.0, None
         for b in cand:
-            m = metrics(states, bands[b][1])
+            m = metrics(states, bands[b][1], nat)
             if m["pb_p_frac"] > best:
                 best, band = m["pb_p_frac"], b
         how = f"max Pb-p near E_F ({len(frac)} fractional bands)"
     E_state, pairs = bands[band]
-    m = metrics(states, pairs)
-    res = {"pw": a.pw, "n_bands": len(ev), "n_iter": nit, "converged": conv,
+    m = metrics(states, pairs, nat)
+    res = {"pw": a.pw, "n_atoms": nat, "ipr_uniform": 1.0 / nat,
+           "n_bands": len(ev), "n_iter": nit, "converged": conv,
            "etot_Ry": etot, "E_F": ef, "band": band, "identified_by": how,
            "E_state": E_state, "occupation": occ[band - 1],
            **{k: v for k, v in m.items() if k != "weights"}}
     if a.ref:
-        ref = np.array(json.load(open(a.ref))["weights"])
+        refj = json.load(open(a.ref))
+        ref = np.array(refj["weights"])
         w = np.array(m["weights"])
+        if ref.size != w.size:
+            # different supercells -> per-atom vectors are not comparable elementwise
+            res["cosine_vs_ref"] = None
+            res["cosine_skipped"] = (f"reference has {ref.size} atoms, this run has {w.size}; "
+                                     "compare eff_atoms and IPR/uniform ratio instead")
+            json.dump({**res, "weights": m["weights"]}, open(a.out or a.pw.replace(".out","_metrics.json"), "w"), indent=1)
+            for k, v in res.items():
+                print(f"  {k}: {v}")
+            return
         res["cosine_vs_ref"] = float(w @ ref / (np.linalg.norm(w) * np.linalg.norm(ref)))
     out = a.out or a.pw.replace(".out", "_metrics.json")
     json.dump({**res, "weights": m["weights"]}, open(out, "w"), indent=1)
