@@ -1,5 +1,17 @@
 # q=0 static benchmark — plan, acceptance criteria, and HPC budget
 
+> **⚠️ SUPERSEDED ESCALATION ADVICE (2026-07-27).** Any recommendation below to apply a
+> Hubbard U is HISTORICAL and must not drive an HPC decision. The spin-free projection
+> (`Q0_PROJECTION_RESULT.md`) shows the q=0 half-occupied state is **delocalised** —
+> IPR 0.0261 ≈ 38 effective atoms of 159, with the two vacancy-flanking Pb carrying only
+> 2.66% and 2.44% — so a U would *impose* a localisation the physics does not support and
+> yield an artefact. The convergence ladder (`Q0_CONVERGENCE_LADDER.md`) further shows the
+> result is robust to `nbnd` and the Davidson subspace. **The agreed next HPC step is a
+> LARGER-SUPERCELL spin-free q=0 SCF + projection**, to decide whether the delocalisation
+> is intrinsic or an artefact of periodic images in the 159-atom cell. Until the q=0 state
+> and its forces are established: no U, no q=0 relaxation or NEB on q=0 forces, and the
+> q=0/q=+1 DFT barrier comparison stays closed.
+
 **Purpose.** Find a treatment that gives the q=0 state **reliable atomic forces**, not just
 a stable energy. Forces are the binding constraint: the current state's energy is stable to
 0.24 meV, but an unconverged SCF gives forces that cannot drive an endpoint relaxation or a
