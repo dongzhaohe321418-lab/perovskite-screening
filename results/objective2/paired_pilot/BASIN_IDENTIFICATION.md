@@ -1,58 +1,72 @@
-# Rejected-path basin identification (P2 follow-up)
+# Rejected-path basin identification — CORRECTED (v2)
 
-**All 35 rejected paths from the rerun classified by what actually moves between the
-initial endpoint and the band's lowest configuration. Two physical classes emerge, and
-neither is an unphysical collapse. Each needs a different fix, and neither is "more
-relaxation budget".**
+> **This version supersedes v1 entirely.** A reviewer audit found that v1's
+> "correction" fixed only the labels while carrying the uncorrected statistics: 25 of the
+> 29 profile minima sat at image 6 — the **final endpoint** of a 7-image band — not 2 as
+> v1 claimed, so v1's "interior minimum, mean −280 meV" was in fact mostly the final
+> endpoint, its Class A "during the hop" interpretation rested on that mislabelling, and
+> its Class B "shallow initial minimum reachable by many small motions" reading was
+> contradicted by the recorded migrating-ion displacements (3.5–4 Å — one atom completing
+> the hop, not many small motions). The analysis below was redone from scratch with the
+> two questions kept separate.
 
-Method: for every rejected path, the displacement field between the initial endpoint and
-the band's minimum-energy image (minimum-image convention), split by atom type; co-movers
-counted above 0.8 Å. Endpoints are images 0 and 6 in a 7-image band — an earlier pass of
-this analysis misclassified minima at image 6 as "interior", which is corrected here
-(2 of the 35 were mislabelled; the class counts below are the corrected ones).
+Method: for each of the 35 rejected paths, two independent questions, each with its own
+displacement field —
 
-## Class A — FA reorientation accompanies the hop: 20 of 35
+- **Q1 (asymmetric well):** does the *final endpoint* sit >50 meV below the initial one?
+  Displacements measured initial→final.
+- **Q2 (interior basin):** does the *lowest interior image* sit below **both** endpoints?
+  Displacements measured initial→that image.
 
-| | |
-|---|---|
-| interior minimum below initial endpoint | mean −280 meV, range [−563, −22] |
-| FA co-movers >0.8 Å | 50 atoms across 20 paths, mean displacement 0.97 Å |
-| by system | undoped 5, GA 8, Sr 7 |
+## Result: the dominant phenomenon is strongly asymmetric wells, not mid-path basins
 
-The band discovers that rotating one or more FA molecules *during* the iodide hop reaches
-configurations far below the initial endpoint. These are genuine states — the validity gate
-is doing exactly its job by refusing to report their barrier as the pure iodide hop.
+| class | n / 35 | definition |
+|---|---|---|
+| **asymmetric well** | **27** | final endpoint below initial by >50 meV (mean -273, range [-563, -71] meV) |
+| genuine interior basin | 3 | an interior image below *both* endpoints |
+| both | 1 | (counted in each row above) |
+| neither (other gate failures) | 6 | endpoint-consistency or magnitude rejections |
 
-**This is the composite-mechanism branch. The fix is mechanistic, not numerical:**
-treat "I hop at frozen FA orientation" and "I hop + FA reorientation" as *different
-mechanisms* with separate barriers. Practically: re-relax each rejected path's endpoints
-with the band's discovered FA orientation, and run that band as its own mechanism class.
-A single Ea mixing both is meaningless.
+By system, asymmetric wells: undoped 9, GA 8, Sr 10 — evenly spread, a host property.
 
-## Class B — no co-mover above 0.8 Å: 9 of 35
+## What the asymmetric wells are
 
-Seven of nine are **strongly asymmetric wells**: the final endpoint sits 100–520 meV below
-the initial one, with the profile descending after the saddle (`dip_after_barrier`). Two are
-**shallow initial minima**: an adjacent configuration reachable by small *collective*
-displacements (every atom under 0.8 Å) lies 84–100 meV below the converged endpoint
-(`dip_before_barrier`).
+**18 of 27 have FA atoms displaced >0.8 Å in the final state.** The picture: the two
+iodide sites connected by the hop are strongly inequivalent in a disordered FA host, and in
+most cases the *arrival* site is additionally stabilised by an FA reorientation that the
+final-endpoint relaxation finds. The initial endpoint is *not* shown to be shallow —
+that was v1's unsupported claim. What the data show is a hop landing in a much deeper well.
 
-Neither is a failure of the calculation. Both mean the endpoint chosen by
-"nearest iodide to the vacancy, relaxed to fmax ≤ 0.02" is a *shallow* local minimum whose
-basin bottom lies elsewhere — reachable not by one atom moving but by many small motions,
-which is why force convergence does not catch it (forces at a shallow minimum are small
-by definition).
+These paths fail the endpoint gate because the descending profile puts an adjacent interior
+image below the initial endpoint. The physics is a **strongly exothermic hop**, and the
+forward barrier from the initial state is still a well-defined quantity — but for
+18 of the 27, the *final* state mixes iodide transfer with FA reorientation, so the
+reverse barrier and the well depth are composite-mechanism quantities.
 
-**Fix: basin-bottom identification before the band** — a short MD quench or a perturbed
-re-relaxation of each endpoint, accepting the endpoint only if it returns to itself.
+**Fix:** for the pure-hop statistic, these need endpoints prepared in a *common* FA
+orientation — re-relax the final endpoint with FA orientations constrained to the initial
+member's, or accept the forward barrier only, with the asymmetry recorded. Averaging their
+apparent barriers into the screening statistic without that separation mixes mechanisms.
 
-## What this changes
+## The genuine interior basins (3 of 35)
 
-1. The ~35% validity yield decomposes into: 19 valid + 20 composite-mechanism +
-   9 shallow-endpoint + 6 other. The "yield" is not noise to push through with more
-   sampling — half the rejections are a second mechanism worth studying in its own right.
-2. **The screening statistic stays defined on the pure-hop class only.** Composite paths
-   must not be averaged in, at any n.
-3. GA shows the most class-A rejections (8), consistent with a larger A-site cation
-   coupling more strongly to FA orientation — worth tracking, but at these counts not yet
-   a claim.
+| path | interior min | image | co-movers (FA/framework) |
+|---|---|---|---|
+| m01 Sr | −121.3 meV | 5 | 1 / 0 |
+| m04 GA | −22.4 meV | 5 | 1 / 0 |
+| m09 undoped | −100.0 meV | 1 | 0 / 0 |
+
+Two involve a single FA rotating mid-path (a true composite mechanism, the only cases the
+v1 "Class A" story actually describes); m09's basin at image 1 with no co-mover >0.8 Å is
+the one place a small-collective-displacement reading might apply — a single path, not a
+class.
+
+## Consequences (revised)
+
+1. The rejection pool is dominated by **site-energy asymmetry** (27/35), not by mid-path
+   FA-rotation mechanisms (3/35). v1 had this backwards.
+2. The screening statistic can potentially recover many of the 27 asymmetric-well paths by
+   reporting **forward barriers with endpoint-asymmetry recorded**, rather than discarding
+   them — a protocol question for the user, since it changes what "E_a" means in the table.
+3. The basin-bottom re-identification fix proposed in v1 addresses at most 1 path (m09) and
+   is dropped as a priority.
