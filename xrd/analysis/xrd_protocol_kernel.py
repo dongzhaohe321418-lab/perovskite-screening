@@ -5,6 +5,8 @@ Design rule: every reported quantity carries its uncertainty DECOMPOSED
 Nothing here returns a single "crystallinity" or "phase fraction" number whose
 value is actually set by an unstated modelling assumption.
 """
+import os
+import re
 import numpy as np
 import pandas as pd
 
@@ -951,5 +953,332 @@ def report_lines(res):
              % (c['comparative_index_bragg'], c['comparative_index_bragg_over_total'],
                 c['comparative_index_peak_over_bg']))
     for n in res.get('gates', {}).get('notes', []):
+        L.append("  gate: %s" % n)
+    return L
+
+
+# =====================  instrument header + data integrity  =====================
+def read_mdi_header(path):
+    """Parse acquisition metadata from a .mdi sidecar.
+
+    Line 1 is a free-text instrument string; line 2 is
+      start  step  dwell  anode  wavelength  end  npoints
+
+    The declared wavelength is authoritative. It is usually the Cu Ka WEIGHTED
+    MEAN (1.54184 A), not Ka1 (1.540598 A) -- silently assuming Ka1 biases every
+    d-spacing and hence the refined cell. Returns a dict suitable for
+    `scan_meta(**hdr)`; raises ValueError if the numeric line will not parse.
+    """
+    raw = open(path, 'rb').read().decode('latin-1')
+    lines = raw.split('\n')
+    if len(lines) < 2:
+        raise ValueError("%s: no numeric header line" % path)
+    instr = lines[0].strip()
+    f = lines[1].split()
+    if len(f) < 7:
+        raise ValueError("%s: header line has %d fields, need 7" % (path, len(f)))
+    return dict(instrument=instr, start=float(f[0]), step=float(f[1]),
+                dwell=float(f[2]), anode=f[3], wavelength=float(f[4]),
+                end=float(f[5]), npoints=int(f[6]))
+
+
+def verify_txt_against_mdi(txt_path, mdi_path):
+    """Confirm the two-column .txt matches the counts embedded in its .mdi.
+
+    The .mdi body carries trailing footer tokens after the data; only the first
+    `npoints` values are counts. Returns (ok, detail).
+    """
+    hdr = read_mdi_header(mdi_path)
+    n = hdr['npoints']
+    raw = open(mdi_path, 'rb').read().decode('latin-1')
+    body = raw.split('\n', 2)[2] if raw.count('\n') >= 2 else ''
+    toks = re.findall(r'(\d+)\.', body)
+    if len(toks) < n:
+        return False, "mdi body has %d numeric tokens, header declares %d" % (len(toks), n)
+    counts = np.array([int(t) for t in toks[:n]], float)
+    arr = np.loadtxt(txt_path)
+    inten = arr[:, 1]
+    if len(inten) != n:
+        return False, "txt has %d rows, mdi header declares %d" % (len(inten), n)
+    if not np.array_equal(counts, inten):
+        bad = int((counts != inten).sum())
+        return False, "%d of %d intensity values differ between txt and mdi" % (bad, n)
+    return True, "txt matches mdi for all %d points (footer tokens %s ignored)" % (n, toks[n:])
+
+
+# =====================  substrate referencing + geometry diagnostics  ============
+def fit_substrate_line(tth, inten, seed, half=1.1):
+    """Fit the substrate reflection. Returns dict with position, area, FWHM."""
+    out = lrt_peak(tth, inten, seed, half=half)
+    return dict(tth=float(out[0]), area=float(out[1]), e_area=float(out[2]),
+                fwhm=float(out[3]), delta_chi2=float(out[4]), p_asymptotic=float(out[5]))
+
+
+def substrate_reference(patterns, substrate_seed, reference_label=None, half=1.1):
+    """Measure the substrate reflection in every scan and reference to one sample.
+
+    `patterns` maps label -> (tth, intensity). The substrate is physically the
+    SAME under every film, so any change in its line is instrumental. The
+    returned `zero_offset` is the per-sample angular offset to SUBTRACT before
+    any lattice comparison.
+
+    Deliberately relative: the observed substrate angle can sit a constant
+    offset from its literature value (geometry, sample height, transparency),
+    so it is a differential reference, not an absolute angle standard.
+    """
+    labels = list(patterns)
+    ref = reference_label if reference_label in patterns else labels[0]
+    rows = []
+    for lab in labels:
+        tt, ii = patterns[lab]
+        f = fit_substrate_line(tt, ii, substrate_seed, half=half)
+        f['sample'] = lab
+        rows.append(f)
+    df = pd.DataFrame(rows)
+    ref_tth = float(df.loc[df['sample'] == ref, 'tth'].iloc[0])
+    df['zero_offset'] = df.tth - ref_tth
+    df['reference'] = ref
+    return df
+
+
+def geometry_diagnostics(patterns, sub_df, perov_peaks, reference_label=None,
+                         slope_tol=0.30, r_pos_min=0.80, r_width_max=0.60):
+    """Decide whether lattice and size differences between scans are real.
+
+    Two tests, both anchored on the substrate reflection:
+
+    POSITION -- regress each film's perovskite 100 shift on its substrate shift.
+    A slope near 1 with high r means the film peaks move WITH the substrate,
+    i.e. a common geometric offset (sample height / displacement), not a lattice
+    change. Delta-a is then NOT COMPARABLE.
+
+    WIDTH -- correlate film peak width with substrate peak width. The substrate
+    cannot broaden, so a strong positive correlation means the instrumental
+    contribution differed between scans and Delta-D is NOT COMPARABLE.
+
+    Also reports whether the substrate line is BROADER than the film peaks. If
+    it is, its width is dominated by the substrate's own grain size and it
+    cannot serve as a resolution standard -- deconvolving it drives the apparent
+    size to infinity.
+    """
+    labels = list(patterns)
+    ref = reference_label if reference_label in patterns else labels[0]
+    sub = sub_df.set_index('sample')
+    shift_sub, shift_100, fwhm_film, fwhm_sub, dnm = [], [], [], [], []
+    for lab in labels:
+        pk = perov_peaks[lab]
+        shift_sub.append(float(sub.loc[lab, 'zero_offset']))
+        shift_100.append(float(pk.tth.iloc[0]) - float(perov_peaks[ref].tth.iloc[0]))
+        fwhm_film.append(float(np.median(pk.fwhm)))
+        fwhm_sub.append(float(sub.loc[lab, 'fwhm']))
+    shift_sub = np.asarray(shift_sub); shift_100 = np.asarray(shift_100)
+    fwhm_film = np.asarray(fwhm_film); fwhm_sub = np.asarray(fwhm_sub)
+
+    def _fit(x, y):
+        if np.ptp(x) < 1e-9:
+            return np.nan, np.nan, np.nan
+        s, i = np.polyfit(x, y, 1)
+        r = float(np.corrcoef(x, y)[0, 1])
+        return float(s), float(i), r
+
+    slope_pos, icept_pos, r_pos = _fit(shift_sub, shift_100)
+    _, _, r_width = _fit(fwhm_sub, fwhm_film)
+
+    pos_contaminated = (np.isfinite(r_pos) and abs(r_pos) >= r_pos_min
+                        and abs(slope_pos - 1.0) <= slope_tol)
+    width_contaminated = np.isfinite(r_width) and r_width >= r_width_max
+    sub_broader = {lab: bool(sub.loc[lab, 'fwhm'] > perov_peaks[lab].fwhm.max())
+                   for lab in labels}
+    usable_as_standard = not any(sub_broader.values())
+
+    notes = []
+    if pos_contaminated:
+        notes.append("perovskite shift tracks substrate shift (slope %.2f, r %.3f): "
+                     "Delta-a NOT COMPARABLE across these scans" % (slope_pos, r_pos))
+    if width_contaminated:
+        notes.append("film width tracks substrate width (r %+.3f): "
+                     "Delta-D NOT COMPARABLE across these scans" % r_width)
+    if not usable_as_standard:
+        notes.append("substrate line is broader than the film peaks in %d/%d scans, so it is "
+                     "grain-size limited and CANNOT be used as a resolution standard"
+                     % (sum(sub_broader.values()), len(labels)))
+    if not notes:
+        notes.append("no substrate-linked contamination detected at the configured thresholds")
+
+    return dict(
+        labels=labels, reference=ref,
+        substrate_shift=shift_sub, perov_100_shift=shift_100,
+        substrate_fwhm=fwhm_sub, perov_fwhm_median=fwhm_film,
+        slope_position=slope_pos, r_position=r_pos, r_width=r_width,
+        substrate_shift_span=float(np.ptp(shift_sub)),
+        substrate_fwhm_span_pct=float(100 * np.ptp(fwhm_sub) / np.mean(fwhm_sub)),
+        lattice_comparable=not pos_contaminated,
+        size_comparable=not width_contaminated,
+        substrate_usable_as_resolution_standard=usable_as_standard,
+        substrate_broader_than_film=sub_broader,
+        notes=notes)
+
+
+# =====================  the standing protocol: analyse_series  =====================
+def analyse_series(files, substrate_seed, reference_label=None, perov_seeds=None,
+                   extra_seeds=None, nmc=1500, n_boot=400, seed=11,
+                   allow_assumed_wavelength=False):
+    """MODE `series`: the full fixed protocol on a set of scans measured together.
+
+    `files` maps label -> path to the two-column .txt. A sibling `.mdi` with the
+    same stem is read when present, and its declared wavelength/step/dwell are
+    used -- never assumed.
+
+    Runs, in order:
+      1. header parse + txt/mdi integrity check
+      2. protocol-identity check across all scans (absolute-intensity gate)
+      3. substrate referencing -> per-sample zero offset
+      4. geometry diagnostics -> lattice_comparable / size_comparable verdicts
+      5. per-sample peak fit, bootstrap-calibrated detection, lattice, size,
+         texture, impurities, crystallinity
+      6. within-scan ratios (immune to alignment/flux) and cross-sample indices
+
+    Every comparative quantity comes back with a status. Quantities the
+    diagnostics rule out are computed but flagged NOT_COMPARABLE rather than
+    silently reported.
+    """
+    labels = list(files)
+    ref = reference_label if reference_label in files else labels[0]
+    perov_seeds = list(perov_seeds) if perov_seeds is not None else list(PEROVSKITE_SEEDS)
+    extra_seeds = list(extra_seeds) if extra_seeds is not None else \
+        [s for s in IMPURITY_SEEDS if abs(s - substrate_seed) > 0.5]
+
+    # ---- 1. headers + integrity ----
+    meta_by, integrity = {}, {}
+    for lab, p in files.items():
+        mdi = os.path.splitext(p)[0] + '.mdi'
+        if os.path.exists(mdi):
+            hdr = read_mdi_header(mdi)
+            ok, detail = verify_txt_against_mdi(p, mdi)
+            integrity[lab] = dict(checked=True, ok=bool(ok), detail=detail)
+            meta_by[lab] = scan_meta(wavelength=hdr['wavelength'], step=hdr['step'],
+                                     dwell=hdr['dwell'], tth_range=(hdr['start'], hdr['end']),
+                                     instrument=hdr['instrument'], label=lab)
+        else:
+            integrity[lab] = dict(checked=False, ok=None,
+                                  detail="no .mdi sidecar; metadata must be supplied by hand")
+            meta_by[lab] = scan_meta(label=lab)
+
+    missing = [l for l in labels if meta_by[l].get('wavelength') is None]
+    if missing and not allow_assumed_wavelength:
+        return dict(status='NOT_COMPARABLE', labels=labels, integrity=integrity,
+                    gates=dict(notes=["wavelength/step undeclared for %s -- lattice and size "
+                                      "HALTED. Supply metadata or pass "
+                                      "allow_assumed_wavelength=True (which flags the "
+                                      "assumption)." % ', '.join(missing)]),
+                    meta=meta_by)
+
+    # ---- 2. protocol identity ----
+    keys = {l: protocol_key(meta_by[l]) for l in labels}
+    same_protocol = len(set(keys.values())) == 1
+    lam = float(meta_by[ref]['wavelength'])
+
+    # ---- 3. substrate referencing ----
+    patterns = {l: load_pattern(files[l]) for l in labels}
+    sub_df = substrate_reference(patterns, substrate_seed, reference_label=ref)
+    zoff = dict(zip(sub_df['sample'], sub_df['zero_offset']))
+
+    # ---- 4/5. per-sample analysis on offset-tracked seeds ----
+    per, perov_peaks = {}, {}
+    for lab in labels:
+        tt, ii = patterns[lab]
+        z = float(zoff[lab])
+        seeds = sorted([s + z for s in perov_seeds] +
+                       [s + z for s in extra_seeds] + [substrate_seed + z])
+        det = detect_phases(tt, ii, seeds=seeds, n_boot=n_boot, seed=seed, calibrate=True)
+        pk, curves = fit_xrd_peaks(tt, ii, seeds)
+        pk = attach_detection(pk, det, tol=0.45)
+        shifted = [s + z for s in perov_seeds]
+        pk['is_perovskite'] = [bool(any(abs(t - s) < 0.45 for s in shifted)) for t in pk.tth]
+        pk['phase'] = np.where(pk.detected & pk.is_perovskite, 'perovskite',
+                               np.where(pk.detected, 'minor', 'not detected'))
+        pkp = pk[pk.detected & pk.is_perovskite].reset_index(drop=True)
+        perov_peaks[lab] = pkp
+        pkc = pkp.copy(); pkc['tth'] = pkc.tth - z          # substrate-referenced
+        lat = refine_pseudocubic(pkc, wavelength=lam)
+        sub_tth = float(sub_df.loc[sub_df['sample'] == lab, 'tth'].iloc[0])
+        per[lab] = dict(
+            tth=tt, intensity=ii, peaks=pk, perovskite_peaks=pkp, detection=det,
+            curves=curves, lattice=lat, zero_offset=z, substrate_tth=sub_tth,
+            crystallinity=crystallinity_metrics(tt, ii, pk[pk.detected]),
+            size=size_analysis(pkp, wavelength=lam, nmc=nmc),
+            texture=texture_coefficients(pkp, lat['N'], lat['a'], exclude_tth=[sub_tth]),
+            impurities=impurity_report(det, lat, float(pkp.area.sum()),
+                                       zero_shift=0.0, substrate_tth=[sub_tth]),
+            meta=meta_by[lab], integrity=integrity[lab])
+
+    geo = geometry_diagnostics(patterns, sub_df, perov_peaks, reference_label=ref)
+
+    # ---- 6. comparative table with per-quantity status ----
+    rows = []
+    for lab in labels:
+        r = per[lab]; imp = r['impurities']
+        sub_area = float(imp.loc[imp.origin == 'substrate', 'area'].sum()) if len(imp) else np.nan
+        perov_area = float(r['perovskite_peaks'].area.sum())
+        rows.append(dict(
+            sample=lab, is_reference=(lab == ref),
+            a_A=r['lattice']['a'], e_a_formal=r['lattice']['e_a_formal'],
+            e_a_model=r['lattice']['e_a_model'], birge=r['lattice']['birge_ratio'],
+            D_nm=r['size']['D_nm'],
+            D_stat_lo=r['size']['stat_ci68'][0], D_stat_hi=r['size']['stat_ci68'][1],
+            D_syst_lo=r['size']['syst_range'][0], D_syst_hi=r['size']['syst_range'][1],
+            perov_bragg=perov_area,
+            perov_over_substrate=perov_area / sub_area if sub_area else np.nan,
+            bragg_over_total=r['crystallinity']['comparative_index_bragg_over_total'],
+            doc_lo=r['crystallinity']['doc_range'][0],
+            doc_hi=r['crystallinity']['doc_range'][1],
+            film_impurity_pct=film_impurity_pct(imp),
+            substrate_tth=r['substrate_tth'], zero_offset=r['zero_offset'],
+            substrate_fwhm=float(sub_df.loc[sub_df['sample'] == lab, 'fwhm'].iloc[0]),
+            perov_fwhm_median=float(np.median(r['perovskite_peaks'].fwhm)),
+            lattice_status='VALID' if geo['lattice_comparable'] else 'NOT_COMPARABLE',
+            size_status='VALID' if geo['size_comparable'] else 'NOT_COMPARABLE',
+            intensity_status='VALID' if same_protocol else 'NOT_COMPARABLE',
+            protocol_key=keys[lab],
+            integrity_ok=integrity[lab]['ok']))
+    comp = pd.DataFrame(rows)
+
+    status = 'VALID'
+    if not same_protocol or not (geo['lattice_comparable'] and geo['size_comparable']):
+        status = 'PROVISIONAL'
+    if any(v['ok'] is False for v in integrity.values()):
+        status = 'NOT_COMPARABLE'
+
+    gate_notes = list(geo['notes'])
+    if not same_protocol:
+        gate_notes.append("acquisition protocol differs between scans: absolute-intensity "
+                          "comparison FORBIDDEN; use within-scan ratios only")
+    for lab, v in integrity.items():
+        if v['ok'] is False:
+            gate_notes.append("%s: data integrity FAILED -- %s" % (lab, v['detail']))
+        elif v['checked'] is False:
+            gate_notes.append("%s: no .mdi sidecar, metadata unverified" % lab)
+
+    return dict(status=status, labels=labels, reference=ref, per_sample=per,
+                substrate=sub_df, geometry=geo, comparison=comp,
+                same_protocol=same_protocol, integrity=integrity,
+                wavelength=lam, meta=meta_by, gates=dict(notes=gate_notes))
+
+
+def series_report_lines(res):
+    """Terse text summary of a `series` run -- what is usable and what is not."""
+    L = ["status: %s   (reference sample: %s)" % (res['status'], res.get('reference'))]
+    if 'comparison' not in res:
+        return L + ["  gate: %s" % n for n in res.get('gates', {}).get('notes', [])]
+    g = res['geometry']
+    L.append("wavelength %.5f A (declared, not assumed)" % res['wavelength'])
+    L.append("substrate line drifts %.3f deg; its FWHM varies %.0f%% across scans"
+             % (g['substrate_shift_span'], g['substrate_fwhm_span_pct']))
+    L.append("  position test: slope %.2f, r %.3f  -> lattice %s"
+             % (g['slope_position'], g['r_position'],
+                'comparable' if g['lattice_comparable'] else 'NOT COMPARABLE'))
+    L.append("  width test:    r %+.3f            -> size %s"
+             % (g['r_width'], 'comparable' if g['size_comparable'] else 'NOT COMPARABLE'))
+    for n in res['gates']['notes']:
         L.append("  gate: %s" % n)
     return L

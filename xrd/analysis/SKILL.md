@@ -61,6 +61,12 @@ per-reflection `TC_hkl`. Each row carries `stat_uncertainty`,
 The instrumental systematic is largely **common-mode** on one instrument, so
 ΔD is more reliable than either absolute D. Say so when reporting.
 
+### `series` — a set of scans measured together (**the default**)
+
+`analyse_series(...)` — headers, integrity, protocol identity, substrate
+referencing, geometry verdicts, then per-sample analysis. Use this whenever
+more than one scan is on the table. See "The standing protocol" below.
+
 ### `batch` — additive / concentration series
 ```python
 results, summary, comparisons = analyse_batch(
@@ -167,6 +173,91 @@ below that come from the gamma-tail fit, not direct counting. Raise `n_boot`
 before trusting a bootstrap p near alpha. Calibration shifts the FAR tail
 strongly (x10^2-10^3) but is near-neutral close to alpha, so it rarely changes
 a borderline call -- it prevents overstating far-tail significance.
+
+## The standing protocol — run this every time
+
+`analyse_series(files, substrate_seed, reference_label=...)` executes the whole
+procedure below in one call and returns a per-quantity status. Prefer it over
+calling the stages by hand; the stages exist so you can inspect, not so you can
+skip.
+
+```python
+files = {'control': 'ctrl.txt', 'P1': 'p1.txt', ...}   # .mdi sidecars auto-read
+res = analyse_series(files, substrate_seed=30.25, reference_label='control')
+print("\n".join(series_report_lines(res)))
+res['comparison'].to_csv('comparison.csv', index=False, float_format='%.10g')
+```
+
+**Step 0 — metadata from the instrument, never from memory.**
+`read_mdi_header()` takes wavelength, step, dwell and range from the `.mdi`
+sidecar. The declared Cu Ka value is typically the WEIGHTED MEAN (1.54184 A),
+not Ka1 (1.540598 A); assuming Ka1 biases every d-spacing and the refined cell
+with it. No header and no hand-supplied metadata -> lattice and size HALT.
+
+**Step 1 — prove the data is what it claims to be.**
+`verify_txt_against_mdi()` compares the two-column `.txt` against the counts
+embedded in the `.mdi` (ignoring footer tokens after `npoints`). A mismatch sets
+`status = NOT_COMPARABLE`. Run this before analysing, not after.
+
+**Step 2 — protocol identity across the set.** `protocol_key()` fingerprints
+wavelength, step, dwell, range, instrument, optics and normalisation. If the
+keys differ, absolute-intensity comparison is forbidden and only within-scan
+ratios may be reported.
+
+**Step 3 — reference every scan to the substrate.** The substrate under each
+film is physically identical, so its reflection is a built-in control.
+`substrate_reference()` fits it in every scan and returns the per-sample
+`zero_offset` to subtract before any lattice comparison. Treat it as a
+DIFFERENTIAL reference only: the observed angle can sit a constant offset from
+its literature value (sample height, transparency, geometry), so it does not
+calibrate absolute angle.
+
+**Step 4 — let the substrate decide what is comparable.**
+`geometry_diagnostics()` runs two tests and they are not advisory:
+
+| test | what it means | consequence |
+|---|---|---|
+| perovskite shift vs substrate shift, slope ~1 and \|r\| high | film peaks move WITH the substrate — a common geometric offset, not a lattice change | `Delta-a` = **NOT COMPARABLE** |
+| film FWHM vs substrate FWHM, r positive | instrumental contribution differed between scans | `Delta-D` = **NOT COMPARABLE** |
+
+It also reports whether the substrate line is BROADER than the film peaks. When
+it is, its width is set by the substrate's own grain size, so it cannot serve as
+a resolution standard — deconvolving it sends the apparent size to infinity.
+That divergence is a diagnostic, not a bug to work around.
+
+**Step 5 — per sample**, on seeds tracked by each scan's own offset: fit,
+bootstrap-calibrated detection, lattice, size, texture, impurities,
+crystallinity — all as specified in the sections above.
+
+**Step 6 — report only what survives.** Ratios measured inside one scan
+(PbI2/perovskite, perovskite/substrate) cancel alignment and beam-intensity
+drift and stay valid even when Step 4 rules out `Delta-a` and `Delta-D`. Check a
+ranking against a second normalisation before believing it; if the order is
+unchanged, say so with the rank correlation.
+
+### Non-negotiables
+
+1. **A quantity the diagnostics rule out is reported as NOT COMPARABLE, never
+   quietly omitted and never quietly reported.** The negative result is the
+   finding.
+2. **Never merge a statistical interval with a systematic range.** They answer
+   different questions. `stat_ci68` and `syst_range` stay separate fields, and
+   separate bars in any figure.
+3. **Lattice error is two numbers**: `e_a_formal` and `e_a_model` (Birge-scaled).
+   A pseudo-cubic effective cell is never a space-group claim.
+4. **No weight fraction from a single reflection of a textured phase.** Report a
+   relative Bragg-intensity index and say "PbI2-compatible".
+5. **Every claim in a figure title or report line is checked against the array it
+   plots before rendering.** If the data says 2 of 3, the title says 2 of 3.
+6. **State n.** One scan per film is n = 1; put it in the figure.
+
+### Deliverables for every run
+
+- `comparison.csv` — one row per sample, every quantity with its status column
+- `peak_table.csv` via `write_peak_table()` — full-precision p-values, never rounded
+- `geometry_diagnostics.csv` — substrate drift/width evidence behind the verdicts
+- a figure whose panels show the diagnostics, not only the results
+- a dated entry in the experiment record, and a push to the project repo
 
 ## Reporting checklist
 
