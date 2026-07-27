@@ -1,0 +1,1335 @@
+{
+ "job_id": "8f2c1e3d-4b02-4466-b69b-a81d97dcc131",
+ "source_bands_job": "0c2795a7-dcf5-4878-8ccd-6271d3c0f192",
+ "protocol": {
+  "direction": "initial -> image1 (minimum-image)",
+  "amplitudes_A": [
+   0.02,
+   0.05
+  ],
+  "signs": [
+   1,
+   -1
+  ],
+  "scaling": "max per-atom displacement equals amplitude exactly",
+  "relax": {
+   "fmax": 0.02,
+   "max_steps": 2000,
+   "optimizer": "FIRE",
+   "cell": "fixed"
+  },
+  "criterion": "DISPLACEMENT ONLY: max per-atom displacement < 0.15 A. No energy criterion (see scripts/24_return_test.py header).",
+  "calculator": "MACE-MP-0 medium, float64, cuda"
+ },
+ "summary": {
+  "metastability": {
+   "verified_metastable": 23,
+   "multi_basin_ambiguous": 4
+  },
+  "band_class": {
+   "pure_hop_asymmetric": 5,
+   "hop_plus_FA_reorientation": 11,
+   "n/a (not metastable)": 4,
+   "band_collapsed": 6,
+   "endpoint_energy_unconverged": 1
+  }
+ },
+ "rows": [
+  {
+   "member": 0,
+   "system": "undoped",
+   "band_file": "band_undoped_m00.extxyz",
+   "band_sha256_16": "71fc77ac21d1279b",
+   "E0_eV": -1063.7958704744456,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.045,
+     "dE_meV": -19.95,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.028,
+     "dE_meV": -7.04,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.052,
+     "dE_meV": -17.52,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.045,
+     "dE_meV": 14.09,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "pure_hop_asymmetric",
+   "Ea_forward_meV": 172.18076618610212,
+   "Ea_reverse_meV": 276.61392955906194,
+   "dE_endpoints_meV": -104.43316337295983,
+   "saddle_image": 3
+  },
+  {
+   "member": 2,
+   "system": "GA",
+   "band_file": "band_GA_m02.extxyz",
+   "band_sha256_16": "bb359bee8810769b",
+   "E0_eV": -1076.8409052443687,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.036,
+     "dE_meV": -15.95,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.03,
+     "dE_meV": -8.84,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.054,
+     "dE_meV": -22.7,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.061,
+     "dE_meV": -7.06,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 120.96208249931806,
+   "Ea_reverse_meV": 261.74058082006013,
+   "dE_endpoints_meV": -140.77849832074207,
+   "saddle_image": 3
+  },
+  {
+   "member": 2,
+   "system": "Sr",
+   "band_file": "band_Sr_m02.extxyz",
+   "band_sha256_16": "d0320e2e33a23e11",
+   "E0_eV": -1064.9802318752268,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.037,
+     "dE_meV": -17.11,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.034,
+     "dE_meV": -8.73,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.066,
+     "dE_meV": -24.94,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.064,
+     "dE_meV": -6.8,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 136.8542955040084,
+   "Ea_reverse_meV": 540.3296991987645,
+   "dE_endpoints_meV": -403.4754036947561,
+   "saddle_image": 3
+  },
+  {
+   "member": 3,
+   "system": "Sr",
+   "band_file": "band_Sr_m03.extxyz",
+   "band_sha256_16": "df51c0c7c7d28386",
+   "E0_eV": -1064.8463757864752,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.02,
+     "dE_meV": -0.24,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.02,
+     "dE_meV": 0.35,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.049,
+     "dE_meV": -1.52,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.049,
+     "dE_meV": 0.41,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "pure_hop_asymmetric",
+   "Ea_forward_meV": 268.19140938800956,
+   "Ea_reverse_meV": 377.50802289792773,
+   "dE_endpoints_meV": -109.31661350991817,
+   "saddle_image": 3
+  },
+  {
+   "member": 4,
+   "system": "undoped",
+   "band_file": "band_undoped_m04.extxyz",
+   "band_sha256_16": "2eb01ef249539e4d",
+   "E0_eV": -1063.7031294729893,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.239,
+     "dE_meV": -123.46,
+     "converged": true,
+     "returned": false
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.028,
+     "dE_meV": -10.74,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.217,
+     "dE_meV": -108.16,
+     "converged": true,
+     "returned": false
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.037,
+     "dE_meV": -2.47,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 2,
+   "metastability": "multi_basin_ambiguous",
+   "band_class": "n/a (not metastable)",
+   "Ea_forward_meV": null,
+   "Ea_reverse_meV": null,
+   "dE_endpoints_meV": null,
+   "saddle_image": null
+  },
+  {
+   "member": 4,
+   "system": "Sr",
+   "band_file": "band_Sr_m04.extxyz",
+   "band_sha256_16": "4c8917d80b1ffa12",
+   "E0_eV": -1064.8452170354653,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.019,
+     "dE_meV": -8.41,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.018,
+     "dE_meV": 1.31,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.262,
+     "dE_meV": -140.49,
+     "converged": true,
+     "returned": false
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.036,
+     "dE_meV": -8.36,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 3,
+   "metastability": "multi_basin_ambiguous",
+   "band_class": "n/a (not metastable)",
+   "Ea_forward_meV": null,
+   "Ea_reverse_meV": null,
+   "dE_endpoints_meV": null,
+   "saddle_image": null
+  },
+  {
+   "member": 6,
+   "system": "GA",
+   "band_file": "band_GA_m06.extxyz",
+   "band_sha256_16": "418ee94101544141",
+   "E0_eV": -1076.587628055049,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.02,
+     "dE_meV": -6.34,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.02,
+     "dE_meV": 5.73,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.05,
+     "dE_meV": -15.04,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.045,
+     "dE_meV": 11.77,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "pure_hop_asymmetric",
+   "Ea_forward_meV": 102.94733747991813,
+   "Ea_reverse_meV": 233.95007778412946,
+   "dE_endpoints_meV": -131.00274030421133,
+   "saddle_image": 3
+  },
+  {
+   "member": 7,
+   "system": "GA",
+   "band_file": "band_GA_m07.extxyz",
+   "band_sha256_16": "4386c35a51ebdd86",
+   "E0_eV": -1076.7391640533572,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.021,
+     "dE_meV": -9.24,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.021,
+     "dE_meV": -0.59,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.058,
+     "dE_meV": -28.43,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.047,
+     "dE_meV": 2.16,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 112.71513213500839,
+   "Ea_reverse_meV": 406.8470257325316,
+   "dE_endpoints_meV": -294.13189359752323,
+   "saddle_image": 3
+  },
+  {
+   "member": 9,
+   "system": "undoped",
+   "band_file": "band_undoped_m09.extxyz",
+   "band_sha256_16": "5731eb55d0d68287",
+   "E0_eV": -1063.7543345364625,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.042,
+     "dE_meV": -19.14,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.026,
+     "dE_meV": -7.27,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.077,
+     "dE_meV": -29.74,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.049,
+     "dE_meV": 14.64,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "pure_hop_asymmetric",
+   "Ea_forward_meV": 96.2248485825512,
+   "Ea_reverse_meV": 179.0316469478057,
+   "dE_endpoints_meV": -82.80679836525451,
+   "saddle_image": 3
+  },
+  {
+   "member": 10,
+   "system": "Sr",
+   "band_file": "band_Sr_m10.extxyz",
+   "band_sha256_16": "b684e93cef64bc4a",
+   "E0_eV": -1064.8094058559607,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.02,
+     "dE_meV": -2.2,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.441,
+     "dE_meV": -157.3,
+     "converged": true,
+     "returned": false
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.051,
+     "dE_meV": -5.17,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.03,
+     "dE_meV": -17.1,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 3,
+   "metastability": "multi_basin_ambiguous",
+   "band_class": "n/a (not metastable)",
+   "Ea_forward_meV": null,
+   "Ea_reverse_meV": null,
+   "dE_endpoints_meV": null,
+   "saddle_image": null
+  },
+  {
+   "member": 11,
+   "system": "undoped",
+   "band_file": "band_undoped_m11.extxyz",
+   "band_sha256_16": "a867813e880ac80f",
+   "E0_eV": -1063.6756374233214,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.041,
+     "dE_meV": -13.58,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.022,
+     "dE_meV": -5.13,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.051,
+     "dE_meV": -10.65,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.046,
+     "dE_meV": 7.71,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 58.718456558835896,
+   "Ea_reverse_meV": 305.6323578014144,
+   "dE_endpoints_meV": -246.9139012425785,
+   "saddle_image": 3
+  },
+  {
+   "member": 11,
+   "system": "GA",
+   "band_file": "band_GA_m11.extxyz",
+   "band_sha256_16": "8b4975c9ae0ecc35",
+   "E0_eV": -1076.4687255027766,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.042,
+     "dE_meV": -20.68,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.024,
+     "dE_meV": -5.88,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.055,
+     "dE_meV": -22.65,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.039,
+     "dE_meV": 1.19,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "band_collapsed",
+   "Ea_forward_meV": 0.0,
+   "Ea_reverse_meV": 419.21013082196623,
+   "dE_endpoints_meV": -419.21013082196623,
+   "saddle_image": 0
+  },
+  {
+   "member": 11,
+   "system": "Sr",
+   "band_file": "band_Sr_m11.extxyz",
+   "band_sha256_16": "2105f08381bf3932",
+   "E0_eV": -1064.8211973849413,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.04,
+     "dE_meV": -12.82,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.02,
+     "dE_meV": -4.78,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.051,
+     "dE_meV": -10.08,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.045,
+     "dE_meV": 6.89,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 66.08311205854989,
+   "Ea_reverse_meV": 477.2634502812707,
+   "dE_endpoints_meV": -411.1803382227208,
+   "saddle_image": 3
+  },
+  {
+   "member": 12,
+   "system": "GA",
+   "band_file": "band_GA_m12.extxyz",
+   "band_sha256_16": "db52aa5bfede2be4",
+   "E0_eV": -1076.9119607415867,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.02,
+     "dE_meV": -0.59,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.02,
+     "dE_meV": 0.68,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.05,
+     "dE_meV": -1.27,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.038,
+     "dE_meV": -2.37,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 197.12641347473436,
+   "Ea_reverse_meV": 267.99252646515015,
+   "dE_endpoints_meV": -70.86611299041579,
+   "saddle_image": 3
+  },
+  {
+   "member": 13,
+   "system": "undoped",
+   "band_file": "band_undoped_m13.extxyz",
+   "band_sha256_16": "f26b363fa440f8ec",
+   "E0_eV": -1063.8448386578898,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.019,
+     "dE_meV": -1.55,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.019,
+     "dE_meV": 0.43,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.034,
+     "dE_meV": -14.27,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.035,
+     "dE_meV": -10.24,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 242.06046961307948,
+   "Ea_reverse_meV": 338.22231781641676,
+   "dE_endpoints_meV": -96.16184820333729,
+   "saddle_image": 3
+  },
+  {
+   "member": 13,
+   "system": "GA",
+   "band_file": "band_GA_m13.extxyz",
+   "band_sha256_16": "b1a9f6bb5aec0776",
+   "E0_eV": -1076.8894509846896,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.019,
+     "dE_meV": -2.26,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.02,
+     "dE_meV": 0.88,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.034,
+     "dE_meV": -15.54,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.031,
+     "dE_meV": -8.19,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 209.11736748985277,
+   "Ea_reverse_meV": 305.32765079055935,
+   "dE_endpoints_meV": -96.21028330070658,
+   "saddle_image": 3
+  },
+  {
+   "member": 13,
+   "system": "Sr",
+   "band_file": "band_Sr_m13.extxyz",
+   "band_sha256_16": "a59e11b27b7838d7",
+   "E0_eV": -1065.160761466276,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.018,
+     "dE_meV": -1.15,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.019,
+     "dE_meV": -0.4,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.038,
+     "dE_meV": -5.17,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.044,
+     "dE_meV": -6.05,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 286.9156254446352,
+   "Ea_reverse_meV": 372.7358672883838,
+   "dE_endpoints_meV": -85.82024184374859,
+   "saddle_image": 3
+  },
+  {
+   "member": 14,
+   "system": "undoped",
+   "band_file": "band_undoped_m14.extxyz",
+   "band_sha256_16": "ae6d5db978f3aa25",
+   "E0_eV": -1063.5568211091652,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.045,
+     "dE_meV": -31.65,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.024,
+     "dE_meV": -12.73,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.072,
+     "dE_meV": -45.26,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.043,
+     "dE_meV": 0.11,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "band_collapsed",
+   "Ea_forward_meV": 0.0,
+   "Ea_reverse_meV": 306.16992555951583,
+   "dE_endpoints_meV": -306.16992555951583,
+   "saddle_image": 0
+  },
+  {
+   "member": 14,
+   "system": "Sr",
+   "band_file": "band_Sr_m14.extxyz",
+   "band_sha256_16": "e3c1cbc251231166",
+   "E0_eV": -1064.7078358890026,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.047,
+     "dE_meV": -33.09,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.023,
+     "dE_meV": -12.62,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.075,
+     "dE_meV": -47.33,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.04,
+     "dE_meV": -4.88,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "band_collapsed",
+   "Ea_forward_meV": 0.0,
+   "Ea_reverse_meV": 464.082072889596,
+   "dE_endpoints_meV": -464.082072889596,
+   "saddle_image": 0
+  },
+  {
+   "member": 15,
+   "system": "undoped",
+   "band_file": "band_undoped_m15.extxyz",
+   "band_sha256_16": "8b8a1cb47fe9855b",
+   "E0_eV": -1063.6703428450687,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.041,
+     "dE_meV": -27.93,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.023,
+     "dE_meV": -10.47,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.065,
+     "dE_meV": -39.72,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.043,
+     "dE_meV": 3.94,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "pure_hop_asymmetric",
+   "Ea_forward_meV": 43.02679543297927,
+   "Ea_reverse_meV": 276.62707235276685,
+   "dE_endpoints_meV": -233.60027691978758,
+   "saddle_image": 3
+  },
+  {
+   "member": 15,
+   "system": "Sr",
+   "band_file": "band_Sr_m15.extxyz",
+   "band_sha256_16": "9aa0f696b3d126bd",
+   "E0_eV": -1064.8205522276903,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.029,
+     "dE_meV": -19.33,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.018,
+     "dE_meV": 7.1,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.072,
+     "dE_meV": -46.28,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.037,
+     "dE_meV": 5.22,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "band_collapsed",
+   "Ea_forward_meV": 0.0,
+   "Ea_reverse_meV": 221.82848370539432,
+   "dE_endpoints_meV": -221.82848370539432,
+   "saddle_image": 0
+  },
+  {
+   "member": 16,
+   "system": "undoped",
+   "band_file": "band_undoped_m16.extxyz",
+   "band_sha256_16": "7685470b2edb2155",
+   "E0_eV": -1063.7321651819518,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.052,
+     "dE_meV": -29.06,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.022,
+     "dE_meV": -12.28,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.078,
+     "dE_meV": -36.2,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.025,
+     "dE_meV": -5.34,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "band_collapsed",
+   "Ea_forward_meV": 0.0,
+   "Ea_reverse_meV": 292.28595927861534,
+   "dE_endpoints_meV": -292.28595927861534,
+   "saddle_image": 0
+  },
+  {
+   "member": 16,
+   "system": "GA",
+   "band_file": "band_GA_m16.extxyz",
+   "band_sha256_16": "e497f2610922d39c",
+   "E0_eV": -1076.7525225752147,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.049,
+     "dE_meV": -23.15,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.021,
+     "dE_meV": -9.74,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.086,
+     "dE_meV": -35.81,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.035,
+     "dE_meV": -1.69,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 92.29869630758003,
+   "Ea_reverse_meV": 289.5391183424181,
+   "dE_endpoints_meV": -197.24042203483805,
+   "saddle_image": 3
+  },
+  {
+   "member": 16,
+   "system": "Sr",
+   "band_file": "band_Sr_m16.extxyz",
+   "band_sha256_16": "f89820c4cbeb7e71",
+   "E0_eV": -1064.891548038363,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.052,
+     "dE_meV": -28.81,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.027,
+     "dE_meV": -15.15,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.08,
+     "dE_meV": -36.74,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.023,
+     "dE_meV": -6.45,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "band_collapsed",
+   "Ea_forward_meV": 0.0,
+   "Ea_reverse_meV": 442.74771823575065,
+   "dE_endpoints_meV": -442.74771823575065,
+   "saddle_image": 0
+  },
+  {
+   "member": 17,
+   "system": "undoped",
+   "band_file": "band_undoped_m17.extxyz",
+   "band_sha256_16": "6bd9dd7aa068760b",
+   "E0_eV": -1063.60585112598,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.022,
+     "dE_meV": -11.52,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.016,
+     "dE_meV": 5.62,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.501,
+     "dE_meV": -243.96,
+     "converged": true,
+     "returned": false
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.031,
+     "dE_meV": 0.58,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 3,
+   "metastability": "multi_basin_ambiguous",
+   "band_class": "n/a (not metastable)",
+   "Ea_forward_meV": null,
+   "Ea_reverse_meV": null,
+   "dE_endpoints_meV": null,
+   "saddle_image": null
+  },
+  {
+   "member": 17,
+   "system": "GA",
+   "band_file": "band_GA_m17.extxyz",
+   "band_sha256_16": "63ea5fba1d4b1375",
+   "E0_eV": -1076.5528785956453,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.02,
+     "dE_meV": -13.96,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.016,
+     "dE_meV": 8.02,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.05,
+     "dE_meV": -34.27,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.034,
+     "dE_meV": 8.74,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "endpoint_energy_unconverged",
+   "Ea_forward_meV": 0.0,
+   "Ea_reverse_meV": 563.4612392193503,
+   "dE_endpoints_meV": -563.4612392193503,
+   "saddle_image": 0
+  },
+  {
+   "member": 17,
+   "system": "Sr",
+   "band_file": "band_Sr_m17.extxyz",
+   "band_sha256_16": "3e3010a32c89964f",
+   "E0_eV": -1065.0187154483951,
+   "perturbations": [
+    {
+     "amp_A": 0.02,
+     "sign": 1,
+     "max_disp_A": 0.046,
+     "dE_meV": -15.71,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.02,
+     "sign": -1,
+     "max_disp_A": 0.021,
+     "dE_meV": -6.55,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": 1,
+     "max_disp_A": 0.082,
+     "dE_meV": -24.51,
+     "converged": true,
+     "returned": true
+    },
+    {
+     "amp_A": 0.05,
+     "sign": -1,
+     "max_disp_A": 0.036,
+     "dE_meV": -2.82,
+     "converged": true,
+     "returned": true
+    }
+   ],
+   "n_returned": 4,
+   "metastability": "verified_metastable",
+   "band_class": "hop_plus_FA_reorientation",
+   "Ea_forward_meV": 73.99612414428702,
+   "Ea_reverse_meV": 489.6067640690944,
+   "dE_endpoints_meV": -415.6106399248074,
+   "saddle_image": 3
+  }
+ ]
+}
