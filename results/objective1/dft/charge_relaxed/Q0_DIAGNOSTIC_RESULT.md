@@ -3,6 +3,24 @@
 **Status: the electronic origin of the q=0 SCF failure is now identified.** The remaining
 question is spatial localisation, which needs `projwfc.x` and is not yet answered.
 
+
+> **Correction (2026-07-27): the band index and the localisation claim.**
+>
+> The table below labels the states 699/700/701. Re-parsing `q0A.out` strictly (eigenvalue
+> list terminated at `occupation numbers`, occupations at `the Fermi energy is`, giving 841
+> aligned pairs) shows the half-occupied state is **band 701**, not 700. The energies
+> (4.3259 / 2.6940 / 4.5554 eV) are right; the labels were off by one, so 2.6940 eV is
+> band 700, not the valence edge. All five bands in the window match `projwfc.x` to
+> 0.0000 eV.
+>
+> More importantly, `projwfc.x` has now run (see `Q0_PROJECTION_RESULT.md`): the state is
+> **Pb-p 90.8% but spatially DELOCALISED**, IPR = 0.0261 ≈ 38 effective atoms, with only
+> 2.66% and 2.44% on the two Pb flanking the vacancy. **It is not a polaron**, and the
+> phrase "one unpaired electron forced to share a single spatial orbital" below should not
+> be read as implying localisation — the 0.5000 occupation is an artefact of the spin-free
+> probe (an odd electron count forces half occupancy there).
+
+
 ## What was run
 
 `q0A`: the same V_I⁰ cell at the locked Stage-2 theory level (PBE+D3(BJ), ecut 50/400,
