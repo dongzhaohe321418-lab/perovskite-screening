@@ -103,7 +103,10 @@ def check_endpoints(profile_eV, *, label="", tol_eV=0.0):
     from bands whose first interior image lay BELOW the initial endpoint. The endpoints were
     not minima, so Ea was a difference from a non-minimum reference.
 
-    Requires both endpoints below every interior image, and the maximum strictly interior.
+    Requires each endpoint to lie below ITS OWN ADJACENT interior image (i.e. to be a local
+    minimum of the band), the maximum strictly interior, and the band span within a
+    physical bound. NOTE: an earlier version required both endpoints below EVERY interior
+    image -- that tests path SYMMETRY, not minimality, and rejected valid asymmetric hops.
     """
     E = np.asarray(profile_eV, float)
     if E.size < 3:
