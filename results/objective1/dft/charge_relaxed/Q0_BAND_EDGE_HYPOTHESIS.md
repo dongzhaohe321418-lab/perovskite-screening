@@ -1,9 +1,15 @@
-# q=0 state — the "gap state" is very likely the conduction band minimum
+# q=0 state — the "gap state" is CBM-like, not a vacancy-localised polaron
 
-**A free re-analysis of the existing projection (no new compute) indicates the
-half-occupied state is not a defect level at all, but the CBM. If confirmed, V_I⁰ is a
-shallow donor, the escalation ladder is misdirected, and the SCF problem has a physical
-rather than numerical explanation.**
+**The claim this evidence supports, stated at the strength it earns:**
+
+> *At the q=+1 relaxed geometry, under spin-free PBE+D3, the extra electron occupies a
+> delocalised CBM-like state rather than a vacancy-localised dangling-bond polaron.*
+
+This is deliberately narrower than "V_I⁰ is a shallow donor", which would require a
+lattice-relaxed polaron to have been tested and excluded — it has not been, because q=0
+forces are unusable. What the evidence does establish is that the *premise* of the
+localisation escalation is unsupported at this geometry: there is no localised state here
+for a Hubbard U to correct.
 
 ## Five independent indicators, all from the already-harvested projection
 
@@ -20,8 +26,9 @@ extent, whether or not the extent is physical.
 
 ## Consequence if confirmed
 
-V_I⁰ is a **shallow donor** — the extra electron occupies the delocalised conduction band
-edge with no in-gap level. That explains the SCF pathology exactly: one electron shared
+The extra electron occupies the delocalised conduction band edge with no in-gap level at
+this geometry — the electronic structure of a **shallow donor**, though that label is only
+earned once lattice relaxation has been shown not to localise it. That explains the SCF pathology exactly: one electron shared
 among near-degenerate conduction states which reshuffle between iterations, which is why
 mixing, seeding, and fixed occupations all struck the same wall while total energy stayed
 stable to sub-meV. It also **removes the premise of the localisation escalation** — there is
@@ -31,8 +38,13 @@ localisation it was meant to test.
 ## Two tests dispatched (job `32d8fd27`)
 
 - **P1 — pristine 160-atom cell.** Vacancy filled (verified: every Pb 6-coordinate, 1408
-  electrons = closed shell), spin-free, identical theory level. If its CBM shows the same
-  near-uniform Pb-p character, band 701 in the defective cell *is* the CBM.
+  electrons = closed shell), spin-free, identical theory level. Three comparisons against
+  the defective cell's band 701, not one: (i) **energy reference** — CBM position relative
+  to the valence top in each cell, which tests whether 701 sits at a band edge rather than
+  in the gap; (ii) **per-atom weight overlap** — cosine similarity of the Pb-resolved weight
+  vectors on the 159 shared atoms, which tests whether it is the *same* state and not merely
+  a similarly uniform one; (iii) Pb-p uniformity (effective Pb count). Uniformity alone is
+  weak evidence — several conduction states are uniform — so (i) and (ii) carry the test.
 - **P2 — unconstrained spin.** `nspin=2` on the defective cell with the moment free
   (smearing, no `tot_magnetization`), restarting from q0A's converged density. Every prior
   spin attempt either forced a moment or started cold. If the moment relaxes to ≈0 from a
