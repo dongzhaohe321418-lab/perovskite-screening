@@ -112,10 +112,17 @@ about a large cation blocking the channel.
 
 ## What is needed next
 
-1. **More pairs.** Only 2 GA and 4 Sr pairs survived from 18 members. At a 33% yield,
-   reaching n = 10 valid pairs needs ~30 members per system.
-2. **Per-dopant sample sizes**, from each dopant's own s_ΔEa rather than one global n.
-3. **Understand the GA scatter** before screening large A-site substituents — with n = 2,
+1. **Raise the yield before generating hosts.** Record `endpoint_relax` per path (already in
+   the script, missing from this run), re-relax the endpoints that fell short, and re-pair
+   the existing 18 members. Raising the paired pass rate cuts the host requirement
+   proportionally, so this is strictly cheaper than adding hosts — and it also resolves
+   whether the 33% single-path yield is the landscape or the relaxation budget.
+2. **Then more pairs, at the corrected counts.** From the *observed paired* rates above,
+   reaching n = 10 valid pairs needs **90 hosts for GA** and **45 for Sr** — not the ~30 an
+   earlier version of this section quoted by wrongly applying the 33% *single-path* rate to
+   pairs. At a measured 137 s per path that is 6.8 and 3.4 GPU-h respectively, and the
+   undoped leg is shared across dopants, so k dopants cost (k+1) legs per host, not 2k.
+3. **Per-dopant sample sizes**, from each dopant's own s_ΔEa rather than one global n — but
+   not from an n = 2 point estimate (see the χ² bound above).
+4. **Understand the GA scatter** before screening large A-site substituents — with n = 2,
    whether it is physical or methodological is genuinely open.
-4. **Record `endpoint_relax` per path** (already in the script, missing from this run) so
-   the 33% yield can be attributed to the landscape or to the relaxation budget.
