@@ -1,0 +1,81 @@
+{
+ "GA": {
+  "n": 9,
+  "members": [
+   5,
+   6,
+   8,
+   10,
+   12,
+   15,
+   18,
+   20,
+   21
+  ],
+  "values_meV": [
+   -11.4,
+   -17.0,
+   4.5,
+   66.5,
+   -38.0,
+   71.7,
+   -30.1,
+   33.7,
+   -14.3
+  ],
+  "mean_meV": 7.3,
+  "sd_meV": 40.6,
+  "ci95_meV": [
+   -23.9,
+   38.5
+  ],
+  "sigma_upper95_meV": 77.8,
+  "n_req_upper": 7,
+  "resolvable": false,
+  "status": "EQUIVALENT (TOST p=0.0024; n=9 meets required 7)",
+  "tost_p": 0.0024
+ },
+ "Sr": {
+  "n": 10,
+  "members": [
+   4,
+   5,
+   6,
+   8,
+   12,
+   14,
+   15,
+   20,
+   21,
+   27
+  ],
+  "values_meV": [
+   -7.4,
+   -30.2,
+   19.2,
+   -14.7,
+   13.8,
+   -139.8,
+   7.9,
+   129.3,
+   -7.8,
+   11.8
+  ],
+  "mean_meV": -1.8,
+  "sd_meV": 65.2,
+  "ci95_meV": [
+   -48.4,
+   44.8
+  ],
+  "sigma_upper95_meV": 119.0,
+  "n_req_upper": 16,
+  "resolvable": false,
+  "status": "SUGGESTIVE-EQUIVALENT (TOST p=0.0104 but n=10 < required 16 under the sigma upper bound)",
+  "tost_p": 0.0104
+ },
+ "host": {
+  "n": 13,
+  "mean_meV": 162.8,
+  "sd_meV": 69.6
+ }
+}
