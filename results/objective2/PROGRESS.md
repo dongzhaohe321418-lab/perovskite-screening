@@ -82,3 +82,37 @@ the expected composition deltas.
 - any ΔE_a for any dopant — the screen has not been run on real configurations yet
 
 No ranking exists and none may be published until the six entry gates are met.
+
+
+---
+
+# Update — 2026-07-27
+
+## Track A, q=0 spin localisation: both cheap rungs CLOSED
+
+| variant | outcome |
+|---|---|
+| q0C (seed Pb139) | plateaued at 1.55e-3 Ry, 65 iters; energy stable to 0.7 meV |
+| q0D (seed Pb70) | same plateau; **agrees with q0C to 0.04 meV** |
+| rung 1, degauss 0.001 Ry | TESTED AND FAILED — \|m\| rose to 2.68; smearing width RULED OUT |
+| rung 2, cg diagonalisation | NOT VIABLE ON COST — 8x slower/iter, ~160 days for both legs |
+
+Site-selection ambiguity is closed. **But energy agreement at the current precision does
+not prove the two seeds share a wavefunction** — `projwfc.x`, spin density and IPR are
+still outstanding, so spatial localisation remains unproven. q=0 supports static energies
+only; forces are not trustworthy and no CI-NEB may run.
+
+## Track B, Objective 2: pool expanded, pilot run, GA arm retracted
+
+- FA pool: 18/18 accepted (`results/fa_host/pool_v2/m00..m17`), carbon-pivot rotation.
+- GPU Gate 1: passed exactly (309.9168 meV on both devices, 7.7x speedup).
+- Paired pilot: 54 paths run. **The GA arm is retracted** — a migrating-iodide index bug
+  invalidated 8 of 18 GA arms. See `AUDIT_RESPONSE.md`. Sr's numbers stand.
+- Noise floor: the 73.3 meV figure is the OLD 8-member pool's. On the new pool the undoped
+  scatter is **83.9 meV** (n=6), giving n >= 16 for an unpaired design rather than 13.
+
+## Next
+
+P0 code fixes are done (tag-based atom tracking, convergence required for validity, force
+norms, 39 test assertions). Next is a full 54-path rerun on the same 18 members, then
+`projwfc.x` plus a seeded DFT+U benchmark on HPC.
