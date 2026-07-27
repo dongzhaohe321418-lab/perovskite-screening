@@ -24,10 +24,22 @@ a displacement check (<0.15 Å) with an energy check (|ΔE| < 5 meV). The energy
 binding one — it failed 81 of 108 relaxations — and it was miscalibrated: endpoints are
 converged to fmax = 0.02 eV/Å, which leaves up to *232 × 0.02 × 0.03 ≈ 139 meV* of residual
 descent available at a 0.03 Å displacement. Tens of meV at sub-0.05 Å displacement is an
-incomplete relaxation finishing, not a basin change. Dropping the energy criterion changes
-**nothing** about which relaxations pass — the 5 genuine basin changes already fail on
-displacement (median 0.262 Å vs 0.037 Å for the rest) — so this removes a miscalibrated
-test rather than tuning a threshold.
+incomplete relaxation finishing, not a basin change.
+
+**This criterion choice is consequential and produced the headline result — stated plainly
+rather than minimised.** With the energy rule: 27 of 108 relaxations pass and **2 of 27**
+endpoints are metastable. Without it: 103 of 108 and **23 of 27**. Seventy-six relaxation
+verdicts and twenty-one endpoint verdicts turn on this decision. An earlier version of this
+report claimed dropping it "changes nothing about which relaxations pass"; that was false
+and is retracted.
+
+What justifies the choice is narrower and does hold: **the energy rule reclassifies no basin
+change.** All 5 relaxations that left the basin (displacement ≥ 0.15 Å) already fail on
+displacement, and 0 of them would have been caught by energy alone. So every one of the 76
+flips is a structure that stayed put geometrically (median displacement 0.037 Å) while
+finishing its relaxation energetically — which is precisely what the fmax = 0.02 eV/Å
+convergence leaves on the table, and not evidence of a basin change. The criterion is
+retired because it measures relaxation completeness, not basin identity.
 
 ## Result
 
