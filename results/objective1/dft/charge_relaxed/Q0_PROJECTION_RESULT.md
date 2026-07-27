@@ -25,6 +25,11 @@ the window match `projwfc.x` to 0.0000 eV, confirming the indexing.
 
 ## The result
 
+*(Cell: 159 atoms, Cs32 Pb32 I95 — the γ-CsPbI₃ V_I supercell. An earlier version of this
+report used 232, which is the atom count of the FA-host supercell used for Objective 2, a
+different system. Every reference number below is recomputed for 159; the delocalisation
+conclusion is unaffected.)*
+
     band 701, E = 4.3259 eV = E_F, occupation 0.5000, |psi|^2 = 0.971
 
 | quantity | value |
@@ -32,13 +37,16 @@ the window match `projwfc.x` to 0.0000 eV, confirming the indexing.
 | orbital character | **Pb-p 90.8%**, I-s 9.2% |
 | IPR | **0.0261** |
 | effective atoms (1/IPR) | **38.3** |
-| atoms contributing at all | 64 of 232 |
+| atoms contributing at all | 64 of **159** |
 | weight on Pb139 | 2.66% |
 | weight on Pb70 | 2.44% |
 | largest single atom | 3.19% (Pb #110, not adjacent to the vacancy) |
 
-Reference points: a state spread evenly over all 232 atoms gives IPR = 0.0043; a two-atom
-state gives 0.5. At 0.0261 this sits an order of magnitude from a localised state.
+Reference points for **this 159-atom cell** (Cs32 Pb32 I95, `number of atoms/cell = 159`
+in `q0A.out`; `projwfc.x` resolves exactly 159 distinct atoms): a state spread evenly over
+all 159 atoms gives IPR = **0.0063**; a two-atom polaron gives 0.5. At 0.0261 the state is
+only ~4x more concentrated than uniform, and ~19x less concentrated than a polaron. The
+38.3 effective atoms are **24% of the cell**.
 
 ## What this means
 
@@ -91,7 +99,7 @@ the *manifold*, not an on-site orbital:
    states are being reshuffled, giving the diagonaliser more room to resolve them addresses
    the actual mechanism. Cheap, and changes no theory level, so the existing q=+1 leg stays
    valid — the only remaining option with that property.
-2. **A larger supercell.** A state spread over 38 atoms in a 232-atom cell is interacting
+2. **A larger supercell.** A state spread over 38 atoms in a 159-atom cell is interacting
    with its periodic images. This may be a finite-size artefact, in which case no
    correction at fixed cell size will fix it.
 3. **Hybrid functional** — correct for the self-interaction that delocalises such states,
