@@ -269,8 +269,10 @@ def main():
                 "wall_s": round(time.time() - t0, 1),
             })
             write(f"{args.out}/band_{sysname}_m{mem:02d}.extxyz", images)
-            flag = "ok " if valid else "REJ"
-            why = "" if valid else f"  [{ge.get('reason') or gc.get('reason')}]"
+            valid_all = bool(valid and ep["all_converged"])
+            flag = "ok " if valid_all else "REJ"
+            why = ("" if valid_all else
+                   f"  [{ge.get('reason') or gc.get('reason') or 'not converged'}]")
             print(f"  m{mem:02d} {sysname:<8} Ea={Ea:8.1f} meV  {flag} conv={conv} "
                   f"{time.time()-t0:5.0f}s{why}")
             sys.stdout.flush()
