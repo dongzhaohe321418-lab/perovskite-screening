@@ -1,0 +1,3301 @@
+{
+ "stats": {
+  "GA": {
+   "n": 4,
+   "members": [
+    3,
+    5,
+    8,
+    10
+   ],
+   "values_meV": [
+    -34.18558223779655,
+    3.753170293975927,
+    41.057630945260826,
+    85.84705596445019
+   ],
+   "mean_meV": 24.118068741472598,
+   "s_dEa_meV": 51.35322592112991,
+   "se_meV": 25.676612960564956,
+   "t_crit": 3.1824463052837078,
+   "ci95_t": [
+    -57.596373307077116,
+    105.83251079002231
+   ],
+   "sigma_upper95": 149.95185845804167,
+   "resolvable": false
+  },
+  "Sr": {
+   "n": 4,
+   "members": [
+    5,
+    6,
+    8,
+    12
+   ],
+   "values_meV": [
+    -58.355229266453534,
+    31.806179348677688,
+    -12.796097386399197,
+    0.2734657591645373
+   ],
+   "mean_meV": -9.767920386252626,
+   "s_dEa_meV": 37.41270570566268,
+   "se_meV": 18.70635285283134,
+   "t_crit": 3.1824463052837078,
+   "ci95_t": [
+    -69.29988390807907,
+    49.76404313557382
+   ],
+   "sigma_upper95": 109.24542031934068,
+   "resolvable": false
+  },
+  "undoped_baseline": {
+   "n": 6,
+   "mean_meV": 216.1716203014521,
+   "sd_meV": 83.93094430180366
+  }
+ },
+ "rows": [
+  {
+   "member": 0,
+   "system": "undoped",
+   "Ea_meV": 172.18076618610212,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 136,
+   "band_converged": true,
+   "nsteps": 122,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m0",
+    "passed": false,
+    "Ea_forward_meV": 172.18076618610212,
+    "band_span_meV": 172.2,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 83.8 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m0",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.033,
+    "second_disp_A": 0.684,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0192,
+     "converged": true,
+     "nsteps": 197
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 435
+    },
+    "neb": {
+     "fmax": 0.0407,
+     "converged": true,
+     "nsteps": 122
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -83.81320977923679,
+    55.79803264618022,
+    172.18076618610212,
+    99.60313639157903,
+    -61.22873891172276,
+    -104.43316337295983
+   ],
+   "structure_hash": "c3f9de4a55e5727356ba03cd405c58bbb37bd4fb3e7ef431aab9a59f77c4e18b",
+   "wall_s": 133.5
+  },
+  {
+   "member": 0,
+   "system": "GA",
+   "Ea_meV": 585.9717310647738,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 135,
+   "band_converged": true,
+   "nsteps": 94,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m0",
+    "passed": false,
+    "Ea_forward_meV": 585.9717310647738,
+    "band_span_meV": 586.0,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 53.9 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m0",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 3,
+    "largest_disp_A": 4.242,
+    "second_disp_A": 1.397,
+    "reason": "3 atoms moved >1.0 A (second largest 1.40 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 780
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 246
+    },
+    "neb": {
+     "fmax": 0.0454,
+     "converged": true,
+     "nsteps": 94
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    93.40454352536653,
+    380.1596824898752,
+    585.9717310647738,
+    433.12324053795237,
+    242.26574565341252,
+    296.1278091102031
+   ],
+   "structure_hash": "6da25457f4f6363505c690723bed4dca4158c55efbb2c799a5ebeeb8a78521e0",
+   "wall_s": 159.5
+  },
+  {
+   "member": 0,
+   "system": "Sr",
+   "Ea_meV": 278.90605623815645,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 136,
+   "band_converged": true,
+   "nsteps": 54,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m0",
+    "passed": true,
+    "Ea_forward_meV": 278.90605623815645,
+    "band_span_meV": 278.9,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m0",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.992,
+    "second_disp_A": 0.631,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 181
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 246
+    },
+    "neb": {
+     "fmax": 0.0494,
+     "converged": true,
+     "nsteps": 54
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    36.35741390326075,
+    205.99980741053514,
+    278.90605623815645,
+    165.31073868304702,
+    -88.3272866255993,
+    -167.55334608546946
+   ],
+   "structure_hash": "cb96e8d35953d20c1d70468e054eb33c1234737eeb7457da0fe8d0901dc06ff6",
+   "wall_s": 74.7
+  },
+  {
+   "member": 1,
+   "system": "undoped",
+   "Ea_meV": 202.3624248070064,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 124,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m1",
+    "passed": false,
+    "Ea_forward_meV": 202.3624248070064,
+    "band_span_meV": 202.4,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 92.1 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m1",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 2,
+    "largest_disp_A": 3.649,
+    "second_disp_A": 1.205,
+    "reason": "2 atoms moved >1.0 A (second largest 1.20 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 528
+    },
+    "final": {
+     "fmax": 0.0194,
+     "converged": true,
+     "nsteps": 138
+    },
+    "neb": {
+     "fmax": 0.0498,
+     "converged": true,
+     "nsteps": 124
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    60.359624556440394,
+    157.0296039153618,
+    202.3624248070064,
+    147.62515133793386,
+    57.35054850447341,
+    149.44847824199314
+   ],
+   "structure_hash": "3612f097f128bf4db2d6d4ebf813118c328ded928029342f9c208803b299c0f9",
+   "wall_s": 134.9
+  },
+  {
+   "member": 1,
+   "system": "GA",
+   "Ea_meV": 121.74544713343494,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 52,
+   "band_converged": true,
+   "nsteps": 31,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m1",
+    "passed": true,
+    "Ea_forward_meV": 121.74544713343494,
+    "band_span_meV": 121.7,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m1",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.633,
+    "second_disp_A": 0.36,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 202
+    },
+    "final": {
+     "fmax": 0.0183,
+     "converged": true,
+     "nsteps": 161
+    },
+    "neb": {
+     "fmax": 0.0455,
+     "converged": true,
+     "nsteps": 31
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    20.001299870955336,
+    91.32123848394258,
+    121.74544713343494,
+    86.89812487114068,
+    -3.4667517747948295,
+    -41.399134672928994
+   ],
+   "structure_hash": "7dd6f0dc4ac01ba9aa6aa08ad1d115cbe3ef08ee2fafe0986a68c2e01f655edd",
+   "wall_s": 57.1
+  },
+  {
+   "member": 1,
+   "system": "Sr",
+   "Ea_meV": 186.8938155428168,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 116,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m1",
+    "passed": false,
+    "Ea_forward_meV": 186.8938155428168,
+    "band_span_meV": 186.9,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 96.0 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m1",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 2,
+    "largest_disp_A": 3.608,
+    "second_disp_A": 1.271,
+    "reason": "2 atoms moved >1.0 A (second largest 1.27 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 515
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 163
+    },
+    "neb": {
+     "fmax": 0.0402,
+     "converged": true,
+     "nsteps": 116
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    58.467013334393414,
+    152.26383380991138,
+    186.8938155428168,
+    69.7620965167971,
+    -121.32259378199706,
+    -25.325450066247868
+   ],
+   "structure_hash": "191fb6b7b6687c4914f14bfdcb12857b38dd8c12f0498376fe5cac9ed7d01b8f",
+   "wall_s": 133.2
+  },
+  {
+   "member": 2,
+   "system": "undoped",
+   "Ea_meV": 268.73147082437754,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 70,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m2",
+    "passed": true,
+    "Ea_forward_meV": 268.73147082437754,
+    "band_span_meV": 268.7,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m2",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.141,
+    "second_disp_A": 0.811,
+    "reason": "1 atoms moved >1.0 A (second largest 0.81 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 260
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 313
+    },
+    "neb": {
+     "fmax": 0.0494,
+     "converged": true,
+     "nsteps": 70
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    26.43075923288052,
+    160.28245429060917,
+    268.73147082437754,
+    228.60844244200962,
+    91.16063262604257,
+    53.506591729728825
+   ],
+   "structure_hash": "48b9b45dc8183253b21792b597c9c0e62c908f42abec5548a7007ac12b268c72",
+   "wall_s": 97.4
+  },
+  {
+   "member": 2,
+   "system": "GA",
+   "Ea_meV": 120.96208249931806,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 90,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m2",
+    "passed": false,
+    "Ea_forward_meV": 120.96208249931806,
+    "band_span_meV": 140.8,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 55.1 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m2",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.908,
+    "second_disp_A": 0.929,
+    "reason": "1 atoms moved >1.0 A (second largest 0.93 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 328
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 657
+    },
+    "neb": {
+     "fmax": 0.0498,
+     "converged": true,
+     "nsteps": 90
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -55.13077284967949,
+    -10.563370342197231,
+    120.96208249931806,
+    95.95228562170632,
+    -55.42646476214941,
+    -140.77849832074207
+   ],
+   "structure_hash": "29f696625df8482c84b92218fcf3bf2cfac78a6f5f58a197ac0555d40ee5905d",
+   "wall_s": 154.3
+  },
+  {
+   "member": 2,
+   "system": "Sr",
+   "Ea_meV": 136.8542955040084,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 111,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m2",
+    "passed": false,
+    "Ea_forward_meV": 136.8542955040084,
+    "band_span_meV": 403.5,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 72.5 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m2",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 3,
+    "largest_disp_A": 4.079,
+    "second_disp_A": 1.051,
+    "reason": "3 atoms moved >1.0 A (second largest 1.05 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 277
+    },
+    "final": {
+     "fmax": 0.0183,
+     "converged": true,
+     "nsteps": 703
+    },
+    "neb": {
+     "fmax": 0.0498,
+     "converged": true,
+     "nsteps": 111
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -72.47675324629199,
+    -10.05448816772514,
+    136.8542955040084,
+    14.420825598108422,
+    -310.4952273326944,
+    -403.4754036947561
+   ],
+   "structure_hash": "2b0cc4c86aef7a234bdaf1979c372c3f41d56436399ed5d0d9054a0e70b4e71f",
+   "wall_s": 161.4
+  },
+  {
+   "member": 3,
+   "system": "undoped",
+   "Ea_meV": 289.57060645075217,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 50,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m3",
+    "passed": true,
+    "Ea_forward_meV": 289.57060645075217,
+    "band_span_meV": 289.6,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m3",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.141,
+    "second_disp_A": 0.51,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.019,
+     "converged": true,
+     "nsteps": 277
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 218
+    },
+    "neb": {
+     "fmax": 0.0455,
+     "converged": true,
+     "nsteps": 50
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    55.88243360875822,
+    213.80176924890293,
+    289.57060645075217,
+    218.98366660684587,
+    47.82592779747574,
+    18.59119079699667
+   ],
+   "structure_hash": "100b2535eef4e33f7d1e7a4d4a548ebab4cc2f48da0704a4e56354da5fc4062d",
+   "wall_s": 79.8
+  },
+  {
+   "member": 3,
+   "system": "GA",
+   "Ea_meV": 255.3850242129556,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 58,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m3",
+    "passed": true,
+    "Ea_forward_meV": 255.3850242129556,
+    "band_span_meV": 255.4,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m3",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.323,
+    "second_disp_A": 0.501,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 300
+    },
+    "final": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 219
+    },
+    "neb": {
+     "fmax": 0.0451,
+     "converged": true,
+     "nsteps": 58
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    36.42962353455914,
+    177.40321208248133,
+    255.3850242129556,
+    178.0643011752545,
+    -11.017300333605817,
+    -39.91622283729157
+   ],
+   "structure_hash": "8812a6196c62a9dd82d2360c85e9e50fd954eedfecdc4cb655a0eaa32e2cff04",
+   "wall_s": 89.1
+  },
+  {
+   "member": 3,
+   "system": "Sr",
+   "Ea_meV": 268.19140938800956,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 64,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m3",
+    "passed": false,
+    "Ea_forward_meV": 268.19140938800956,
+    "band_span_meV": 268.2,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 1.0 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m3",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.093,
+    "second_disp_A": 0.508,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.019,
+     "converged": true,
+     "nsteps": 277
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 200
+    },
+    "neb": {
+     "fmax": 0.0492,
+     "converged": true,
+     "nsteps": 64
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    50.60193195140528,
+    206.86636075697606,
+    268.19140938800956,
+    142.92929885618832,
+    -110.27088099149296,
+    -109.31661350991817
+   ],
+   "structure_hash": "a957d1d616bd6046efa8670b25ffd144c838bb6f6d0272b43ee4baf40321354a",
+   "wall_s": 85.2
+  },
+  {
+   "member": 4,
+   "system": "undoped",
+   "Ea_meV": 53.769418057299845,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 94,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m4",
+    "passed": false,
+    "Ea_forward_meV": 53.769418057299845,
+    "band_span_meV": 344.3,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 105.5 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m4",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.952,
+    "second_disp_A": 0.606,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 362
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 618
+    },
+    "neb": {
+     "fmax": 0.0498,
+     "converged": true,
+     "nsteps": 94
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -105.5048882740266,
+    -21.227390865078632,
+    53.769418057299845,
+    -48.475785709342745,
+    -270.50787512689567,
+    -344.3206559920782
+   ],
+   "structure_hash": "9adf82fd7dcdc3b548703fed282d87e0ba9dbe7c3e22e65bb1733c49bd00d856",
+   "wall_s": 152.9
+  },
+  {
+   "member": 4,
+   "system": "GA",
+   "Ea_meV": 240.00073047591286,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 95,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m4",
+    "passed": false,
+    "Ea_forward_meV": 240.00073047591286,
+    "band_span_meV": 240.0,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 66.8 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m4",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 3,
+    "largest_disp_A": 4.103,
+    "second_disp_A": 1.074,
+    "reason": "3 atoms moved >1.0 A (second largest 1.07 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 739
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 485
+    },
+    "neb": {
+     "fmax": 0.045,
+     "converged": true,
+     "nsteps": 95
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    57.00209964174974,
+    210.51151783422029,
+    240.00073047591286,
+    56.14594261305683,
+    -22.419320082235572,
+    44.380968432051304
+   ],
+   "structure_hash": "6fd8affdb33660731b440c4158ddb74e6bc2e330517fe93234033ab65d13cb1b",
+   "wall_s": 182.5
+  },
+  {
+   "member": 4,
+   "system": "Sr",
+   "Ea_meV": 68.46408487285771,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 80,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m4",
+    "passed": false,
+    "Ea_forward_meV": 68.46408487285771,
+    "band_span_meV": 522.8,
+    "magnitude_sane": true,
+    "saddle_index": 2,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 77.4 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m4",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.989,
+    "second_disp_A": 0.564,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 321
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 628
+    },
+    "neb": {
+     "fmax": 0.0499,
+     "converged": true,
+     "nsteps": 80
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -77.3792528341346,
+    68.46408487285771,
+    56.08329722053895,
+    -126.63004631440344,
+    -421.88228037593944,
+    -522.8159456448793
+   ],
+   "structure_hash": "d310d768d7008f7bbf44b1498581e5c81481cef25522be5867ab74ac360014e7",
+   "wall_s": 143.1
+  },
+  {
+   "member": 5,
+   "system": "undoped",
+   "Ea_meV": 306.33075600826487,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 137,
+   "band_converged": true,
+   "nsteps": 45,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m5",
+    "passed": true,
+    "Ea_forward_meV": 306.33075600826487,
+    "band_span_meV": 306.3,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m5",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.079,
+    "second_disp_A": 0.664,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 577
+    },
+    "final": {
+     "fmax": 0.0194,
+     "converged": true,
+     "nsteps": 549
+    },
+    "neb": {
+     "fmax": 0.0495,
+     "converged": true,
+     "nsteps": 45
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    53.469817622954,
+    216.22957108161245,
+    306.33075600826487,
+    263.9433835370255,
+    105.62550509848734,
+    26.304817602522235
+   ],
+   "structure_hash": "f4ac3f50d59016c0c68b631190488599823159ab6cfe1249d0a3cbb85cc44fbc",
+   "wall_s": 142.7
+  },
+  {
+   "member": 5,
+   "system": "GA",
+   "Ea_meV": 310.0839263022408,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 136,
+   "band_converged": true,
+   "nsteps": 42,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m5",
+    "passed": true,
+    "Ea_forward_meV": 310.0839263022408,
+    "band_span_meV": 310.1,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m5",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.051,
+    "second_disp_A": 0.742,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 580
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 546
+    },
+    "neb": {
+     "fmax": 0.0485,
+     "converged": true,
+     "nsteps": 42
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    57.38722098817561,
+    223.9363495350517,
+    310.0839263022408,
+    265.7521107314551,
+    115.10190524677455,
+    43.579921511991415
+   ],
+   "structure_hash": "294ea033254b8a53645a1ed4b4a877f3b72ad98d5d0ce05032cc3932663a91dc",
+   "wall_s": 143.7
+  },
+  {
+   "member": 5,
+   "system": "Sr",
+   "Ea_meV": 247.97552674181134,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 137,
+   "band_converged": true,
+   "nsteps": 49,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m5",
+    "passed": true,
+    "Ea_forward_meV": 247.97552674181134,
+    "band_span_meV": 248.0,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m5",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.867,
+    "second_disp_A": 0.565,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 563
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 560
+    },
+    "neb": {
+     "fmax": 0.0439,
+     "converged": true,
+     "nsteps": 49
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    36.27841764819095,
+    163.77340405847463,
+    247.97552674181134,
+    240.51863117779249,
+    136.93437741812886,
+    84.53212865856585
+   ],
+   "structure_hash": "cef96a95b04cec65db6ebc80058269c8958fee691ad8cd8d60d578d2ad0c12a9",
+   "wall_s": 144.4
+  },
+  {
+   "member": 6,
+   "system": "undoped",
+   "Ea_meV": 170.1783928695022,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 48,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m6",
+    "passed": true,
+    "Ea_forward_meV": 170.1783928695022,
+    "band_span_meV": 170.2,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m6",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.815,
+    "second_disp_A": 0.301,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 85
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 99
+    },
+    "neb": {
+     "fmax": 0.0482,
+     "converged": true,
+     "nsteps": 48
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    4.598783930077843,
+    110.67232420782602,
+    170.1783928695022,
+    136.48714370879134,
+    21.790143221778635,
+    -19.368320140756623
+   ],
+   "structure_hash": "bbf5c721dcc7814dfecb985ad69681641c7155fc3d491d388d19429815c14c74",
+   "wall_s": 46.1
+  },
+  {
+   "member": 6,
+   "system": "GA",
+   "Ea_meV": 102.94733747991813,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 52,
+   "band_converged": true,
+   "nsteps": 123,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m6",
+    "passed": false,
+    "Ea_forward_meV": 102.94733747991813,
+    "band_span_meV": 131.0,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 82.0 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m6",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.027,
+    "second_disp_A": 0.464,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 103
+    },
+    "final": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 244
+    },
+    "neb": {
+     "fmax": 0.0497,
+     "converged": true,
+     "nsteps": 123
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -81.95169196937968,
+    13.953174394373491,
+    102.94733747991813,
+    58.470385335340325,
+    -82.8433401059101,
+    -131.00274030421133
+   ],
+   "structure_hash": "a725239ada87c48346de17d1da919cb0144b21623d532abf407bab0e5ae8eb9c",
+   "wall_s": 105.7
+  },
+  {
+   "member": 6,
+   "system": "Sr",
+   "Ea_meV": 201.9845722181799,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 39,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m6",
+    "passed": true,
+    "Ea_forward_meV": 201.9845722181799,
+    "band_span_meV": 202.0,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m6",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.763,
+    "second_disp_A": 0.485,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0174,
+     "converged": true,
+     "nsteps": 128
+    },
+    "final": {
+     "fmax": 0.0192,
+     "converged": true,
+     "nsteps": 85
+    },
+    "neb": {
+     "fmax": 0.0353,
+     "converged": true,
+     "nsteps": 39
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    31.229902142058563,
+    150.17697379335004,
+    201.9845722181799,
+    134.50831142426978,
+    -55.25931588113053,
+    -104.71630989286496
+   ],
+   "structure_hash": "69a1b84d1901c627b5d22cea4958f3ac7a584ee16797452318332f8da762cd8a",
+   "wall_s": 45.3
+  },
+  {
+   "member": 7,
+   "system": "undoped",
+   "Ea_meV": 271.77178667238877,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 114,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m7",
+    "passed": false,
+    "Ea_forward_meV": 271.77178667238877,
+    "band_span_meV": 271.8,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 118.5 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m7",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.944,
+    "second_disp_A": 0.729,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 386
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 150
+    },
+    "neb": {
+     "fmax": 0.0491,
+     "converged": true,
+     "nsteps": 114
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    60.540753681607384,
+    204.37278613530907,
+    271.77178667238877,
+    175.3986750977674,
+    87.66477520384797,
+    206.14320721733748
+   ],
+   "structure_hash": "e9e3b32e4bdcb96ba960cba5464fc88b4f823e2df3e2a7716ff4dd14ce0c301e",
+   "wall_s": 118.0
+  },
+  {
+   "member": 7,
+   "system": "GA",
+   "Ea_meV": 112.71513213500839,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 97,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m7",
+    "passed": false,
+    "Ea_forward_meV": 112.71513213500839,
+    "band_span_meV": 294.1,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 91.5 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m7",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 3,
+    "largest_disp_A": 4.412,
+    "second_disp_A": 1.625,
+    "reason": "3 atoms moved >1.0 A (second largest 1.62 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 385
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 1011
+    },
+    "neb": {
+     "fmax": 0.046,
+     "converged": true,
+     "nsteps": 97
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -91.54234900711344,
+    -60.470572470876505,
+    112.71513213500839,
+    22.71295381069649,
+    -201.8168364502344,
+    -294.13189359752323
+   ],
+   "structure_hash": "f9864d3341ea22ed2f6cc29eff9ae44d1bff3d57bf41257caac92eb7bd40ba78",
+   "wall_s": 203.0
+  },
+  {
+   "member": 7,
+   "system": "Sr",
+   "Ea_meV": 174.45054452855402,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 115,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m7",
+    "passed": false,
+    "Ea_forward_meV": 174.45054452855402,
+    "band_span_meV": 174.5,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 101.0 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m7",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.673,
+    "second_disp_A": 0.707,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 372
+    },
+    "final": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 151
+    },
+    "neb": {
+     "fmax": 0.0491,
+     "converged": true,
+     "nsteps": 115
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    22.541256361364503,
+    130.24907614703807,
+    174.45054452855402,
+    113.18742529374504,
+    39.747175267393686,
+    140.70587077662822
+   ],
+   "structure_hash": "64f004b2294540c5ea0923bbd8c616d6d47a6c3aa098e25d880677fed6888db0",
+   "wall_s": 117.4
+  },
+  {
+   "member": 8,
+   "system": "undoped",
+   "Ea_meV": 194.4894219905109,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 48,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m8",
+    "passed": true,
+    "Ea_forward_meV": 194.4894219905109,
+    "band_span_meV": 194.5,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m8",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.825,
+    "second_disp_A": 0.206,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0194,
+     "converged": true,
+     "nsteps": 70
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 102
+    },
+    "neb": {
+     "fmax": 0.0499,
+     "converged": true,
+     "nsteps": 48
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    7.213420950392901,
+    126.96385167078006,
+    194.4894219905109,
+    161.18427307037564,
+    47.94270764546127,
+    24.750494465934025
+   ],
+   "structure_hash": "689eb35fcc6a71f33291511eff74ffeae7bb018d628954bc1d68804130bfc9cb",
+   "wall_s": 45.6
+  },
+  {
+   "member": 8,
+   "system": "GA",
+   "Ea_meV": 235.54705293577172,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 48,
+   "band_converged": true,
+   "nsteps": 46,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m8",
+    "passed": true,
+    "Ea_forward_meV": 235.54705293577172,
+    "band_span_meV": 235.5,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m8",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.999,
+    "second_disp_A": 0.373,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 137
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 180
+    },
+    "neb": {
+     "fmax": 0.0496,
+     "converged": true,
+     "nsteps": 46
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    23.499544691276242,
+    154.58232171226882,
+    235.54705293577172,
+    211.20378549971974,
+    85.15827129963327,
+    25.070855166859474
+   ],
+   "structure_hash": "9dc43b4532b6e7d92cf01c05a7de96afdd145b3691e70e10e187e6aedaa01ea4",
+   "wall_s": 60.6
+  },
+  {
+   "member": 8,
+   "system": "Sr",
+   "Ea_meV": 181.6933246041117,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 48,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m8",
+    "passed": true,
+    "Ea_forward_meV": 181.6933246041117,
+    "band_span_meV": 181.7,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m8",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.785,
+    "second_disp_A": 0.297,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 86
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 115
+    },
+    "neb": {
+     "fmax": 0.0491,
+     "converged": true,
+     "nsteps": 48
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    8.032143409309356,
+    128.19299937882533,
+    181.6933246041117,
+    101.39036463124285,
+    -118.58156708535716,
+    -169.5521506417208
+   ],
+   "structure_hash": "01bdab0e460242b1c531c9bb51632bffa1c5a52f16d9fb1f90f2e8487eb689ce",
+   "wall_s": 49.7
+  },
+  {
+   "member": 9,
+   "system": "undoped",
+   "Ea_meV": 96.2248485825512,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 165,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m9",
+    "passed": false,
+    "Ea_forward_meV": 96.2248485825512,
+    "band_span_meV": 100.0,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 100.0 meV -- not a local minimum; final endpoint above its adjacent interior image by 13.2 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m9",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.386,
+    "second_disp_A": 0.663,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 408
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 667
+    },
+    "neb": {
+     "fmax": 0.0495,
+     "converged": true,
+     "nsteps": 165
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -100.00987642388282,
+    17.431425717177262,
+    96.2248485825512,
+    6.19480448926879,
+    -95.96473185979448,
+    -82.80679836525451
+   ],
+   "structure_hash": "a30f7fe4ae958974e7281c7dd16c230b3f75f004c28998f41e99f7576254a8d1",
+   "wall_s": 202.1
+  },
+  {
+   "member": 9,
+   "system": "GA",
+   "Ea_meV": 184.9432724268354,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 50,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m9",
+    "passed": true,
+    "Ea_forward_meV": 184.9432724268354,
+    "band_span_meV": 184.9,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m9",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.203,
+    "second_disp_A": 0.546,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 430
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 580
+    },
+    "neb": {
+     "fmax": 0.0398,
+     "converged": true,
+     "nsteps": 50
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    22.931676269081436,
+    139.83500945187188,
+    184.9432724268354,
+    111.12888138609378,
+    -1.3850960265244794,
+    -34.13278777634332
+   ],
+   "structure_hash": "6bc83b2eff07b5aa2e210d9c374eb0311e6eb2313ed3c42adfaa5657f73a1d1c",
+   "wall_s": 136.8
+  },
+  {
+   "member": 9,
+   "system": "Sr",
+   "Ea_meV": 146.15680853557933,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 50,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m9",
+    "passed": true,
+    "Ea_forward_meV": 146.15680853557933,
+    "band_span_meV": 146.2,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m9",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.73,
+    "second_disp_A": 0.648,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 407
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 495
+    },
+    "neb": {
+     "fmax": 0.0481,
+     "converged": true,
+     "nsteps": 50
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    34.46660514100586,
+    114.70985303026282,
+    146.15680853557933,
+    109.83576528769845,
+    25.707918424814125,
+    -1.8669285020678217
+   ],
+   "structure_hash": "ed55a9c10f6bc61f3fb1ac680586384b5940472d9b773b8beec7cb927bac3df1",
+   "wall_s": 123.9
+  },
+  {
+   "member": 10,
+   "system": "undoped",
+   "Ea_meV": 83.01379573458689,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 31,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m10",
+    "passed": true,
+    "Ea_forward_meV": 83.01379573458689,
+    "band_span_meV": 195.7,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m10",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.889,
+    "second_disp_A": 0.424,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 111
+    },
+    "final": {
+     "fmax": 0.0196,
+     "converged": true,
+     "nsteps": 206
+    },
+    "neb": {
+     "fmax": 0.0432,
+     "converged": true,
+     "nsteps": 31
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    1.0697341504055657,
+    60.94180912032243,
+    83.01379573458689,
+    8.86787365084274,
+    -131.8397679026475,
+    -195.66859269366432
+   ],
+   "structure_hash": "f2ea0d615ddda47717748fa6087584353103c2f8d2ffcdf4c18a6e4af29e4288",
+   "wall_s": 52.0
+  },
+  {
+   "member": 10,
+   "system": "GA",
+   "Ea_meV": 168.86085169903708,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 31,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m10",
+    "passed": true,
+    "Ea_forward_meV": 168.86085169903708,
+    "band_span_meV": 168.9,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m10",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.015,
+    "second_disp_A": 0.524,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 403
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 217
+    },
+    "neb": {
+     "fmax": 0.0412,
+     "converged": true,
+     "nsteps": 31
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    50.39207532877299,
+    140.67205081255452,
+    168.86085169903708,
+    90.44254079981329,
+    -33.21156628931021,
+    -67.32922902187966
+   ],
+   "structure_hash": "3f2f7574a61a8ab13b4b7e76e87ea35edf0524ce87f16d890beed56377e646d3",
+   "wall_s": 85.0
+  },
+  {
+   "member": 10,
+   "system": "Sr",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 46,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m10",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 163.8,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 32.4 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m10",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.447,
+    "second_disp_A": 0.388,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 114
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 198
+    },
+    "neb": {
+     "fmax": 0.05,
+     "converged": true,
+     "nsteps": 46
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -32.37328802470074,
+    -9.214222964146757,
+    -0.21797221620545315,
+    -35.869796948190924,
+    -121.83812663693061,
+    -163.7559054988742
+   ],
+   "structure_hash": "d797f5247c7766deec4edfe8ea06ec736d998e533629ce9a687beea7f502eab1",
+   "wall_s": 59.7
+  },
+  {
+   "member": 11,
+   "system": "undoped",
+   "Ea_meV": 58.718456558835896,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 106,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m11",
+    "passed": false,
+    "Ea_forward_meV": 58.718456558835896,
+    "band_span_meV": 246.9,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 65.4 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m11",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 2,
+    "largest_disp_A": 3.794,
+    "second_disp_A": 1.113,
+    "reason": "2 atoms moved >1.0 A (second largest 1.11 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 484
+    },
+    "final": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 811
+    },
+    "neb": {
+     "fmax": 0.0437,
+     "converged": true,
+     "nsteps": 106
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -65.43621665264254,
+    -47.14333547440219,
+    58.718456558835896,
+    0.04467838084565301,
+    -179.08641734857156,
+    -246.9139012425785
+   ],
+   "structure_hash": "0d2d560da3c53336a96a8d226e8216c8a422a42bbc478f49c7a924a60b5102ab",
+   "wall_s": 193.6
+  },
+  {
+   "member": 11,
+   "system": "GA",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 182,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m11",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 419.2,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 115.3 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m11",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 4,
+    "largest_disp_A": 3.938,
+    "second_disp_A": 1.209,
+    "reason": "4 atoms moved >1.0 A (second largest 1.21 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 215
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 973
+    },
+    "neb": {
+     "fmax": 0.0491,
+     "converged": true,
+     "nsteps": 182
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -115.31860855279774,
+    -236.31787956014705,
+    -104.01563718141915,
+    -192.06426716186797,
+    -374.5813507641742,
+    -419.21013082196623
+   ],
+   "structure_hash": "68a11e7ef617e1bc3dfcd642b6707696123579167e861ddb58c39f9aa9e6a756",
+   "wall_s": 225.0
+  },
+  {
+   "member": 11,
+   "system": "Sr",
+   "Ea_meV": 66.08311205854989,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 87,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m11",
+    "passed": false,
+    "Ea_forward_meV": 66.08311205854989,
+    "band_span_meV": 411.2,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 57.6 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m11",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 2,
+    "largest_disp_A": 3.745,
+    "second_disp_A": 1.038,
+    "reason": "2 atoms moved >1.0 A (second largest 1.04 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 459
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 850
+    },
+    "neb": {
+     "fmax": 0.0498,
+     "converged": true,
+     "nsteps": 87
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -57.573382669261264,
+    -32.47744003851949,
+    66.08311205854989,
+    -48.3466098273766,
+    -329.40988757013656,
+    -411.1803382227208
+   ],
+   "structure_hash": "7f34ab69bc5662b207553a356891df5cbd57f6359accb4a5ec793382c4ac0b85",
+   "wall_s": 185.1
+  },
+  {
+   "member": 12,
+   "system": "undoped",
+   "Ea_meV": 253.44674875509554,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 64,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m12",
+    "passed": true,
+    "Ea_forward_meV": 253.44674875509554,
+    "band_span_meV": 253.4,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m12",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.075,
+    "second_disp_A": 0.57,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 382
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 403
+    },
+    "neb": {
+     "fmax": 0.0386,
+     "converged": true,
+     "nsteps": 64
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    34.74325442562076,
+    181.94799690058971,
+    253.44674875509554,
+    178.43915913249475,
+    27.184763860532257,
+    -5.123624053339881
+   ],
+   "structure_hash": "3304899fa99fa9a0c39df5523b8518511db3a3a15526382dece5094735eaf5cd",
+   "wall_s": 121.4
+  },
+  {
+   "member": 12,
+   "system": "GA",
+   "Ea_meV": 197.12641347473436,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 73,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m12",
+    "passed": true,
+    "Ea_forward_meV": 197.12641347473436,
+    "band_span_meV": 197.1,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m12",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.904,
+    "second_disp_A": 0.951,
+    "reason": "1 atoms moved >1.0 A (second largest 0.95 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 420
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 565
+    },
+    "neb": {
+     "fmax": 0.0492,
+     "converged": true,
+     "nsteps": 73
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    22.14696012015338,
+    140.6133996229073,
+    197.12641347473436,
+    129.11913657285368,
+    -8.26024160369343,
+    -70.86611299041579
+   ],
+   "structure_hash": "6cd197016c58dcc43a8634796f0cf8ef7c288cea4329dc738ebc52258f6be2c2",
+   "wall_s": 151.3
+  },
+  {
+   "member": 12,
+   "system": "Sr",
+   "Ea_meV": 253.72021451426008,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 64,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m12",
+    "passed": true,
+    "Ea_forward_meV": 253.72021451426008,
+    "band_span_meV": 253.7,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m12",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.966,
+    "second_disp_A": 0.741,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 361
+    },
+    "final": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 387
+    },
+    "neb": {
+     "fmax": 0.0455,
+     "converged": true,
+     "nsteps": 64
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    31.3328189170079,
+    178.36252643837724,
+    253.72021451426008,
+    148.42786243320916,
+    -94.54861038648232,
+    -132.13231100758094
+   ],
+   "structure_hash": "125650079f4e55c4a28cc26166392167557db46515557f87c17ecf233ba56fa0",
+   "wall_s": 117.0
+  },
+  {
+   "member": 13,
+   "system": "undoped",
+   "Ea_meV": 242.06046961307948,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 43,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m13",
+    "passed": true,
+    "Ea_forward_meV": 242.06046961307948,
+    "band_span_meV": 242.1,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m13",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.961,
+    "second_disp_A": 0.87,
+    "reason": "1 atoms moved >1.0 A (second largest 0.87 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0196,
+     "converged": true,
+     "nsteps": 392
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 546
+    },
+    "neb": {
+     "fmax": 0.0467,
+     "converged": true,
+     "nsteps": 43
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    26.983168858350837,
+    153.70314606070679,
+    242.06046961307948,
+    165.43259949185085,
+    -6.922939362084435,
+    -96.16184820333729
+   ],
+   "structure_hash": "b624b7a9767de5b03b1316cd56c7da54a40bc64593188277f08d7b7846b3dd8a",
+   "wall_s": 130.0
+  },
+  {
+   "member": 13,
+   "system": "GA",
+   "Ea_meV": 209.11736748985277,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 52,
+   "band_converged": true,
+   "nsteps": 49,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m13",
+    "passed": true,
+    "Ea_forward_meV": 209.11736748985277,
+    "band_span_meV": 209.1,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m13",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.89,
+    "second_disp_A": 0.914,
+    "reason": "1 atoms moved >1.0 A (second largest 0.91 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 396
+    },
+    "final": {
+     "fmax": 0.0194,
+     "converged": true,
+     "nsteps": 611
+    },
+    "neb": {
+     "fmax": 0.0483,
+     "converged": true,
+     "nsteps": 49
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    15.735998250647754,
+    125.30429095636464,
+    209.11736748985277,
+    143.08386896186676,
+    -15.20952982741619,
+    -96.21028330070658
+   ],
+   "structure_hash": "5a1c1ac7259d2b7218dd5d45025c4b7f244e2eeaa6c280e25952e7d42917e3cb",
+   "wall_s": 140.1
+  },
+  {
+   "member": 13,
+   "system": "Sr",
+   "Ea_meV": 286.9156254446352,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 53,
+   "band_converged": true,
+   "nsteps": 74,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m13",
+    "passed": true,
+    "Ea_forward_meV": 286.9156254446352,
+    "band_span_meV": 286.9,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m13",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.909,
+    "second_disp_A": 0.986,
+    "reason": "1 atoms moved >1.0 A (second largest 0.99 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 725
+    },
+    "final": {
+     "fmax": 0.0187,
+     "converged": true,
+     "nsteps": 521
+    },
+    "neb": {
+     "fmax": 0.0409,
+     "converged": true,
+     "nsteps": 74
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    46.87320328480382,
+    194.07744375371294,
+    286.9156254446352,
+    138.78480680068606,
+    -81.53932832397004,
+    -85.82024184374859
+   ],
+   "structure_hash": "2a3074148f4db45099e922d3b4b4d91d2df004ab07f3680e8c0a99716b308c65",
+   "wall_s": 175.8
+  },
+  {
+   "member": 14,
+   "system": "undoped",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 162,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m14",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 306.2,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 122.8 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m14",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.01,
+    "second_disp_A": 0.954,
+    "reason": "1 atoms moved >1.0 A (second largest 0.95 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0196,
+     "converged": true,
+     "nsteps": 84
+    },
+    "final": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 527
+    },
+    "neb": {
+     "fmax": 0.0483,
+     "converged": true,
+     "nsteps": 162
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -122.7924509987588,
+    -196.393300642967,
+    -50.33155480850837,
+    -83.02288432309979,
+    -229.12225895174743,
+    -306.16992555951583
+   ],
+   "structure_hash": "cefeba35d65b2f311f63b47761147e3be63b0931e09bd2188b7af068f6051834",
+   "wall_s": 153.6
+  },
+  {
+   "member": 14,
+   "system": "GA",
+   "Ea_meV": 556.6951562836948,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 96,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m14",
+    "passed": false,
+    "Ea_forward_meV": 556.6951562836948,
+    "band_span_meV": 556.7,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "final endpoint above its adjacent interior image by 67.6 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m14",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 7,
+    "largest_disp_A": 4.403,
+    "second_disp_A": 1.372,
+    "reason": "7 atoms moved >1.0 A (second largest 1.37 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 1306
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 539
+    },
+    "neb": {
+     "fmax": 0.0465,
+     "converged": true,
+     "nsteps": 96
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    114.07916381199357,
+    338.36848219721105,
+    556.6951562836948,
+    370.76673795218085,
+    234.54667467717627,
+    302.11665437354895
+   ],
+   "structure_hash": "7338fc58095311c36e365cdd09883a3dd2ac0d012e6fa03f292568878b70a900",
+   "wall_s": 249.3
+  },
+  {
+   "member": 14,
+   "system": "Sr",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 126,
+   "band_converged": true,
+   "nsteps": 181,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m14",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 464.1,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 126.9 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m14",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.922,
+    "second_disp_A": 0.959,
+    "reason": "1 atoms moved >1.0 A (second largest 0.96 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 109
+    },
+    "final": {
+     "fmax": 0.0196,
+     "converged": true,
+     "nsteps": 528
+    },
+    "neb": {
+     "fmax": 0.0487,
+     "converged": true,
+     "nsteps": 181
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -126.89385563476208,
+    -215.9373470024093,
+    -67.25755476963968,
+    -140.35385316765314,
+    -389.75927347360084,
+    -464.082072889596
+   ],
+   "structure_hash": "08b9ea2d53853ee90eb9aef675adef5f874e3e1060ee618b1c0c15578d68b551",
+   "wall_s": 163.5
+  },
+  {
+   "member": 15,
+   "system": "undoped",
+   "Ea_meV": 43.02679543297927,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 114,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m15",
+    "passed": false,
+    "Ea_forward_meV": 43.02679543297927,
+    "band_span_meV": 233.6,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 95.2 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m15",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.809,
+    "second_disp_A": 0.673,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0193,
+     "converged": true,
+     "nsteps": 150
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 365
+    },
+    "neb": {
+     "fmax": 0.049,
+     "converged": true,
+     "nsteps": 114
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -95.190943500711,
+    -34.65111240848273,
+    43.02679543297927,
+    -16.858921727816778,
+    -158.9529787399897,
+    -233.60027691978758
+   ],
+   "structure_hash": "05af2f7cc6e4244df369ce097f8afccf2592bf99fdbf0a9f074b175c578c53d8",
+   "wall_s": 117.7
+  },
+  {
+   "member": 15,
+   "system": "GA",
+   "Ea_meV": 129.1241986782552,
+   "valid": true,
+   "valid_shape_only": true,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 48,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m15",
+    "passed": true,
+    "Ea_forward_meV": 129.1241986782552,
+    "band_span_meV": 185.5,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": null
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m15",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.101,
+    "second_disp_A": 0.614,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0194,
+     "converged": true,
+     "nsteps": 215
+    },
+    "final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 359
+    },
+    "neb": {
+     "fmax": 0.049,
+     "converged": true,
+     "nsteps": 48
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    0.1644783990286669,
+    102.4112652810345,
+    129.1241986782552,
+    24.729834701929576,
+    -119.71029081860252,
+    -185.5154000963921
+   ],
+   "structure_hash": "0079661c47223fc63e1a5d29e05101c7c9b118be81ed65d72fe637656cc182fb",
+   "wall_s": 88.7
+  },
+  {
+   "member": 15,
+   "system": "Sr",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 49,
+   "band_converged": true,
+   "nsteps": 116,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m15",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 221.8,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 97.1 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m15",
+    "passed": true,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.542,
+    "second_disp_A": 0.487,
+    "reason": null
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.019,
+     "converged": true,
+     "nsteps": 154
+    },
+    "final": {
+     "fmax": 0.0196,
+     "converged": true,
+     "nsteps": 274
+    },
+    "neb": {
+     "fmax": 0.0479,
+     "converged": true,
+     "nsteps": 116
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -97.11373805725998,
+    -48.98998963221857,
+    -12.269108470263745,
+    -67.57867179567256,
+    -181.10840787767302,
+    -221.82848370539432
+   ],
+   "structure_hash": "9dd29764157251e82d3ba2562bddd21fd0db044eea70a5f4f44865143b65116e",
+   "wall_s": 108.1
+  },
+  {
+   "member": 16,
+   "system": "undoped",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 137,
+   "band_converged": true,
+   "nsteps": 132,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m16",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 292.3,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 106.6 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m16",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 2,
+    "largest_disp_A": 3.736,
+    "second_disp_A": 1.099,
+    "reason": "2 atoms moved >1.0 A (second largest 1.10 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0196,
+     "converged": true,
+     "nsteps": 119
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 818
+    },
+    "neb": {
+     "fmax": 0.0481,
+     "converged": true,
+     "nsteps": 132
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -106.5618055044979,
+    -180.0755182298417,
+    -75.66831739586632,
+    -90.17638166733377,
+    -223.99475340671415,
+    -292.28595927861534
+   ],
+   "structure_hash": "854bdad00acd031b24ce38e9df36b2c9c83a88af5efd8224c2576541299b1d96",
+   "wall_s": 169.2
+  },
+  {
+   "member": 16,
+   "system": "GA",
+   "Ea_meV": 92.29869630758003,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 136,
+   "band_converged": true,
+   "nsteps": 124,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m16",
+    "passed": false,
+    "Ea_forward_meV": 92.29869630758003,
+    "band_span_meV": 197.2,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 103.8 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m16",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 4.061,
+    "second_disp_A": 0.824,
+    "reason": "1 atoms moved >1.0 A (second largest 0.82 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0178,
+     "converged": true,
+     "nsteps": 245
+    },
+    "final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 614
+    },
+    "neb": {
+     "fmax": 0.049,
+     "converged": true,
+     "nsteps": 124
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -103.81767005060283,
+    -41.65405905791886,
+    92.29869630758003,
+    24.95238908477404,
+    -128.42897544123844,
+    -197.24042203483805
+   ],
+   "structure_hash": "7146e56ecbf8d9f390e13dd8a87fc7e6b2f35b4671f211282760251688cd6b7e",
+   "wall_s": 159.0
+  },
+  {
+   "member": 16,
+   "system": "Sr",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 137,
+   "band_converged": true,
+   "nsteps": 146,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m16",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 442.7,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 110.9 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m16",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 1,
+    "largest_disp_A": 3.703,
+    "second_disp_A": 0.967,
+    "reason": "1 atoms moved >1.0 A (second largest 0.97 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 131
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 745
+    },
+    "neb": {
+     "fmax": 0.05,
+     "converged": true,
+     "nsteps": 146
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -110.91571654196741,
+    -188.58912804557804,
+    -65.68374458493054,
+    -131.14823920341223,
+    -372.9159092813461,
+    -442.74771823575065
+   ],
+   "structure_hash": "d7d1269e111ca2c602aa1b61732e21043f6efb192d39d4622862bcdd230a75e6",
+   "wall_s": 169.7
+  },
+  {
+   "member": 17,
+   "system": "undoped",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 137,
+   "band_converged": true,
+   "nsteps": 201,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "undoped_m17",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 515.3,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 80.2 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "undoped_m17",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 3,
+    "largest_disp_A": 4.049,
+    "second_disp_A": 1.139,
+    "reason": "3 atoms moved >1.0 A (second largest 1.14 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.019,
+     "converged": true,
+     "nsteps": 117
+    },
+    "final": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 719
+    },
+    "neb": {
+     "fmax": 0.0492,
+     "converged": true,
+     "nsteps": 201
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -80.2491912190817,
+    -287.7325905528778,
+    -241.55571298342693,
+    -244.2969453288697,
+    -432.2551527204723,
+    -515.284068677829
+   ],
+   "structure_hash": "f1acaa7bda53e5950b6c34fd63c3ee6f267dd7f56cc563ba8cc641faa7c57a74",
+   "wall_s": 194.2
+  },
+  {
+   "member": 17,
+   "system": "GA",
+   "Ea_meV": 0.0,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": false,
+   "migrating_index_doped": 136,
+   "band_converged": false,
+   "nsteps": 300,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "GA_m17",
+    "passed": false,
+    "Ea_forward_meV": 0.0,
+    "band_span_meV": 563.5,
+    "magnitude_sane": true,
+    "saddle_index": 0,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 32.8 meV -- not a local minimum; maximum at image 0 (an endpoint)"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "GA_m17",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 3,
+    "largest_disp_A": 4.148,
+    "second_disp_A": 1.138,
+    "reason": "3 atoms moved >1.0 A (second largest 1.14 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 144
+    },
+    "final": {
+     "fmax": 0.0191,
+     "converged": true,
+     "nsteps": 722
+    },
+    "neb": {
+     "fmax": 0.0923,
+     "converged": false,
+     "nsteps": 300
+    },
+    "all_converged": false
+   },
+   "profile_meV": [
+    0.0,
+    -32.81572176683767,
+    -308.0184370865027,
+    -327.5792662670938,
+    -283.98189172366983,
+    -501.5239002409544,
+    -563.4612392193503
+   ],
+   "structure_hash": "b01c4c8873ed9eb6bdef608b5d373b1889df8402bcb8709b4cf185177d98fe37",
+   "wall_s": 254.4
+  },
+  {
+   "member": 17,
+   "system": "Sr",
+   "Ea_meV": 73.99612414428702,
+   "valid": false,
+   "valid_shape_only": false,
+   "converged_all": true,
+   "migrating_index_doped": 137,
+   "band_converged": true,
+   "nsteps": 94,
+   "gate_endpoints": {
+    "check": "endpoints",
+    "label": "Sr_m17",
+    "passed": false,
+    "Ea_forward_meV": 73.99612414428702,
+    "band_span_meV": 415.6,
+    "magnitude_sane": true,
+    "saddle_index": 3,
+    "n_images": 7,
+    "reason": "initial endpoint above its adjacent interior image by 68.5 meV -- not a local minimum"
+   },
+   "gate_consistency": {
+    "check": "endpoint_consistency",
+    "label": "Sr_m17",
+    "passed": false,
+    "n_atoms_moved_gt_1.0A": 2,
+    "largest_disp_A": 3.915,
+    "second_disp_A": 1.053,
+    "reason": "2 atoms moved >1.0 A (second largest 1.05 A) -> endpoints describe different configurations"
+   },
+   "endpoint_relax": {
+    "initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 448
+    },
+    "final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 707
+    },
+    "neb": {
+     "fmax": 0.0487,
+     "converged": true,
+     "nsteps": 94
+    },
+    "all_converged": true
+   },
+   "profile_meV": [
+    0.0,
+    -68.54105557931689,
+    -24.260377756945672,
+    73.99612414428702,
+    -38.85083446584758,
+    -322.59292520461713,
+    -415.6106399248074
+   ],
+   "structure_hash": "0a06540dffb68abd9d071b249172f832407ff07e69226d3b454e6358fb789400",
+   "wall_s": 172.3
+  }
+ ]
+}
