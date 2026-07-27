@@ -5,10 +5,6 @@
    "mean_meV": 25.830736856732983,
    "s_dEa_meV": 84.87589243330456,
    "se_meV": 60.01631909884963,
-   "ci95": [
-    -91.80124857701229,
-    143.46272229047827
-   ],
    "n_required": 9,
    "values_meV": [
     -34.18558224211665,
@@ -18,17 +14,26 @@
     3,
     10
    ],
-   "verdict": "NOT_RESOLVABLE"
+   "verdict": "NOT_RESOLVABLE",
+   "t_crit": 12.706204736174694,
+   "ci95_t": [
+    -736.748901124842,
+    788.4103748383079
+   ],
+   "sigma_upper95": 1353.5361761078964,
+   "n_required_upper": 2070,
+   "ci95_normal_DEPRECATED": [
+    -91.80124857701229,
+    143.46272229047827
+   ],
+   "paired_pass_rate": 0.1111111111111111,
+   "hosts_for_10_pairs": 90
   },
   "Sr": {
    "n": 4,
    "mean_meV": -9.767920068554758,
    "s_dEa_meV": 37.412705156003064,
    "se_meV": 18.706352578001532,
-   "ci95": [
-    -46.43237112143776,
-    26.896530984328244
-   ],
    "n_required": 2,
    "values_meV": [
     -58.35522799657156,
@@ -42,7 +47,20 @@
     8,
     12
    ],
-   "verdict": "NOT_RESOLVABLE"
+   "verdict": "NOT_RESOLVABLE",
+   "t_crit": 3.1824463052837078,
+   "ci95_t": [
+    -69.2998827157501,
+    49.76404257864058
+   ],
+   "sigma_upper95": 109.2454187143299,
+   "n_required_upper": 14,
+   "ci95_normal_DEPRECATED": [
+    -46.43237112143776,
+    26.896530984328244
+   ],
+   "paired_pass_rate": 0.2222222222222222,
+   "hosts_for_10_pairs": 45
   }
  },
  "n_valid": 18,
@@ -2263,5 +2281,7 @@
    "valid_final": false,
    "reason_final": "initial endpoint above its adjacent interior image by 68.5 meV -- not a local minimum"
   }
- ]
+ ],
+ "single_path_pass_rate": 0.3333333333333333,
+ "wall_s_per_path_mean": 136.51666666666665
 }
