@@ -238,6 +238,45 @@ expect(abs(np.linalg.norm(step_v2, axis=1).max() - 0.05) < 1e-12,
 expect(np.linalg.norm(step_v2, axis=1).max() < 0.15,
        "v2 perturbation always below RETURN_TOL, so a returned structure is detectable")
 
+print("\n[14] return-test classification -- locked against the committed raw record")
+# Replays the committed return_test_v2.json through the DISPLACEMENT-ONLY rule and locks
+# the published counts. Guards against (a) silently reintroducing the miscalibrated 5 meV
+# energy criterion, (b) a future edit changing RETURN_TOL_A, (c) the classification drifting
+# from the raw per-perturbation data.
+import json as _json, os as _os
+_rt = "results/objective2/paired_pilot/return_test/return_test_v2.json"
+if _os.path.exists(_rt):
+    _d = _json.load(open(_rt))
+    _rows = _d["rows"]
+    expect(len(_rows) == 27, f"27 asymmetric-well endpoints in the record (got {len(_rows)})")
+    # recompute verdicts from raw perturbations, displacement only
+    _meta = sum(1 for r in _rows
+                if sum(1 for p in r["perturbations"] if p["max_disp_A"] < 0.15) == 4)
+    _amb = len(_rows) - _meta
+    expect(_meta == 23, f"23 verified_metastable recomputed from raw displacements (got {_meta})")
+    expect(_amb == 4, f"4 multi_basin_ambiguous (got {_amb})")
+    _bc = {}
+    for r in _rows: _bc[r["band_class"]] = _bc.get(r["band_class"], 0) + 1
+    expect(_bc.get("pure_hop_asymmetric") == 5, f"5 pure_hop_asymmetric (got {_bc.get('pure_hop_asymmetric')})")
+    expect(_bc.get("hop_plus_FA_reorientation") == 11,
+           f"11 hop_plus_FA_reorientation (got {_bc.get('hop_plus_FA_reorientation')})")
+    expect(_bc.get("band_collapsed") == 6, f"6 band_collapsed (got {_bc.get('band_collapsed')})")
+    expect(_bc.get("endpoint_energy_unconverged") == 1,
+           f"1 endpoint_energy_unconverged (got {_bc.get('endpoint_energy_unconverged')})")
+    # the energy criterion must NOT be reintroduced: applying it would flip 21 verdicts
+    _meta_with_E = sum(1 for r in _rows
+                       if sum(1 for p in r["perturbations"]
+                              if p["max_disp_A"] < 0.15 and abs(p["dE_meV"]) < 5.0) == 4)
+    expect(_meta_with_E == 2,
+           f"the retired 5 meV criterion would give only {_meta_with_E} metastable -- do not reinstate")
+    # and the source code must not carry it
+    _src = open("scripts/24_return_test.py").read()
+    expect("E_TOL_MEV" not in _src.split("# NO energy criterion")[-1].split("def ")[0] or
+           "abs(dE) < E_TOL" not in _src,
+           "scripts/24 judges metastability by displacement alone")
+else:
+    print("  SKIP  return_test_v2.json not present in this checkout")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
