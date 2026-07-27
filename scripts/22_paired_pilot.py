@@ -120,12 +120,37 @@ def build_pair(host, vac_ref_pos, calc, args):
     vpos = at.positions[vi].copy()
     del at[vi]
 
-    # migrating ion: the iodide nearest the vacancy in the post-deletion cell
+    # Migrating ion: the iodide nearest the vacancy in the post-deletion cell.
+    #
+    # INCIDENT: this was returned as a bare integer index, captured BEFORE the dopant
+    # substitution ran. The GA substitution deletes an FA hydrogen, which shifts every index
+    # above it down by one, so `fin.positions[mig] = vpos` then moved the WRONG atom -- in 8
+    # of 18 members (m00,01,05,06,08,13,16,17), i.e. every member whose deleted H sat below
+    # the migrating iodide. All three "MLIP blow-ups" were in that set.
+    #
+    # Fix: tag the atom instead of indexing it. ASE tags survive deletion and insertion, so
+    # `migrating_index(at)` resolves the correct atom no matter how the cell was edited.
     sym2 = np.array(at.get_chemical_symbols())
     iod2 = np.flatnonzero(sym2 == "I")
     d2 = np.linalg.norm(mic(at.positions[iod2] - vpos, cell), axis=1)
     mig = int(iod2[int(np.argmin(d2))])
+    tags = np.zeros(len(at), int)
+    tags[mig] = MIG_TAG
+    at.set_tags(tags)
     return at, vpos, mig
+
+
+MIG_TAG = 99  # stable marker for the migrating iodide; survives atom deletion/insertion
+
+
+def migrating_index(at):
+    """Index of the tagged migrating iodide in the CURRENT cell, whatever was edited."""
+    hits = np.flatnonzero(np.asarray(at.get_tags()) == MIG_TAG)
+    assert hits.size == 1, f"expected exactly 1 tagged migrating ion, found {hits.size}"
+    i = int(hits[0])
+    assert at.get_chemical_symbols()[i] == "I", \
+        f"tagged migrating atom is {at.get_chemical_symbols()[i]}, not I"
+    return i
 
 
 def run_path(ini, fin, make_calc, args, label):
@@ -137,7 +162,7 @@ def run_path(ini, fin, make_calc, args, label):
         a.calc = make_calc()
         oe = FIRE(a, logfile=None)
         oe.run(fmax=args.endpoint_fmax, steps=args.endpoint_steps)
-        ep[nm] = {"fmax": round(float(np.abs(a.get_forces()).max()), 4),
+        ep[nm] = {"fmax": round(float(np.linalg.norm(a.get_forces(), axis=1).max()), 4),
                   "converged": bool(oe.converged()),
                   "nsteps": int(oe.get_number_of_steps())}
     images = [ini] + [ini.copy() for _ in range(args.images)] + [fin]
@@ -149,6 +174,14 @@ def run_path(ini, fin, make_calc, args, label):
     opt = FIRE(neb, logfile=None)
     opt.run(fmax=args.fmax, steps=args.steps)
     E = np.array([im.get_potential_energy() for im in images])
+    neb_fmax = float(np.linalg.norm(neb.get_forces(), axis=1).max())
+    ep["neb"] = {"fmax": round(neb_fmax, 4), "converged": bool(opt.converged()),
+                 "nsteps": int(opt.get_number_of_steps())}
+    ep["all_converged"] = bool(ep["initial"]["converged"] and ep["final"]["converged"]
+                               and opt.converged()
+                               and ep["initial"]["fmax"] <= args.endpoint_fmax
+                               and ep["final"]["fmax"] <= args.endpoint_fmax
+                               and neb_fmax <= args.fmax)
     gate_e = check_endpoints((E - E[0]).tolist(), label=label)
     gate_c = check_endpoint_consistency(images[0].positions, images[-1].positions,
                                         ini.cell.array, label=label)
@@ -215,15 +248,21 @@ def main():
                 sys.stdout.flush()
                 continue
 
+            # resolve the migrating iodide in the DOPED cell -- the GA substitution
+            # deletes an H, so the pre-doping integer index is stale (see MIG_TAG note)
+            mig_d = migrating_index(doped)
             ini = doped.copy()
             fin = doped.copy()
-            fin.positions[mig] = vpos
+            fin.positions[mig_d] = vpos
             images, E, ge, gc, conv, nst, ep = run_path(ini, fin, make_calc, args, f"{sysname}_m{mem}")
             Ea = float((E.max() - E[0]) * 1000)
-            valid = bool(ge["passed"] and gc["passed"])
+            valid = bool(ge["passed"] and gc["passed"])  # SHAPE gates only
             rows.append({
                 "member": mem, "system": sysname, "Ea_meV": Ea,
-                "valid": valid, "band_converged": conv, "nsteps": nst,
+                "valid": bool(valid and ep["all_converged"]),
+                "valid_shape_only": valid,
+                "converged_all": ep["all_converged"],
+                "migrating_index_doped": int(mig_d), "band_converged": conv, "nsteps": nst,
                 "gate_endpoints": ge, "gate_consistency": gc, "endpoint_relax": ep,
                 "profile_meV": ((E - E[0]) * 1000).tolist(),
                 "structure_hash": structure_hash(doped),
