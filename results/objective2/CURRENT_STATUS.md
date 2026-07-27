@@ -1,46 +1,38 @@
 # Objective 2 — CURRENT STATUS (canonical index)
 
-**Updated 2026-07-27. This file names the authoritative result for each question; anything
-it does not name is historical.**
+**Updated 2026-07-27 (late). This file names the authoritative result for each question;
+anything it does not name is historical.**
+
+## Headline
+
+**GA is EQUIVALENT to no effect at the 10× rate scale** — n = 9 pairs, mean +7.3 meV,
+95% CI [−24.0, +38.5], TOST p = 0.0024, and n = 9 meets the 7 required by the χ² variance
+bound. First adequately-powered result in the project.
+**Sr is SUGGESTIVE-EQUIVALENT** — n = 10, mean −1.8, CI [−48.4, +44.8], TOST p = 0.0104,
+but requires 16 pairs under its variance bound. Sr's spread is driven by two
+configurations (m14, m20) that pass every gate and are kept.
+
+**No ranking. Both are indistinguishable from zero and from each other. MLIP level only.**
 
 | question | authoritative document |
 |---|---|
-| paired pilot statistics (GA/Sr) | `paired_pilot/RERUN_RESULT.md` + `rerun_results.json` |
-| why 35 paths were rejected | `paired_pilot/BASIN_IDENTIFICATION.md` (v2) |
-| barrier definition + result tiers | `BARRIER_DEFINITION.md` |
-| host pool | `../fa_host/pool_v2/POOL_EXPANSION.md` (18 members, used alone) |
-| noise floor / sampling baseline | new-pool undoped: n=6, mean 216.2, sd 83.9 meV (planning value) |
+| paired result (GA/Sr) | `paired_pilot/CORPUS84_RESULT.md` + `corpus84/` raw records |
+| host pool | `../fa_host/pool_v3_harmonised/` (28 members, fmax 0.02) + `../fa_host/POOL_HOMOGENEITY.md` |
+| why paths are rejected | `paired_pilot/BASIN_IDENTIFICATION.md` (v2) |
+| endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` + `corpus84/return_test_84.json` |
+| barrier definition + tiers | `BARRIER_DEFINITION.md` |
 | GPU validity | `gpu_regression/GATE1_GPU_REGRESSION.md` |
-| automated gates | `../../scripts/checks.py` + `20_test_checks.py` (44 assertions) |
+| automated gates | `../../scripts/checks.py` + `20_test_checks.py` (61 assertions) |
 
 **Superseded / historical (do not cite):** `paired_pilot/PAIRED_PILOT.md` (retracted first
-run; retraction record only), `AUDIT_RESPONSE.md` (the audit that triggered the rerun),
-`noise_floor/NOISE_FLOOR_REPORT.md` (OLD 8-member pool; its sigma=73.3 does not apply to
-pool_v2).
+run), `paired_pilot/RERUN_RESULT.md` and `RETURN_TEST_RESULT.md` statistics (18-host pool —
+their *method* stands, their n = 7 numbers are superseded by the 28-host corpus),
+`AUDIT_RESPONSE.md`, `noise_floor/NOISE_FLOOR_REPORT.md` (old 8-member pool).
 
-**Return test: COMPLETE** (`paired_pilot/RETURN_TEST_RESULT.md`, raw record
-`paired_pilot/return_test/return_test_v2.json`, trajectories
-`paired_pilot/return_test/return_test_bands.tar.gz`). 23 of 27 asymmetric-well endpoints are
-verified metastable by **displacement alone** (< 0.15 Å; the 5 meV energy criterion was
-retired as miscalibrated). Band classes: 5 `pure_hop_asymmetric` (admitted), 11
-`hop_plus_FA_reorientation` (separate distribution), 6 `band_collapsed`, 1
-`endpoint_energy_unconverged`, 4 `multi_basin_ambiguous`.
-
-**Current pool:** pure-hop admissible **24 of 54**; paired rate **7/18 = 0.389** for both GA
-and Sr. At n = 7: GA +29.2 meV (95% CI −29.5 to +87.8), Sr +13.7 meV (−36.3 to +63.8) —
-**neither resolvable**, no ranking.
-
-**Next batch (approved shape, not yet launched):** 26 hosts × 3 systems = **78 paths ≈ 3.0
-GPU-h** to reach n = 10 pairs per dopant.
-
-**Cost correction (self-caught).** The 26-host / 78-path / 3.0 GPU-h figure counts *all* 26
-hosts. Eighteen already exist and their paths are the n = 7 data — they are not recomputed.
-The **incremental** batch is **8 new host members → 24 new paths ≈ 0.9 GPU-h**, plus pool
-generation. The 78-path figure is the total corpus size at n = 10, not the work remaining. `hop_plus_FA_reorientation` results are stored and
-analysed separately and never enter the pure-hop ranking.
-
-**In flight:** Objective 1 band-edge discriminators P1/P2 (job `32d8fd27`).
+**In flight:** Objective 1 q = 0 geometry relaxation (job `e1319fa5`) — testing whether
+lattice relaxation localises the electron into a polaron. See
+`../objective1/dft/charge_relaxed/Q0_RESOLVED.md`.
 
 **Standing prohibitions:** no ranking from EXPLORE-tier data; no mixing mechanism labels or
-result tiers in one distribution; no cross-theory-fingerprint comparisons; old 8-member and
-new 18-member pools never merged.
+result tiers in one distribution; no cross-theory-fingerprint comparisons; pools of
+different relaxation depth never merged.
