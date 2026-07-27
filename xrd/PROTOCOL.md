@@ -95,7 +95,8 @@ apparent size to infinity. That divergence is the diagnostic working, not a bug.
 
 Two batches produced numbers that looked precise and were not. The control scan
 gave a confident crystallite size whose value moved 38→50 nm with an assumed
-instrumental width. The passivator batch gave an apparent lattice contraction
-and a 4× spread in apparent domain size that were both alignment artifacts.
+instrumental width. The passivator batch gave an apparent lattice spread of
+0.011 A (4 of 5 films above control, 1 below -- scatter, not a contraction) and
+a 3.9x spread in apparent domain size; both were alignment artifacts.
 In each case the assumption, not the sample, set the number. The protocol exists
 to make that failure visible automatically rather than after review.

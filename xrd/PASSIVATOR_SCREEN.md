@@ -173,7 +173,7 @@ Numbers behind every panel are in `results/master_figure_data.csv`.
 | **f** | perovskite shift vs ITO shift | slope 1.08, r = 0.985 → geometric |
 | **g** | film FWHM vs ITO FWHM | r = +0.87 → width is contaminated |
 | **h** | apparent size vs ITO FWHM | r = −0.79 → "crystallinity" is alignment |
-| **i** | PbI₂ / perovskite Bragg, ranked | 1.1–10.0%, 3.8× spread; P3 below detection |
+| **i** | PbI₂ / perovskite Bragg, ranked | 1.1–10.0% across the six; P5 is 3.8× the control; P3 below detection |
 | **j** | PbI₂ under two normalisations | ρ = 1.00 → ranking is real |
 | **k** | three crystallinity indices vs control | P3 exceeds the band on the normalised index; P2 only on the raw one |
 | **l** | texture coefficients, all reflections | every film strongly oriented |
