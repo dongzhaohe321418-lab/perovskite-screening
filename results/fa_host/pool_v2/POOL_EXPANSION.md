@@ -37,14 +37,24 @@ real MACE energies before resubmitting.
 ## Why the new pool is used alone rather than merged with members 0-7
 
 The new members sit 643 meV lower with a tighter spread (0.150 vs 0.378 eV) — 2.24 pooled
-sd apart. All seven non-outlier original members lie *inside* the new range, so this is not
-a different population but a **better-sampled** one: clash rejection avoids the strained
-corners of orientation space the original sampler sometimes landed in, so it finds better
-minima more often.
+sd apart, or 2.62 sd excluding the `as_built` outlier.
 
-Merging them anyway would confound "host member" with "which sampler produced it" — a
-nuisance variable inside the very design meant to eliminate nuisance variables. The paired
-pilot therefore runs on the 18 new members as one homogeneous set.
+**The two ranges barely overlap.** Against the new range [−1065.906, −1065.421], only
+**1 of the 7** non-outlier original members (−1065.533) falls inside; the other six sit
+above −1065.421.
+
+> An earlier version of this document claimed 7 of 7 overlap. That was a coding error — the
+> test checked only `E_old >= E_new.min()` and omitted the upper bound, so every old member
+> passed trivially. The corrected figure is 1/7, and it makes the separation *stronger*,
+> not weaker.
+
+The two samplers therefore produce measurably different distributions: clash rejection
+avoids the strained corners of orientation space that the original sometimes landed in, so
+it reaches better minima with less scatter. Whether that is "a better-sampled version of the
+same population" or "a distinct population" is not settled by these data, and the decision
+does not depend on which: **merging them would confound "host member" with "which sampler
+produced it"** — a nuisance variable inside the very design meant to eliminate nuisance
+variables. The paired pilot therefore runs on the 18 new members as one homogeneous set.
 
 ## Route and its limitation
 
