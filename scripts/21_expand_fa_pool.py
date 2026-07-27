@@ -24,6 +24,11 @@ from ase.optimize import FIRE
 
 FA_CN_MAX = 1.65   # C-N covalent bond cutoff, A
 PB_I_CUT = 4.0     # Pb-I first-shell cutoff, A
+# Minimum allowed separation between atoms in DIFFERENT molecules/framework after a
+# trial rotation. The relaxed host's own closest INTERMOLECULAR contact sets the scale;
+# 2.0 A is below every such contact in the relaxed cell but far above the 0.3-0.7 A
+# overlaps that produced nonsense MACE energies in the first attempt.
+MIN_SEP_A = 2.0
 
 
 def fa_groups(atoms):
@@ -51,21 +56,65 @@ def fa_groups(atoms):
     return groups
 
 
-def randomise_orientations(atoms, rng):
-    """Rigid-body random rotation of every FA about its own centroid."""
+def _rand_rot(rng):
+    """Uniform random rotation via QR of a gaussian matrix (Haar measure)."""
+    q, r = np.linalg.qr(rng.normal(size=(3, 3)))
+    q *= np.sign(np.diag(r))
+    if np.linalg.det(q) < 0:
+        q[:, 0] *= -1
+    return q
+
+
+def randomise_orientations(atoms, rng, *, min_sep=MIN_SEP_A, max_tries=200):
+    """Rigid random rotation of every FA ABOUT ITS OWN CARBON, using MIC vectors.
+
+    This reproduces `randomize_fa_orientations` in scripts/07_fa_host_cell.py, which built
+    the existing members 0-7. Two details are load-bearing and were both wrong in my first
+    attempt, which accepted 0 of 14 candidates and put the 3 eventual survivors 8.2 eV
+    above the existing pool (whose own spread is 0.35 eV):
+
+      * PIVOT ON THE CARBON, not the molecular centroid. The C sits in the A-site cage and
+        must stay there. A centroid pivot displaces it by up to twice the C-to-centroid
+        offset -- and that offset is itself meaningless for a molecule wrapped across the
+        periodic boundary, where a naive mean of raw coordinates lands nowhere near the
+        molecule. Doing this to all 19 FA at once is what cost 8 eV.
+      * BUILD THE MOLECULE FROM MIC VECTORS relative to the C, so a wrapped molecule stays
+        intact through the rotation.
+
+    Clash rejection is retained on top (the original had none): a trial rotation is accepted
+    only if every atom stays >= `min_sep` from every atom outside its own molecule. The
+    relaxed host's closest FA-to-framework contact is 2.65 A, so 2.0 A admits real
+    orientations while excluding the 0.3-0.7 A overlaps that produce nonsense MACE forces.
+    """
     at = atoms.copy()
+    n_kept = 0
     for g in fa_groups(at):
         idx = [g["C"]] + g["N"] + g["H"]
+        c = g["C"]
         if len(idx) < 4:
             continue
-        p = at.positions[idx]
-        cen = p.mean(axis=0)
-        # uniform random rotation via QR of a gaussian matrix (Haar measure)
-        q, r = np.linalg.qr(rng.normal(size=(3, 3)))
-        q *= np.sign(np.diag(r))
-        if np.linalg.det(q) < 0:
-            q[:, 0] *= -1
-        at.positions[idx] = (p - cen) @ q.T + cen
+        others = np.setdiff1d(np.arange(len(at)), idx)
+        cpos = at.positions[c].copy()
+        # MIC vectors from the carbon keep a boundary-wrapped molecule intact
+        vecs = np.array([at.get_distance(int(c), int(a), mic=True, vector=True) for a in idx])
+        placed = False
+        for _ in range(max_tries):
+            trial = cpos + vecs @ _rand_rot(rng).T
+            # minimum-image separation of the trial molecule from everything else
+            dv = at.positions[others][None, :, :] - trial[:, None, :]
+            cell = at.cell.array
+            f = dv @ np.linalg.inv(cell)
+            f -= np.round(f)
+            d = np.linalg.norm(f @ cell, axis=2)
+            if d.min() >= min_sep:
+                at.positions[idx] = trial
+                placed = True
+                break
+        if not placed:
+            n_kept += 1          # leave this molecule as it was rather than force a clash
+    at.wrap()
+    if n_kept:
+        print(f"    ({n_kept} FA kept original orientation -- no clash-free rotation found)")
     return at
 
 
