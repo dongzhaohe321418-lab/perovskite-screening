@@ -10,7 +10,11 @@ anything it does not name is historical.**
 bound. First adequately-powered result in the project.
 **Sr is SUGGESTIVE-EQUIVALENT** — n = 10, mean −1.8, CI [−48.4, +44.8], TOST p = 0.0104,
 but requires 16 pairs under its variance bound. Sr's spread is driven by two
-configurations (m14, m20) that pass every gate and are kept.
+configurations (m14, m20) that entered via the **return-test rescue**, not the strict gate
+(`Sr_m14` and `undoped_m20` both have `gate_endpoints.passed = False`); they are kept, and a
+sensitivity analysis shows strict-only pairs give GA sd 16.7 / Sr sd 19.4 versus 40.6 / 65.2
+for all pairs — so the equivalence conclusion is robust and the all-pairs figures reported
+above are the conservative ones.
 
 **No ranking. Both are indistinguishable from zero and from each other. MLIP level only.**
 
