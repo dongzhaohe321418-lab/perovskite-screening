@@ -83,6 +83,13 @@ expect(r["passed"],
 expect(abs(r["Ea_forward_meV"] - 309.9) < 0.5,
        f"asymmetric Ea = {r['Ea_forward_meV']:.1f} meV, matching the discriminator run")
 
+# INCIDENT: a GA band passed BOTH shape gates with Ea = 77400 meV and interior images at
+# -323356 meV -- a catastrophic MLIP failure on an out-of-distribution geometry. The shape
+# gates compare each endpoint only to its neighbour, so an interior blow-up slips through.
+blowup = [0.0, 1.039, -153.942, -323.356, 77.400, 3.682, 0.040]   # real m16 GA profile, eV
+r = check_endpoints(blowup, label="MLIP blow-up")
+expect(not r["passed"], f"77 eV band REJECTED on magnitude (span {r.get('band_span_meV',0)/1000:.0f} eV)")
+
 # but a genuine non-minimum endpoint must still be caught
 notmin = [0.0, -0.030, 0.198, 0.310, 0.276, 0.133, 0.080]     # initial ABOVE its neighbour
 r = check_endpoints(notmin, label="initial not a minimum")
