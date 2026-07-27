@@ -1,3 +1,12 @@
+# ⛔ SUPERSEDED — do not cite
+
+**This document describes the RETRACTED first pilot run and is retained only as the record
+of what was retracted and why. All statistics, pass rates, and interpretations here are
+superseded by [`RERUN_RESULT.md`](RERUN_RESULT.md) (clean rerun, fixed driver) and
+[`BASIN_IDENTIFICATION.md`](BASIN_IDENTIFICATION.md) (v2 rejection analysis). Cite those.**
+
+---
+
 # Objective C — undoped / GA / Sr paired pilot
 
 > ## ⚠ THE GA ARM IS RETRACTED (2026-07-27)
