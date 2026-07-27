@@ -107,7 +107,7 @@ only; forces are not trustworthy and no CI-NEB may run.
 - FA pool: 18/18 accepted (`results/fa_host/pool_v2/m00..m17`), carbon-pivot rotation.
 - GPU Gate 1: passed exactly (309.9168 meV on both devices, 7.7x speedup).
 - Paired pilot: 54 paths run. **The GA arm is retracted** — a migrating-iodide index bug
-  invalidated 8 of 18 GA arms. See `AUDIT_RESPONSE.md`. Sr's numbers stand.
+  invalidated 8 of 18 GA arms. See [`AUDIT_RESPONSE.md`](AUDIT_RESPONSE.md). Sr's numbers stand.
 - Noise floor: the 73.3 meV figure is the OLD 8-member pool's. On the new pool the undoped
   scatter is **83.9 meV** (n=6), giving n >= 16 for an unpaired design rather than 13.
 
