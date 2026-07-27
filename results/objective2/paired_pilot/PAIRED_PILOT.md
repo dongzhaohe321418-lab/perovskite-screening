@@ -16,13 +16,36 @@ ranking is published.
 | mean | +25.8 meV | -9.8 meV |
 | **s_ΔEa** | **84.9 meV** | **37.4 meV** |
 | SE | 60.0 meV | 18.7 meV |
-| 95% CI | [-91.8, +143.5] meV | [-46.4, +26.9] meV |
-| updated n required | **9** | **2** |
+| **95% CI (Student-t)** | **[−736.7, +788.4] meV** | **[−69.3, +49.8] meV** |
+| n from point-estimate sd | 9 | 2 |
+| **n from 95% upper bound on σ** | **2070** | **14** |
 | verdict | NOT RESOLVABLE | NOT RESOLVABLE |
 
-Both confidence intervals straddle zero and lie inside the ±59.5 meV band. There is no
-evidence at this n that either dopant changes the barrier by a resolvable amount, and no
-ranking may be drawn.
+Both confidence intervals straddle zero. There is no evidence at this n that either dopant
+changes the barrier by a resolvable amount, and no ranking may be drawn.
+
+> **Correction (statistics).** An earlier version of this table used normal-approximation
+> intervals (1.96·SE). At n = 2 and n = 4 that is wrong: the critical value is t(df=n−1),
+> which is **12.706** at df = 1, not 1.96. The GA interval was understated **6.5×**. Both
+> intervals above are now Student-t.
+>
+> For the same reason, **an sd estimated from n = 2 cannot set a sample size.** The 95%
+> upper bound on σ from a χ² distribution puts GA's requirement anywhere from n ≥ 9 to
+> n ≥ 2070. The 84.9 meV figure is an early-warning signal, not a planning number.
+
+**Single-path pass rate is not the paired pass rate.** A pair needs *both* legs valid:
+
+| | single-path | observed paired | hosts for 10 pairs |
+|---|---|---|---|
+| GA | 6/18 = 0.333 | **2/18 = 0.111** | **90** |
+| Sr | 6/18 = 0.333 | **4/18 = 0.222** | **45** |
+
+Under independence the paired rate would be 0.333² = 0.111 for both. GA matches exactly;
+**Sr is twice that**, meaning its failures cluster on the same members as the undoped leg's.
+Fisher's exact test gives p = 0.107, so at n = 18 that is suggestive, not established —
+plan on independence and treat correlated failure as upside. At a measured 137 s per path
+this is **6.8 GPU-h for GA and 3.4 GPU-h for Sr**; the undoped leg is shared, so screening k
+dopants costs (k+1) legs per host, not 2k.
 
 ## Does pairing work? Yes for Sr, no for GA
 
