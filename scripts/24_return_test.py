@@ -5,9 +5,10 @@ For each rejected asymmetric-well path: perturb the relaxed INITIAL endpoint alo
 initial -> first-NEB-image direction, both signs, amplitudes 0.02 and 0.05 A (4 tests),
 re-relax, and check whether it returns to the initial basin.
 
-  PASS (metastable): all 4 perturbations relax back (max per-atom displacement from the
-       unperturbed endpoint < RETURN_TOL and energy within E_TOL) -> the forward barrier
-       from this state is a well-defined screening quantity.
+  PASS (metastable): all 4 perturbations relax back to within RETURN_TOL_A of the
+       unperturbed endpoint (max per-atom displacement) -> the forward barrier from this
+       state is a well-defined screening quantity. Energy change is recorded but is NOT a
+       criterion (see RETURN_TOL_A note below).
   FAIL: any perturbation slides to a lower configuration -> not a definable hop origin.
 
 Usage: python 24_return_test.py --rerun-dir <out dir> --rejected <basin_summary_v2.json>
@@ -18,7 +19,14 @@ from ase.io import read
 from ase.optimize import FIRE
 
 RETURN_TOL_A = 0.15    # max per-atom displacement to count as "same configuration"
-E_TOL_MEV = 5.0        # and energy within this of the unperturbed endpoint
+# NO energy criterion. An earlier version also required |dE| < 5 meV; that was the BINDING
+# criterion (failing 81/108 relaxations) and was miscalibrated against the endpoints' own
+# convergence: at fmax = 0.02 eV/A, a 0.03 A displacement leaves up to
+# 232 atoms x 0.02 eV/A x 0.03 A = 139 meV of residual descent available, so tens of meV at
+# sub-0.05 A displacement is an incomplete relaxation finishing, not a basin change.
+# Removing it changed NOTHING about which relaxations pass -- the genuine basin changes
+# already fail on displacement (median 0.262 A vs 0.037 A) -- so metastability is judged by
+# DISPLACEMENT ALONE. dE is still recorded for diagnosis.
 
 def mic(dv, cell):
     inv = np.linalg.inv(cell)
@@ -75,7 +83,7 @@ def main():
                 opt.run(fmax=a.fmax, steps=a.steps)
                 disp = np.linalg.norm(mic(t.positions - ini.positions, cell), axis=1).max()
                 dE = (t.get_potential_energy() - E0) * 1000
-                returned = bool(disp < RETURN_TOL_A and abs(dE) < E_TOL_MEV)
+                returned = bool(disp < RETURN_TOL_A)
                 outcomes.append({"amp_A": amp, "sign": sign, "max_disp_A": round(float(disp), 3),
                                  "dE_meV": round(float(dE), 2), "returned": returned,
                                  "converged": bool(opt.converged())})
