@@ -1,5 +1,24 @@
 # Objective C — undoped / GA / Sr paired pilot
 
+> ## ⚠ THE GA ARM IS RETRACTED (2026-07-27)
+>
+> An audit found that `scripts/22_paired_pilot.py` tracked the migrating iodide by a bare
+> integer index recorded *before* the GA substitution. That substitution deletes an FA
+> hydrogen, shifting every higher index down by one — so **8 of 18 GA arms
+> (m00, m01, m05, m06, m08, m13, m16, m17) displaced the wrong atom.** Reproduced exactly;
+> see `AUDIT_RESPONSE.md`. Sr is unaffected (a B-site swap deletes no atom).
+>
+> Retracted: the GA paired statistics; the suggestion that GA's scatter reflects a large
+> cation blocking the channel; and the attribution of the three magnitude failures to
+> out-of-distribution MLIP behaviour — **all three were in index-shifted GA arms**, which is
+> a sufficient explanation that must be excluded first.
+>
+> Also corrected: validity did not require convergence, endpoint `fmax` used the component
+> maximum rather than the per-atom norm (understating force by up to √3), and the σ used
+> below (73.3 meV) is the **old 8-member pool's**; the new pool's own value is **83.9 meV**.
+>
+> Sr's numbers stand. Everything GA awaits the rerun.
+
 **54 paths run (18 host members × 3 systems). 18 passed the validity gates.
 Neither dopant is resolvable at this sample size — and the pilot's job was to establish
 that, not to rank them.**
