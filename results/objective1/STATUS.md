@@ -177,3 +177,36 @@ Do not write, anywhere in the repo or proposal, until the gating work is done:
 - "DFT benchmarked the true migration barrier" (PBE ≠ truth)
 - "the true barrier lies between PBE and MACE" (unproven; retracted from DFT_BENCHMARK.md)
 - "DFT found the true saddle" (needs all-image evaluation + DFT-NEB)
+
+
+---
+
+## 2026-07-27 — q=0 escalation ladder: both no-theory-change rungs closed
+
+**Rung 1 (degauss 0.005 → 0.001 Ry): TESTED AND FAILED.** Plateaued at ~4.6×10⁻³ Ry then
+oscillated; |m| drifted **up** to 2.68, further from the physical 1.00 than any
+fixed-occupation run. At 0.0136 eV smearing against a 0.230 eV gap-state separation,
+fractional occupation of both spin channels should be impossible — so **smearing width is
+ruled out**. The obstacle is the near-degenerate manifold itself.
+
+**Rung 2 (cg diagonalisation): NOT VIABLE ON COST**, stopped at 3 iterations before any
+numerical verdict. 1155 s/iteration vs ~150 s for davidson — 8× slower. One CI-NEB ≈ 80
+days, both charge states ≈ 160 days: the same wall-clock wall that already excluded HSE06.
+Even if it converged it could not be used. This is a *different* verdict from rung 1's
+tested-and-failed, and the hypothesis it tests remains untested and plausible.
+
+**Spatial seeds.** q0C (Pb139) and q0D (Pb70) reach the same plateau and agree to
+**0.04 meV**, closing the site-selection question. Energy agreement at the current precision
+does **not** establish that the two seeds share a wavefunction — `projwfc.x`, spin density
+and IPR are still outstanding, so spatial localisation is **unproven**. The 0.5000
+occupation reported earlier is an artefact of the spin-free probe (an odd electron count
+forces half occupancy there) and is not evidence either way.
+
+**Position.** q=0 supports **static energies only**. Its forces are not trustworthy, so no
+DFT migration barrier — and therefore no charge-state comparison — until a theory-level
+change is made and **both** legs are rerun identically. Every remaining option (DFT+U, cDFT,
+hybrid) changes the theory level. A uniform U on all Pb penalises the two Pb sites
+identically and cannot by itself break the Pb139/Pb70 degeneracy (they sit 6.71 Å apart on
+opposite sides of the vacancy), so any U benchmark must run **together with a spatial seed**.
+
+The anchor stays **PROVISIONAL** and the ban on claiming the Tyagi ordering stays in force.
