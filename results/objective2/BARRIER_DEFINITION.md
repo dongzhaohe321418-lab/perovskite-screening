@@ -47,6 +47,8 @@ band, not by rejecting the endpoint.
    metastable; 5 pure hops recovered into the statistic. Paired rate 0.222 → **0.389**.
 2. Expand to ~10 valid pairs per dopant: **26 shared hosts ≈ 78 paths ≈ 3.0 GPU-h** at the
    measured 137 s/path, plus margin. (Supersedes the pre-return-test 45/135/5 estimate.)
+   **Incremental cost is smaller:** 18 hosts already exist, so only **8 new members →
+   24 new paths ≈ 0.9 GPU-h** are required; 78 is the total corpus at n = 10.
 3. Recompute Student-t intervals and χ² variance bounds at n≈10.
 4. Only if |mean ΔE_a| > 59.5 meV *and* the uncertainty is below that scale → expand
    further / discuss ranking. Current bounds (GA ≤ 26 pairs, Sr ≤ 14) are planning
