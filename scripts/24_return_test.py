@@ -54,14 +54,22 @@ def main():
         if nrm < 1e-8:
             results.append({**{k: r[k] for k in ("member","system")}, "verdict": "SKIP_degenerate"})
             continue
-        dhat = dvec / nrm
+        # INCIDENT: v1 scaled by sqrt(N) ("per-atom RMS = amp"), giving TOTAL displacements
+        # of 0.31/0.76 A -- 24-61% of the initial->image-1 segment, and PAST image 1 for
+        # three paths, with single-atom moves up to 0.65 A (>> RETURN_TOL 0.15 A). Every
+        # NOT_A_MINIMUM verdict from that version was void: it tested "does a large step
+        # along the path roll downhill" (it does, trivially), not local stability.
+        # Correct scaling: amp = the LARGEST single-atom displacement. max-atom move equals
+        # amp exactly (0.02/0.05 A), always < RETURN_TOL, and the perturbation is small
+        # relative to every segment.
+        dhat = dvec / np.linalg.norm(dvec, axis=1).max()
         ref = ini.copy(); ref.calc = make_calc()
         E0 = ref.get_potential_energy()
         outcomes = []
         for amp in (0.02, 0.05):
             for sign in (+1, -1):
                 t = ini.copy()
-                t.positions = t.positions + sign * amp * dhat * np.sqrt(len(t))  # per-atom rms = amp
+                t.positions = t.positions + sign * amp * dhat  # max single-atom move = amp
                 t.calc = make_calc()
                 opt = FIRE(t, logfile=None)
                 opt.run(fmax=a.fmax, steps=a.steps)
