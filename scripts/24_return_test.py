@@ -24,9 +24,15 @@ RETURN_TOL_A = 0.15    # max per-atom displacement to count as "same configurati
 # convergence: at fmax = 0.02 eV/A, a 0.03 A displacement leaves up to
 # 232 atoms x 0.02 eV/A x 0.03 A = 139 meV of residual descent available, so tens of meV at
 # sub-0.05 A displacement is an incomplete relaxation finishing, not a basin change.
-# Removing it changed NOTHING about which relaxations pass -- the genuine basin changes
-# already fail on displacement (median 0.262 A vs 0.037 A) -- so metastability is judged by
-# DISPLACEMENT ALONE. dE is still recorded for diagnosis.
+# Removing it IS CONSEQUENTIAL and must be reported as such: 103/108 relaxations pass on
+# displacement alone vs 27/108 with the energy rule (76 flip), and endpoint verdicts go from
+# 2/27 to 23/27 metastable. The headline 23/27 result is PRODUCED BY this criterion choice,
+# not independent of it.
+# What justifies the choice is narrower: the energy rule reclassifies NO basin change.
+# All 5 relaxations that left the basin (disp >= 0.15 A) already fail on displacement, and
+# 0 of them would have been caught by energy alone -- so the 76 flips are all cases where a
+# structure stayed put geometrically while finishing its relaxation energetically.
+# Metastability is therefore judged by DISPLACEMENT ALONE; dE is recorded for diagnosis.
 
 def mic(dv, cell):
     inv = np.linalg.inv(cell)
