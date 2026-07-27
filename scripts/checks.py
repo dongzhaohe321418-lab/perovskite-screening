@@ -20,6 +20,8 @@ import numpy as np
 
 TEN_X_MEV = 59.5      # |dEa| for a 10x rate ratio at 300 K, equal prefactors
 REL_DRIFT_TOL = 0.02  # |m| relative drift over the last 5 iterations (see parse_magnetisation)
+MAX_EA_EV = 3.0       # physical upper bound on a halide-perovskite ionic migration barrier;
+                      # a band exceeding this is an MLIP failure (see check_endpoints)
 
 
 class CheckFailure(Exception):
@@ -118,15 +120,27 @@ def check_endpoints(profile_eV, *, label="", tol_eV=0.0):
     ini_ok = bool(E[0] <= E[1] + tol_eV)
     fin_ok = bool(E[-1] <= E[-2] + tol_eV)
     saddle_ok = bool(0 < int(np.argmax(E)) < E.size - 1)
+    # MAGNITUDE SANITY. INCIDENT: a GA band passed both shape gates with Ea = 77400 meV and
+    # interior images at -323356 meV -- a catastrophic MLIP failure on a geometry outside
+    # its training distribution. The shape gates test ORDERING and only compare each
+    # endpoint to its immediate neighbour, so an interior blow-up slips through. An ionic
+    # migration barrier in a halide perovskite is O(0.1-1 eV); anything beyond MAX_EA_EV is
+    # a model failure, not a barrier, and no span of the band may exceed it either.
+    span = float(np.abs(E - E[0]).max())
+    sane = bool(span <= MAX_EA_EV)
     problems = []
+    if not sane:
+        problems.append(f"band spans {span*1000:.0f} meV, beyond the {MAX_EA_EV*1000:.0f} meV "
+                        f"physical bound -- MLIP failure, not a barrier")
     if not ini_ok:  problems.append(f"initial endpoint above its adjacent interior image by "
                                     f"{(E[0]-E[1])*1000:.1f} meV -- not a local minimum")
     if not fin_ok:  problems.append(f"final endpoint above its adjacent interior image by "
                                     f"{(E[-1]-E[-2])*1000:.1f} meV -- not a local minimum")
     if not saddle_ok: problems.append(f"maximum at image {int(np.argmax(E))} (an endpoint)")
     return {"check": "endpoints", "label": label,
-            "passed": bool(ini_ok and fin_ok and saddle_ok),
+            "passed": bool(ini_ok and fin_ok and saddle_ok and sane),
             "Ea_forward_meV": float((E.max() - E[0]) * 1000),
+            "band_span_meV": round(span * 1000, 1), "magnitude_sane": sane,
             "saddle_index": int(np.argmax(E)), "n_images": int(E.size),
             "reason": "; ".join(problems) or None}
 
