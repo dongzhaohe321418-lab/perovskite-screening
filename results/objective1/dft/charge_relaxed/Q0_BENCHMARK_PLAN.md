@@ -83,3 +83,64 @@ Whichever rung wins, its fingerprint is recorded via `theory_fingerprint()` in
 `scripts/checks.py`, and `check_comparable()` will refuse any comparison against a leg
 computed at a different level. If rung 3 or 4 wins, **the q=+1 explore path already computed
 becomes a starting geometry only — its energies are not reusable.**
+
+
+---
+
+# Benchmark results (2026-07-27)
+
+## Rung 1 — `degauss` 0.005 → 0.001 Ry: **FAILED**, and informatively so
+
+Stopped at 31 iterations.
+
+| | |
+|---|---|
+| accuracy | plateaued ~4.6×10⁻³ Ry, then **oscillated** (3.0×10⁻³ → 7.2×10⁻³) |
+| total magnetisation | 0.94 (free under smearing; physical value 1.00) |
+| absolute magnetisation | **rose** 1.20 → 2.68, worse than any fixed-occupation run |
+| automated check | FAIL — 57.2% relative drift over the last 5 iterations |
+
+The hypothesis was that `degauss` = 0.068 eV is roughly a third of the 0.230 eV gap-state
+separation, wide enough to put fractional charge in both spin channels. At 0.0136 eV that
+separation is ~17× the smearing width and the half-filled solution should be inaccessible.
+It still did not converge, and |m| drifted further from the physical value than before.
+
+**This rules out smearing width as the cause.** The obstacle is not how the occupations are
+broadened — it is the near-degenerate manifold itself. That is a genuine negative result,
+not merely a failed run.
+
+## Rung 2 — `cg` diagonalisation: **NOT VIABLE ON COST**
+
+Stopped at 3 iterations, before any numerical verdict.
+
+    measured:  1155 s per SCF iteration (19.3 min)
+    davidson:  ~150 s per iteration     (2.5 min)
+    -> cg is 8x slower per iteration on this system
+
+| target | wall time |
+|---|---|
+| 40 iterations (where davidson plateaued) | 12.8 h |
+| 150 iterations (the cap) | **48 h** |
+| one CI-NEB (~40 SCF-equivalents) | **~80 days** |
+| both charge states | **~160 days** |
+
+A static SCF was budgeted at 1.7-2.2 h. One rung at 48 h is 24× that, for a ladder whose
+entire justification was being cheap relative to the campaign it gates. And the cost
+compounds into the production run: cg hits the *same wall-clock wall that already excluded
+HSE06*. **Even if it converged, it could not be used** — so there is no value in paying 48 h
+to find out.
+
+Recorded as *not viable on cost*, which is a different verdict from rung 1's *tested and
+failed*. If a future machine makes cg affordable, the hypothesis it tests — that davidson's
+re-ordering of near-degenerate states is what stalls the residual — remains untested and
+plausible.
+
+## Where this leaves the ladder
+
+Both no-theory-change rungs are now closed. Every remaining option (DFT+U, cDFT, hybrid)
+**changes the theory level and therefore forces the q=+1 leg to be recomputed identically**,
+per criterion 3. The cheap escape route is exhausted.
+
+The honest position: the q=0 state supports **static energies only**. Its forces are not
+reliable, so no DFT migration barrier can be reported for q=0 — and consequently no
+charge-state comparison — until a theory-level change is made and *both* legs are rerun.
