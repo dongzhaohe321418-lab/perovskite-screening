@@ -300,6 +300,26 @@ if _os.path.exists(_rt):
     expect("changed NOTHING about which relaxations pass" not in _s24,
            "the retracted claim is absent from scripts/24")
 
+print("\n[16] rescued vs gate-passing provenance must not be conflated -- INCIDENT")
+# I described two Sr outliers as passing "every gate". Both had gate_endpoints.passed=False
+# and entered only via the return-test rescue. Any claim about a path's admission route must
+# be checked against paired_raw_84.json, never asserted.
+_pr = "results/objective2/paired_pilot/corpus84/paired_raw_84.json"
+if _os.path.exists(_pr):
+    _rows84 = _json.load(open(_pr))["rows"]
+    _by = {(r["member"], r["system"]): r for r in _rows84}
+    for _m, _s in [(14, "Sr"), (20, "undoped")]:
+        _r = _by[(_m, _s)]
+        expect(_r["valid"] is False,
+               f"m{_m:02d} {_s} did NOT pass the strict gate (valid={_r['valid']})")
+    # and the report must carry the retraction, not the false claim as an assertion
+    _rep84 = open("results/objective2/paired_pilot/CORPUS84_RESULT.md").read()
+    _idx = _rep84.find("pass every gate")
+    expect(_idx == -1 or "An earlier version of this report said" in _rep84[max(0,_idx-120):_idx],
+           "any 'pass every gate' text in the report is inside the retraction, not an assertion")
+    expect("RESCUED, not gate-passing" in _rep84,
+           "the report distinguishes rescued members from gate-passing ones")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
