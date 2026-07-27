@@ -31,7 +31,12 @@ and Sr. At n = 7: GA +29.2 meV (95% CI −29.5 to +87.8), Sr +13.7 meV (−36.3 
 **neither resolvable**, no ranking.
 
 **Next batch (approved shape, not yet launched):** 26 hosts × 3 systems = **78 paths ≈ 3.0
-GPU-h** to reach n = 10 pairs per dopant. `hop_plus_FA_reorientation` results are stored and
+GPU-h** to reach n = 10 pairs per dopant.
+
+**Cost correction (self-caught).** The 26-host / 78-path / 3.0 GPU-h figure counts *all* 26
+hosts. Eighteen already exist and their paths are the n = 7 data — they are not recomputed.
+The **incremental** batch is **8 new host members → 24 new paths ≈ 0.9 GPU-h**, plus pool
+generation. The 78-path figure is the total corpus size at n = 10, not the work remaining. `hop_plus_FA_reorientation` results are stored and
 analysed separately and never enter the pure-hop ranking.
 
 **In flight:** Objective 1 band-edge discriminators P1/P2 (job `32d8fd27`).
