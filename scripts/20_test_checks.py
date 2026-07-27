@@ -165,6 +165,61 @@ rep = run_all([check_endpoints(m2), check_endpoints(m1)])
 expect(not rep["passed"] and rep["n_failed"] == 1, "one bad row fails the aggregate")
 
 
+print("\n[9] migrating-atom identity -- INCIDENT: GA deleted an H below the migrating iodide")
+# Deleting an atom shifts every higher index down by one. Tracking the migrating ion by a
+# bare integer captured BEFORE the substitution moved the WRONG atom in 8 of 18 GA members
+# (m00,01,05,06,08,13,16,17) -- and all three "MLIP blow-ups" were in that set.
+_a = Atoms("I5", positions=[[0,0,0],[3,0,0],[6,0,0],[9,0,0],[12,0,0]],
+           cell=np.eye(3)*20, pbc=True)
+_t = np.zeros(5, int); _t[4] = 99; _a.set_tags(_t)
+_target = _a.positions[4].copy()
+_b = _a.copy(); del _b[1]                      # delete an atom BELOW the tagged one
+_i = int(np.flatnonzero(_b.get_tags() == 99)[0])
+expect(_i == 3, f"tag follows the atom after a lower-index deletion (4 -> {_i})")
+expect(np.allclose(_b.positions[_i], _target), "tagged atom is the SAME physical atom")
+expect(len(_b) == 4 and 4 >= len(_b),
+       "stale index 4 is now OUT OF RANGE (5 atoms -> 4) -- would raise, not silently pass")
+_big = Atoms("I8", positions=[[3*i,0,0] for i in range(8)], cell=np.eye(3)*40, pbc=True)
+_tb = np.zeros(8, int); _tb[6] = 99; _big.set_tags(_tb)
+_tgt = _big.positions[6].copy()
+_e = _big.copy(); del _e[2]
+expect(not np.allclose(_e.positions[6], _tgt),
+       "in a cell large enough to stay in range, stale index 6 SILENTLY points elsewhere")
+expect(np.allclose(_e.positions[int(np.flatnonzero(_e.get_tags()==99)[0])], _tgt),
+       "the tag still resolves to the correct atom -- this is the actual bug and fix")
+_c = _a.copy(); del _c[0]                      # deletion ABOVE-safe case
+expect(int(np.flatnonzero(_c.get_tags() == 99)[0]) == 3, "shift also handled from index 0")
+_d = _a.copy(); del _d[4]
+expect(np.flatnonzero(_d.get_tags() == 99).size == 0,
+       "deleting the tagged atom leaves no tag -- migrating_index would assert")
+
+print("\n[10] force convergence metric -- INCIDENT: component-max recorded, not vector norm")
+_g = np.array([[0.012, 0.012, 0.012]])
+_cm, _nm = np.abs(_g).max(), np.linalg.norm(_g, axis=1).max()
+expect(_nm > _cm, f"isotropic force: norm {_nm:.4f} > component {_cm:.4f} "
+                  f"(ratio {_nm/_cm:.2f}, up to sqrt(3) = 1.73)")
+expect(_cm < 0.02 <= _nm,
+       "a force that PASSES a 0.02 component test FAILS the correct norm test")
+
+print("\n[11] small-sample statistics -- INCIDENT: 1.96*SE published at n=2")
+from scipy import stats as _st
+expect(abs(_st.t.ppf(0.975, 1) - 12.706) < 0.01,
+       f"t critical at df=1 is {_st.t.ppf(0.975,1):.3f}, NOT 1.96")
+_w = (2*_st.t.ppf(0.975,1)*84.9/np.sqrt(2)) / (2*1.96*84.9/np.sqrt(2))
+expect(_w > 6, f"t interval is {_w:.1f}x wider than the normal one at n=2")
+expect(int(np.ceil(2*(2*73.3/59.5)**2)) == 13,
+       "UNPAIRED n uses 2*(2s/T)^2 [n per group]: sigma 73.3 -> 13")
+expect(int(np.ceil(2*(2*83.9/59.5)**2)) == 16,
+       "new-pool sigma 83.9 -> 16, NOT the 8 the paired formula would give")
+
+print("\n[12] paired vs single-path pass rate -- INCIDENT: 33% single applied to pairs")
+expect(abs(0.333**2 - 0.111) < 0.002,
+       "under independence the paired rate is the SQUARE of the single-path rate")
+expect(int(np.ceil(10/(2/18))) == 90,
+       f"10 pairs at the observed 2/18 GA rate needs {int(np.ceil(10/(2/18)))} hosts, not 30")
+expect(int(np.ceil(10/(4/18))) == 45, "Sr at 4/18 needs 45 hosts")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
