@@ -220,6 +220,24 @@ expect(int(np.ceil(10/(2/18))) == 90,
 expect(int(np.ceil(10/(4/18))) == 45, "Sr at 4/18 needs 45 hosts")
 
 
+print("\n[13] return-test perturbation scale -- INCIDENT: sqrt(N) scaling stepped past image 1")
+# v1 used amp*dhat*sqrt(N) with ||dhat||_F=1: total displacement 0.05*15.23=0.76 A, which
+# EXCEEDED the whole initial->image-1 segment for 3 of 27 paths (min ||dvec||_F=0.274 A)
+# and moved single atoms up to 0.65 A >> RETURN_TOL 0.15 A. Correct scaling normalises by
+# the max per-atom displacement so the largest atomic move equals amp exactly.
+rng = np.random.default_rng(3)
+dvec = rng.normal(size=(232, 3)) * 0.05
+dhat_v1 = dvec / np.linalg.norm(dvec)
+step_v1 = 0.05 * dhat_v1 * np.sqrt(232)
+dhat_v2 = dvec / np.linalg.norm(dvec, axis=1).max()
+step_v2 = 0.05 * dhat_v2
+expect(np.linalg.norm(step_v1) > 0.5,
+       f"v1 total displacement {np.linalg.norm(step_v1):.2f} A -- NOT a small perturbation")
+expect(abs(np.linalg.norm(step_v2, axis=1).max() - 0.05) < 1e-12,
+       f"v2 max single-atom move = {np.linalg.norm(step_v2, axis=1).max():.4f} A = amp exactly")
+expect(np.linalg.norm(step_v2, axis=1).max() < 0.15,
+       "v2 perturbation always below RETURN_TOL, so a returned structure is detectable")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
