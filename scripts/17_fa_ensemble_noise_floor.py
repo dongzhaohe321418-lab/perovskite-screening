@@ -59,6 +59,8 @@ def main():
     ap.add_argument("--host-dir", default="results/fa_host")
     ap.add_argument("--out", default="results/objective2/noise_floor")
     ap.add_argument("--members", type=int, nargs="+", default=[0, 1, 2, 3])
+    ap.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
+    ap.add_argument("--dtype", default="float64", choices=["float64", "float32"])
     ap.add_argument("--images", type=int, default=5, help="interior images")
     ap.add_argument("--fmax", type=float, default=0.05)
     ap.add_argument("--steps", type=int, default=80)
@@ -71,7 +73,7 @@ def main():
     os.makedirs(args.out, exist_ok=True)
 
     from mace.calculators import mace_mp
-    calc = mace_mp(model="medium", device="cpu", default_dtype="float64")
+    calc = mace_mp(model="medium", device=args.device, default_dtype=args.dtype)
 
     pristine = read(f"{args.host_dir}/fa19cs1_pb20i60_233.extxyz")
     vac_ref = read(f"{args.host_dir}/fa19cspb20i59_232_vI.extxyz")
@@ -99,7 +101,7 @@ def main():
         # band's own fmax/step budget leaves them ABOVE the first interior image, which
         # makes Ea a difference from a non-minimum and is meaningless.
         for at in (ini, fin):
-            at.calc = mace_mp(model="medium", device="cpu", default_dtype="float64")
+            at.calc = mace_mp(model="medium", device=args.device, default_dtype=args.dtype)
         ep_info = {}
         if args.relax_endpoints:
             for nm, at in (("initial", ini), ("final", fin)):
@@ -115,7 +117,7 @@ def main():
 
         images = [ini] + [ini.copy() for _ in range(args.images)] + [fin]
         for im in images:
-            im.calc = mace_mp(model="medium", device="cpu", default_dtype="float64")
+            im.calc = mace_mp(model="medium", device=args.device, default_dtype=args.dtype)
         neb = NEB(images, climb=True, allow_shared_calculator=False,
                   method='improvedtangent')
         neb.interpolate(mic=True)
@@ -166,7 +168,7 @@ def main():
         print("\nNO VALID BANDS -- no noise floor reported.")
         return None
     summary = {
-        "tier": "EXPLORE", "level": "MACE-MP-0 medium, CPU, float64, CI-NEB improvedtangent",
+        "tier": "EXPLORE", "level": f"MACE-MP-0 medium, {args.device.upper()}, {args.dtype}, CI-NEB improvedtangent",
         "validity_gate": ("Ea reported only where both endpoints are local minima of the "
                           "band and the maximum is interior. Rejected members are listed, "
                           "not silently averaged in."),
