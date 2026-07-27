@@ -1,0 +1,236 @@
+#!/usr/bin/env python
+"""Objective C: undoped / GA / Sr PAIRED pilot.
+
+The paired design is the whole point. The undoped barrier varies by sigma = 73.3 meV across
+FA orientations -- larger than the 59.5 meV effect we want to detect -- so an unpaired
+comparison of mean(doped) vs mean(undoped) is hopeless at any affordable n. Pairing removes
+the host-configuration term:
+
+    dEa(member) = Ea(doped, member) - Ea(undoped, member)
+
+Both legs of every pair share the same FA orientation, the same vacancy site, and the same
+migrating ion, so the configurational contribution cancels to the extent the dopant does not
+change it. The quantity that then sets the required sample size is s_dEa, the standard
+deviation of the PAIRED DIFFERENCES -- not sigma. Reporting s_dEa and the updated n is a
+required output of this pilot.
+
+    python scripts/22_paired_pilot.py --members 0 1 2 ... --systems undoped GA Sr
+"""
+import argparse, json, os, sys, time
+import numpy as np
+from ase.io import read, write
+from ase.optimize import FIRE
+from ase.mep import NEB
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from checks import check_endpoints, check_endpoint_consistency, check_composition, structure_hash
+
+TEN_X_MEV = 59.5
+
+# Dopants. GA+ (guanidinium, CN3H6+) substitutes an FA A-site; Sr2+ substitutes Pb.
+# Both are named in the proposal; GA is the pipeline-validation anchor.
+SYSTEMS = {
+    "undoped": {"kind": "none"},
+    "GA":      {"kind": "A_site_GA"},
+    "Sr":      {"kind": "B_site", "ion": "Sr"},
+}
+
+
+def mic(dv, cell):
+    inv = np.linalg.inv(cell)
+    f = dv @ inv
+    f -= np.round(f)
+    return f @ cell
+
+
+def fa_molecule(at, c_index):
+    """The 8 atoms of the FA whose carbon is c_index, by rank (never by cutoff)."""
+    sym = np.array(at.get_chemical_symbols())
+    n_all = np.flatnonzero(sym == "N")
+    h_all = np.flatnonzero(sym == "H")
+    nn = n_all[np.argsort(at.get_distances(c_index, n_all, mic=True))[:2]]
+    mol = [int(c_index)] + [int(x) for x in nn]
+    mol.append(int(h_all[np.argsort(at.get_distances(int(c_index), h_all, mic=True))[0]]))
+    for N in nn:
+        mol += [int(x) for x in h_all[np.argsort(at.get_distances(int(N), h_all, mic=True))[:2]]]
+    return sorted(set(mol))
+
+
+def apply_system(host, spec, vpos):
+    """Return (doped_atoms, expected_composition_delta) or (host.copy(), {}) for undoped."""
+    at = host.copy()
+    if spec["kind"] == "none":
+        return at, {}
+
+    sym = np.array(at.get_chemical_symbols())
+    cell = at.cell.array
+
+    if spec["kind"] == "B_site":
+        pb = np.flatnonzero(sym == "Pb")
+        d = np.linalg.norm(mic(at.positions[pb] - vpos, cell), axis=1)
+        i = int(pb[int(np.argmin(d))])
+        at.symbols[i] = spec["ion"]
+        return at, {"Pb": -1, spec["ion"]: +1}
+
+    if spec["kind"] == "A_site_GA":
+        # GA+ = C(NH2)3+ : replace the nearest FA (CH(NH2)2) with guanidinium.
+        # Net change vs FA: +1 N, +1 H, C unchanged. Built by adding an NH2 in the
+        # molecular plane, opposite the FA's own C-H, then deleting that H.
+        c_all = np.flatnonzero(sym == "C")
+        d = np.linalg.norm(mic(at.positions[c_all] - vpos, cell), axis=1)
+        c = int(c_all[int(np.argmin(d))])
+        mol = fa_molecule(at, c)
+        msym = [at.get_chemical_symbols()[i] for i in mol]
+        assert sorted(msym) == sorted(["C", "N", "N", "H", "H", "H", "H", "H"]), \
+            f"A-site target is not an FA unit: {msym}"
+
+        cpos = at.positions[c]
+        nvec = [at.get_distance(c, i, mic=True, vector=True)
+                for i in mol if at.get_chemical_symbols()[i] == "N"]
+        # the FA's own C-H: the H closest to C
+        hs = [(np.linalg.norm(at.get_distance(c, i, mic=True, vector=True)), i)
+              for i in mol if at.get_chemical_symbols()[i] == "H"]
+        d_ch, i_ch = min(hs)
+        vch = at.get_distance(c, int(i_ch), mic=True, vector=True)
+        # new N goes where that H was, at C-N bond length, keeping the molecular plane
+        n_new = cpos + vch / np.linalg.norm(vch) * 1.33
+        # two H on the new N, in the plane defined by the two existing C-N vectors
+        plane_n = np.cross(nvec[0], nvec[1])
+        plane_n /= np.linalg.norm(plane_n)
+        u = vch / np.linalg.norm(vch)
+        w = np.cross(plane_n, u)
+        h1 = n_new + (0.34 * u + 0.95 * w) * 1.01
+        h2 = n_new + (0.34 * u - 0.95 * w) * 1.01
+        del at[int(i_ch)]                      # remove the FA C-H hydrogen
+        from ase import Atoms as _A
+        at += _A("NHH", positions=[n_new, h1, h2])
+        return at, {"N": +1, "H": +1}
+
+    raise ValueError(spec["kind"])
+
+
+def build_pair(host, vac_ref_pos, calc, args):
+    """Make the V_I initial/final endpoints in this host and relax them."""
+    at = host.copy()
+    sym = np.array(at.get_chemical_symbols())
+    cell = at.cell.array
+    iod = np.flatnonzero(sym == "I")
+    d = np.linalg.norm(mic(at.positions[iod] - vac_ref_pos, cell), axis=1)
+    vi = int(iod[int(np.argmin(d))])
+    vpos = at.positions[vi].copy()
+    del at[vi]
+
+    # migrating ion: the iodide nearest the vacancy in the post-deletion cell
+    sym2 = np.array(at.get_chemical_symbols())
+    iod2 = np.flatnonzero(sym2 == "I")
+    d2 = np.linalg.norm(mic(at.positions[iod2] - vpos, cell), axis=1)
+    mig = int(iod2[int(np.argmin(d2))])
+    return at, vpos, mig
+
+
+def run_path(ini, fin, calc, args, label):
+    for a in (ini, fin):
+        a.calc = calc
+        FIRE(a, logfile=None).run(fmax=args.endpoint_fmax, steps=args.endpoint_steps)
+    images = [ini] + [ini.copy() for _ in range(args.images)] + [fin]
+    for im in images:
+        im.calc = calc
+    neb = NEB(images, climb=True, method="improvedtangent")
+    neb.interpolate()
+    opt = FIRE(neb, logfile=None)
+    opt.run(fmax=args.fmax, steps=args.steps)
+    E = np.array([im.get_potential_energy() for im in images])
+    gate_e = check_endpoints((E - E[0]).tolist(), label=label)
+    gate_c = check_endpoint_consistency(images[0].positions, images[-1].positions,
+                                        ini.cell.array, label=label)
+    return images, E, gate_e, gate_c, bool(opt.converged()), int(opt.get_number_of_steps())
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pool", default="results/fa_host/pool_v2")
+    ap.add_argument("--vac-ref", default="results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz")
+    ap.add_argument("--members", type=int, nargs="+", required=True)
+    ap.add_argument("--systems", nargs="+", default=["undoped", "GA", "Sr"])
+    ap.add_argument("--images", type=int, default=5)
+    ap.add_argument("--fmax", type=float, default=0.05)
+    ap.add_argument("--steps", type=int, default=300)
+    ap.add_argument("--endpoint-fmax", type=float, default=0.02)
+    ap.add_argument("--endpoint-steps", type=int, default=800)
+    ap.add_argument("--device", default="cuda")
+    ap.add_argument("--dtype", default="float64")
+    ap.add_argument("--out", default="results/objective2/paired_pilot")
+    args = ap.parse_args()
+
+    os.makedirs(args.out, exist_ok=True)
+    from mace.calculators import mace_mp
+    calc = mace_mp(model="medium", device=args.device, default_dtype=args.dtype)
+
+    vac_ref = read(args.vac_ref)
+    pristine = read(f"{args.pool}/fa19cs1_pb20i60_233.extxyz")
+    sym0 = np.array(pristine.get_chemical_symbols())
+    i0 = np.flatnonzero(sym0 == "I")
+    vac_ref_pos = pristine.positions[i0[0]].copy()
+    # locate the reference vacancy by comparing pristine vs the reference V_I cell
+    from collections import Counter
+    dif = None
+    for i in i0:
+        dd = np.linalg.norm(mic(vac_ref.positions - pristine.positions[i], pristine.cell.array), axis=1)
+        if dd.min() > 0.5:
+            dif = i
+            break
+    if dif is not None:
+        vac_ref_pos = pristine.positions[dif].copy()
+
+    rows = []
+    for mem in args.members:
+        hp = f"{args.pool}/m{mem:02d}.extxyz"
+        if not os.path.exists(hp):
+            print(f"  member {mem}: MISSING {hp}")
+            continue
+        host = read(hp)
+        for sysname in args.systems:
+            t0 = time.time()
+            spec = SYSTEMS[sysname]
+            base_vac, vpos, mig = build_pair(host, vac_ref_pos, calc, args)
+            doped, delta = apply_system(base_vac, spec, vpos)
+            comp = (check_composition(base_vac, doped, delta, label=f"{sysname} m{mem}")
+                    if delta else {"check": "composition", "passed": True, "label": "undoped"})
+            if not comp["passed"]:
+                rows.append({"member": mem, "system": sysname, "valid": False,
+                             "reject": f"composition: {comp.get('reason')}", "wall_s": time.time()-t0})
+                print(f"  m{mem:02d} {sysname:<8} REJECT composition: {comp.get('reason')}")
+                sys.stdout.flush()
+                continue
+
+            ini = doped.copy()
+            fin = doped.copy()
+            fin.positions[mig] = vpos
+            images, E, ge, gc, conv, nst = run_path(ini, fin, calc, args, f"{sysname}_m{mem}")
+            Ea = float((E.max() - E[0]) * 1000)
+            valid = bool(ge["passed"] and gc["passed"])
+            rows.append({
+                "member": mem, "system": sysname, "Ea_meV": Ea,
+                "valid": valid, "band_converged": conv, "nsteps": nst,
+                "gate_endpoints": ge, "gate_consistency": gc,
+                "profile_meV": ((E - E[0]) * 1000).tolist(),
+                "structure_hash": structure_hash(doped),
+                "wall_s": round(time.time() - t0, 1),
+            })
+            write(f"{args.out}/band_{sysname}_m{mem:02d}.extxyz", images)
+            flag = "ok " if valid else "REJ"
+            why = "" if valid else f"  [{ge.get('reason') or gc.get('reason')}]"
+            print(f"  m{mem:02d} {sysname:<8} Ea={Ea:8.1f} meV  {flag} conv={conv} "
+                  f"{time.time()-t0:5.0f}s{why}")
+            sys.stdout.flush()
+        json.dump({"rows": rows}, open(f"{args.out}/paired_raw.json", "w"), indent=1)
+
+    json.dump({"tier": "EXPLORE",
+               "level": f"MACE-MP-0 medium, {args.device.upper()}, {args.dtype}, CI-NEB improvedtangent",
+               "design": "PAIRED: dEa(member) = Ea(doped,member) - Ea(undoped,member)",
+               "rows": rows}, open(f"{args.out}/paired_raw.json", "w"), indent=1)
+    print(f"\nwrote {args.out}/paired_raw.json  ({len(rows)} rows)")
+
+
+if __name__ == "__main__":
+    main()
