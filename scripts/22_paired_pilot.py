@@ -128,22 +128,31 @@ def build_pair(host, vac_ref_pos, calc, args):
     return at, vpos, mig
 
 
-def run_path(ini, fin, calc, args, label):
-    for a in (ini, fin):
-        a.calc = calc
-        FIRE(a, logfile=None).run(fmax=args.endpoint_fmax, steps=args.endpoint_steps)
+def run_path(ini, fin, make_calc, args, label):
+    """ASE requires a SEPARATE calculator object per NEB image -- a shared one raises
+    'One or more NEB images share the same calculator'. `make_calc` is a factory, not a
+    calculator, so each image gets its own instance (this is what scripts/17 did)."""
+    ep = {}
+    for nm, a in (("initial", ini), ("final", fin)):
+        a.calc = make_calc()
+        oe = FIRE(a, logfile=None)
+        oe.run(fmax=args.endpoint_fmax, steps=args.endpoint_steps)
+        ep[nm] = {"fmax": round(float(np.abs(a.get_forces()).max()), 4),
+                  "converged": bool(oe.converged()),
+                  "nsteps": int(oe.get_number_of_steps())}
     images = [ini] + [ini.copy() for _ in range(args.images)] + [fin]
     for im in images:
-        im.calc = calc
-    neb = NEB(images, climb=True, method="improvedtangent")
-    neb.interpolate()
+        im.calc = make_calc()
+    neb = NEB(images, climb=True, allow_shared_calculator=False,
+              method="improvedtangent")
+    neb.interpolate(mic=True)
     opt = FIRE(neb, logfile=None)
     opt.run(fmax=args.fmax, steps=args.steps)
     E = np.array([im.get_potential_energy() for im in images])
     gate_e = check_endpoints((E - E[0]).tolist(), label=label)
     gate_c = check_endpoint_consistency(images[0].positions, images[-1].positions,
                                         ini.cell.array, label=label)
-    return images, E, gate_e, gate_c, bool(opt.converged()), int(opt.get_number_of_steps())
+    return images, E, gate_e, gate_c, bool(opt.converged()), int(opt.get_number_of_steps()), ep
 
 
 def main():
@@ -164,7 +173,10 @@ def main():
 
     os.makedirs(args.out, exist_ok=True)
     from mace.calculators import mace_mp
-    calc = mace_mp(model="medium", device=args.device, default_dtype=args.dtype)
+    # factory, not a single instance: ASE needs one calculator object per NEB image
+    def make_calc():
+        return mace_mp(model="medium", device=args.device, default_dtype=args.dtype)
+    calc = make_calc()
 
     vac_ref = read(args.vac_ref)
     pristine = read(f"{args.pool}/fa19cs1_pb20i60_233.extxyz")
@@ -206,13 +218,13 @@ def main():
             ini = doped.copy()
             fin = doped.copy()
             fin.positions[mig] = vpos
-            images, E, ge, gc, conv, nst = run_path(ini, fin, calc, args, f"{sysname}_m{mem}")
+            images, E, ge, gc, conv, nst, ep = run_path(ini, fin, make_calc, args, f"{sysname}_m{mem}")
             Ea = float((E.max() - E[0]) * 1000)
             valid = bool(ge["passed"] and gc["passed"])
             rows.append({
                 "member": mem, "system": sysname, "Ea_meV": Ea,
                 "valid": valid, "band_converged": conv, "nsteps": nst,
-                "gate_endpoints": ge, "gate_consistency": gc,
+                "gate_endpoints": ge, "gate_consistency": gc, "endpoint_relax": ep,
                 "profile_meV": ((E - E[0]) * 1000).tolist(),
                 "structure_hash": structure_hash(doped),
                 "wall_s": round(time.time() - t0, 1),
