@@ -72,6 +72,22 @@ expect(r["passed"], "valid band PASSES")
 expect(abs(r["Ea_forward_meV"] - 309.9) < 0.5,
        f"Ea recovered as {r['Ea_forward_meV']:.1f} meV (recorded 309.9)")
 
+# INCIDENT: an earlier version required BOTH endpoints below EVERY interior image. That is
+# a test for path SYMMETRY, not minimality, and it rejected the real old-member-2 band whose
+# Ea reproduced the reference to 0.0000 meV. Asymmetric hops are the generic case here --
+# the two iodide sites are inequivalent in a disordered FA host.
+asym = [0.0, 0.0498, 0.1979, 0.3099, 0.2758, 0.1326, 0.0802]  # real: final 80.2 meV ABOVE initial
+r = check_endpoints(asym, label="asymmetric hop")
+expect(r["passed"],
+       "ASYMMETRIC hop PASSES (final 80.2 meV above initial, lowest interior 49.8 meV)")
+expect(abs(r["Ea_forward_meV"] - 309.9) < 0.5,
+       f"asymmetric Ea = {r['Ea_forward_meV']:.1f} meV, matching the discriminator run")
+
+# but a genuine non-minimum endpoint must still be caught
+notmin = [0.0, -0.030, 0.198, 0.310, 0.276, 0.133, 0.080]     # initial ABOVE its neighbour
+r = check_endpoints(notmin, label="initial not a minimum")
+expect(not r["passed"], "endpoint above its ADJACENT image is still REJECTED")
+
 
 print("\n[4] endpoint consistency -- INCIDENT: Cs_A r1 returned +2984 meV (different basins)")
 rng = np.random.RandomState(0)
