@@ -277,6 +277,29 @@ if _os.path.exists(_rt):
 else:
     print("  SKIP  return_test_v2.json not present in this checkout")
 
+print("\n[15] criterion-change impact must be reported, not minimised -- INCIDENT")
+# I wrote that dropping the 5 meV energy rule "changed NOTHING about which relaxations
+# pass". False: it flips 76 of 108 relaxation verdicts and 21 of 27 endpoint verdicts, and
+# it is what produced the headline 23/27. The defensible claim is narrower: the energy rule
+# reclassifies no BASIN CHANGE. This test pins both halves so neither can drift back.
+if _os.path.exists(_rt):
+    _P = [p for r in _rows for p in r["perturbations"]]
+    _disp = sum(1 for p in _P if p["max_disp_A"] < 0.15)
+    _both = sum(1 for p in _P if p["max_disp_A"] < 0.15 and abs(p["dE_meV"]) < 5.0)
+    expect(_disp - _both == 76,
+           f"the criterion change flips {_disp - _both} relaxation verdicts (not zero)")
+    _left = [p for p in _P if p["max_disp_A"] >= 0.15]
+    expect(len(_left) == 5, f"{len(_left)} relaxations left the basin")
+    expect(sum(1 for p in _left if abs(p["dE_meV"]) < 5.0) == 0,
+           "no basin change would have been caught by energy alone -- the narrow claim holds")
+    # and the prose must not reassert the retracted version
+    _rep = open("results/objective2/paired_pilot/RETURN_TEST_RESULT.md").read()
+    expect("changes **nothing** about which relaxations pass" not in _rep,
+           "the retracted 'changes nothing' claim is absent from the report")
+    _s24 = open("scripts/24_return_test.py").read()
+    expect("changed NOTHING about which relaxations pass" not in _s24,
+           "the retracted claim is absent from scripts/24")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
