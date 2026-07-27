@@ -15,7 +15,7 @@ superseded by [`RERUN_RESULT.md`](RERUN_RESULT.md) (clean rerun, fixed driver) a
 > integer index recorded *before* the GA substitution. That substitution deletes an FA
 > hydrogen, shifting every higher index down by one — so **8 of 18 GA arms
 > (m00, m01, m05, m06, m08, m13, m16, m17) displaced the wrong atom.** Reproduced exactly;
-> see `AUDIT_RESPONSE.md`. Sr is unaffected (a B-site swap deletes no atom).
+> see [`AUDIT_RESPONSE.md`](../AUDIT_RESPONSE.md). Sr is unaffected (a B-site swap deletes no atom).
 >
 > Retracted: the GA paired statistics; the suggestion that GA's scatter reflects a large
 > cation blocking the channel; and the attribution of the three magnitude failures to
