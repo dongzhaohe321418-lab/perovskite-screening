@@ -412,6 +412,124 @@ for _scr, _flags in _EXPECTED_FLAGS.items():
         expect(_bad not in _h,
                f"{_os.path.basename(_scr)} does NOT accept {_bad} (the flag I invented)")
 
+# EXISTENCE IS NOT ENOUGH: my guard verified each flag EXISTS but 22_paired_pilot.py has a
+# REQUIRED --members that I omitted, so the run still died. Assert required args explicitly.
+_REQUIRED_ARGS = {"scripts/22_paired_pilot.py": ["--members"]}
+for _scr, _req in _REQUIRED_ARGS.items():
+    if not _os.path.exists(_scr):
+        continue
+    _h2 = _sp.run([_sys.executable, _scr, "--help"], capture_output=True, text=True).stdout
+    _usage = _h2.split("options:")[0]
+    for _r in _req:
+        # argparse prints required args WITHOUT surrounding brackets in the usage line
+        expect(_r in _usage and f"[{_r}" not in _usage,
+               f"{_os.path.basename(_scr)}: {_r} is REQUIRED and must be passed explicitly")
+
+print("\n[20] a guard must not misreport an import failure as a flag failure -- INCIDENT")
+# My flag guard ran `driver --help`, grepped for each flag, and reported "--pool not accepted"
+# when the REAL cause was ModuleNotFoundError: no checks.py. --help crashed, so no flags
+# appeared in the output and the guard blamed the flag. Two distinct failure modes were
+# collapsed into one message, which sent me looking in the wrong place twice.
+# Derive the local-module dependency of each driver from its SOURCE rather than asserting a
+# hand-written map (my first version claimed script 18 imports checks; it does not).
+_LOCAL_MODULES = {_f[:-3] for _f in _os.listdir("scripts") if _f.endswith(".py")}
+_LOCAL_MODULES |= {"checks"}
+for _scr in ["scripts/22_paired_pilot.py", "scripts/18_objective2_explore_screen.py",
+             "scripts/24_return_test.py", "scripts/21_expand_fa_pool.py"]:
+    if not _os.path.exists(_scr):
+        continue
+    _src = open(_scr).read()
+    _deps = sorted({_m.group(1) for _m in _re2.finditer(r"^\s*from\s+(\w+)\s+import", _src, _re2.M)
+                    if _m.group(1) in _LOCAL_MODULES}
+                   | {_m.group(1) for _m in _re2.finditer(r"^\s*import\s+(\w+)\s*$", _src, _re2.M)
+                      if _m.group(1) in _LOCAL_MODULES})
+    print(f"       {_os.path.basename(_scr)} local deps: {_deps if _deps else '(none)'}")
+    for _d in _deps:
+        expect(_os.path.exists(f"scripts/{_d}.py"),
+               f"{_os.path.basename(_scr)} needs scripts/{_d}.py -> MUST be staged with it")
+    # --help must exit 0; a non-zero exit means the driver cannot import, which is an
+    # environment problem and must be reported as such, never as a missing flag
+    _r = _sp.run([_sys.executable, _scr, "--help"], capture_output=True, text=True)
+    expect(_r.returncode == 0,
+           f"{_os.path.basename(_scr)} --help exits 0 (a crash here means a staging problem)")
+    expect("usage:" in _r.stdout,
+           f"{_os.path.basename(_scr)} --help actually prints a usage line")
+
+print("\n[21] a driver's DEFAULT paths must be staged or overridden -- INCIDENT")
+# Four submissions of the same job failed for four different reasons. The last one passed
+# every guard (flags exist, driver imports, required args given) and still died: --vac-ref
+# has a hardcoded default pointing at a repo path that was never staged remotely. Guards that
+# check flags and imports cannot see whether the FILES those flags point at are present.
+for _scr in ["scripts/22_paired_pilot.py"]:
+    if not _os.path.exists(_scr):
+        continue
+    _src = open(_scr).read()
+    # find every argparse default that looks like a path
+    _defaults = _re2.findall(r'add_argument\(\s*"(--[\w-]+)"[^)]*?default\s*=\s*"([^"]+)"', _src)
+    _pathish = [(_f, _d) for _f, _d in _defaults
+                if "/" in _d or _d.endswith((".extxyz", ".json", ".xyz"))]
+    print(f"       {_os.path.basename(_scr)} path-valued defaults: {_pathish}")
+    expect(bool(_pathish), "the driver has at least one path-valued default (that is the hazard)")
+    for _f, _d in _pathish:
+        expect(_os.path.exists(_d),
+               f"default for {_f} ({_d}) exists locally -> MUST be staged or overridden remotely")
+
+print("\n[22] enumerate a driver's inputs from SOURCE, not one failure at a time -- INCIDENT")
+# Five submissions of one job. Guards for flags, imports, required args and path-valued
+# DEFAULTS all passed, and it still died: the driver also reads a HARDCODED filename from
+# inside a directory argument -- f"{args.pool}/fa19cs1_pb20i60_233.extxyz" -- which no
+# flag-level check can see. The lesson: grep every read()/open() in the driver and stage the
+# whole set, rather than discovering inputs by successive failures.
+_drv = "scripts/22_paired_pilot.py"
+if _os.path.exists(_drv):
+    _s = open(_drv).read()
+    _hard = _re2.findall(r'read\(\s*f?"([^"]*\{[^}]+\}[^"]*|[^"]+)"', _s)
+    _interp = [h for h in _hard if "{" in h]
+    print(f"       hardcoded/interpolated read paths: {_interp}")
+    expect(any("fa19cs1_pb20i60_233" in h for h in _interp),
+           "driver reads a hardcoded pristine filename from inside --pool (the invisible input)")
+    # that file must exist SOMEWHERE in the repo so it can be staged
+    _found = [p for p in _glob.glob("results/**/fa19cs1_pb20i60_233.extxyz", recursive=True)]
+    expect(bool(_found), f"the pristine reference exists in the repo to stage: {_found[:2]}")
+    # and it is NOT inside the harmonised pool dir -- which is exactly why staging the pool
+    # directory alone was insufficient
+    expect(not _os.path.exists("results/fa_host/pool_v3_harmonised/fa19cs1_pb20i60_233.extxyz"),
+           "it is NOT in pool_v3_harmonised -> staging the pool dir alone does not supply it")
+
+print("\n[23] manifest energies must be MEASURED, never inferred by index -- INCIDENT")
+# I completed the manifest's energy table by assuming member index == seed offset. harmonise.json
+# shows m00-m17 map to pool_v2 seeds 8-25, so 8 members got energies belonging to OTHER members,
+# at the superseded fmax~0.03 depth, which biased the homogeneity gate from -31.5 to -102.6 meV.
+# Also: fmax was written in as a literal 0.02 per row and never measured.
+_MF = "results/fa_host/pool_v3_harmonised/HOST_MANIFEST.json"
+_HR = "results/fa_host/pool_v3_harmonised/harmonise.json"
+if _os.path.exists(_MF) and _os.path.exists(_HR):
+    _mj = _json.load(open(_MF)); _hj = _json.load(open(_HR))
+    _harm = {r["member"].replace(".extxyz", ""): r for r in _hj["rows"]}
+    expect(_mj.get("fmax_all_measured") is True,
+           "manifest declares every fmax MEASURED (not a hardcoded target)")
+    for _r in _mj["rows"]:
+        expect(_r.get("fmax_measured") is not None,
+               f"m{_r['member']:02d} carries a measured fmax")
+        expect(_r["fmax_measured"] <= 0.0201,
+               f"m{_r['member']:02d} measured fmax {_r.get('fmax_measured')} <= 0.0201")
+        expect("measured" in (_r.get("energy_source") or "")
+               or "expansion_plus8" in (_r.get("energy_source") or ""),
+               f"m{_r['member']:02d} energy comes from a measured source")
+    # harmonised members must match harmonise.json E_after BY FILENAME, never by index
+    for _tag, _hrow in list(_harm.items())[:18]:
+        _m = int(_tag[1:])
+        _row = next(x for x in _mj["rows"] if x["member"] == _m)
+        expect(abs(_row["energy_eV"] - _hrow["E_after_eV"]) < 5e-4,
+               f"{_tag} energy == harmonise E_after ({_hrow['E_after_eV']:.4f}), not E_before")
+        expect(abs(_row["energy_eV"] - _hrow["E_before_eV"]) > 1e-3,
+               f"{_tag} energy is NOT the pre-harmonisation E_before (the v1 bug)")
+    # the corrected gate must be the one recorded
+    _g = _mj.get("gate", {})
+    expect(abs(_g.get("offset_meV", 0) + 31.5) < 1.0,
+           f"recorded gate offset is the corrected -31.5 meV (got {_g.get('offset_meV')})")
+    expect(_g.get("welch_p", 0) > 0.05, "recorded gate p indicates same population")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
