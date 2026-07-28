@@ -55,8 +55,31 @@ def parse_neb_path(path_file):
     return images
 
 
-def archive_iteration(jobdir, outdir, tag=None):
-    """Snapshot the current neb.path + per-image pw outputs. Append-only."""
+BOHR_A = 0.529177210903
+
+
+def write_images_extxyz(images, ref_extxyz, out_path):
+    """Write per-image geometries (neb.path is in bohr; symbols/cell from the reference)."""
+    from ase import Atoms
+    from ase.io import read, write
+    ref = read(ref_extxyz)
+    n = len(ref)
+    frames = []
+    for k, im in enumerate(images):
+        if im["n_rows"] != n:
+            raise ValueError(f"image {k}: {im['n_rows']} rows vs reference {n} atoms")
+        at = Atoms(symbols=ref.get_chemical_symbols(),
+                   positions=[[c * BOHR_A for c in row] for row in im["coords"]],
+                   cell=ref.cell, pbc=True)
+        at.info["neb_image"] = k
+        at.info["energy_au"] = im["energy_au"]
+        frames.append(at)
+    write(out_path, frames)
+    return len(frames)
+
+
+def archive_iteration(jobdir, outdir, tag=None, ref_extxyz=None, state_id=None):
+    """Snapshot the current neb.path + per-image structures + state-ID. Append-only."""
     pf = os.path.join(jobdir, "neb.path")
     cands = glob.glob(os.path.join(jobdir, "*.path")) if not os.path.exists(pf) else [pf]
     if not cands:
@@ -72,16 +95,53 @@ def archive_iteration(jobdir, outdir, tag=None):
         raise FileExistsError(f"{snap} exists -- the archive is append-only")
     os.makedirs(snap)
     shutil.copy(pf, os.path.join(snap, "neb.path"))
+    n_frames = None
+    if ref_extxyz:
+        n_frames = write_images_extxyz(images, ref_extxyz,
+                                       os.path.join(snap, "images.extxyz"))
     meta = {"snapshot": n, "tag": tag, "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "n_images": len(images),
             "energies_au": [im["energy_au"] for im in images],
             "rows_per_image": [im["n_rows"] for im in images],
-            "sha256_neb_path": sha256(os.path.join(snap, "neb.path"))}
+            "sha256_neb_path": sha256(os.path.join(snap, "neb.path")),
+            "images_extxyz_frames": n_frames,
+            "sha256_images_extxyz": (sha256(os.path.join(snap, "images.extxyz"))
+                                     if n_frames else None),
+            "state_id": state_id}
     json.dump(meta, open(os.path.join(snap, "META.json"), "w"), indent=1)
     idx["snapshots"].append({"iter": n, "tag": tag, "sha256": meta["sha256_neb_path"],
                              "n_images": meta["n_images"], "utc": meta["utc"]})
     json.dump(idx, open(idx_file, "w"), indent=1)
     return meta
+
+
+def prepare_restart(archive_dir, template_in, outdir, nstep_path=1):
+    """Prepare a REAL neb.x continuation from the latest archived snapshot.
+
+    Verifies the snapshot first, then writes <outdir>/ with (a) the archived neb.path under
+    the prefix neb.x expects and (b) the input flipped to restart_mode='restart' with the
+    given nstep_path. The caller submits this directory; neb.x continues the band from the
+    archive, not from interpolation.
+    """
+    r = verify_restartable(archive_dir)
+    if not r["restartable"]:
+        raise ValueError("latest snapshot failed verification -- refusing to build a restart")
+    snap = os.path.join(archive_dir, f"iter_{r['snapshot']:03d}")
+    os.makedirs(outdir, exist_ok=True)
+    t = open(template_in).read()
+    if "restart_mode" in t:
+        t = re.sub(r"restart_mode\s*=\s*'[^']*'", "restart_mode = 'restart'", t)
+    else:
+        t = t.replace("&PATH", "&PATH\n  restart_mode = 'restart'", 1)
+    if "nstep_path" in t:
+        t = re.sub(r"nstep_path\s*=\s*\d+", f"nstep_path = {nstep_path}", t)
+    else:
+        t = t.replace("&PATH", f"&PATH\n  nstep_path = {nstep_path}", 1)
+    open(os.path.join(outdir, "restart.neb.in"), "w").write(t)
+    shutil.copy(os.path.join(snap, "neb.path"), os.path.join(outdir, "neb.path"))
+    return {"from_snapshot": r["snapshot"], "sha256_neb_path": r["sha256"],
+            "restart_input": os.path.join(outdir, "restart.neb.in"),
+            "nstep_path": nstep_path}
 
 
 def verify_restartable(archive_dir):
@@ -118,6 +178,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", required=True, choices=["archive", "verify", "selftest"])
     ap.add_argument("--jobdir"); ap.add_argument("--outdir"); ap.add_argument("--tag")
+    ap.add_argument("--ref-extxyz", default=None,
+                    help="reference structure for symbols/cell when writing images.extxyz")
     ap.add_argument("--q1-band-archive", default=None,
                     help="selftest: tar.gz containing a real neb.path (the preserved q=+1 band)")
     a = ap.parse_args()
@@ -143,13 +205,24 @@ def main():
         if os.path.basename(pfs[0]) != "neb.path":
             shutil.copy(pfs[0], os.path.join(jd, "neb.path"))
         out = os.path.join(td, "arch")
-        m1 = archive_iteration(jd, out, tag="selftest-1")
-        m2 = archive_iteration(jd, out, tag="selftest-2")
+        ref = a.ref_extxyz
+        m1 = archive_iteration(jd, out, tag="selftest-1", ref_extxyz=ref,
+                               state_id={"cosine": 1.0, "note": "selftest placeholder"})
+        m2 = archive_iteration(jd, out, tag="selftest-2", ref_extxyz=ref)
         r = verify_restartable(out)
-        ok = r["restartable"] and m1["n_images"] == r["n_images"] and m2["snapshot"] == 1
+        rst = None
+        neb_in = glob.glob(os.path.join(jd, "*.neb.in")) + glob.glob(os.path.join(jd, "*.in"))
+        if neb_in:
+            rst = prepare_restart(out, neb_in[0], os.path.join(td, "restart"), nstep_path=1)
+        ok = (r["restartable"] and m1["n_images"] == r["n_images"] and m2["snapshot"] == 1
+              and (ref is None or m1["images_extxyz_frames"] == m1["n_images"])
+              and (not neb_in or (rst and "restart_mode = 'restart'"
+                                  in open(rst["restart_input"]).read())))
         print(json.dumps({"selftest_pass": bool(ok), "n_images": r["n_images"],
                           "rows_per_image": r["rows_per_image"],
-                          "snapshots_written": 2, "verify": r}, indent=1))
+                          "images_extxyz_frames": m1["images_extxyz_frames"],
+                          "restart_prepared": bool(rst), "snapshots_written": 2,
+                          "verify": r}, indent=1))
         return 0 if ok else 2
 
 
