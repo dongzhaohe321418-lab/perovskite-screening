@@ -66,6 +66,8 @@ def main():
     p.add_argument("--ecutwfc", type=float, default=50.0)
     p.add_argument("--ecutrho", type=float, default=400.0)
     p.add_argument("--degauss", type=float, default=0.01)
+    p.add_argument("--conv-thr", default="1e-6",
+                   help="SCF threshold: 1e-6 explore / 1e-8 production (locked protocol)")
     p.add_argument("--kpoints", default="1,1,1")
     p.add_argument("--d3", action="store_true", default=True)
     p.add_argument("--no-d3", dest="d3", action="store_false")
@@ -139,7 +141,7 @@ def main():
             L.append(f"   tot_magnetization = {args.tot_magnetization}")
     L.append("/")
     L.append("&ELECTRONS")
-    L.append("   conv_thr = 1e-6")
+    L.append(f"   conv_thr = {args.conv_thr}")
     L.append("   mixing_beta = 0.3")
     L.append("   electron_maxstep = 200")
     L.append("/")
