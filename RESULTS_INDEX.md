@@ -57,7 +57,7 @@ Anything not listed here is historical. Restructured 2026-07-28.
 
 | area | where | why superseded |
 |---|---|---|
-| Original MACE tracer-bullet screen | `results/dopant_screen/`, `results/objective1/REPORT_objective1.md`, `results/objective1/STATUS.md` | fixed-path single-point method superseded by relaxed NEB + paired design |
+| Original MACE tracer-bullet screen | `results/dopant_screen/`, `archive/objective1_early/REPORT_objective1.md`, `archive/objective1_early/STATUS.md` | fixed-path single-point method superseded by relaxed NEB + paired design |
 | Early FA baseline | `results/fa_host/REPORT_fa_baseline.md` | pool superseded by pool_v3_harmonised |
 | q=0 diagnostic chain (spin-SCF saga) | `archive/objective1_q0_diagnostics/` | resolved by Q0_RESOLVED.md — kept as the record of HOW it was resolved |
 | Early plans/handoffs | `archive/` | superseded by NEXT_STEP_GUIDE.md |
