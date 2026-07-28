@@ -1,3 +1,9 @@
+> # SUPERSEDED — archived (bannered 2026-07-28)
+>
+> Plan amendments to the original tracer-bullet plan; the plan itself is archived.
+>
+> **Current authority: `NEXT_STEP_GUIDE.md`.** Retained verbatim below for provenance; do not cite as current.
+
 # 执行计划修正案(PLAN_AMENDMENTS)
 
 写于 2026-07-23(MacBook Pro 会话)。针对《下一步执行指南:从 Objective 1 到
