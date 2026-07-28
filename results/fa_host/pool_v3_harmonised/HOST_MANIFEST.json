@@ -1,6 +1,5 @@
 {
  "pool": "pool_v3_harmonised",
- "fmax_target": 0.02,
  "n_members": 36,
  "in_84_corpus": [
   0,
@@ -32,6 +31,14 @@
   26,
   27
  ],
+ "fmax_all_measured": true,
+ "fmax_max_measured": 0.02,
+ "gate": {
+  "offset_meV": -31.5,
+  "welch_t": 0.48,
+  "welch_p": 0.6422,
+  "sigma_sep": 0.2
+ },
  "rows": [
   {
    "member": 0,
@@ -41,10 +48,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1066.2244,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.0194,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 1,
@@ -54,10 +60,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1066.0277,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01992,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 2,
@@ -67,10 +72,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1066.1063,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01984,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 3,
@@ -80,10 +84,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1065.8635,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01994,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 4,
@@ -93,10 +96,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1066.0018,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01961,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 5,
@@ -106,10 +108,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1066.0618,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.02,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 6,
@@ -119,10 +120,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1065.8916,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01992,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 7,
@@ -132,10 +132,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1065.8188,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.0188,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 8,
@@ -143,12 +142,11 @@
    "sha256_16": "4e3649841696883f",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 8,
+   "seed": null,
    "energy_eV": -1065.9007,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01959,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 9,
@@ -156,12 +154,11 @@
    "sha256_16": "4b32616d8868c11f",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 9,
+   "seed": null,
    "energy_eV": -1066.0199,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.019,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 10,
@@ -169,12 +166,11 @@
    "sha256_16": "35280b2b9b6cede7",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 10,
+   "seed": null,
    "energy_eV": -1065.9638,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01994,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 11,
@@ -182,12 +178,11 @@
    "sha256_16": "5dd2f51ceda68501",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 11,
+   "seed": null,
    "energy_eV": -1065.7091,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01936,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 12,
@@ -195,12 +190,11 @@
    "sha256_16": "32c5bac61c5c396f",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 12,
+   "seed": null,
    "energy_eV": -1066.1789,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.0198,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 13,
@@ -208,12 +202,11 @@
    "sha256_16": "a9f0f69e17827ca5",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 13,
+   "seed": null,
    "energy_eV": -1066.1047,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01897,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 14,
@@ -221,12 +214,11 @@
    "sha256_16": "015a12f9cecb04a9",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 14,
+   "seed": null,
    "energy_eV": -1065.8334,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01982,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 15,
@@ -234,12 +226,11 @@
    "sha256_16": "d1380829ec8af780",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 15,
+   "seed": null,
    "energy_eV": -1065.9516,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01978,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 16,
@@ -247,12 +238,11 @@
    "sha256_16": "5555ff40b824644f",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 16,
+   "seed": null,
    "energy_eV": -1065.9742,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01985,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 17,
@@ -260,12 +250,11 @@
    "sha256_16": "4dd07ea656e87674",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 17,
+   "seed": null,
    "energy_eV": -1065.8616,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "file calculator"
+   "fmax_measured": 0.01992,
+   "energy_source": "harmonise.json (E_after, measured)",
+   "in_84_corpus": true
   },
   {
    "member": 18,
@@ -273,12 +262,11 @@
    "sha256_16": "262dcc81d9a9ec44",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 18,
-   "energy_eV": -1065.8752,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1065.9548,
+   "fmax_measured": 0.01706,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 19,
@@ -286,12 +274,11 @@
    "sha256_16": "53a24f76dfc66157",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 19,
-   "energy_eV": -1065.5456,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1066.1904,
+   "fmax_measured": 0.01567,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 20,
@@ -299,12 +286,11 @@
    "sha256_16": "a33254de5e8faa42",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 20,
-   "energy_eV": -1065.9016,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1065.733,
+   "fmax_measured": 0.01881,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 21,
@@ -312,12 +298,11 @@
    "sha256_16": "4e5153e8c9ea0ee9",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 21,
-   "energy_eV": -1065.6063,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1066.1582,
+   "fmax_measured": 0.01622,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 22,
@@ -325,12 +310,11 @@
    "sha256_16": "13b2a682ae75994c",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 22,
-   "energy_eV": -1065.624,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1065.8669,
+   "fmax_measured": 0.016,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 23,
@@ -338,12 +322,11 @@
    "sha256_16": "a2f9a22e1a02f56a",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 23,
-   "energy_eV": -1065.778,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1066.0301,
+   "fmax_measured": 0.01704,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 24,
@@ -351,12 +334,11 @@
    "sha256_16": "a94b64563cef3e4b",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 24,
-   "energy_eV": -1065.8062,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1066.0075,
+   "fmax_measured": 0.01708,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 25,
@@ -364,12 +346,11 @@
    "sha256_16": "e1c09dd994d6d2b2",
    "n_atoms": 233,
    "formula": "C19H95CsI60N38Pb20",
-   "seed": 25,
-   "energy_eV": -1065.6564,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "fa_pool_expansion.json"
+   "seed": null,
+   "energy_eV": -1065.8432,
+   "fmax_measured": 0.0175,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 26,
@@ -379,10 +360,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1066.1775,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "recomputed MACE single-point"
+   "fmax_measured": 0.01925,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 27,
@@ -392,10 +372,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": null,
    "energy_eV": -1065.8987,
-   "in_84_corpus": true,
-   "fmax_target": 0.02,
-   "source": "pool_v3_harmonised",
-   "energy_source": "recomputed MACE single-point"
+   "fmax_measured": 0.01682,
+   "energy_source": "recomputed MACE single-point (measured)",
+   "in_84_corpus": true
   },
   {
    "member": 28,
@@ -405,10 +384,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4242,
    "energy_eV": -1065.6579,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.0165,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   },
   {
    "member": 29,
@@ -418,10 +396,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4243,
    "energy_eV": -1066.0501,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.018,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   },
   {
    "member": 30,
@@ -431,10 +408,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4244,
    "energy_eV": -1066.1843,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.0125,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   },
   {
    "member": 31,
@@ -444,10 +420,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4245,
    "energy_eV": -1065.9754,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.0191,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   },
   {
    "member": 32,
@@ -457,10 +432,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4246,
    "energy_eV": -1065.9832,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.0185,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   },
   {
    "member": 33,
@@ -470,10 +444,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4247,
    "energy_eV": -1066.2096,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.0175,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   },
   {
    "member": 34,
@@ -483,10 +456,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4248,
    "energy_eV": -1065.9487,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.016,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   },
   {
    "member": 35,
@@ -496,10 +468,9 @@
    "formula": "C19H95CsI60N38Pb20",
    "seed": 4249,
    "energy_eV": -1066.0586,
-   "in_84_corpus": false,
-   "fmax_target": 0.02,
-   "source": "expansion_plus8 (2026-07-28)",
-   "energy_source": "expansion_plus8.json"
+   "fmax_measured": 0.0192,
+   "energy_source": "expansion_plus8.json",
+   "in_84_corpus": false
   }
  ]
 }
