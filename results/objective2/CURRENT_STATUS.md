@@ -33,12 +33,13 @@ ones. Full admission-route accounting in `paired_pilot/CORPUS108_RESULT.md` §6.
 | question | authoritative document |
 |---|---|
 | paired result (GA/Sr) | **`paired_pilot/CORPUS108_RESULT.md`** + `corpus108/` raw records |
-| host pool | `../fa_host/pool_v3_harmonised/HOST_MANIFEST.md` (36 members, all fmax measured ≤ 0.02000) |
+| extension provenance | `corpus108/paired_raw_24.json`, `integrity_audit_24.json`, `input_manifest_24.json`, `HASHES.json` |
+| host pool | `../fa_host/pool_v3_harmonised/HOST_MANIFEST.md` (v2 — 36 members, all fmax measured ≤ 0.02000, gate −31.5 meV / p 0.6422 / 0.20σ) |
 | why paths are rejected | `paired_pilot/BASIN_IDENTIFICATION.md` (v2) |
-| endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` + `corpus84/return_test_84.json` |
+| endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` (method) + `corpus84/return_test_84.json` (27 candidates) + **`corpus108/return_test_24.json`** (14 candidates, 14/14 metastable) |
 | barrier definition + tiers | `BARRIER_DEFINITION.md` |
 | GPU validity | `gpu_regression/GATE1_GPU_REGRESSION.md` |
-| automated gates | `../../scripts/checks.py` + `20_test_checks.py` (25 check groups) |
+| automated gates | `../../scripts/checks.py` + `20_test_checks.py` (26 check groups, all passing) |
 
 **Superseded / historical (do not cite):** `paired_pilot/PAIRED_PILOT.md` (retracted first
 run), `paired_pilot/RERUN_RESULT.md` and `RETURN_TEST_RESULT.md` statistics (18-host pool —
@@ -55,8 +56,8 @@ and nothing was computing. The claim was false when made. Corrections:
 |---|---|
 | HPC — P1 / P2 | **audited and closed.** P1 wording corrected to CBM-like (see `../objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`); P2 passes all four criteria. |
 | HPC — `q0_final` | **ionic relaxation at the soft-mode floor.** 9 BFGS steps, 8 converged SCF cycles, gradient error **non-monotonic** (3.1 → 1.4 → 2.3×10⁻³; steps below the 1.945×10⁻³ criterion were **not accepted** by BFGS). Energy still descending. This is at the documented soft-tilt-mode floor — **NOT** "endpoint verified converged", and an earlier claim that it "crossed its force target" is retracted. |
-| GPU — 8 new hosts | **built and through the homogeneity gate.** m28–m35, see `../fa_host/HOST_MANIFEST.md`. |
-| GPU — 24-path extension | **was NOT running when I claimed it was.** Five submissions failed on four distinct causes (invented flags; missing required `--members`; unstaged `checks.py` crashing `--help` so the guard misreported a flag problem; two unstaged input paths). The sixth submission, with all three input classes staged and inventoried, is now genuinely producing bands. |
+| GPU — 8 new hosts | **built and through the homogeneity gate.** m28–m35, see `../fa_host/pool_v3_harmonised/HOST_MANIFEST.md`. |
+| GPU — 24-path extension | **was NOT running when I claimed it was.** Five submissions failed on four distinct causes (invented flags; missing required `--members`; unstaged `checks.py` crashing `--help` so the guard misreported a flag problem; two unstaged input paths). The sixth submission (all inputs staged and inventoried) **completed: 24/24 bands, exit 0**, integrity-audited, return test complete (14/14 metastable), and **merged into the published 108-path result**. |
 
 **Rule adopted:** a track is described as running only after its own preflight has reported
 success and output exists. Job submission is not evidence of execution.
