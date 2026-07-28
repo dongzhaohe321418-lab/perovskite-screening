@@ -33,9 +33,30 @@ run), `paired_pilot/RERUN_RESULT.md` and `RETURN_TEST_RESULT.md` statistics (18-
 their *method* stands, their n = 7 numbers are superseded by the 28-host corpus),
 `AUDIT_RESPONSE.md`, `noise_floor/NOISE_FLOOR_REPORT.md` (old 8-member pool).
 
-**In flight:** Objective 1 q = 0 geometry relaxation (job `e1319fa5`) — testing whether
-lattice relaxation localises the electron into a polaron. See
-`../objective1/dft/charge_relaxed/Q0_RESOLVED.md`.
+## Execution status — corrected 2026-07-28
+
+**A status-reporting failure is recorded here because it matters more than the science it
+concerned.** I reported "24 new paths running" while the job had failed five times in a row
+and nothing was computing. The claim was false when made. Corrections:
+
+| track | true state |
+|---|---|
+| HPC — P1 / P2 | **audited and closed.** P1 wording corrected to CBM-like (see `../objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`); P2 passes all four criteria. |
+| HPC — `q0_final` | **early but well-behaved ionic relaxation.** 3 BFGS steps, each SCF converged, gradient error descending 3.1 → 2.7×10⁻³ toward 1.945×10⁻³. This is "moving stably for the first time", **NOT** "endpoint verified converged". |
+| GPU — 8 new hosts | **built and through the homogeneity gate.** m28–m35, see `../fa_host/HOST_MANIFEST.md`. |
+| GPU — 24-path extension | **was NOT running when I claimed it was.** Five submissions failed on four distinct causes (invented flags; missing required `--members`; unstaged `checks.py` crashing `--help` so the guard misreported a flag problem; two unstaged input paths). The sixth submission, with all three input classes staged and inventoried, is now genuinely producing bands. |
+
+**Rule adopted:** a track is described as running only after its own preflight has reported
+success and output exists. Job submission is not evidence of execution.
+
+**q=0 NEB gate: NOT open.** 4 of 5 conditions pass; `q0_final` has not reached its force
+target and the band archive/restart harness does not exist. See
+`../objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
+
+**Sr methodology note.** The χ² sample-size threshold falls as n rises even at constant
+variance (n_req 16 at n=10 → 13 at n=13 → 10 at n=20, holding sd at 65.2 meV). The final Sr
+judgement must therefore rest on whether its **95% CI lies entirely inside ±59.5 meV**, not on
+`n_req` clearing itself. Retained in the methods description, not used as evidence.
 
 **Standing prohibitions:** no ranking from EXPLORE-tier data; no mixing mechanism labels or
 result tiers in one distribution; no cross-theory-fingerprint comparisons; pools of
