@@ -38,7 +38,7 @@ BEGIN_ENGINE_INPUT
    noinv = .true.
 /
 &ELECTRONS
-   conv_thr = 1e-6
+   conv_thr = 1e-8
    mixing_beta = 0.3
    electron_maxstep = 200
 /
