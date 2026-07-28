@@ -48,14 +48,13 @@ bands renumbers bands; it does not change where the state lives in space.
 | restart from an archived band | done, round-tripped on the real q=+1 `.path` |
 | append-only iteration archive | done, 2 snapshots, hash-indexed |
 | state identification without band index | done |
-| **exercised end-to-end on a live q=0 job** | **NOT YET — requires the q=0 NEB to start** |
+| **exercised end-to-end on a live q=0 job** | **DONE 2026-07-28** — see `HARNESS_TRIAL_RESULT.md`: real restart proven as re-evaluation (not position update); v2's zero-iteration no-op caught and guarded |
 
-The last row is the honest remaining gap and it is circular by nature: the harness cannot be
-proven on a live q=0 job until a q=0 job runs, and the gate exists to stop that job starting
-unprotected. The resolution is to treat the **first** q=0 NEB as the harness's live trial — run
-it with archiving enabled from iteration 1, verify the archive after the first few iterations,
-and stop immediately if the round-trip fails. That is a smaller commitment than a full CI-NEB
-and it closes the circularity honestly rather than by declaring the component done.
+The live trial ran on 2026-07-28 (PI-approved, bounded) and closed this row — with two real
+harness bugs found and fixed in the process (the cumulative-`nstep_path` zero-iteration no-op,
+and the CLI not forwarding the images reference). Per the PI's verdict the condition itself
+stays PARTIAL until the state-ID closure runs on the preserved wavefunctions, production inputs
+are regenerated at `degauss=0.005` with a fingerprint check, documents are synced, and the
+suite is green from a clean clone.
 
-**This document does not open the gate.** It records that four of five condition-5 components
-are validated and proposes how to close the fifth.
+**This document does not open the gate.** The gate file (`Q0_NEB_GATE.md`) records the PI's four closure items.
