@@ -335,6 +335,36 @@ if _os.path.exists(_pr):
     expect("return-test rescue" in _idx84,
            "the canonical index names the rescue route for m14/m20")
 
+print("\n[17] a derived constant must not be quoted below its input's own residual -- INCIDENT")
+# I derived g = 11.0 meV/A, u_crit = 0.0039 A and a well depth of 0.011 meV from a 2.2 meV
+# energy difference whose own SCF residual was ~30 meV, and whose value swung 5 meV between
+# sampling windows. Precision must be bounded by the noisiest input, not the arithmetic.
+_POL_RESIDUAL_MEV = 30.0        # POL estimated scf accuracy 2.2e-3 Ry, never converged
+_GAIN_WINDOWS_MEV = (2.3, 7.3)  # same quantity, iterations ~129 and ~83
+expect(abs(_GAIN_WINDOWS_MEV[1] - _GAIN_WINDOWS_MEV[0]) < _POL_RESIDUAL_MEV,
+       "the window-to-window swing is itself within the residual (both are noise)")
+expect(max(_GAIN_WINDOWS_MEV) < _POL_RESIDUAL_MEV,
+       f"the gain ({max(_GAIN_WINDOWS_MEV)} meV) is BELOW POL's residual ({_POL_RESIDUAL_MEV}) "
+       "-> report a bound, never a point value")
+_pol = "results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md"
+if _os.path.exists(_pol):
+    _tp = open(_pol).read()
+    for _stale in ["11.0 meV/\u00c5", "0.0039", "0.011 meV"]:
+        _i = _tp.find(_stale)
+        expect(_i == -1 or "An earlier version" in _tp[max(0, _i-260):_i],
+               f"retracted figure {_stale!r} appears only inside the retraction")
+    expect("NOT RESOLVED" in _tp or "NOT resolved" in _tp,
+           "the report states the localisation gain is unresolved")
+    expect("no bound polaron at any amplitude" not in _tp.split("earlier draft")[0],
+           "the over-strong 'any amplitude' claim is not asserted")
+    expect("no thermally significant polaron" in _tp,
+           "the report makes the bounded claim instead")
+    # the well-depth bound must be recomputable from the CONVERGED elastic cost
+    _k = 112.6 / 0.20**2
+    _depth = ((2*_POL_RESIDUAL_MEV/0.20)**2) / (4*_k)
+    expect(abs(_depth - 8.0) < 0.5, f"2x-residual well-depth bound recomputes to {_depth:.1f} meV")
+    expect(_depth < 25.7, "even the extreme bound stays below room-temperature kT")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
