@@ -1,0 +1,3 @@
+tth_obs,tth_corr,d_A,area,fwhm,origin,delta_chi2,p_asymptotic,p_bootstrap_used,effective_dof,rel_to_perovskite_pct,best_match,best_delta_d,second_match,wt_percent,wt_percent_blocked_reason
+12.59353795,12.68234571,6.974279298,9.786645626,0.2434469057,film,75.01463162,3.597250407e-16,6.393388471e-14,2.711929984,2.706027253,PbI2(001),-0.004720702467,PbI2(100),,single reflection + textured phase
+30.19854529,30.28735304,2.948621137,25.10784772,0.4777820145,substrate,93.75973661,3.410673931e-20,6.567206834e-17,2.255589234,6.942370531,In2O3/ITO(222),0.02762113712,SnO2:F(101),,single reflection + textured phase
