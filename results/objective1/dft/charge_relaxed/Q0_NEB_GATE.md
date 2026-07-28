@@ -77,23 +77,30 @@ by round-tripping the **real** q=+1 explore band written by `neb.x` itself (5 im
 atoms, 2 snapshots, hash-verified), not a synthetic fixture. Regression test [31] pins every
 value. Detail in `NEB_HARNESS.md`.
 
-**Still missing, and honestly circular:** the harness has not been exercised on a *live* q=0
-job, and it cannot be until a q=0 NEB runs — which this gate exists to prevent. The proposed
-resolution is to treat the **first** q=0 NEB as the harness's live trial: archiving enabled
-from iteration 1, archive verified after the first few iterations, job stopped immediately if
-the round-trip fails. That is a bounded commitment, not a full CI-NEB, and it closes the
-circularity rather than declaring the component done by assertion.
+**The live trial RAN (2026-07-28, PI-approved, jobs e2273435 phase-1 + 0e4443ed restart) and
+its result is in `HARNESS_TRIAL_RESULT.md`:** archive → verify → real `neb.x` restart
+(resumed at iteration 3, 1h16m of SCF re-evaluation, re-converged non-bit-identical
+energies/gradients) → re-archive, all succeeded. Restart is proven **as re-evaluation, not as
+position update** (the budget cap stops before the Broyden move). The trial's ~0.98–1.29 eV
+intermediate activation energies are **HARNESS_TRIAL output and remain unquotable**.
+
+**PI verdict on the trial: harness validated; condition 5 stays PARTIAL** pending four closure
+items: (1) at least one real `projwfc.x` → weights → cosine → JSON state-ID on the preserved
+phase-2 wavefunctions (in progress); (2) production inputs regenerated at `degauss=0.005` with
+an automated theory-fingerprint comparison against the q=+1 leg — the trial ran at the
+generator default 0.01, fine for the harness, PROHIBITED for production; (3) the three
+authority documents synchronised (this edit); (4) the regression suite green from a clean
+clone.
 
 ## Verdict
 
-**Gate: 4 of 5 conditions PASS. Condition 5 is PARTIAL — 4 of its 5 components are built and
-validated; the harness has not been exercised on a live q=0 job.**
+**Gate: 4 of 5 conditions PASS. Condition 5 is PARTIAL — the live harness trial SUCCEEDED
+(see above) and the PI has conditioned PARTIAL → PASS on four small closure items** (state-ID
+closure on real wavefunctions; degauss=0.005 production inputs + fingerprint check; document
+sync; clean-clone green suite).
 
-No CI-NEB submission. What *is* now defensible is a **bounded harness trial**: a short q=0 NEB
-(explore tier, no CI, low iteration cap) run solely to exercise archiving and restart on a live
-band, stopped as soon as the round-trip is verified or fails. That trial is not a scientific
-result and its barrier must not be quoted. A full q=0 CI-NEB waits until this file records the
-trial's outcome.
+No full q=0 CI-NEB submission until this file records condition 5 as PASS. The trial's
+intermediate energies stay unquotable.
 
 Also worth stating: a false alarm during this audit. A grep for band-convergence warnings
 returned a hit that turned out to be routine `c_bands` memory-report lines, not a warning.
