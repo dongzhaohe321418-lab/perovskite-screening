@@ -62,7 +62,7 @@ charge-state comparison; the earlier q=+1 explore NEB (path_thr 0.10, no-CI, con
 is not directly comparable to a production result and is never mixed with one.
 
 | NEB images | identical count for both charge states |
-| NEB `path_thr` | **0.10 eV/A for both legs** |
+| NEB `path_thr` | ~~0.10 eV/A for both legs~~ **HISTORICAL (explore era) — superseded by the 2026-07-28 amendment above: production = 0.05 eV/Å, pair-locked** |
 
 Only two things may differ between the legs:
 
