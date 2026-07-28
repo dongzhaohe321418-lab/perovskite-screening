@@ -303,23 +303,24 @@ mean different things:
          -- a FILE FORMAT fact, not a pool subset. Quoting it as "existing 18" caused
             the ambiguity this manifest exists to remove.
 
-Integrity: **36 unique IDs**, no gaps, **zero duplicate structure hashes**, **uniform
-fmax 0.02** across the whole pool, energy coverage **36/36** (18 from file calculators, 16 from
-committed expansion records, 2 recomputed as MACE single points — m26/m27 verified at fmax
-0.0193 and 0.0168).
+Integrity: **36 unique IDs**, no gaps, **zero duplicate structure hashes**, **measured
+fmax ≤ 0.02000 across all 36 members** (range [0.01250, 0.02000] — measured, not asserted),
+energy coverage **36/36** all from measured sources (18 `harmonise.json` E_after, 8
+`expansion_plus8.json`, 10 fresh MACE single points).
 
 **Homogeneity gate on the complete pool** (the earlier reported gate used only 18 of 28):
 
 | | all 28 existing | all 8 new |
 |---|---|---|
-| mean E (eV) | −1065.9058 ± 0.1769 | −1066.0085 ± 0.1706 |
-| offset | — | **−102.6 meV** |
-| Welch t / p | — | **t = 1.49, p = 0.1632** |
-| separation | — | **0.59σ** |
+| mean E (eV) | −1065.9769 ± 0.1392 | −1066.0085 ± 0.1706 |
+| offset | — | **−31.5 meV** |
+| Welch t / p | — | **t = 0.48, p = 0.6422** |
+| separation | — | **0.20σ** |
 
-Verdict unchanged (poolable), but **weaker than first reported** (−36.6 meV, p = 0.6018, 0.24σ
-on the partial set). Far from the 643 meV / 2.24σ / p < 1e-4 failure this gate exists to catch,
-but 0.59σ is the number to cite.
+**Same population, poolable.** This is the *third* version of this gate and the first correct
+one — see Section 4.15. The earlier "−102.6 meV / p = 0.1632 / 0.59σ" figures were computed
+from 8 corrupted energies and are retracted; the corrupted values had inflated the apparent
+offset roughly threefold.
 
 ## 2.8 Rejected-path basin identification
 
@@ -494,9 +495,52 @@ exists; job submission is not evidence of execution.*
 
 **Claimed:** the +8 expansion passed the gate at −36.6 meV, p = 0.6018, 0.24σ.
 **Actual:** that compared **18 of 28** existing members — those whose energies happened to be
-readable from an attached calculator. On the complete pool: **−102.6 meV, p = 0.1632, 0.59σ**.
-**Impact:** verdict unchanged (poolable) but the margin is ~3× smaller than reported.
-**Fix:** energy coverage completed to 36/36; `HOST_MANIFEST.md` carries the full-pool gate.
+readable from an attached calculator, a file-format accident rather than a chosen subset.
+**Fix:** energy coverage completed to 36/36. **The first attempt at that completion was itself
+wrong — see §4.15.** The correct full-pool gate is −31.5 meV, p = 0.6422, 0.20σ.
+
+## 4.15 Manifest energies misassigned by an index assumption — and the gate it corrupted
+
+**Claimed:** a complete 36/36 energy table, "uniform fmax 0.02 across the pool", and a
+full-pool homogeneity gate of **−102.6 meV, p = 0.1632, 0.59σ**.
+
+**Actual:** the recovery step built its energy map by assuming **member index == seed offset**
+(`seed_map[8+j]`). `harmonise.json` shows the harmonised members `m00`–`m17` correspond to
+pool_v2 seeds 8–25, so the mapping was shifted. Consequences:
+
+1. Eight members (`m18`–`m25`) were assigned energies belonging to **different** members, and
+   those values were the **pre-harmonisation** states at `fmax ≈ 0.029–0.030` — the loose depth
+   the project's own standing rule forbids mixing. Each had later been lowered 89–277 meV by
+   harmonisation.
+2. Those values sit systematically high, biasing the existing-pool mean upward — exactly the
+   direction that produced the −102.6 meV offset.
+3. `fmax_target = 0.02` was written as a **hardcoded literal on every row**, never measured, so
+   the "relaxation depth is uniform" integrity check asserted something the file did not check.
+
+**Corrected:** no index arithmetic anywhere. Energies now come from `harmonise.json` matched
+**by filename** (`E_after`), from `expansion_plus8.json` for `m28`–`m35`, or from fresh MACE
+single points for `m18`–`m27` where no trustworthy record existed. Every `fmax` is measured:
+range **[0.01250, 0.02000]** across all 36, so uniformity is verified rather than asserted.
+Mapping cross-check: `harmonise.json` gives `m00` E_after = −1066.2244 eV, matching the value
+read from that file's own attached calculator.
+
+**The three versions of this gate:**
+
+| version | offset | p | separation | status |
+|---|---|---|---|---|
+| partial (18 calculator-read) | −36.6 meV | 0.6018 | 0.24σ | incomplete |
+| v1 "full pool" (8 corrupted) | −102.6 meV | 0.1632 | 0.59σ | **wrong** |
+| **v2 (measured, correct mapping)** | **−31.5 meV** | **0.6422** | **0.20σ** | **authoritative** |
+
+**Impact:** the verdict was poolable throughout, so no downstream result changes — but the
+corrupted values had inflated the apparent offset roughly threefold, and the correct pool is
+*more* homogeneous than v1 claimed. `m18`–`m27` measure at fmax 0.01567–0.01925, genuinely at
+target: the corrupted numbers were the problem, not the structures.
+
+**Note on how this was found.** Both v1 errors were caught by review, not by me. The failure
+mode is worth naming: I "completed" a data table by inferring identities arithmetically instead
+of reading them from the record that already held them, then published an integrity check
+asserting a property I had written in as a constant.
 
 ## 4.14 My own guard misreported a failure, twice
 
