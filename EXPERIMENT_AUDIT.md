@@ -230,6 +230,41 @@ Return test protocol: perturb along the path direction, both signs, two amplitud
 (±0.02, ±0.05 Å), re-relax, require return to the initial basin. 108 perturbation relaxations,
 all converged; median max displacement 0.034 Å. `return_test_84.json`.
 
+## 2.3b MERGED 108-path corpus — SUPERSEDES §2.4 below
+
+The 24-path extension has completed, been integrity-audited, and been merged. **`§2.4`-`§2.6`
+below describe the 84-path corpus and are retained for provenance; the authoritative result is
+now `paired_pilot/CORPUS108_RESULT.md`.**
+
+Pooling was not automatic. The extension's strict yield was 4/24 against 30/84, tested before
+merging: **Fisher exact odds ratio 2.78, p = 0.0867** — consistent with chance, same
+rejection-reason profile. Host pool homogeneity also passed (−31.5 meV, p = 0.6422, 0.20σ).
+
+Integrity pass on the merged set: **108 unique rows, zero duplicates, identical 7-image bands
+in both batches, zero unconverged bands, zero blow-ups, zero capped rows leaking into the
+admissible set, zero admissible rows above the 0.02 endpoint target.** Extension return test:
+14/14 verified metastable, 5 pure hops admitted, 9 hop+FA kept separate. Pure-hop admissible
+**49/108 = 0.454**.
+
+| | GA | Sr |
+|---|---|---|
+| paired n | **11** (was 9) | **12** (was 10) |
+| mean ΔE_a | **+6.8 meV** | **−4.3 meV** |
+| paired sd | 47.4 meV | 59.6 meV |
+| 95% CI | **[−25.0, +38.6]** | **[−42.2, +33.6]** |
+| CI inside ±59.5 | yes, **35% margin** | yes, **29% margin** |
+| TOST p | **0.0021** | **0.0042** |
+| χ² requirement | 8 → MET at 11 | 12 → MET at 12 |
+
+**Sr's threshold cleared mostly mechanically** — decomposing the 16→12 drop: 2 points from
+sample size alone, 2 from the variance actually falling (65.2 → 59.6 meV). Per the agreed rule
+the claim rests on the CI, not on n_req. Strict-only sensitivity: GA n=6 mean −2.8 sd 39.8;
+Sr n=7 mean −5.8 **sd 21.3** — both inside the band, and Sr's rescued paths carry its variance,
+so the all-pairs figures are conservative.
+
+**Both additives are now equivalent to no effect by the CI test. Still no ranking — they remain
+indistinguishable from zero and from each other, at MACE level only.**
+
 ## 2.4 Result — GA is EQUIVALENT to no effect; Sr is not yet decided
 
 | | GA | Sr |
