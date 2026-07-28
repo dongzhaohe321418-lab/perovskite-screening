@@ -25,11 +25,11 @@ Anything not listed here is historical. Restructured 2026-07-28.
   barrier still descending at stop (431 meV, NOT converged, NOT quotable). q=0: both endpoints
   formally converged (asymmetry −27.1 meV); NEB not yet run.
 - **Scope:** PBE+D3(BJ), degauss 0.005, Γ, 159-atom γ-like cell — one vacancy, one path.
-- **Authoritative:** `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` (gate, 4/5 pass)
+- **Authoritative:** `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` (gate: ALL FIVE conditions PASS)
   + `CHARGE_STATE_ANCHOR.md` (PROVISIONAL anchor)
 - **Raw data:** `results/objective1/dft/charge_relaxed/q0/` (QE outputs .gz, inputs,
   CONVERGENCE_SUMMARY.json), `q1_explore_restart/q1_explore_state.tar.gz`
-- **Next:** HARNESS_TRIAL **complete** (restart-as-re-evaluation proven; `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md`); condition 5 stays PARTIAL pending the PI's four closure items (state-ID on real wavefunctions, degauss-0.005 production inputs + fingerprint check, doc sync, clean-clone green suite); then the full q=0 CI-NEB decision.
+- **Next:** HARNESS_TRIAL **complete** (restart-as-re-evaluation proven; `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md`); condition 5 is PASS (all four PI closure items met: state-ID recomputable from committed weights, production pair at conv_thr=1e-8/degauss=0.005 with machine-verified fingerprint identity, docs synced, clean-clone green). The full q=0+q=+1 production CI-NEB pair awaits the PI's explicit go.
 
 ## Q3. Is V_I⁰ a polaron or a shallow donor?
 
