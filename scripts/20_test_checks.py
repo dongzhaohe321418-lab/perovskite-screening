@@ -861,25 +861,41 @@ print("\n[34] production q=0 NEB input: degauss 0.005 + machine fingerprint matc
 # The trial ran at the generator DEFAULT degauss=0.01 -- fine for the harness, prohibited for
 # production. The PI requires the production input regenerated at 0.005 with an automated
 # fingerprint comparison against the q=+1 leg.
+# PI correction: the comparison object is q0-PRODUCTION vs q1-PRODUCTION -- never explore.
+# (The first version of this test compared against q1_explore, so both sides just inherited
+# the explore-level conv_thr=1e-6 error together.)
 _Q0P = "ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in"
-_Q1P = "ehpc/inputs_stage2/neb_q1/q1_explore.neb.in"
+_Q1P = "ehpc/inputs_stage2/neb_q1_production/q1_cineb.neb.in"
 if _os.path.exists(_Q0P) and _os.path.exists(_Q1P):
+    _DEF = {"tot_charge": "0.0", "nspin": "1"}   # QE defaults resolved explicitly
     def _fp(path):
         _t = open(path).read()
         _f = {}
         for _k in ["ecutwfc", "ecutrho", "degauss", "occupations", "vdw_corr",
-                   "dftd3_version", "nosym", "noinv", "conv_thr", "smearing"]:
+                   "dftd3_version", "nosym", "noinv", "conv_thr", "smearing",
+                   "CI_scheme", "path_thr", "num_of_images", "nstep_path",
+                   "opt_scheme", "tot_charge", "nspin"]:
             _m = _re2.search(rf"^\s*{_k}\s*=\s*(\S+?)\s*$", _t, _re2.M)
-            if _m: _f[_k] = _m.group(1).rstrip(",")
+            _f[_k] = _m.group(1).rstrip(",") if _m else _DEF.get(_k)
         _m = _re2.search(r"K_POINTS\s+\w+\s*\n\s*([\d ]+)", _t)
         _f["kgrid"] = _m.group(1).strip() if _m else None
+        _f["pseudos"] = dict(_re2.findall(r"^\s*([A-Z][a-z]?)\s+[\d.]+\s+(\S+\.UPF)\s*$", _t, _re2.M))
         return _f
     _f0, _f1 = _fp(_Q0P), _fp(_Q1P)
+    expect(_f0.get("conv_thr") == "1e-8" and _f1.get("conv_thr") == "1e-8",
+           f"production pair uses conv_thr=1e-8 (locked protocol; got {_f0.get('conv_thr')}/{_f1.get('conv_thr')})")
     expect(_f0.get("degauss") == "0.005",
            f"production q=0 input uses degauss=0.005 (got {_f0.get('degauss')})")
-    _dif = {k for k in set(_f0) | set(_f1) if _f0.get(k) != _f1.get(k)}
-    expect(not _dif, f"q=0 and q=+1 theory fingerprints are IDENTICAL (diffs: {_dif})")
+    expect(_f0.get("CI_scheme") == "'auto'" and _f0.get("path_thr") == "0.050",
+           "pair-locked NEB params: CI auto, path_thr 0.05")
+    _dif = {k for k in (set(_f0) | set(_f1)) - {"tot_charge"}
+            if str(_f0.get(k)) != str(_f1.get(k))}
+    expect(not _dif, f"q0/q1 PRODUCTION fingerprints identical beyond charge (diffs: {_dif})")
+    expect(float(_f0["tot_charge"]) == 0.0 and float(_f1["tot_charge"]) == 1.0,
+           "charge check is NON-VACUOUS: q0=0.0 (QE default, resolved), q1=1")
     expect(_f0.get("kgrid") == "1 1 1 0 0 0", "k-grid is Gamma (1x1x1 unshifted)")
+    expect(_f0["pseudos"] == _f1["pseudos"] and len(_f0["pseudos"]) == 3,
+           "pseudopotentials identical across the pair (3 species)")
     # the TRIAL input must never be promoted to production
     _TRI = "ehpc/inputs_stage2/neb_q0_trial/q0_trial.neb.in"
     if _os.path.exists(_TRI):
@@ -890,6 +906,58 @@ import glob as _gl2
 _missing = [f for f in _gl2.glob("archive/**/*.md", recursive=True)
             if not open(f).read(60).startswith("> # SUPERSEDED")]
 expect(not _missing, f"every archive/ doc opens with a SUPERSEDED banner (missing: {_missing})")
+
+print("\n[35] state-ID must be RECOMPUTABLE from committed weights -- PI GATE")
+# The first state-ID record shipped only cosine/IPR/E -- results without the data to recompute
+# them. Now the per-atom weight vectors and source hashes are committed; this test recomputes
+# every cosine and IPR from the raw weights and cross-checks the reference hash.
+_SW = "results/objective1/dft/charge_relaxed/harness_trial/state_id_weights.json"
+_RF = "results/objective1/dft/charge_relaxed/harness_trial/q0_reference_metrics.json"
+if _os.path.exists(_SW) and _os.path.exists(_RF):
+    import hashlib as _hl, math as _math
+    _sw = _json.load(open(_SW)); _ref = _json.load(open(_RF))
+    _rh = _hl.sha256(open(_RF, "rb").read()).hexdigest()
+    expect(_rh == _sw["reference_weights_sha256_of_json"],
+           "the committed reference file hash matches the hash recorded at extraction")
+    _rw = _ref["weights"]
+    expect(len(_rw) == 159, "reference weight vector has 159 entries (one per atom)")
+    _pub = {"2": 0.9789, "3": 0.9755, "4": 0.9743}
+    for _img, _d in sorted(_sw["images"].items()):
+        _w = _d["weights"]
+        expect(len(_w) == 159, f"image {_img}: 159 per-atom weights committed")
+        _dot = sum(a*b for a, b in zip(_w, _rw))
+        _na = _math.sqrt(sum(a*a for a in _w)); _nb = _math.sqrt(sum(b*b for b in _rw))
+        _cos = _dot/(_na*_nb)
+        expect(abs(_cos - _d["cosine"]) < 5e-6,
+               f"image {_img}: cosine recomputed from raw weights = {_cos:.6f} matches record")
+        expect(abs(_cos - _pub[_img]) < 5e-4,
+               f"image {_img}: recomputed cosine matches the published {_pub[_img]}")
+        _ipr = sum(x*x for x in _w) / (sum(_w) ** 2)
+        expect(0.02 < _ipr < 0.04,
+               f"image {_img}: IPR from raw weights ({_ipr:.4f}) in the delocalised range")
+        expect(len(_d.get("projwfc_out_sha256", "")) == 64,
+               f"image {_img}: projwfc output sha256 recorded")
+
+print("\n[36] gate-status semantic consistency across ALL authority documents -- PI GATE")
+# The clean-clone suite was green while four documents still said PARTIAL/4-of-5 -- the tests
+# checked syntax, not semantics. This test asserts: any PARTIAL/4-of-5 mention in an authority
+# document must sit in explicitly historical context (held/was/superseded/since met).
+_AUTH = ["results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md",
+         "results/objective1/dft/charge_relaxed/NEB_HARNESS.md",
+         "results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md",
+         "RESULTS_INDEX.md", "EXPERIMENT_AUDIT.md", "results/objective2/CURRENT_STATUS.md"]
+_HIST = ["held at PARTIAL", "was held", "SINCE MET", "since met", "Superseded", "superseded",
+         "historical"]
+for _f in _AUTH:
+    if not _os.path.exists(_f): continue
+    for _i, _ln in enumerate(open(_f).read().splitlines()):
+        if ("PARTIAL" in _ln or "4/5" in _ln or "4 of 5" in _ln) and "PASS" not in _ln:
+            expect(any(h in _ln for h in _HIST),
+                   f"{_f}:{_i+1}: PARTIAL/4-of-5 mention is marked historical: {_ln[:70]!r}")
+_g_idx = open("RESULTS_INDEX.md").read()
+expect("ALL FIVE conditions PASS" in _g_idx, "the index states the gate as fully passed")
+_aud = open("EXPERIMENT_AUDIT.md").read()
+expect("PASS (2026-07-28)" in _aud, "the audit gate table row 5 records PASS")
 
 print("\n" + "=" * 70)
 if FAILS:
