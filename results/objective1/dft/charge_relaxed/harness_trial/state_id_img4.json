@@ -1,0 +1,12 @@
+{
+ "image": 4,
+ "snapshot_sha256_neb_path": "ef471a4ce8eaef8dc723f91a408af617e3c55e187d997ccbca81c9010824f0c9",
+ "reference": "q0A defect state (baseline_metrics.json), identified by weight cosine, never band index",
+ "E_ref_eV": 4.3259,
+ "match": {
+  "E_eV": 4.31676,
+  "cosine": 0.9743,
+  "ipr": 0.02765,
+  "sum_w": 0.93
+ }
+}
