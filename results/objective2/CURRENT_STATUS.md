@@ -38,7 +38,7 @@ ones. Full admission-route accounting in `paired_pilot/CORPUS108_RESULT.md` §6.
 | endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` + `corpus84/return_test_84.json` |
 | barrier definition + tiers | `BARRIER_DEFINITION.md` |
 | GPU validity | `gpu_regression/GATE1_GPU_REGRESSION.md` |
-| automated gates | `../../scripts/checks.py` + `20_test_checks.py` (61 assertions) |
+| automated gates | `../../scripts/checks.py` + `20_test_checks.py` (25 check groups) |
 
 **Superseded / historical (do not cite):** `paired_pilot/PAIRED_PILOT.md` (retracted first
 run), `paired_pilot/RERUN_RESULT.md` and `RETURN_TEST_RESULT.md` statistics (18-host pool —
