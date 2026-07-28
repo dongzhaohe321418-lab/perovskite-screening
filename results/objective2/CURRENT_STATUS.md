@@ -55,16 +55,14 @@ and nothing was computing. The claim was false when made. Corrections:
 | track | true state |
 |---|---|
 | HPC — P1 / P2 | **audited and closed.** P1 wording corrected to CBM-like (see `../objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`); P2 passes all four criteria. |
-| HPC — `q0_final` | **ionic relaxation at the soft-mode floor.** 9 BFGS steps, 8 converged SCF cycles, gradient error **non-monotonic** (3.1 → 1.4 → 2.3×10⁻³; steps below the 1.945×10⁻³ criterion were **not accepted** by BFGS). Energy still descending. This is at the documented soft-tilt-mode floor — **NOT** "endpoint verified converged", and an earlier claim that it "crossed its force target" is retracted. |
+| HPC — `q0_final` | **CONVERGED FORMALLY** (2026-07-28, job `f9993838`): QE convergence block at 10 BFGS steps, energy error 9.8×10⁻⁵ Ry / gradient error 1.6×10⁻³ Ry/bohr, both within criteria. E = −9247.62842357 Ry. The earlier "crossed its force target" claim at a transient sub-threshold reading stays retracted; the run later converged genuinely. Both q=0 endpoints now exist at identical theory level (asymmetry −27.1 meV). |
 | GPU — 8 new hosts | **built and through the homogeneity gate.** m28–m35, see `../fa_host/pool_v3_harmonised/HOST_MANIFEST.md`. |
 | GPU — 24-path extension | **was NOT running when I claimed it was.** Five submissions failed on four distinct causes (invented flags; missing required `--members`; unstaged `checks.py` crashing `--help` so the guard misreported a flag problem; two unstaged input paths). The sixth submission (all inputs staged and inventoried) **completed: 24/24 bands, exit 0**, integrity-audited, return test complete (14/14 metastable), and **merged into the published 108-path result**. |
 
 **Rule adopted:** a track is described as running only after its own preflight has reported
 success and output exists. Job submission is not evidence of execution.
 
-**q=0 NEB gate: NOT open.** 4 of 5 conditions pass; `q0_final` has not reached its force
-target and the band archive/restart harness does not exist. See
-`../objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
+**q=0 NEB gate: condition 1 CLOSED (both endpoints converged); the sole remaining blocker is condition 5 — the band restart/archive/state-ID harness.** No CI-NEB submission until it exists. See `../objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
 
 **Sr methodology note.** The χ² sample-size threshold falls as n rises even at constant
 variance (n_req 16 at n=10 → 13 at n=13 → 10 at n=20, holding sd at 65.2 meV). The final Sr
