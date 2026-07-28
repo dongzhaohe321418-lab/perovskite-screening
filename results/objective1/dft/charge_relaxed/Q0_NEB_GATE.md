@@ -19,17 +19,43 @@ CI-NEB. Current state, audited rather than assumed.
 deduplicated the relaxed structure onto the input by checksum, confirming zero movement
 independently.
 
-**q0_final: in progress and behaving correctly for the first time** (job `f9993838`,
-`nspin=1`). Three BFGS steps completed, each with a fully converged SCF (1.5×10⁻⁷ Ry), and
-the gradient error is descending monotonically toward the target:
+**q0_final: in progress, at the soft-mode floor** (job `f9993838`, `nspin=1`). **Updated
+2026-07-28 — this section previously reported 3 monotonically-descending steps, which is no
+longer the state.** Nine or more BFGS steps completed (the run is live; the count grows), and
+the gradient error does **not** descend monotonically:
 
-    step 1:  energy error 9.7e-5 Ry   gradient error 3.1e-3 Ry/bohr
-    step 2:  energy error 9.4e-5 Ry   gradient error 2.9e-3
-    step 3:  energy error 1.0e-4 Ry   gradient error 2.7e-3    (target 1.945e-3)
+    step: 1     2     3     4     5     6     7     8     9
+    grad: 3.1   2.9   2.7   2.4   1.9   1.4   1.9   2.3   2.2   (x1e-3 Ry/bohr, crit 1.945e-3)
+    eV/A: 0.080 0.075 0.069 0.062 0.049 0.036 0.049 0.059 0.057
 
-Energies −9247.62700020 → −9247.62709463 → −9247.62719485 Ry, descending smoothly. Every
-previous q0_final attempt used `nspin=2` and either diverged or plateaued at 1.4×10⁻³ Ry
-without completing a single step.
+**This table is a snapshot of a running job, not a final record.** The authoritative trajectory
+is the job output itself; the invariant that matters for this gate is the *shape* — the gradient
+oscillates in the 0.036-0.059 eV/Å band and QE has printed no convergence block — not the exact
+step count.
+
+Steps 5-7 read below the criterion but **BFGS did not accept them**; the gradient rose again and
+QE has never printed its convergence block (`End of BFGS` count = 0). A single sub-threshold
+reading is not convergence, and an earlier claim that this run "crossed its force target" is
+retracted.
+
+The energy descends monotonically throughout (−9247.62777349 → −9247.62803730 →
+−9247.62822030 Ry; −3.59 and −2.49 meV on the last two steps), so the optimiser is finding
+genuinely lower structures. The 0.036-0.059 eV/Å oscillation is the **soft octahedral-tilt
+floor** documented for this cell, where the q=+1 endpoints floored at fmax ≈ 0.04 eV/Å.
+
+**Proposed protocol revision, NOT yet adopted.** After the step cap, accept the
+**lowest-gradient accepted step with a stable energy** as the converged geometry — the same
+treatment already applied to the q=+1 pair. Three conditions attach to adopting it:
+
+1. it must be applied **identically to q=0 and q=+1**, since the whole point of the campaign is
+   a charge-state comparison at one theory level;
+2. `LOCKED_PROTOCOL_AND_STOPLOSS.md` and this gate document must both be updated to state the
+   revised acceptance criterion explicitly, before any NEB input is generated;
+3. the accepted geometry's gradient and energy stability must be recorded per endpoint so the
+   comparison is auditable.
+
+Until all three are done, **condition 1 of this gate remains OPEN** regardless of how the
+relaxation ends.
 
 ## Condition 2 — `nspin=1` stability across geometries
 
