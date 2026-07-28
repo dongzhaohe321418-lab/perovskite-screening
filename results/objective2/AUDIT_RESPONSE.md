@@ -104,7 +104,7 @@ be re-measured after the rerun rather than trusted.
 - `scripts/22` default `--pool`/`--vac-ref` point at two structure files that exist in my
   workspace only because a shell step copied them; **they were never committed**, so a
   fresh clone fails on the default command. Now committed.
-- `STATUS.md`, `PROGRESS.md`, and the `ACCEPTANCE_GATE.md` attempt log are behind.
+- `STATUS.md`, `PROGRESS.md`, and the `archive/objective1_q0_diagnostics/ACCEPTANCE_GATE.md (archived)` attempt log are behind.
 
 ---
 
