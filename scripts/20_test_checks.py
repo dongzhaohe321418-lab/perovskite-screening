@@ -644,7 +644,8 @@ if _os.path.exists(_CS):
     expect("61 assertions" not in _s3, "stale assertion count removed from the canonical index")
     expect("28 members" not in _s3 or "36" in _s3,
            "the index does not state a stale pool size")
-    expect("9 BFGS steps" in _s3 or "soft-mode floor" in _s3,
+    # updated 2026-07-28: q0_final converged formally, so the current state IS convergence
+    expect("CONVERGED FORMALLY" in _s3 or "QE convergence block" in _s3,
            "the index carries the current q0_final state")
 
 print("\n[27] canonical docs must not go stale, and links must resolve -- PI AUDIT")
@@ -720,6 +721,39 @@ if _os.path.exists(_GT2):
     expect("PARTIAL" in _row5 or "OPEN" in _row5,
            "condition-5 row still shows the archive harness as the open item")
     expect("No CI-NEB submission" in _g2, "the gate still forbids CI-NEB submission")
+
+# PI request: the q0_final convergence state must be CONSISTENT across gate, canonical index
+# and audit record -- the previous fix touched only the gate. Also: the convergence claim must
+# be checkable from the RAW archived output, not just report transcription.
+_DOCS_Q0 = ["results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md",
+            "results/objective2/CURRENT_STATUS.md", "EXPERIMENT_AUDIT.md"]
+for _f in _DOCS_Q0:
+    if not _os.path.exists(_f):
+        continue
+    _tx = open(_f).read()
+    for _stale in ["q0_final not yet converged", "not yet converged per QE",
+                   "has not reached its force target",
+                   "IN PROGRESS, at the soft-mode floor"]:
+        expect(_stale not in _tx, f"{_os.path.basename(_f)}: no stale claim {_stale!r}")
+    expect("CONVERGED" in _tx, f"{_os.path.basename(_f)}: records q0_final as converged")
+# raw-output archive: the convergence block must be verifiable from the primary record
+import gzip as _gzip
+_GZ = "results/objective1/dft/charge_relaxed/q0/q0_final_ns1.out.gz"
+_CV = "results/objective1/dft/charge_relaxed/q0/CONVERGENCE_SUMMARY.json"
+if _os.path.exists(_GZ) and _os.path.exists(_CV):
+    _raw = _gzip.open(_GZ, "rt", errors="ignore").read()
+    expect("End of BFGS Geometry Optimization" in _raw,
+           "the RAW archived output contains QE's convergence block")
+    expect("bfgs converged in  11 scf cycles and  10 bfgs steps" in _raw,
+           "the raw output contains the exact converged-in line")
+    _cv = _json.load(open(_CV))
+    _fin = next(e for e in _cv["endpoints"] if e["tag"] == "q0_final")
+    expect(_fin["qe_convergence_block"] is True and _fin["final_energy_Ry"] == -9247.62842357,
+           "the parsed summary matches the raw output (block + energy)")
+    import hashlib as _hl
+    _h = _hl.sha256(open(_GZ, "rb").read()).hexdigest()
+    expect(_fin["sha256_of_gz"] == _h,
+           "the summary's recorded hash matches the archived gz on disk")
 
 print("\n" + "=" * 70)
 if FAILS:
