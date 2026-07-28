@@ -75,3 +75,24 @@ follow-up work and is NOT claimed as done.
 Archive ✓, per-image structures ✓, hashes ✓, genuine resume ✓ (scope above), stop-on-failure ✓,
 tagging ✓. **Proposed: condition 5 PARTIAL → PASS with the position-update scope and the
 state-ID wiring gap recorded.** The PI makes the call.
+
+
+---
+
+## Closure items — all four met (2026-07-28, later)
+
+| # | PI item | outcome |
+|---|---|---|
+| 1 | real state-ID on preserved wavefunctions | **DONE** (job `c19efa6f`): `projwfc.x` on all 3 interior images → per-atom weights → cosine vs the q0A reference. **Image 2: 0.9789, image 3: 0.9755, image 4: 0.9743**; energies 4.317–4.332 eV vs reference 4.3259 eV; IPR 0.027 (reference 0.026). Records cite snapshot sha `ef471a4ce8…` and live in `harness_trial/state_id_img{2,3,4}.json`. Identification by weight cosine — band index never used. The original snapshots were not modified (append-only preserved). First attempt OOM-killed on 1 node; the proven 2-node/64-rank projwfc layout succeeded. |
+| 2 | production inputs at degauss 0.005 + fingerprint check | **DONE**: `ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` regenerated at 0.005; automated comparison vs the q=+1 leg (`fingerprint_check.json`) — identical on every field, Γ grid confirmed; test [34] pins it and pins the trial input as-run (0.01), never promotable. |
+| 3 | authority documents synced | **DONE**: gate, harness doc, results index all record the trial as run, with scope. |
+| 4 | suite green from clean clone | **DONE**: GitHub zipball of `main` extracted to a fresh directory, suite run there: exit 0, 385 assertions. The four unbannered pre-existing `archive/` files (the clean-clone failures) are bannered; test [34] sweeps all of `archive/`. |
+
+**The state-ID result also carries workflow meaning worth one sentence:** the half-occupied
+state remains identifiable and CBM-like (cosine ≥ 0.974) at every interior image of the
+2-update band — the tracking machinery the q=0 CI-NEB needs is demonstrated on exactly the
+band it will track. (Not a mechanism statement; HARNESS_TRIAL scope applies.)
+
+**Condition 5: PARTIAL → PASS**, per the PI's conditional ruling with all four items met.
+The full q=0 CI-NEB submission decision is now open; the trial's intermediate energies remain
+unquotable.
