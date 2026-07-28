@@ -61,9 +61,17 @@ it goes.
 - Relaxed at **production tolerance** (`forc_conv_thr = 7.8e-4`, fmax 0.02 eV/Å), tighter
   than the explore tier that gave zero steps.
 
-**Returns to the undistorted m = 0 geometry** → no polaron basin exists from a strong seed,
-and "shallow donor" is earned at this level of theory.
-**Falls into a distinct distorted magnetic minimum** → a polaron exists, the delocalised
-result was an artefact of the starting point, and the barrier programme changes shape.
+**Returns to the undistorted m = 0 geometry** → no polaron basin from a strong seed.
+**Falls into a distinct distorted magnetic minimum** → a polaron exists and the barrier
+programme changes shape.
 
 Both outcomes are results. Neither licenses a charge-state ordering.
+
+> **OUTCOME (this test has since run — see `Q0_POLARON_EXCLUDED.md`).** The seeded state
+> converged to ~110 meV *above* the delocalised solution with its moment decaying
+> monotonically, so there is no polaron basin from this seed. But the result is a **bound,
+> not an exclusion**: the localisation gain was smaller than the run's own SCF residual, so
+> the honest conclusion is "no *thermally significant* polaron" (deepest possible well
+> ~8 meV, well under kT), not "no polaron at any amplitude". The predicted wording above —
+> that returning would make "shallow donor" simply *earned* — was too strong and the
+> outcome document states the bounded version.
