@@ -823,6 +823,34 @@ if _os.path.exists(_c84):
     expect(open(_c84).read(150).startswith("> **SUPERSEDED"),
            "CORPUS84 opens with its supersession pointer")
 
+print("\n[33] restart evidence must be recompute-vs-reread, and numeric bounds must match data")
+# Three reviewer findings on the HARNESS_TRIAL report, one root: (a) an audit cell cited the
+# NEAR-ZERO energy movement as 'evidence of genuine continuation' -- backwards; stability at
+# fixed positions evidences nothing. The valid discriminator is recompute-vs-reread: v2's no-op
+# gave a BIT-IDENTICAL neb.path (same sha, 0s SCF); v4 spent 1h16m SCF and produced
+# re-converged non-identical values. (b,c) the report claimed <=3e-9 au energy agreement when
+# the printed snapshots give max 4e-8 -- an order of magnitude off.
+_TR = "results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md"
+if _os.path.exists(_TR):
+    _tr = open(_TR).read()
+    expect("3×10⁻⁹" not in _tr.replace("was wrong", "\x00", 1) or "wrong" in _tr,
+           "the retracted 3e-9 bound appears only inside its own correction")
+    expect("4×10⁻⁸" in _tr, "the correct max energy delta (4e-8 au) is stated")
+    expect("Recompute-vs-reread" in _tr or "recompute" in _tr.lower(),
+           "the report names recompute-vs-reread as the discriminator")
+    expect("bit-identical" in _tr.lower(),
+           "the v2 no-op signature (bit-identical file) is recorded for contrast")
+    expect("evidence of nothing" in _tr or "mislabelled" in _tr,
+           "the backwards 'energy stability = continuation' claim is retracted in the report")
+    expect("NOT as position update" in _tr,
+           "criterion 3's PASS is scoped to re-evaluation, not position update")
+    # the actual snapshot energies, pinned so the bound can't drift again
+    _E0 = [-4623.81474023, -4623.79612228, -4623.77858921, -4623.79523558, -4623.81562675]
+    _E1 = [-4623.81474023, -4623.79612229, -4623.77858919, -4623.79523562, -4623.81562675]
+    _dmax = max(abs(a - b) for a, b in zip(_E0, _E1))
+    expect(3e-9 < _dmax < 1e-7 and abs(_dmax - 4e-8) < 1e-9,
+           f"pinned snapshot energies give max delta 4e-8 au (got {_dmax:.1e}) -- the old bound was wrong")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
