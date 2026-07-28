@@ -1,3 +1,9 @@
+> # SUPERSEDED — archived (bannered 2026-07-28)
+>
+> Early FA-transition note; the pool, sampler and screening design it sketches were all superseded.
+>
+> **Current authority: `results/objective2/CURRENT_STATUS.md`.** Retained verbatim below for provenance; do not cite as current.
+
 # 下一阶段研究指引 — FA₀.₉₅Cs₀.₀₅PbI₃ 转向(给 Mac mini 的 claudescience)
 
 写于 2026-07-23(MacBook Pro 会话)。前提:已读 GitHub 上全部 14 个新 commit 的
