@@ -1,4 +1,18 @@
-# q=0 RESOLVED — the state is the conduction band minimum, and the SCF was never broken
+# q=0 RESOLVED — the state is CBM-like, and the SCF was never broken
+
+> **WORDING CORRECTED (see `P1_REFERENCE_AUDIT.md`).** This document originally titled the
+> result "the state IS the conduction band minimum" and cited a 7 meV energy agreement
+> (pristine 4.3188 vs defective 4.3259 eV). That comparison used raw eigenvalues from two
+> separate periodic calculations, which share no common energy zero — it was not valid.
+> Re-anchored: VBM-referenced the difference is +75.9 meV, semicore-aligned +52.1 meV. All
+> references place the state at the conduction band edge, so the identification stands, but
+> at ~50–80 meV resolution rather than 7 meV. The claim is therefore **CBM-like /
+> consistent with the pristine CBM**, not identity. The per-atom overlap (cosine 0.9757 vs
+> controls 0.788/0.741) and Pb-p character (90.8% vs 91.4%) are unaffected and remain the
+> strongest evidence. A new check strengthens the picture: the 229 meV gap above the state
+> is the pristine supercell's OWN Γ-point band-edge spacing (311 meV), mildly perturbed —
+> so nothing is split off from the conduction manifold and there is no donor level to
+> interpret.
 
 **Both discriminators returned unambiguous answers. The q=0 "spin-SCF convergence problem"
 that consumed six attempts was not a numerical pathology: the calculation was being asked
