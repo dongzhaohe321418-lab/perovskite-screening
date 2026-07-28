@@ -10,20 +10,33 @@ result. The trial exists solely to answer: can the harness archive a live q=0 ba
 |---|---|---|
 | 1 | ≤2 NEB updates fresh + 1 restart evaluation, no CI | **MET** — phase 1: nstep_path=2 (2 updates, `JOB DONE`); restart: nstep_path=3=istep+1 (1 evaluation) |
 | 2 | per-snapshot neb.path, per-image structures, hashes, energies | **MET** — both snapshots carry `neb.path` (sha256), 5-frame `images.extxyz` (sha256), 5 energies; state-ID field present in META (see gap below) |
-| 3 | genuine restart from the archive, not mere re-reading | **MET, with precise scope** — see decomposition below |
+| 3 | genuine restart from the archive, not mere re-reading | **MET as re-evaluation, NOT as position update** — QE resumed the iteration counter and spent 1h16m recomputing SCF from the archived state (bit-non-identical re-converged values); no Broyden move ran at this budget, so zero atoms moved. See decomposition below. |
 | 4 | stop on any failure, raw outputs preserved | **MET** — demonstrated live: v1 halted in env setup (exit 1), v3 halted at the archive step (exit 4) with the raw traceback preserved; v4's asserts all passed |
 | 5 | all products tagged, no barrier reported | **MET** — no activation-energy value from any trial output appears in any report or statistic |
 
 ## What the restart demonstrably did (criterion 3, stated precisely)
 
 `neb.x` parsed `restart_mode='restart'`, **resumed at iteration 3** (not 1), and ran a full SCF
-force evaluation on all three interior images (~1.5 h wall). The re-archived snapshot differs
-from the pre-restart snapshot in exactly the fields a genuine continuation updates:
+force evaluation on all three interior images (1h16m wall; ~25 min of self-consistency per
+interior image, read from the tcpu stamps). The re-archived snapshot differs from the
+pre-restart snapshot in exactly the fields a genuine re-evaluation updates:
 
 - `istep`: 2 → 3
-- all 5 image energies (re-converged SCF; ≤3×10⁻⁹ au from the archived values)
-- **477 gradient rows updated**
+- image energies re-converged: per-image |ΔE| = 0, 1×10⁻⁸, 2×10⁻⁸, 4×10⁻⁸, 0 au
+  (**max 4×10⁻⁸ au ≈ 1.1 µeV** — an earlier version of this file wrote "≤3×10⁻⁹ au", which
+  was wrong by an order of magnitude; corrected against the printed snapshot values)
+- **477 of 636 gradient rows updated**, |Δgrad| up to 2.7×10⁻⁴ au (median 4×10⁻⁶) against
+  gradient magnitudes up to 4.3×10⁻² au — the ~10⁻⁵-relative wiggle of a re-converged SCF at
+  identical positions
 - **0 position rows changed**
+
+**Recompute-vs-reread is the decisive discriminator, and it separates v4 from the v2 no-op:**
+a file re-read gives bit-identical values — v2's post-"restart" `neb.path` had the *same*
+sha256 and zero SCF time. v4 spent 1h16m of SCF and produced re-converged, non-bit-identical
+energies and gradients. That — not the hash difference per se, and *not* the near-zero energy
+movement (which an earlier audit cell mislabelled "evidence of genuine continuation"; energy
+*stability* at fixed positions is evidence of nothing) — is what demonstrates the archived
+snapshot is a live optimiser state QE genuinely resumes from.
 
 Positions are unchanged because QE applies the Broyden move *after* the force evaluation, and
 the `nstep_path` cap stops the run at the evaluation. So the trial proves: **the archived
