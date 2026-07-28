@@ -154,13 +154,28 @@ The q=+1 geometry is already a q=0 stationary point. Independent confirmation: t
 store **deduplicated the relaxed structure onto the q=+1 input by checksum** — the geometry is
 byte-identical.
 
-**q0_final (`nspin=1`, job `f9993838`): IN PROGRESS.** 7 BFGS steps, 6 converged SCF cycles,
-gradient error descending
+**q0_final (`nspin=1`, job `f9993838`): IN PROGRESS, at the soft-mode floor.** 9 BFGS steps,
+8 converged SCF cycles. The gradient error does **not** descend monotonically:
 
-    3.1E-03 → 2.9E-03 → 2.7E-03 → 2.4E-03 → 1.9E-03 → 1.4E-03 Ry/bohr   (criterion 1.945E-03)
+    step: 1     2     3     4     5     6     7     8
+    grad: 3.1  2.9   2.7   2.4   1.9   1.4   1.9   2.3   (x1e-3 Ry/bohr, criterion 1.945e-3)
+          0.080 0.075 0.069 0.062 0.049 0.036 0.049 0.059  (eV/A)
 
-It has crossed the criterion value but QE has **not** printed its convergence block, so this
-is **NOT** a verified converged endpoint. Latest energy −9247.62777349 Ry.
+**Correction.** An earlier status message said this run "has crossed its force target". That was
+premature. Steps 5-7 read below the criterion, but **BFGS did not accept them** and the gradient
+rose again to 2.3E-03; QE's convergence block has never been printed (`End of BFGS` count = 0).
+A single sub-threshold gradient reading is not convergence.
+
+What *is* happening: the energy descends monotonically (−9247.62777349 → −9247.62803730 →
+−9247.62822030 Ry, i.e. −3.59 and −2.49 meV on the last two steps), so the optimiser is finding
+genuinely lower structures. The oscillation at 0.036-0.059 eV/Å is the **soft octahedral-tilt
+floor already documented for this cell** (BFGS floors near fmax ≈ 0.04 eV/Å), the same behaviour
+recorded for the q=+1 endpoints in `LOCKED_PROTOCOL_AND_STOPLOSS.md`.
+
+**Consequence:** this endpoint will very likely need the same treatment as the q=+1 pair —
+accept the lowest-gradient accepted step as an energy-converged geometry rather than waiting for
+a formal BFGS convergence that the soft modes prevent. That is a protocol decision, not a
+result, and it is flagged here rather than taken silently.
 
 ## 1.9 q = 0 NEB entry gate — NOT OPEN
 
