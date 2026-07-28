@@ -581,15 +581,33 @@ if _os.path.exists(_PF) and _os.path.exists(_DRV):
     # c) explicit inputs must have a remote source (stage / local-map / assembled)
     expect("has no remote source" in _r.stdout,
            "preflight checks that each explicit input maps to a remote target")
-    # d) the CORRECT invocation must still pass -- a guard that rejects everything is useless
+    # d) the CORRECT invocation must still pass -- a guard that rejects everything is useless.
+    # SELF-CONTAINED fixture (PI finding: the first version depended on a /tmp directory that
+    # existed only on my machine, so the suite failed everywhere else). The remote layout is
+    # declared with EXACT remote-path mappings -- pool/<file>=<local source> -- which is also
+    # the semantics real submissions must use; no --pool-dir, no external state.
     _r = _pf("--pool pool --vac-ref vac_ref.extxyz --members 28 29 --systems undoped GA Sr "
              "--out out --device cuda",
              ("results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
               "results/fa_host/fa19cs1_pb20i60_233.extxyz",
-              "--local-map", "vac_ref.extxyz=results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
-              "--assembled", "pool", "--pool-dir", "/tmp/pf_pool"))
-    expect("PREFLIGHT PASSED" in _r.stdout,
+              "--local-map",
+              "vac_ref.extxyz=results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
+              "pool/fa19cs1_pb20i60_233.extxyz=results/fa_host/fa19cs1_pb20i60_233.extxyz",
+              "--assembled", "pool"))
+    expect(_r.returncode == 0 and "PREFLIGHT PASSED" in _r.stdout,
            "the correct invocation still PASSES (no over-rejection)")
+    expect("pool/fa19cs1_pb20i60_233.extxyz <- results/fa_host/fa19cs1_pb20i60_233.extxyz" in _r.stdout,
+           "the interpolated read is satisfied by the EXACT remote-path mapping")
+    # d2) an exact mapping pointing at a NONEXISTENT local source must fail
+    _r = _pf("--pool pool --vac-ref vac_ref.extxyz --members 28 --systems undoped GA Sr "
+             "--out out",
+             ("results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
+              "--local-map",
+              "vac_ref.extxyz=results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
+              "pool/fa19cs1_pb20i60_233.extxyz=NOWHERE.extxyz",
+              "--assembled", "pool"))
+    expect(_r.returncode != 0 and "does not exist locally" in _r.stdout,
+           "an exact mapping to a nonexistent local source is REJECTED")
     # e) output flags must not be demanded as pre-existing inputs
     expect("--out = 'out' does not exist" not in _r.stdout,
            "an output directory is not required to pre-exist")
