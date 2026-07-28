@@ -690,18 +690,20 @@ if _os.path.exists(_GT):
     # 2026-07-28 (later): the harness was built and validated on the real q=+1 band, so
     # condition 5 went from "missing" to PARTIAL. The assertion now pins the SHARPER state --
     # that condition 5 is still not PASS and the live-job component is named as the gap.
-    expect("Condition 5 is PARTIAL" in _g,
-           "condition 5 is recorded as PARTIAL, not passed")
-    expect("not yet exercised on a live q=0 job" in _g or "live q=0 job" in _g,
-           "the un-exercised live-job component is named explicitly")
+    # 2026-07-28 (final): all four PI closure items met -> condition 5 legitimately PASS.
+    expect("ALL FIVE CONDITIONS PASS" in _g, "the gate records all five conditions as passed")
+    expect("0.9789" in _g or "0.974" in _g,
+           "the state-ID cosines from real wavefunctions are recorded in the gate")
+    _gflat = " ".join(_g.split())
+    expect("requires an explicit go from the PI" in _gflat,
+           "passing the gate authorises ASKING, not launching")
     # 2026-07-28 (later): the trial RAN; the gate now records the PI verdict instead of the
     # proposal. The invariants: prohibition stands, trial output unquotable, closure items named.
     expect("PI verdict on the trial" in _g, "the gate records the PI verdict on the trial")
     expect("remain unquotable" in _g or "stay unquotable" in _g,
            "the trial energies are explicitly unquotable")
-    expect("No full q=0 CI-NEB submission" in _g,
-           "the gate still forbids the full CI-NEB")
-    expect("No full q=0 CI-NEB submission" in _g, "the gate still forbids CI-NEB submission")
+    expect("requires an explicit go from the PI" in _gflat,
+           "CI-NEB launch requires explicit PI approval (gate passed != launch approved)")
 
 print("\n[29] preflight must emit a local->remote staging manifest -- PI REQUEST")
 if _os.path.exists("scripts/25_preflight.py"):
@@ -730,9 +732,10 @@ if _os.path.exists(_GT2):
     # table/body consistency for every condition: a row claiming PASS must not have body text
     # still calling that condition open, and vice versa for condition 5
     _row5 = next((l for l in _g2.splitlines() if l.startswith("| 5 |")), "")
-    expect("PARTIAL" in _row5 or "OPEN" in _row5,
-           "condition-5 row still shows the archive harness as the open item")
-    expect("No full q=0 CI-NEB submission" in _g2, "the gate still forbids CI-NEB submission")
+    expect("PASS" in _row5 and "PARTIAL" not in _row5,
+           "condition-5 row records PASS after the closure items (table/body agree)")
+    expect("requires an explicit go from the PI" in " ".join(_g2.split()),
+           "CI-NEB launch still requires explicit PI approval")
 
 # PI request: the q0_final convergence state must be CONSISTENT across gate, canonical index
 # and audit record -- the previous fix touched only the gate. Also: the convergence claim must
