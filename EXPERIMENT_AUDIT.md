@@ -185,6 +185,21 @@ of the path. Recorded as an observation; interpretation awaits the NEBs.
 
 ## 1.9 q = 0 NEB entry gate — ALL FIVE CONDITIONS PASS (2026-07-28); launch awaits explicit PI go
 
+**LAUNCH RECORD (2026-07-28, PI-approved):** both production CI-NEBs submitted after the PI's
+explicit go, scoped to the exact approved input hashes.
+
+| leg | job id | SLURM | input sha256 (PI-approved = staged, verified remote) | manifest commit |
+|---|---|---|---|---|
+| q=0 | `374e51f1` | 54, RUNNING | `04acee190675ec82c3d5132a61079506955413afcc4c871b39d4c9d6edfd12c7` | `1b0add68` |
+| q=+1 | `98199034` | 55, PENDING (Resources — normal; 2-node cluster runs the legs serially) | `9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267` | `aa64a8f5` |
+
+Two-step rule followed: staging manifests committed BEFORE submission; remote hashes verified
+in place (input + harness `b3cc0149…` + reference `7af20ebb…`) before the tasks were reported
+running. In-job guards: hash gate at start (exit 2 on mismatch), per-advance append-only
+archiving with parse-before-archive and verification, stop-on-persistent-archive-failure or
+image-count anomaly with raw outputs preserved. **No barrier from either leg is extracted or
+reported until BOTH legs converge; explore/trial intermediates remain unquotable.**
+
 | # | condition | status |
 |---|---|---|
 | 1 | both endpoints ionically converged | **PASS — both converged** (final: QE block, 10 steps) |
