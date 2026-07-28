@@ -21,6 +21,13 @@ test.**
 sample size alone, 2 from the variance genuinely falling 65.2 → 59.6 meV), so the CI is what
 carries its claim — as agreed. GA's margin is the larger of the two.
 
+Sr's spread is driven partly by two configurations (`m14`, `m20`) that entered via the
+**return-test rescue**, not the strict gate (`Sr_m14` and `undoped_m20` both have
+`gate_endpoints.passed = False`). They are kept — removing them would be selection on outcome —
+and a sensitivity analysis shows the strict-only subsets are tighter (GA sd 39.8, Sr **sd 21.3**
+against 47.4 and 59.6 for all pairs), so the reported all-pairs figures are the conservative
+ones. Full admission-route accounting in `paired_pilot/CORPUS108_RESULT.md` §6.
+
 **No ranking. Both are indistinguishable from zero and from each other. MACE level only.**
 
 | question | authoritative document |
@@ -47,7 +54,7 @@ and nothing was computing. The claim was false when made. Corrections:
 | track | true state |
 |---|---|
 | HPC — P1 / P2 | **audited and closed.** P1 wording corrected to CBM-like (see `../objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`); P2 passes all four criteria. |
-| HPC — `q0_final` | **early but well-behaved ionic relaxation.** 3 BFGS steps, each SCF converged, gradient error descending 3.1 → 2.7×10⁻³ toward 1.945×10⁻³. This is "moving stably for the first time", **NOT** "endpoint verified converged". |
+| HPC — `q0_final` | **ionic relaxation at the soft-mode floor.** 9 BFGS steps, 8 converged SCF cycles, gradient error **non-monotonic** (3.1 → 1.4 → 2.3×10⁻³; steps below the 1.945×10⁻³ criterion were **not accepted** by BFGS). Energy still descending. This is at the documented soft-tilt-mode floor — **NOT** "endpoint verified converged", and an earlier claim that it "crossed its force target" is retracted. |
 | GPU — 8 new hosts | **built and through the homogeneity gate.** m28–m35, see `../fa_host/HOST_MANIFEST.md`. |
 | GPU — 24-path extension | **was NOT running when I claimed it was.** Five submissions failed on four distinct causes (invented flags; missing required `--members`; unstaged `checks.py` crashing `--help` so the guard misreported a flag problem; two unstaged input paths). The sixth submission, with all three input classes staged and inventoried, is now genuinely producing bands. |
 
