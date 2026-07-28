@@ -556,6 +556,79 @@ for _f in ["EXPERIMENT_AUDIT.md", "results/objective2/CURRENT_STATUS.md"]:
                or ("soft-mode floor" in _w),
                f"{_os.path.basename(_f)}: q0_final is not described as a verified endpoint")
 
+print("\n[25] preflight must reject NONEXISTENT EXPLICIT paths -- VULNERABILITY, found by PI")
+# The preflight I built after five failed submissions had a hole: it validated argparse DEFAULTS
+# and the manually-listed --stage files, but NEVER the values actually passed in --invocation.
+# `--pool DOES_NOT_EXIST --vac-ref MISSING.extxyz` returned "PREFLIGHT PASSED -- safe to submit".
+_PF = "scripts/25_preflight.py"
+_DRV = "scripts/22_paired_pilot.py"
+if _os.path.exists(_PF) and _os.path.exists(_DRV):
+    def _pf(inv, extra=()):
+        _c = [_sys.executable, _PF, "--driver", _DRV, "--invocation", inv,
+              "--stage", "scripts/checks.py", *extra]
+        return _sp.run(_c, capture_output=True, text=True)
+    # a) nonexistent --pool must fail
+    _r = _pf("--pool DOES_NOT_EXIST --members 28 --systems undoped GA Sr --out out")
+    expect(_r.returncode != 0 and "PREFLIGHT FAILED" in _r.stdout,
+           "nonexistent explicit --pool is REJECTED")
+    expect("DOES_NOT_EXIST" in _r.stdout, "the failure names the offending value")
+    # b) nonexistent --vac-ref must fail
+    _r = _pf("--pool pool --vac-ref MISSING.extxyz --members 28 --systems undoped GA Sr --out out",
+             ("--assembled", "pool"))
+    expect(_r.returncode != 0 and "PREFLIGHT FAILED" in _r.stdout,
+           "nonexistent explicit --vac-ref is REJECTED")
+    expect("MISSING.extxyz" in _r.stdout, "the failure names the missing file")
+    # c) explicit inputs must have a remote source (stage / local-map / assembled)
+    expect("has no remote source" in _r.stdout,
+           "preflight checks that each explicit input maps to a remote target")
+    # d) the CORRECT invocation must still pass -- a guard that rejects everything is useless
+    _r = _pf("--pool pool --vac-ref vac_ref.extxyz --members 28 29 --systems undoped GA Sr "
+             "--out out --device cuda",
+             ("results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
+              "results/fa_host/fa19cs1_pb20i60_233.extxyz",
+              "--local-map", "vac_ref.extxyz=results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
+              "--assembled", "pool", "--pool-dir", "/tmp/pf_pool"))
+    expect("PREFLIGHT PASSED" in _r.stdout,
+           "the correct invocation still PASSES (no over-rejection)")
+    # e) output flags must not be demanded as pre-existing inputs
+    expect("--out = 'out' does not exist" not in _r.stdout,
+           "an output directory is not required to pre-exist")
+
+print("\n[26] authoritative docs must not contradict each other -- PI AUDIT")
+# Three divergences found by the PI: LOCKED_PROTOCOL still mandated nspin=2 for q=0 and claimed
+# an odd electron count forbids m=0 (contradicted by P2 and the running nspin=1 relaxation);
+# Q0_POLARON_EXCLUDED said the q=0 NEB is "a matter of compute" while the gate says 2 of 5
+# conditions are open; CURRENT_STATUS carried stale counts while calling itself canonical.
+_LP = "results/objective1/dft/charge_relaxed/LOCKED_PROTOCOL_AND_STOPLOSS.md"
+if _os.path.exists(_LP):
+    _s = open(_LP).read()
+    expect("SUPERSEDED IN PART" in _s[:400],
+           "LOCKED_PROTOCOL opens with a superseded banner")
+    expect("q=0 uses `nspin=1`" in _s or "Current protocol for q=0: `nspin=1`" in _s,
+           "LOCKED_PROTOCOL states the current q=0 protocol is nspin=1")
+    _i = _s.find("**2 for q=0**")
+    expect(_i == -1 or "RETRACTED" in _s[_i:_i+200] or "~~" in _s[max(0,_i-4):_i],
+           "the nspin=2 mandate is struck/retracted, not asserted")
+    expect("soft octahedral-tilt" in _s or "soft-tilt" in _s,
+           "the banner preserves what still stands (the soft-mode floor)")
+_PX = "results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md"
+if _os.path.exists(_PX):
+    _s2 = open(_PX).read()
+    _j = _s2.find("matter of compute")
+    expect(_j == -1 or "previously read" in _s2[max(0,_j-300):_j+300]
+           or "overstated" in _s2[max(0,_j-300):_j+300],
+           "the 'matter of compute' claim is corrected, not asserted")
+    expect("gate is not open" in _s2 or "Two of five" in _s2,
+           "the polaron doc defers to the NEB gate")
+_CS = "results/objective2/CURRENT_STATUS.md"
+if _os.path.exists(_CS):
+    _s3 = open(_CS).read()
+    expect("61 assertions" not in _s3, "stale assertion count removed from the canonical index")
+    expect("28 members" not in _s3 or "36" in _s3,
+           "the index does not state a stale pool size")
+    expect("9 BFGS steps" in _s3 or "soft-mode floor" in _s3,
+           "the index carries the current q0_final state")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
