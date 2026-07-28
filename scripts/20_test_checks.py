@@ -550,11 +550,13 @@ for _f in ["EXPERIMENT_AUDIT.md", "results/objective2/CURRENT_STATUS.md"]:
     expect(_i == -1 or "retracted" in _tx[_i:_i+220] or "premature" in _tx[_i:_i+220],
            f"{_os.path.basename(_f)}: the 'crossed its force target' claim is retracted, not asserted")
     if "q0_final" in _tx:
-        # widen the window: the disclaimer can sit after the trajectory table
-        _w = _tx[_tx.find("q0_final"):_tx.find("q0_final") + 2000]
-        expect(("NOT" in _w) or ("not reached" in _w) or ("premature" in _w)
-               or ("soft-mode floor" in _w),
-               f"{_os.path.basename(_f)}: q0_final is not described as a verified endpoint")
+        # ERA UPDATE 2026-07-28: q0_final SINCE CONVERGED FORMALLY (QE's own block). The durable
+        # invariant is no longer "not described as verified" -- it is that the premature claim's
+        # retraction survives (asserted above) and the doc records the FORMAL convergence rather
+        # than a single sub-threshold reading.
+        _w = _tx[_tx.find("q0_final"):_tx.find("q0_final") + 2500]
+        expect(("CONVERGED" in _w.upper()) or ("convergence block" in _w),
+               f"{_os.path.basename(_f)}: q0_final is recorded as formally converged")
 
 print("\n[25] preflight must reject NONEXISTENT EXPLICIT paths -- VULNERABILITY, found by PI")
 # The preflight I built after five failed submissions had a hole: it validated argparse DEFAULTS
@@ -958,6 +960,29 @@ _g_idx = open("RESULTS_INDEX.md").read()
 expect("ALL FIVE conditions PASS" in _g_idx, "the index states the gate as fully passed")
 _aud = open("EXPERIMENT_AUDIT.md").read()
 expect("PASS (2026-07-28)" in _aud, "the audit gate table row 5 records PASS")
+# PI round 2 (commit 21846e10 review): four contradictions test [36] v1 did NOT cover.
+# Each stale phrase below, if present outside historical/strikethrough context, fails the suite.
+_STALE = ["sole remaining blocker", "NOT OPEN", "end-to-end pending",
+          "one endpoint ESTABLISHED, one IN PROGRESS"]
+for _f in _AUTH:
+    if not _os.path.exists(_f): continue
+    for _i, _ln in enumerate(open(_f).read().splitlines()):
+        for _ph in _STALE:
+            if _ph in _ln:
+                expect(any(h in _ln for h in _HIST) or "~~" in _ln,
+                       f"{_f}:{_i+1}: stale phrase {_ph!r} only in historical context")
+# the locked protocol may state exactly ONE production path_thr (0.05); 0.10 only as history
+_lp = open("results/objective1/dft/charge_relaxed/LOCKED_PROTOCOL_AND_STOPLOSS.md").read()
+for _i, _ln in enumerate(_lp.splitlines()):
+    if "path_thr" in _ln and "0.10" in _ln and "0.05" not in _ln:
+        expect("~~" in _ln or "explore" in _ln.lower(),
+               f"LOCKED_PROTOCOL:{_i+1}: a 0.10 path_thr line is marked historical/explore")
+expect("**0.05 eV/Å** (tightened" in _lp,
+       "the protocol amendment states production path_thr = 0.05")
+# the audit must not describe the gate as unopened, nor q0_final as unconverged current-state
+expect("NOT OPEN" not in _aud, "the audit no longer describes the gate as NOT OPEN")
+expect("launch awaits explicit PI go" in _aud or "waits for the" in _aud,
+       "the audit records gate-passed-but-launch-needs-PI-go")
 
 print("\n" + "=" * 70)
 if FAILS:
