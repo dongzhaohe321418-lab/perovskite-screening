@@ -5,7 +5,7 @@ CI-NEB. Current state, audited rather than assumed.
 
 | # | condition | status |
 |---|---|---|
-| 1 | both q=0 endpoints genuinely ionically converged | **initial PASS, final IN PROGRESS** |
+| 1 | both q=0 endpoints genuinely ionically converged | **PASS — both converged** (final: QE block, 10 BFGS steps, 2026-07-28) |
 | 2 | `nspin=1` stable and restartable across nearby geometries | **PASS** |
 | 3 | P1/P2 show no competing localised spin state | **PASS** |
 | 4 | q=0 and q=+1 at an identical theory fingerprint | **PASS (by construction)** |
@@ -19,43 +19,35 @@ CI-NEB. Current state, audited rather than assumed.
 deduplicated the relaxed structure onto the input by checksum, confirming zero movement
 independently.
 
-**q0_final: in progress, at the soft-mode floor** (job `f9993838`, `nspin=1`). **Updated
-2026-07-28 — this section previously reported 3 monotonically-descending steps, which is no
-longer the state.** Nine or more BFGS steps completed (the run is live; the count grows), and
-the gradient error does **not** descend monotonically:
+**q0_final: CONVERGED** (job `f9993838`, `nspin=1`, 2026-07-28). QE printed its own
+convergence block — no protocol revision was needed:
 
-    step: 1     2     3     4     5     6     7     8     9
-    grad: 3.1   2.9   2.7   2.4   1.9   1.4   1.9   2.3   2.2   (x1e-3 Ry/bohr, crit 1.945e-3)
-    eV/A: 0.080 0.075 0.069 0.062 0.049 0.036 0.049 0.059 0.057
+    Energy error   = 9.8E-05 Ry     (criterion 1.0E-04)   PASS
+    Gradient error = 1.6E-03 Ry/Bohr (criterion 1.9E-03)  PASS
+    bfgs converged in 11 scf cycles and 10 bfgs steps
 
-**This table is a snapshot of a running job, not a final record.** The authoritative trajectory
-is the job output itself; the invariant that matters for this gate is the *shape* — the gradient
-oscillates in the 0.036-0.059 eV/Å band and QE has printed no convergence block — not the exact
-step count.
+Full gradient trajectory (×10⁻³ Ry/bohr): 3.1 2.9 2.7 2.4 1.9 1.4 1.9 2.3 2.2 2.0 → **1.6
+accepted**. The mid-run oscillation (1.4 rising to 2.3) was real — an earlier claim that the run
+had "crossed its force target" at the transient 1.4 reading was retracted — but the optimiser
+worked through the soft-mode floor and converged formally. The proposed
+lowest-accepted-step protocol revision is therefore **withdrawn as unnecessary**; it was never
+adopted.
 
-Steps 5-7 read below the criterion but **BFGS did not accept them**; the gradient rose again and
-QE has never printed its convergence block (`End of BFGS` count = 0). A single sub-threshold
-reading is not convergence, and an earlier claim that this run "crossed its force target" is
-retracted.
+Final energy **−9247.62842357 Ry**. Displacement from the q=+1 final geometry: max 0.047 Å,
+mean 0.010 Å, no atom over 0.05 Å — unlike `q0_initial` (which converged in zero steps), this
+endpoint did relax, but only slightly, consistent with the delocalised electron adding no
+strong local force.
 
-The energy descends monotonically throughout (−9247.62777349 → −9247.62803730 →
-−9247.62822030 Ry; −3.59 and −2.49 meV on the last two steps), so the optimiser is finding
-genuinely lower structures. The 0.036-0.059 eV/Å oscillation is the **soft octahedral-tilt
-floor** documented for this cell, where the q=+1 endpoints floored at fmax ≈ 0.04 eV/Å.
+**The q=0 endpoint pair, both converged at identical theory level:**
 
-**Proposed protocol revision, NOT yet adopted.** After the step cap, accept the
-**lowest-gradient accepted step with a stable energy** as the converged geometry — the same
-treatment already applied to the q=+1 pair. Three conditions attach to adopting it:
+| | E (Ry) | steps |
+|---|---|---|
+| q0_initial | −9247.62643363 | 0 |
+| q0_final | −9247.62842357 | 10 |
+| asymmetry | **−27.1 meV** (final below initial) | |
 
-1. it must be applied **identically to q=0 and q=+1**, since the whole point of the campaign is
-   a charge-state comparison at one theory level;
-2. `LOCKED_PROTOCOL_AND_STOPLOSS.md` and this gate document must both be updated to state the
-   revised acceptance criterion explicitly, before any NEB input is generated;
-3. the accepted geometry's gradient and energy stability must be recorded per endpoint so the
-   comparison is auditable.
-
-Until all three are done, **condition 1 of this gate remains OPEN** regardless of how the
-relaxation ends.
+(q=+1 pair: +11.9 meV, final above initial. The two charge states prefer opposite ends of the
+path — noted, not yet interpreted; it awaits the NEBs.)
 
 ## Condition 2 — `nspin=1` stability across geometries
 
@@ -85,9 +77,8 @@ that leg; the q=0 leg needs the same treatment provisioned before launch.
 
 ## Verdict
 
-**Gate NOT yet open.** Four of five conditions pass; condition 1 needs q0_final to reach
-1.945×10⁻³ Ry, which it is approaching monotonically, and condition 5 needs the archive
-harness. No large HPC allocation should be committed until both close.
+**Gate: 4 of 5 conditions now PASS. The single remaining blocker is condition 5** — the q=0
+band restart/archive harness. No CI-NEB submission until it exists and this file records it.
 
 Also worth stating: a false alarm during this audit. A grep for band-convergence warnings
 returned a hit that turned out to be routine `c_bands` memory-report lines, not a warning.
