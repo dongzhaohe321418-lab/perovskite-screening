@@ -78,6 +78,39 @@ def interpolated_reads(src):
     return out
 
 
+def path_flags(src):
+    """Flags whose values are filesystem paths, inferred from the driver's own reads/defaults."""
+    flags = set()
+    for m in re.finditer(r'add_argument\(\s*"(--[\w-]+)"[^)]*?default\s*=\s*"([^"]+)"', src):
+        f, d = m.group(1), m.group(2)
+        if "/" in d or d.endswith((".extxyz", ".xyz", ".json", ".cif", ".traj")):
+            flags.add(f)
+    # any flag whose value is fed to read()/open() in the driver
+    for m in re.finditer(r'(?:read|open)\(\s*(?:f")?[^)]*?args\.(\w+)', src):
+        flags.add("--" + m.group(1).replace("_", "-"))
+    return flags
+
+
+def output_flags(src):
+    """Flags whose value is only ever WRITTEN to (created remotely, must not pre-exist)."""
+    out = set()
+    for m in re.finditer(r'open\(\s*f?"[^"]*\{args\.(\w+)\}[^"]*"\s*,\s*["\']([wax])', src):
+        out.add("--" + m.group(1).replace("_", "-"))
+    for m in re.finditer(r'makedirs\(\s*args\.(\w+)', src):
+        out.add("--" + m.group(1).replace("_", "-"))
+    return out
+
+
+def explicit_values(invocation, flags):
+    """Map flag -> value for path-valued flags actually present in the invocation."""
+    toks = invocation.split()
+    out = {}
+    for i, t in enumerate(toks):
+        if t in flags and i + 1 < len(toks) and not toks[i + 1].startswith("--"):
+            out[t] = toks[i + 1]
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--driver", required=True)
@@ -85,7 +118,13 @@ def main():
     ap.add_argument("--stage", nargs="*", default=[], help="files you will stage remotely")
     ap.add_argument("--pool-dir", default=None,
                     help="local dir that will become the --pool argument, for interpolated reads")
+    ap.add_argument("--local-map", nargs="*", default=[], metavar="REMOTE=LOCAL",
+                    help="map a remote filename to its local source, e.g. vac_ref.extxyz=results/.../x.extxyz")
+    ap.add_argument("--assembled", nargs="*", default=[],
+                    help="remote dirs the job script builds from staged files (e.g. pool)")
     a = ap.parse_args()
+    a.local_map = dict(x.split('=', 1) for x in a.local_map if '=' in x)
+    a.assembled = set(a.assembled)
 
     fails, warns = [], []
     src = open(a.driver).read()
@@ -149,12 +188,57 @@ def main():
             warns.append(f"driver reads '{pat}'; pass --pool-dir to verify {fn} is present")
 
     print(f"[7] staged files: {len(a.stage)}")
-    for s in a.stage:
-        if not os.path.exists(s):
-            fails.append(f"staged file '{s}' does not exist locally")
+    stage_map = {}
+    for st in a.stage:
+        if not os.path.exists(st):
+            fails.append(f"staged file '{st}' does not exist locally")
         else:
-            h = hashlib.sha256(open(s, "rb").read()).hexdigest()[:12]
-            print(f"    OK  {s}  {os.path.getsize(s)} bytes  sha256:{h}")
+            h = hashlib.sha256(open(st, "rb").read()).hexdigest()[:12]
+            stage_map[os.path.basename(st)] = (st, os.path.getsize(st), h)
+            print(f"    OK  {st}  {os.path.getsize(st)} bytes  sha256:{h}")
+
+    # [8] THE VULNERABILITY THIS TOOL SHIPPED WITH: it validated argparse DEFAULTS and the
+    # manually-listed --stage files, but never the VALUES actually passed in --invocation.
+    # `--pool DOES_NOT_EXIST --vac-ref MISSING.extxyz` returned "PREFLIGHT PASSED".
+    outs = output_flags(src) | {"--out", "--outdir", "--output"}
+    explicit = {f: v for f, v in explicit_values(a.invocation, path_flags(src)).items()
+                if f not in outs}
+    if outs:
+        print(f"    (output flags, created remotely, not checked as inputs: {sorted(outs)})")
+    print(f"[8] explicit path-valued arguments: {explicit if explicit else '(none)'}")
+    for flag, val in explicit.items():
+        local = a.local_map.get(val) or a.local_map.get(os.path.basename(val)) or val
+        staged_names = {os.path.basename(x) for x in a.stage}
+        if val in a.assembled:
+            print(f"    OK  {flag} {val} is assembled remotely from staged files")
+        elif os.path.exists(local):
+            kind = "dir" if os.path.isdir(local) else "file"
+            print(f"    OK  {flag} {val} -> {local} ({kind})")
+        elif os.path.basename(val) in stage_map:
+            src_l, sz, h = stage_map[os.path.basename(val)]
+            print(f"    OK  {flag} {val} <- staged from {src_l} ({sz} B, sha256:{h})")
+        elif val in staged_names:
+            print(f"    OK  {flag} {val} <- in stage list")
+        else:
+            fails.append(f"{flag} = '{val}' does not exist locally, is not in the stage "
+                         f"manifest, and is not declared --assembled -> the remote run will "
+                         f"fail with FileNotFoundError")
+
+    # [9] every explicit input must have a resolvable REMOTE target, i.e. be staged (or be a
+    # directory the job script assembles). A local file that is never staged is a silent failure.
+    print(f"[9] remote mapping for explicit inputs:")
+    for flag, val in explicit.items():
+        mapped = a.local_map.get(val) or a.local_map.get(os.path.basename(val))
+        staged = (os.path.basename(val) in stage_map
+                  or val in {os.path.basename(x) for x in a.stage}
+                  or val in a.assembled
+                  or (mapped is not None and os.path.exists(mapped)))
+        if staged:
+            src_note = f" (from {mapped})" if mapped else ""
+            print(f"    OK  {flag} {val} has a remote source{src_note}")
+        else:
+            fails.append(f"{flag} = '{val}' has no remote source: not in --stage, not mapped "
+                         f"via --local-map, and not declared --assembled")
 
     print()
     for w in warns:
