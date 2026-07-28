@@ -1,0 +1,590 @@
+[
+ {
+  "member": 28,
+  "system": "GA",
+  "E0_eV": -1076.527104893801,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.059,
+    "dE_meV": -30.67,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.019,
+    "dE_meV": -9.44,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.076,
+    "dE_meV": -35.68,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.027,
+    "dE_meV": 5.17,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 14.6
+ },
+ {
+  "member": 29,
+  "system": "undoped",
+  "E0_eV": -1063.763402449835,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.021,
+    "dE_meV": -4.86,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.014,
+    "dE_meV": 0.28,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.051,
+    "dE_meV": -12.52,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.046,
+    "dE_meV": -8.83,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 5.7
+ },
+ {
+  "member": 29,
+  "system": "GA",
+  "E0_eV": -1076.872374041738,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": -0.69,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": 0.75,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.05,
+    "dE_meV": -1.34,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.04,
+    "dE_meV": -2.22,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 2.5
+ },
+ {
+  "member": 29,
+  "system": "Sr",
+  "E0_eV": -1065.0453501729776,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": -0.51,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": 0.5,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.048,
+    "dE_meV": -2.47,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.039,
+    "dE_meV": -2.09,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 2.9
+ },
+ {
+  "member": 31,
+  "system": "undoped",
+  "E0_eV": -1063.7346154644044,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.023,
+    "dE_meV": -7.01,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.031,
+    "dE_meV": -11.33,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.068,
+    "dE_meV": -26.26,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.052,
+    "dE_meV": -3.52,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 7.1
+ },
+ {
+  "member": 31,
+  "system": "GA",
+  "E0_eV": -1076.8107842885613,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": -1.76,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.017,
+    "dE_meV": -0.33,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.041,
+    "dE_meV": -13.04,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.038,
+    "dE_meV": -5.96,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 5.8
+ },
+ {
+  "member": 31,
+  "system": "Sr",
+  "E0_eV": -1064.8561220244967,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.024,
+    "dE_meV": -7.53,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.033,
+    "dE_meV": -13.0,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.069,
+    "dE_meV": -28.95,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.054,
+    "dE_meV": -4.7,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 7.0
+ },
+ {
+  "member": 32,
+  "system": "undoped",
+  "E0_eV": -1063.794238801619,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": -1.88,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.018,
+    "dE_meV": 0.91,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.05,
+    "dE_meV": -4.53,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.029,
+    "dE_meV": -12.56,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 3.9
+ },
+ {
+  "member": 32,
+  "system": "GA",
+  "E0_eV": -1076.7465923843909,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.022,
+    "dE_meV": -10.74,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": 3.77,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.063,
+    "dE_meV": -32.43,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.05,
+    "dE_meV": 2.5,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 7.4
+ },
+ {
+  "member": 32,
+  "system": "Sr",
+  "E0_eV": -1064.944222116308,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": -1.64,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": 1.8,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.05,
+    "dE_meV": -3.8,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.035,
+    "dE_meV": -2.48,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 2.0
+ },
+ {
+  "member": 33,
+  "system": "undoped",
+  "E0_eV": -1064.0574666056818,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": 0.23,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": -0.03,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.047,
+    "dE_meV": 0.49,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.041,
+    "dE_meV": -0.72,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 2.4
+ },
+ {
+  "member": 33,
+  "system": "GA",
+  "E0_eV": -1077.0566410371227,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": 0.03,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": 0.17,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.047,
+    "dE_meV": -0.07,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.041,
+    "dE_meV": -0.32,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 2.4
+ },
+ {
+  "member": 33,
+  "system": "Sr",
+  "E0_eV": -1065.2254875655601,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": 0.13,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": 0.03,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.049,
+    "dE_meV": 0.54,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.042,
+    "dE_meV": -0.74,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 2.7
+ },
+ {
+  "member": 34,
+  "system": "Sr",
+  "E0_eV": -1065.0497373805488,
+  "outcomes": [
+   {
+    "amp_A": 0.02,
+    "sign": 1,
+    "max_disp_A": 0.02,
+    "dE_meV": 1.03,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.02,
+    "sign": -1,
+    "max_disp_A": 0.02,
+    "dE_meV": -0.9,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": 1,
+    "max_disp_A": 0.044,
+    "dE_meV": 1.04,
+    "returned": true,
+    "converged": true
+   },
+   {
+    "amp_A": 0.05,
+    "sign": -1,
+    "max_disp_A": 0.045,
+    "dE_meV": -12.98,
+    "returned": true,
+    "converged": true
+   }
+  ],
+  "n_returned": 4,
+  "verdict": "METASTABLE",
+  "wall_s": 4.2
+ }
+]
