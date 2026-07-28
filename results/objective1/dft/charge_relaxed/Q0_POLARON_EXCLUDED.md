@@ -1,9 +1,13 @@
-# Polaron test — NO polaron. V_I⁰ is a shallow donor at this level of theory.
+# Polaron test — no thermally significant polaron. V_I⁰ behaves as a shallow donor.
 
-**The last open question on the q=0 charge state is closed. A deliberately strong seed —
-0.20 Å cage contraction plus a spin moment on the two Pb flanking the vacancy — does not
-produce a bound polaron. Decomposing the energy shows why, and shows the conclusion does not
-depend on the amplitude chosen.**
+**A deliberately strong seed — 0.20 Å cage contraction plus a spin moment on the two Pb
+flanking the vacancy — does not produce a bound polaron: the seeded state sits ~110 meV
+*above* the delocalised solution, and that sign is secure (the gap is ~4× the run's own
+residual). Decomposing the energy separates a solid, converged elastic cost from a
+localisation gain that is *not* resolved, so the amplitude question is answered as a
+BOUND rather than settled: even granting twice the SCF residual as coupling, the deepest
+possible well is ~8 meV, well under room-temperature kT. A weakly bound state of a few meV
+is not excluded by these data — it would be thermally irrelevant either way.**
 
 ## The three calculations
 
