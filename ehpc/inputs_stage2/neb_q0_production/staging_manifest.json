@@ -1,0 +1,24 @@
+{
+ "leg": "q0",
+ "pi_approved_input_sha256": "04acee190675ec82c3d5132a61079506955413afcc4c871b39d4c9d6edfd12c7",
+ "files": [
+  {
+   "local_source": "ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in",
+   "remote_destination": "q0_cineb.neb.in",
+   "size_bytes": 21311,
+   "sha256": "04acee190675ec82c3d5132a61079506955413afcc4c871b39d4c9d6edfd12c7"
+  },
+  {
+   "local_source": "scripts/26_neb_harness.py",
+   "remote_destination": "26_neb_harness.py",
+   "size_bytes": 12910,
+   "sha256": "b3cc0149589b1ef11c999ac30315214c60c0763ada909173fdb054e7a7daf69e"
+  },
+  {
+   "local_source": "results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz",
+   "remote_destination": "ref.extxyz",
+   "size_bytes": 8819,
+   "sha256": "7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121"
+  }
+ ]
+}
