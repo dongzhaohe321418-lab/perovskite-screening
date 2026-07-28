@@ -12,9 +12,16 @@ different force targets.
 | | existing `pool_v3_harmonised` (18 with recorded energies) | new 8 |
 |---|---|---|
 | mean E (eV) | −1065.9719 ± 0.1338 | −1066.0085 ± 0.1707 |
-| offset | — | **−36.6 meV** |
-| Welch t / p | — | **t = 0.54, p = 0.6018** |
-| separation | — | **0.24σ** |
+| offset | — | **−31.5 meV** |
+| Welch t / p | — | **t = 0.48, p = 0.6422** |
+| separation | — | **0.20σ** |
+
+> **SUPERSEDED FIGURES.** This table originally reported the gate on only the 18 members whose
+> energies were readable from an attached calculator (−36.6 meV, p = 0.6018, 0.24σ). A later
+> "full pool" version reported −102.6 meV / p = 0.1632 / 0.59σ, which was **wrong** — it used 8
+> energies misassigned by an index assumption, at the superseded fmax≈0.03 depth. The figures
+> above are the corrected full-pool gate with every energy and fmax measured. See
+> `pool_v3_harmonised/HOST_MANIFEST.md`.
 
 **Same population, poolable without harmonisation.** The reason this worked: identical
 sampler (carbon-pivot rotation with minimum-image vectors) *and* identical `fmax = 0.02`.
