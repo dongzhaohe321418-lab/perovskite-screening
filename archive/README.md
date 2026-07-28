@@ -1,3 +1,9 @@
+> # SUPERSEDED — archived (bannered 2026-07-28)
+>
+> This directory-index predates the 2026-07-28 restructuring that moved 15 more documents here.
+>
+> **Current authority: `RESULTS_INDEX.md (the repo-level index)`.** Retained verbatim below for provenance; do not cite as current.
+
 # archive/ — superseded planning documents
 
 These three planning documents were **merged into and superseded by
