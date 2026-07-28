@@ -1,27 +1,32 @@
 # Objective 2 — CURRENT STATUS (canonical index)
 
-**Updated 2026-07-27 (late). This file names the authoritative result for each question;
+**Updated 2026-07-28. This file names the authoritative result for each question;
 anything it does not name is historical.**
 
-## Headline
+## Headline — 108-path merged corpus
 
-**GA is EQUIVALENT to no effect at the 10× rate scale** — n = 9 pairs, mean +7.3 meV,
-95% CI [−24.0, +38.5], TOST p = 0.0024, and n = 9 meets the 7 required by the χ² variance
-bound. First adequately-powered result in the project.
-**Sr is SUGGESTIVE-EQUIVALENT** — n = 10, mean −1.8, CI [−48.4, +44.8], TOST p = 0.0104,
-but requires 16 pairs under its variance bound. Sr's spread is driven by two
-configurations (m14, m20) that entered via the **return-test rescue**, not the strict gate
-(`Sr_m14` and `undoped_m20` both have `gate_endpoints.passed = False`); they are kept, and a
-sensitivity analysis shows strict-only pairs give GA sd 16.7 / Sr sd 19.4 versus 40.6 / 65.2
-for all pairs — so the equivalence conclusion is robust and the all-pairs figures reported
-above are the conservative ones.
+**Both additives are equivalent to no effect at the 10x rate scale by the confidence-interval
+test.**
 
-**No ranking. Both are indistinguishable from zero and from each other. MLIP level only.**
+| | GA | Sr |
+|---|---|---|
+| paired n | 11 | 12 |
+| mean ΔE_a | +6.8 meV | −4.3 meV |
+| 95% CI | [−25.0, +38.6] | [−42.2, +33.6] |
+| CI inside ±59.5 meV | yes, 35% margin | yes, **29% margin** |
+| TOST p | 0.0021 | 0.0042 |
+| χ² sample requirement | 8 → met at 11 | 12 → met at 12 |
+
+**Sr's sample-size threshold cleared MOSTLY MECHANICALLY** (2 of the 4-point drop came from
+sample size alone, 2 from the variance genuinely falling 65.2 → 59.6 meV), so the CI is what
+carries its claim — as agreed. GA's margin is the larger of the two.
+
+**No ranking. Both are indistinguishable from zero and from each other. MACE level only.**
 
 | question | authoritative document |
 |---|---|
-| paired result (GA/Sr) | `paired_pilot/CORPUS84_RESULT.md` + `corpus84/` raw records |
-| host pool | `../fa_host/pool_v3_harmonised/` (28 members, fmax 0.02) + `../fa_host/POOL_HOMOGENEITY.md` |
+| paired result (GA/Sr) | **`paired_pilot/CORPUS108_RESULT.md`** + `corpus108/` raw records |
+| host pool | `../fa_host/pool_v3_harmonised/HOST_MANIFEST.md` (36 members, all fmax measured ≤ 0.02000) |
 | why paths are rejected | `paired_pilot/BASIN_IDENTIFICATION.md` (v2) |
 | endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` + `corpus84/return_test_84.json` |
 | barrier definition + tiers | `BARRIER_DEFINITION.md` |
@@ -31,7 +36,7 @@ above are the conservative ones.
 **Superseded / historical (do not cite):** `paired_pilot/PAIRED_PILOT.md` (retracted first
 run), `paired_pilot/RERUN_RESULT.md` and `RETURN_TEST_RESULT.md` statistics (18-host pool —
 their *method* stands, their n = 7 numbers are superseded by the 28-host corpus),
-`AUDIT_RESPONSE.md`, `noise_floor/NOISE_FLOOR_REPORT.md` (old 8-member pool).
+`paired_pilot/CORPUS84_RESULT.md` (superseded by the 108-path merge; its method and retractions stand), `AUDIT_RESPONSE.md`, `noise_floor/NOISE_FLOOR_REPORT.md` (old 8-member pool).
 
 ## Execution status — corrected 2026-07-28
 
