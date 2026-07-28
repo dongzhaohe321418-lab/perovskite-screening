@@ -792,6 +792,37 @@ if _os.path.exists(_HR) and _os.path.exists(_Q1):
            "state identification is by per-atom weight cosine, band index explicitly excluded")
     expect("append-only" in _src, "the archive is documented and enforced as append-only")
 
+print("\n[32] navigation layer: README routes, RESULTS_INDEX rows, archive is bannered -- PI")
+# PI assessment: record quality high, information architecture cluttered. The fix: README is a
+# pure navigation page, RESULTS_INDEX has one row per question, superseded docs move to
+# archive/ with banners, xrd/ is marked independent.
+if _os.path.exists("README.md"):
+    _r = open("README.md").read()
+    expect("RESULTS_INDEX.md" in _r, "README links the results index")
+    expect("navigation page only" in _r, "README declares itself navigation, not results")
+    expect("tracer bullet" not in _r.lower() or "historical" in _r.lower(),
+           "README no longer describes the project as an early tracer bullet")
+    expect("INDEPENDENT" in _r or "independent" in _r, "README marks xrd/ as independent")
+if _os.path.exists("RESULTS_INDEX.md"):
+    _x = open("RESULTS_INDEX.md").read()
+    for _q in ["Q1.", "Q2.", "Q3.", "Q4."]:
+        expect(_q in _x, f"results index has a row for {_q}")
+    for _fld in ["Current conclusion", "Scope", "Authoritative", "Raw data", "Next"]:
+        expect(_fld in _x, f"index rows carry the '{_fld}' field")
+    expect("OPEN" in _x, "the charge-state ordering is recorded as OPEN in the index")
+    expect("banned" in _x.lower(), "the Tyagi-ordering ban is visible at the index level")
+# every file under archive/ that this session created must open with a SUPERSEDED banner
+import glob as _gl
+for _f in _gl.glob("archive/**/*.md", recursive=True):
+    _head = open(_f).read(200)
+    expect(_head.startswith("> # SUPERSEDED"),
+           f"{_f}: archived doc opens with a SUPERSEDED banner")
+# in-place superseded/interim docs carry pointers
+_c84 = "results/objective2/paired_pilot/CORPUS84_RESULT.md"
+if _os.path.exists(_c84):
+    expect(open(_c84).read(150).startswith("> **SUPERSEDED"),
+           "CORPUS84 opens with its supersession pointer")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
