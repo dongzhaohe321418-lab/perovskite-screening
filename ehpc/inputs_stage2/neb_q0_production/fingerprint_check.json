@@ -1,0 +1,29 @@
+{
+ "q0": {
+  "ecutwfc": "50.0",
+  "ecutrho": "400.0",
+  "degauss": "0.005",
+  "occupations": "'smearing'",
+  "vdw_corr": "'dft-d3'",
+  "dftd3_version": "4",
+  "nosym": ".true.",
+  "noinv": ".true.",
+  "conv_thr": "1e-6",
+  "smearing": "'gaussian'",
+  "kpoints": "automatic"
+ },
+ "q1": {
+  "ecutwfc": "50.0",
+  "ecutrho": "400.0",
+  "degauss": "0.005",
+  "occupations": "'smearing'",
+  "vdw_corr": "'dft-d3'",
+  "dftd3_version": "4",
+  "nosym": ".true.",
+  "noinv": ".true.",
+  "conv_thr": "1e-6",
+  "smearing": "'gaussian'",
+  "kpoints": "automatic"
+ },
+ "differences": {}
+}
