@@ -1,54 +1,40 @@
-# perovskite-screening
+# Perovskite screening — γ-CsPbI₃ / FA-perovskite iodine-vacancy migration
 
-MLIP-accelerated screening of ion-migration suppressing dopants in halide
-perovskites. Companion code to the research proposal *Rational Design of
-Ion-Migration Suppressing Dopants in Halide Perovskites* (July 2026).
+**This README is a navigation page only. Results live in the files it links; nothing here is a
+result. Last restructured 2026-07-28.**
 
-Current status: **tracer bullet** — the minimal end-to-end pipeline of the
-months 1–2 milestone: undoped CsPbI₃, single iodide vacancy, zero-shot
-MACE-MP CI-NEB.
+## Where to look
 
-## Setup (this machine)
+| you want | go to |
+|---|---|
+| **Every current scientific conclusion** (one row per question) | [`RESULTS_INDEX.md`](RESULTS_INDEX.md) |
+| Objective 2 (GA/Sr additive screening) canonical status | [`results/objective2/CURRENT_STATUS.md`](results/objective2/CURRENT_STATUS.md) |
+| Objective 1 (charge-state migration) gate + status | [`results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`](results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md) |
+| Full audit record incl. all retractions | [`EXPERIMENT_AUDIT.md`](EXPERIMENT_AUDIT.md) |
+| Governing execution rules (PI) | [`NEXT_STEP_GUIDE.md`](NEXT_STEP_GUIDE.md) |
+| Historical / superseded documents | [`archive/`](archive/) — every file carries a `SUPERSEDED` banner |
+| Regression suite (31 groups; every check pins a real past incident) | [`scripts/20_test_checks.py`](scripts/20_test_checks.py) |
 
-This machine sits behind a TLS-intercepting proxy; Python HTTPS needs the
-exported keychain bundle in `.certs/system.pem` (not committed).
+## The three sub-projects in this repository
 
-```bash
-uv venv --python python3.13
-SSL_CERT_FILE=.certs/system.pem uv pip install --native-tls -r requirements.txt
-```
+1. **Objective 1 — V_I charge-state migration barriers (DFT, active).** Are V_I⁰ and V_I⁺
+   migration barriers separable at PBE+D3(BJ) level in the disordered γ-like host?
+   Both q=0 endpoints converged; NEB gated behind
+   `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
+2. **Objective 2 — additive screening (MACE, active).** Do GA⁺ or Sr²⁺ change the iodine-vacancy
+   migration barrier at the 10×-rate scale? Answer so far: both practically equivalent to no
+   effect (108 paths, 36 hosts). `results/objective2/CURRENT_STATUS.md`.
+3. **`xrd/` — INDEPENDENT sub-project** (experimental XRD passivator screen). It shares no
+   evidence chain with Objectives 1–2. Its own `xrd/README.md` applies; nothing there supports
+   or is supported by the migration-barrier work.
 
-## Run
+Early-stage material (the original MACE tracer-bullet pipeline, `results/dopant_screen/`,
+`results/fa_host/REPORT_fa_baseline.md`, `literature_survey/`) is retained for provenance and
+indexed in `RESULTS_INDEX.md` under "historical".
 
-```bash
-export SSL_CERT_FILE=.certs/system.pem   # needed for the MACE checkpoint download
-.venv/bin/python scripts/00_relax_bulk.py    # cubic + tilted gamma-like bulk
-.venv/bin/python scripts/01_vacancy_neb.py   # V_I hop barrier, 2x2x2 supercell
-```
+## Ground rules that hold everywhere
 
-Outputs land in `results/` (JSON + barrier.png + optimizer logs) and
-`structures/` (extxyz).
-
-## What the numbers mean — and what they don't
-
-- `00_relax_bulk.py` relaxes the ideal cubic cell, then lets a
-  symmetry-broken 20-atom cell fall into the tilted (gamma-like) phase, and
-  reports the detected space group and the energy gained by tilting.
-  Experimental γ-CsPbI₃ is orthorhombic *Pnma* with pseudo-cubic lattice
-  parameter ≈ 6.25 Å.
-- `01_vacancy_neb.py` computes the octahedron-edge V_I hop barrier with
-  CI-NEB. **Zero-shot MACE is charge-agnostic**: this is a quasi-neutral
-  PES, not the production V_I⁺ barrier, and MPtrj-trained checkpoints bias
-  barriers low (softening). The number validates the pipeline (literature
-  window 0.1–0.6 eV) and seeds paths; ranked ΔE_a values require the
-  per-charge-state fine-tuned models of the proposal's Phase 3.
-
-## Roadmap (mirrors the proposal)
-
-- [x] Phase MVP: bulk + single V_I CI-NEB, zero-shot (this repo, tracer bullet)
-- [ ] DFT anchors: convergence tests, FNV corrections, QE/VASP single points
-- [ ] Objective 1 anchors: charge-state ordering (Tyagi 2025), GA⁺ ΔE_a, strain–E_a
-- [ ] Phase 1–2 at scale: dopant enumeration, MLIP-NEB farm
-- [ ] Phase 3: per-charge-state active-learning fine-tuning
-- [ ] Phase 4: ΔE_a ranking, pinning radii in ≥4×4×4 cells
-- [ ] Phase 5: top-5 MD (MSD–Arrhenius) + kMC cross-validation
+- Barriers computed at different theory fingerprints are never compared.
+- MACE-level numbers are never presented as DFT or experiment.
+- A job is described as *running* only after its preflight passed and output exists.
+- Every correction leaves the superseded record in place, marked, never overwritten.
