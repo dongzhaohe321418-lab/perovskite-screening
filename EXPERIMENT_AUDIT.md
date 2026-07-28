@@ -154,40 +154,46 @@ The q=+1 geometry is already a q=0 stationary point. Independent confirmation: t
 store **deduplicated the relaxed structure onto the q=+1 input by checksum** — the geometry is
 byte-identical.
 
-**q0_final (`nspin=1`, job `f9993838`): IN PROGRESS, at the soft-mode floor.** 9 BFGS steps,
-8 converged SCF cycles. The gradient error does **not** descend monotonically:
+**q0_final (`nspin=1`, job `f9993838`): CONVERGED FORMALLY (2026-07-28).** QE printed its own
+convergence block:
 
-    step: 1     2     3     4     5     6     7     8
-    grad: 3.1  2.9   2.7   2.4   1.9   1.4   1.9   2.3   (x1e-3 Ry/bohr, criterion 1.945e-3)
-          0.080 0.075 0.069 0.062 0.049 0.036 0.049 0.059  (eV/A)
+    Energy error   = 9.8E-05 Ry      (criterion 1.0E-04)   PASS
+    Gradient error = 1.6E-03 Ry/Bohr (criterion 1.945E-03) PASS
+    bfgs converged in 11 scf cycles and 10 bfgs steps
 
-**Correction.** An earlier status message said this run "has crossed its force target". That was
-premature. Steps 5-7 read below the criterion, but **BFGS did not accept them** and the gradient
-rose again to 2.3E-03; QE's convergence block has never been printed (`End of BFGS` count = 0).
-A single sub-threshold gradient reading is not convergence.
+Full gradient trajectory (×10⁻³ Ry/bohr): 3.1 2.9 2.7 2.4 1.9 1.4 1.9 2.3 2.2 2.0 → **1.6
+accepted**. The mid-run oscillation was real — steps 5–7 read below the criterion but were not
+accepted, and an earlier claim that the run had "crossed its force target" at the transient 1.4
+reading was retracted (§4.16 in spirit; the retraction predates the convergence). The optimiser
+then worked through the soft-tilt floor and converged genuinely; the proposed
+lowest-accepted-step protocol revision was **withdrawn as unnecessary** and never adopted.
 
-What *is* happening: the energy descends monotonically (−9247.62777349 → −9247.62803730 →
-−9247.62822030 Ry, i.e. −3.59 and −2.49 meV on the last two steps), so the optimiser is finding
-genuinely lower structures. The oscillation at 0.036-0.059 eV/Å is the **soft octahedral-tilt
-floor already documented for this cell** (BFGS floors near fmax ≈ 0.04 eV/Å), the same behaviour
-recorded for the q=+1 endpoints in `LOCKED_PROTOCOL_AND_STOPLOSS.md`.
+Final energy **−9247.62842357 Ry**. Displacement from the q=+1 final geometry: max 0.047 Å, no
+atom over 0.05 Å. Raw output archived (`q0/q0_final_ns1.out.gz` + parsed convergence summary +
+input hash) so the convergence block is checkable from the primary record, not this transcript.
 
-**Consequence:** this endpoint will very likely need the same treatment as the q=+1 pair —
-accept the lowest-gradient accepted step as an energy-converged geometry rather than waiting for
-a formal BFGS convergence that the soft modes prevent. That is a protocol decision, not a
-result, and it is flagged here rather than taken silently.
+**The q=0 endpoint pair, both converged at identical theory level:**
+
+| | E (Ry) | BFGS steps |
+|---|---|---|
+| q0_initial | −9247.62643363 | 0 |
+| q0_final | −9247.62842357 | 10 |
+| asymmetry | **−27.1 meV** (final below initial) | |
+
+The q=+1 pair reads +11.9 meV (final above initial): the two charge states prefer opposite ends
+of the path. Recorded as an observation; interpretation awaits the NEBs.
 
 ## 1.9 q = 0 NEB entry gate — NOT OPEN
 
 | # | condition | status |
 |---|---|---|
-| 1 | both endpoints ionically converged | initial PASS, **final in progress** |
+| 1 | both endpoints ionically converged | **PASS — both converged** (final: QE block, 10 steps) |
 | 2 | `nspin=1` stable/restartable across nearby geometries | PASS (4 distinct geometries) |
 | 3 | no competing localised spin state | PASS (§1.7, §1.6) |
 | 4 | q=0 and q=+1 at identical theory fingerprint | PASS by construction |
-| 5 | NEB input, restart, archive, state-ID tooling ready | **PARTIAL — archive harness missing** |
+| 5 | NEB input, restart, archive, state-ID tooling ready | **PARTIAL — archive harness missing (SOLE remaining blocker)** |
 
-**No large HPC allocation may be committed until 1 and 5 close.** `Q0_NEB_GATE.md`.
+**Condition 1 closed 2026-07-28. No large HPC allocation until condition 5 closes.** `Q0_NEB_GATE.md`.
 
 ---
 
@@ -384,7 +390,7 @@ basins. `BASIN_IDENTIFICATION.md` (v2 — the v1 analysis was wrong; see Section
 
 | track | state | evidence |
 |---|---|---|
-| HPC `q0_final` (`f9993838`) | **running**, 7 BFGS steps, gradient error 1.4E-03 vs criterion 1.945E-03, not yet converged per QE | job output read directly |
+| HPC `q0_final` (`f9993838`) | **CONVERGED** (2026-07-28): QE block at 10 BFGS steps, gradient 1.6E-03 within criterion 1.945E-03 | §1.8; raw output archived |
 | GPU 24-path extension (`41ac4172`) | **COMPLETE**, exit 0, 24/24 bands, integrity-audited | §3.1 below |
 | GPU return test on extension (`c535502d`) | **running**, 14 candidates | preflighted before submission |
 | everything else | idle | `squeue` empty apart from the above |
@@ -614,7 +620,7 @@ Read this alongside Section 4. Nothing in this list may be presented as a result
 **No claim of the form "V_I⁺ migrates faster/slower than V_I⁰" is supported.** Requirements
 still unmet:
 
-1. Both endpoints relaxed at identical theory level — **q0_final not yet converged**.
+1. Both endpoints relaxed at identical theory level — **now satisfied** (q0_final converged 2026-07-28; both q=0 endpoints exist at the production fingerprint).
 2. Both CI-NEBs run at identical theory level — **neither has been run**.
 3. The q=+1 explore band is unconverged (431 meV still descending) and is not a barrier.
 
