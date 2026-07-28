@@ -175,19 +175,41 @@ def main():
 
     ir = interpolated_reads(src)
     print(f"[6] reads from inside a directory argument: {ir if ir else '(none)'}")
+    # resolve {args.X} against the invocation so 'pool/<file>' becomes the REAL remote path
+    argvals = explicit_values(a.invocation, path_flags(src) | set(
+        re.findall(r"(--[\w-]+)", a.invocation)))
     for pat in ir:
         fn = pat.split("/")[-1]
         if "{" in fn:
             continue
-        if a.pool_dir:
+        m = re.match(r"\{args\.(\w+)\}/(.+)", pat)
+        remote_path = None
+        if m:
+            flag = "--" + m.group(1).replace("_", "-")
+            if flag in argvals:
+                remote_path = f"{argvals[flag]}/{m.group(2)}"
+        # acceptance, in order of precision:
+        #  (a) an EXACT remote-path mapping: pool/<file>=<local source>
+        #  (b) a local --pool-dir that already contains the file
+        mapped = a.local_map.get(remote_path) if remote_path else None
+        if mapped is not None:
+            if os.path.exists(mapped):
+                print(f"    OK  {remote_path} <- {mapped} (exact remote-path mapping)")
+            else:
+                fails.append(f"--local-map points {remote_path} at '{mapped}', which does not "
+                             f"exist locally")
+        elif a.pool_dir:
             local = os.path.join(a.pool_dir, fn)
             if not os.path.exists(local):
-                fails.append(f"driver reads '{pat}' but {local} does not exist -- staging the "
-                             f"directory alone will NOT supply it")
+                fails.append(f"driver reads '{remote_path or pat}' but neither an exact "
+                             f"--local-map entry nor {local} exists -- staging the directory "
+                             f"alone will NOT supply it")
             else:
-                print(f"    OK  {local}")
+                print(f"    OK  {local} (via --pool-dir)")
         else:
-            warns.append(f"driver reads '{pat}'; pass --pool-dir to verify {fn} is present")
+            fails.append(f"driver reads '{remote_path or pat}' and no verification route was "
+                         f"given: add an exact --local-map '{remote_path}=<local source>' or "
+                         f"--pool-dir")
 
     print(f"[7] staged files: {len(a.stage)}")
     stage_map = {}
@@ -209,7 +231,9 @@ def main():
         print(f"    (output flags, created remotely, not checked as inputs: {sorted(outs)})")
     print(f"[8] explicit path-valued arguments: {explicit if explicit else '(none)'}")
     for flag, val in explicit.items():
-        local = a.local_map.get(val) or a.local_map.get(os.path.basename(val)) or val
+        local = (a.local_map.get(val) or a.local_map.get(os.path.basename(val))
+                 or next((l for r, l in a.local_map.items()
+                          if r.startswith(val + "/")), None) or val)
         staged_names = {os.path.basename(x) for x in a.stage}
         if val in a.assembled:
             print(f"    OK  {flag} {val} is assembled remotely from staged files")
@@ -230,7 +254,9 @@ def main():
     # directory the job script assembles). A local file that is never staged is a silent failure.
     print(f"[9] remote mapping for explicit inputs:")
     for flag, val in explicit.items():
-        mapped = a.local_map.get(val) or a.local_map.get(os.path.basename(val))
+        mapped = (a.local_map.get(val) or a.local_map.get(os.path.basename(val))
+                  or next((l for r, l in a.local_map.items()
+                           if r.startswith(val + "/")), None))
         staged = (os.path.basename(val) in stage_map
                   or val in {os.path.basename(x) for x in a.stage}
                   or val in a.assembled
@@ -250,7 +276,8 @@ def main():
         if not os.path.exists(st):
             continue
         dest = os.path.basename(st)
-        # a remote name may be re-pointed via --local-map (remote=local)
+        # a remote destination may be re-pointed via --local-map (remote=local); the remote
+        # side may include a directory (e.g. pool/<file>) and is recorded EXACTLY
         for rem, loc in a.local_map.items():
             if os.path.abspath(loc) == os.path.abspath(st):
                 dest = rem
