@@ -530,6 +530,32 @@ if _os.path.exists(_MF) and _os.path.exists(_HR):
            f"recorded gate offset is the corrected -31.5 meV (got {_g.get('offset_meV')})")
     expect(_g.get("welch_p", 0) > 0.05, "recorded gate p indicates same population")
 
+print("\n[24] a sub-threshold force READING is not convergence -- INCIDENT")
+# I reported q0_final "has crossed its force target" because one BFGS step printed a gradient
+# error of 1.4e-3 vs the 1.945e-3 criterion. BFGS did not accept it: the next steps read 1.9e-3
+# then 2.3e-3. Convergence requires QE's own block ("End of BFGS Geometry Optimization"), not a
+# single favourable line. The cell has documented soft octahedral-tilt modes that make the
+# gradient oscillate around ~0.04 eV/A.
+_TRAJ = [3.1e-3, 2.9e-3, 2.7e-3, 2.4e-3, 1.9e-3, 1.4e-3, 1.9e-3, 2.3e-3]
+_CRIT = 1.945e-3
+expect(min(_TRAJ) < _CRIT, "some step DID read below the criterion (that is why it misled me)")
+expect(_TRAJ[-1] > _CRIT, "but the trajectory ROSE back above it -- not converged")
+expect(_TRAJ.index(min(_TRAJ)) < len(_TRAJ) - 1,
+       "the minimum is not the last point -> a single reading cannot be cited as convergence")
+for _f in ["EXPERIMENT_AUDIT.md", "results/objective2/CURRENT_STATUS.md"]:
+    if not _os.path.exists(_f):
+        continue
+    _tx = open(_f).read()
+    _i = _tx.find("crossed its force target")
+    expect(_i == -1 or "retracted" in _tx[_i:_i+220] or "premature" in _tx[_i:_i+220],
+           f"{_os.path.basename(_f)}: the 'crossed its force target' claim is retracted, not asserted")
+    if "q0_final" in _tx:
+        # widen the window: the disclaimer can sit after the trajectory table
+        _w = _tx[_tx.find("q0_final"):_tx.find("q0_final") + 2000]
+        expect(("NOT" in _w) or ("not reached" in _w) or ("premature" in _w)
+               or ("soft-mode floor" in _w),
+               f"{_os.path.basename(_f)}: q0_final is not described as a verified endpoint")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
