@@ -1,3 +1,5 @@
+> **SUPERSEDED by `CORPUS108_RESULT.md` (the 84+24 merge) — retained in place because the regression suite pins its retractions and its raw records remain the 84-batch provenance. Do not cite these statistics as current.**
+
 # 84-path harmonised corpus — GA reaches statistical sufficiency, and the answer is NULL
 
 **First result in this project with adequate statistical power. GA: n = 9 paired
