@@ -115,7 +115,15 @@ def archive_iteration(jobdir, outdir, tag=None, ref_extxyz=None, state_id=None):
     return meta
 
 
-def prepare_restart(archive_dir, template_in, outdir, nstep_path=1):
+def read_istep(path_file):
+    """Read the current step count from a neb.path RESTART INFORMATION header."""
+    lines = open(path_file, errors="ignore").read().splitlines()
+    if not lines or "RESTART INFORMATION" not in lines[0]:
+        raise ValueError(f"{path_file}: no RESTART INFORMATION header")
+    return int(lines[1].strip())
+
+
+def prepare_restart(archive_dir, template_in, outdir, extra_steps=1, nstep_path=None):
     """Prepare a REAL neb.x continuation from the latest archived snapshot.
 
     Verifies the snapshot first, then writes <outdir>/ with (a) the archived neb.path under
@@ -128,6 +136,15 @@ def prepare_restart(archive_dir, template_in, outdir, nstep_path=1):
         raise ValueError("latest snapshot failed verification -- refusing to build a restart")
     snap = os.path.join(archive_dir, f"iter_{r['snapshot']:03d}")
     os.makedirs(outdir, exist_ok=True)
+    # QE's nstep_path is CUMULATIVE across a restart: the archived band carries istep, and a
+    # restart with nstep_path <= istep runs ZERO iterations while still printing JOB DONE.
+    # (Found the hard way: the first trial's "restart" left the band hash unchanged.)
+    istep = read_istep(os.path.join(snap, "neb.path"))
+    if nstep_path is None:
+        nstep_path = istep + extra_steps
+    elif nstep_path <= istep:
+        raise ValueError(f"nstep_path={nstep_path} <= archived istep={istep}: the restart "
+                         f"would run zero iterations")
     t = open(template_in).read()
     if "restart_mode" in t:
         t = re.sub(r"restart_mode\s*=\s*'[^']*'", "restart_mode = 'restart'", t)
@@ -141,7 +158,7 @@ def prepare_restart(archive_dir, template_in, outdir, nstep_path=1):
     shutil.copy(os.path.join(snap, "neb.path"), os.path.join(outdir, "neb.path"))
     return {"from_snapshot": r["snapshot"], "sha256_neb_path": r["sha256"],
             "restart_input": os.path.join(outdir, "restart.neb.in"),
-            "nstep_path": nstep_path}
+            "archived_istep": istep, "nstep_path": nstep_path}
 
 
 def verify_restartable(archive_dir):
@@ -184,7 +201,7 @@ def main():
                     help="selftest: tar.gz containing a real neb.path (the preserved q=+1 band)")
     a = ap.parse_args()
     if a.mode == "archive":
-        meta = archive_iteration(a.jobdir, a.outdir, a.tag)
+        meta = archive_iteration(a.jobdir, a.outdir, a.tag, ref_extxyz=a.ref_extxyz)
         print(json.dumps(meta, indent=1)); return 0
     if a.mode == "verify":
         r = verify_restartable(a.outdir)
@@ -213,7 +230,7 @@ def main():
         rst = None
         neb_in = glob.glob(os.path.join(jd, "*.neb.in")) + glob.glob(os.path.join(jd, "*.in"))
         if neb_in:
-            rst = prepare_restart(out, neb_in[0], os.path.join(td, "restart"), nstep_path=1)
+            rst = prepare_restart(out, neb_in[0], os.path.join(td, "restart"), extra_steps=1)
         ok = (r["restartable"] and m1["n_images"] == r["n_images"] and m2["snapshot"] == 1
               and (ref is None or m1["images_extxyz_frames"] == m1["n_images"])
               and (not neb_in or (rst and "restart_mode = 'restart'"
