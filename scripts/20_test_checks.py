@@ -687,8 +687,17 @@ if _os.path.exists(_GT):
            "the protocol revision is recorded as withdrawn, never silently adopted")
     expect("-27.1 meV" in _g or "−27.1 meV" in _g,
            "the gate records the q=0 endpoint asymmetry")
-    expect("condition 5" in _g and ("remaining blocker" in _g or "sole blocker" in _g),
-           "the archive harness is named as the single remaining blocker")
+    # 2026-07-28 (later): the harness was built and validated on the real q=+1 band, so
+    # condition 5 went from "missing" to PARTIAL. The assertion now pins the SHARPER state --
+    # that condition 5 is still not PASS and the live-job component is named as the gap.
+    expect("Condition 5 is PARTIAL" in _g,
+           "condition 5 is recorded as PARTIAL, not passed")
+    expect("not yet exercised on a live q=0 job" in _g or "live q=0 job" in _g,
+           "the un-exercised live-job component is named explicitly")
+    expect("bounded harness trial" in _g,
+           "the gate proposes a bounded trial rather than quietly permitting a full CI-NEB")
+    expect("its barrier must not be quoted" in _g,
+           "the trial is explicitly barred from producing a quotable barrier")
     expect("No CI-NEB submission" in _g, "the gate still forbids CI-NEB submission")
 
 print("\n[29] preflight must emit a local->remote staging manifest -- PI REQUEST")
@@ -754,6 +763,34 @@ if _os.path.exists(_GZ) and _os.path.exists(_CV):
     _h = _hl.sha256(open(_GZ, "rb").read()).hexdigest()
     expect(_fin["sha256_of_gz"] == _h,
            "the summary's recorded hash matches the archived gz on disk")
+
+print("\n[31] the NEB archive/restart harness must round-trip a REAL band -- GATE CONDITION 5")
+# Gate condition 5 needs restart+archive+state-ID tooling. A harness that only works on
+# synthetic input proves nothing, so the selftest runs against the PRESERVED q=+1 explore band
+# (a real neb.x .path written by neb.x), not a fixture I wrote.
+_HR = "scripts/26_neb_harness.py"
+_Q1 = "results/objective1/dft/charge_relaxed/q1_explore_restart/q1_explore_state.tar.gz"
+if _os.path.exists(_HR) and _os.path.exists(_Q1):
+    _r = _sp.run([_sys.executable, _HR, "--mode", "selftest", "--q1-band-archive", _Q1],
+                 capture_output=True, text=True)
+    expect(_r.returncode == 0, "harness selftest exits 0 on the real q=+1 band")
+    try:
+        _o = _json.loads(_r.stdout)
+    except Exception:
+        _o = {}
+    expect(_o.get("selftest_pass") is True, "selftest reports pass")
+    expect(_o.get("n_images") == 5, f"parses 5 images from the real band (got {_o.get('n_images')})")
+    expect(_o.get("rows_per_image") == 159,
+           f"parses 159 atoms per image (got {_o.get('rows_per_image')})")
+    expect(_o.get("verify", {}).get("restartable") is True,
+           "the archived snapshot verifies as restartable")
+    expect(_o.get("snapshots_written") == 2 and _o.get("verify", {}).get("snapshot") == 1,
+           "the archive is append-only (second snapshot lands at index 1, does not overwrite)")
+    # state identification must NOT use band index -- PI rule
+    _src = open(_HR).read()
+    expect("cosine" in _src and "NEVER" in _src,
+           "state identification is by per-atom weight cosine, band index explicitly excluded")
+    expect("append-only" in _src, "the archive is documented and enforced as append-only")
 
 print("\n" + "=" * 70)
 if FAILS:
