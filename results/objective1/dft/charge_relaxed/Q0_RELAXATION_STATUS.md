@@ -1,3 +1,5 @@
+> **INTERIM STATUS — retained in place because the regression suite pins its retraction history. For the current state see `Q0_NEB_GATE.md` (both endpoints converged 2026-07-28) and the repo-level `RESULTS_INDEX.md`.**
+
 # q=0 geometry relaxation — status
 
 **One endpoint answered, one plateaued, and the decisive polaron test is queued. The
