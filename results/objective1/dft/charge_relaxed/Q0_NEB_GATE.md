@@ -84,7 +84,7 @@ energies/gradients) → re-archive, all succeeded. Restart is proven **as re-eva
 position update** (the budget cap stops before the Broyden move). The trial's ~0.98–1.29 eV
 intermediate activation energies are **HARNESS_TRIAL output and remain unquotable**.
 
-**PI verdict on the trial: harness validated; condition 5 stays PARTIAL** pending four closure
+**PI verdict on the trial (historical; all four items SINCE MET — see summary above): harness validated; condition 5 held at PARTIAL** pending four closure
 items: (1) at least one real `projwfc.x` → weights → cosine → JSON state-ID on the preserved
 phase-2 wavefunctions (in progress); (2) production inputs regenerated at `degauss=0.005` with
 an automated theory-fingerprint comparison against the q=+1 leg — the trial ran at the
