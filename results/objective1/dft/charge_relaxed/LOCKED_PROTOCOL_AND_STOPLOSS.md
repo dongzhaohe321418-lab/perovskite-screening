@@ -1,3 +1,27 @@
+> # SUPERSEDED IN PART — READ THIS FIRST
+>
+> **The `nspin=2` mandate for q=0 in this document is WRONG and is retracted.** So is the
+> reasoning behind it: this file states that 1401 valence electrons (odd) require a non-zero
+> total magnetic moment. Under Fermi–Dirac/Gaussian smearing, fractional occupation of both
+> spin channels is legitimate, so an odd electron count does **not** force m ≠ 0.
+>
+> What the calculations showed: the unconstrained-spin run **P2** converged to
+> total m = 0.00 and absolute m = 0.00 in **6 iterations** to 1.0×10⁻⁶ Ry, while every
+> *forced*-moment attempt logged below failed after 47–200 iterations — and the forced-moment
+> plateau sits **above** the converged non-magnetic solution. The convergence failures this
+> document treats as physics were self-inflicted from the point a moment was imposed.
+>
+> **Current protocol for q=0: `nspin=1`**, justified by P2 and by the polaron test
+> (`Q0_POLARON_EXCLUDED.md`), not adopted as an approximation. It converges roughly 5× faster
+> and is what the running `q0_final` relaxation uses.
+>
+> **What still stands in this document:** the theory fingerprint (PBE+D3(BJ), degauss 0.005,
+> ecut 50/400, Γ), the stop-loss discipline, and — importantly — the **soft octahedral-tilt
+> floor**: BFGS on this cell floors near fmax ≈ 0.04 eV/Å and the accepted geometry is the
+> lowest-gradient accepted step. That behaviour is now being observed again in `q0_final`.
+>
+> See `Q0_RESOLVED.md`, `Q0_POLARON_EXCLUDED.md`, `Q0_NEB_GATE.md`.
+
 # Stage 2 locked computational protocol and q=0 stop-loss
 
 Agreed with the PI after the theory-level discrepancy was found. Binding for every
@@ -22,7 +46,7 @@ Stage-2 number. Deviating from any row invalidates the charge-state comparison.
 Only two things may differ between the legs:
 
 - `tot_charge`: 0 vs +1
-- `nspin`: **2 for q=0** (1401 valence electrons — odd, one unpaired electron),
+- `nspin`: ~~**2 for q=0** (1401 valence electrons — odd, one unpaired electron)~~ **RETRACTED — see the banner above; q=0 uses `nspin=1`**,
   1 for q=+1 (1400 electrons — even, closed shell)
 
 Nothing else changes. Electron counts verified against the Stage-1 record (1401 / 1400).
