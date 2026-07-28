@@ -1,0 +1,31 @@
+{
+ "n_rows": 24,
+ "expected": 24,
+ "unique_combos": 24,
+ "duplicates": 0,
+ "members": [
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35
+ ],
+ "max_endpoint_fmax_initial": 0.02,
+ "max_endpoint_fmax_final": 0.02,
+ "endpoint_target": 0.02,
+ "excluded_over_target": 0,
+ "blowups_gt_3eV": 0,
+ "bands_unconverged": 0,
+ "strict_valid": 4,
+ "images_per_band": [
+  7
+ ],
+ "overlap_with_84_corpus": 0,
+ "return_test_candidates": 14,
+ "return_test_metastable": 14,
+ "pure_hop_admitted": 5,
+ "hop_plus_FA_separate": 9
+}
