@@ -120,6 +120,8 @@ def main():
                     help="local dir that will become the --pool argument, for interpolated reads")
     ap.add_argument("--local-map", nargs="*", default=[], metavar="REMOTE=LOCAL",
                     help="map a remote filename to its local source, e.g. vac_ref.extxyz=results/.../x.extxyz")
+    ap.add_argument("--manifest-out", default=None,
+                    help="write the local->remote staging manifest (with hashes) to this JSON path")
     ap.add_argument("--assembled", nargs="*", default=[],
                     help="remote dirs the job script builds from staged files (e.g. pool)")
     a = ap.parse_args()
@@ -239,6 +241,31 @@ def main():
         else:
             fails.append(f"{flag} = '{val}' has no remote source: not in --stage, not mapped "
                          f"via --local-map, and not declared --assembled")
+
+    # [10] the staging MANIFEST the PI asked for: one row per file, local source ->
+    # remote destination, with size and hash, so a submission can be audited after the fact.
+    print(f"[10] staging manifest (local source -> remote destination):")
+    rows = []
+    for st in a.stage:
+        if not os.path.exists(st):
+            continue
+        dest = os.path.basename(st)
+        # a remote name may be re-pointed via --local-map (remote=local)
+        for rem, loc in a.local_map.items():
+            if os.path.abspath(loc) == os.path.abspath(st):
+                dest = rem
+        h = hashlib.sha256(open(st, "rb").read()).hexdigest()
+        rows.append({"local_source": st, "remote_destination": dest,
+                     "size_bytes": os.path.getsize(st), "sha256": h})
+        print(f"    {st}  ->  {dest}   {os.path.getsize(st)} B   sha256:{h[:12]}")
+    for asm in sorted(a.assembled):
+        print(f"    (assembled remotely by the job script)  ->  {asm}/")
+    if a.manifest_out and rows:
+        import json as _json
+        _json.dump({"driver": a.driver, "invocation": a.invocation,
+                    "assembled_dirs": sorted(a.assembled), "files": rows},
+                   open(a.manifest_out, "w"), indent=1)
+        print(f"    manifest written to {a.manifest_out}")
 
     print()
     for w in warns:
