@@ -629,6 +629,51 @@ if _os.path.exists(_CS):
     expect("9 BFGS steps" in _s3 or "soft-mode floor" in _s3,
            "the index carries the current q0_final state")
 
+print("\n[27] canonical docs must not go stale, and links must resolve -- PI AUDIT")
+# The index still said the extension was "now genuinely producing bands" after it had completed,
+# merged and been published; and its host-manifest link pointed at results/fa_host/HOST_MANIFEST.md
+# which does not exist (the file is under pool_v3_harmonised/).
+_CS2 = "results/objective2/CURRENT_STATUS.md"
+if _os.path.exists(_CS2):
+    _s = open(_CS2).read()
+    expect("genuinely producing bands" not in _s,
+           "the index no longer describes a completed job as in-progress")
+    expect("completed: 24/24 bands" in _s or "complete" in _s.lower(),
+           "the index states the extension is complete and merged")
+    expect("corpus108/return_test_24.json" in _s,
+           "the index cites the extension's return-test record")
+    # EVERY backticked repo path in the index must resolve
+    _bad = []
+    for _m in _re2.finditer(r"`(\.\./[^`]+\.(?:md|json))`", _s):
+        _rel = _m.group(1)
+        _abs = _os.path.normpath(_os.path.join("results/objective2", _rel))
+        if not _os.path.exists(_abs):
+            _bad.append(_rel)
+    expect(not _bad, f"all relative document links in the index resolve (broken: {_bad})")
+
+print("\n[28] the NEB gate must track the live relaxation state -- PI AUDIT")
+_GT = "results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md"
+if _os.path.exists(_GT):
+    _g = open(_GT).read()
+    expect("3 BFGS steps" not in _g, "the gate no longer reports the stale 3-step state")
+    expect("Nine or more BFGS steps" in _g or "9 BFGS" in _g,
+           "the gate reports the step count without pinning a value a live job will exceed")
+    expect("snapshot of a running job" in _g,
+           "the gate marks the trajectory table as a snapshot, not a final record")
+    expect("not** descend monotonically" in _g or "does **not** descend" in _g,
+           "the gate records that the gradient is non-monotonic")
+    expect("remains OPEN" in _g, "the gate keeps condition 1 explicitly open")
+    expect("identically to q=0 and q=+1" in _g,
+           "any protocol revision is bound to apply to BOTH charge states")
+
+print("\n[29] preflight must emit a local->remote staging manifest -- PI REQUEST")
+if _os.path.exists("scripts/25_preflight.py"):
+    _pf = open("scripts/25_preflight.py").read()
+    expect("--manifest-out" in _pf, "preflight can write a staging manifest")
+    expect("remote_destination" in _pf and "sha256" in _pf,
+           "the manifest records remote destination and hash per file")
+    expect("local_source" in _pf, "the manifest records the local source per file")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
