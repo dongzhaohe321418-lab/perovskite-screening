@@ -1,3 +1,9 @@
+> # SUPERSEDED — archived (bannered 2026-07-28)
+>
+> Early execution guide (Objective 1 → FA screening transition), written before the relaxed-NEB campaign and the paired design.
+>
+> **Current authority: `NEXT_STEP_GUIDE.md + RESULTS_INDEX.md`.** Retained verbatim below for provenance; do not cite as current.
+
 # 下一步执行指南：从 Objective 1 到 FA₀.₉₅Cs₀.₀₅PbI₃ 筛选
 
 **更新：2026-07-23**
