@@ -73,7 +73,7 @@ follow-up work and is NOT claimed as done.
 ## Condition-5 verdict proposal
 
 Archive ✓, per-image structures ✓, hashes ✓, genuine resume ✓ (scope above), stop-on-failure ✓,
-tagging ✓. **Proposed: condition 5 PARTIAL → PASS with the position-update scope and the
+tagging ✓. **[Superseded first proposal — the PI instead set four closure items, all since met; see the closure table below.] Proposed: condition 5 PARTIAL → PASS with the position-update scope and the
 state-ID wiring gap recorded.** The PI makes the call.
 
 
