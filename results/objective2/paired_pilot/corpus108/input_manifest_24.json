@@ -1,0 +1,78 @@
+{
+ "job_id": "41ac4172-dc5d-407a-a0cf-bc3214238c1a",
+ "command": "python 22_paired_pilot.py --pool pool --vac-ref vac_ref.extxyz --members 28 29 30 31 32 33 34 35 --systems undoped GA Sr --fmax 0.05 --steps 400 --endpoint-fmax 0.02 --endpoint-steps 800 --device cuda --out out",
+ "inputs": [
+  {
+   "local_path": "scripts/22_paired_pilot.py",
+   "remote_name": "22_paired_pilot.py",
+   "size_bytes": 13463,
+   "sha256": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a"
+  },
+  {
+   "local_path": "scripts/checks.py",
+   "remote_name": "checks.py",
+   "size_bytes": 14900,
+   "sha256": "76ecab53d4c6d6eeef022977d87b8c1805343d4dbf4e4e336d660133308abf46"
+  },
+  {
+   "local_path": "results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
+   "remote_name": "fa19cspb20i59_232_vI.extxyz",
+   "size_bytes": 12753,
+   "sha256": "ba6a7d79507eef5a10c3e6e261243c98496ca36858c3a0af4d598c44b77d5e23"
+  },
+  {
+   "local_path": "results/fa_host/fa19cs1_pb20i60_233.extxyz",
+   "remote_name": "fa19cs1_pb20i60_233.extxyz",
+   "size_bytes": 28947,
+   "sha256": "43252e35b71e6776c51a57e19613bc7c640fb5d9ddbc91e95b3bce02ec59b7a5"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m28.extxyz",
+   "remote_name": "m28.extxyz",
+   "size_bytes": 12807,
+   "sha256": "1491abe77e8b65cdca66e33b8e376fe244792402f16870ab527a114bb728eb94"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m29.extxyz",
+   "remote_name": "m29.extxyz",
+   "size_bytes": 12807,
+   "sha256": "870a6f72871fa8503a244f27ae9aef06e98648c05a5e21b565480f454938ca0a"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m30.extxyz",
+   "remote_name": "m30.extxyz",
+   "size_bytes": 12807,
+   "sha256": "197118045b849235bf3dd2c17ac941ed0d1fb46a4ec81aa2d620577c8abed463"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m31.extxyz",
+   "remote_name": "m31.extxyz",
+   "size_bytes": 12807,
+   "sha256": "f2ee859782e9397739c63bdc12a6b847c8b9c953e6b8d1c1ca058cc9a8e20ac7"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m32.extxyz",
+   "remote_name": "m32.extxyz",
+   "size_bytes": 12807,
+   "sha256": "3e84ff47a7a9c9e3ec45638538a32de0ab23ddfa70d3ee757731b0a4e13567e8"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m33.extxyz",
+   "remote_name": "m33.extxyz",
+   "size_bytes": 12807,
+   "sha256": "d30c28e03c948bc37c748e0cc1dd2a29e9bb7de2fab18e9dc2cae3577c6b841f"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m34.extxyz",
+   "remote_name": "m34.extxyz",
+   "size_bytes": 12807,
+   "sha256": "4fa78fa1d1bc7e4e7a1098ccfb400106cd84bf13f57e82f86e48da97bb3f64c0"
+  },
+  {
+   "local_path": "results/fa_host/pool_v3_harmonised/m35.extxyz",
+   "remote_name": "m35.extxyz",
+   "size_bytes": 12807,
+   "sha256": "c8ed8a0d28760b4256a73b6c4b196413ed475b93a0ac7906dae03dbb68742273"
+  }
+ ]
+}
