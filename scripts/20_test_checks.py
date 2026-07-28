@@ -390,6 +390,28 @@ if _os.path.exists(_pol2):
         expect("thermally significant" in _ts,
                "the pre-test status doc is annotated with the bounded outcome")
 
+print("\n[19] script flags must be verified, not guessed -- THIRD INCIDENT")
+# Three jobs have now been wasted on invented CLI flags: a missing module, a non-existent
+# --pristine, and --base/--seed on 21_expand_fa_pool.py (which takes --host/--start-seed).
+# This asserts the flags each driver ACTUALLY defines, so a rename breaks the test not a job.
+import subprocess as _sp, sys as _sys
+_EXPECTED_FLAGS = {
+    "scripts/21_expand_fa_pool.py": ["--host", "--out", "--n-new", "--start-seed", "--fmax",
+                                     "--steps", "--device"],
+    "scripts/24_return_test.py":    ["--rerun-dir", "--rejected", "--fmax", "--steps",
+                                     "--device", "--out"],
+}
+for _scr, _flags in _EXPECTED_FLAGS.items():
+    if not _os.path.exists(_scr):
+        continue
+    _h = _sp.run([_sys.executable, _scr, "--help"], capture_output=True, text=True).stdout
+    for _f in _flags:
+        expect(_f in _h, f"{_os.path.basename(_scr)} accepts {_f}")
+    # and the flags I wrongly used must NOT silently exist
+    for _bad in (["--base", "--seed"] if "21_expand" in _scr else []):
+        expect(_bad not in _h,
+               f"{_os.path.basename(_scr)} does NOT accept {_bad} (the flag I invented)")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
