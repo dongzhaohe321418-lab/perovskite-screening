@@ -1,3 +1,5 @@
+> **INDEPENDENT SUB-PROJECT.** This directory is an experimental XRD passivator screen. It shares **no evidence chain** with the migration-barrier work (Objectives 1–2) in the rest of this repository — nothing here supports or is supported by the GA/Sr screening or the q=0/q=+1 NEB campaign. Repo-level navigation: `../RESULTS_INDEX.md`.
+
 # Perovskite screening — XRD analysis log
 
 Analysis of powder/thin-film XRD for the **control** perovskite sample.
