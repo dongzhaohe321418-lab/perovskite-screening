@@ -53,7 +53,7 @@ bands renumbers bands; it does not change where the state lives in space.
 The live trial ran on 2026-07-28 (PI-approved, bounded) and closed this row — with two real
 harness bugs found and fixed in the process (the cumulative-`nstep_path` zero-iteration no-op,
 and the CLI not forwarding the images reference). Per the PI's verdict the condition itself
-stays PARTIAL until the state-ID closure runs on the preserved wavefunctions, production inputs
+was held at PARTIAL until (all four SINCE MET, 2026-07-28 — condition 5 is now PASS, see `Q0_NEB_GATE.md`): the state-ID closure on the preserved wavefunctions, production inputs
 are regenerated at `degauss=0.005` with a fingerprint check, documents are synced, and the
 suite is green from a clean clone.
 
