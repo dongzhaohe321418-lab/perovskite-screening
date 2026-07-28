@@ -89,7 +89,13 @@ Consequences:
   to correct, and no localised solution for it to stabilise.
 - **q=0 forces are usable** — the non-magnetic solution converges (6 iterations from a
   matched density) and the relaxation is well-behaved.
-- **The q=0 NEB is now a matter of compute, not method.**
+- **The q=0 NEB is unblocked on METHOD grounds — but the gate is not open.** This line
+  previously read "a matter of compute, not method", which overstated readiness. What is
+  settled is the *method*: `nspin=1` is correct, forces are trustworthy, and there is no
+  competing localised state. What is **not** settled: `q0_final` has not reached a QE
+  convergence block (its gradient oscillates at the documented soft-tilt floor), and the band
+  archive/restart harness does not exist. Two of five entry conditions remain open — see
+  `Q0_NEB_GATE.md`. No large allocation should be committed until they close.
 
 ## Limits, stated
 
