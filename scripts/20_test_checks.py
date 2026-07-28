@@ -674,15 +674,21 @@ _GT = "results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md"
 if _os.path.exists(_GT):
     _g = open(_GT).read()
     expect("3 BFGS steps" not in _g, "the gate no longer reports the stale 3-step state")
-    expect("Nine or more BFGS steps" in _g or "9 BFGS" in _g,
-           "the gate reports the step count without pinning a value a live job will exceed")
-    expect("snapshot of a running job" in _g,
-           "the gate marks the trajectory table as a snapshot, not a final record")
-    expect("not** descend monotonically" in _g or "does **not** descend" in _g,
-           "the gate records that the gradient is non-monotonic")
-    expect("remains OPEN" in _g, "the gate keeps condition 1 explicitly open")
-    expect("identically to q=0 and q=+1" in _g,
-           "any protocol revision is bound to apply to BOTH charge states")
+    # 2026-07-28 (late): q0_final CONVERGED formally (QE block, 10 steps, grad 1.6e-3), so the
+    # gate legitimately closed condition 1. The test now asserts the CURRENT true state, and
+    # that the historical retraction (the premature "crossed its force target") is preserved.
+    expect("q0_final: CONVERGED" in _g, "the gate records q0_final as formally converged")
+    expect("bfgs converged in 11 scf cycles and 10 bfgs steps" in _g,
+           "the gate quotes QE's own convergence block, not an inferred state")
+    expect("was retracted" in _g or "retracted" in _g,
+           "the premature force-target claim retraction is preserved in the gate")
+    expect("withdrawn as unnecessary" in _g,
+           "the protocol revision is recorded as withdrawn, never silently adopted")
+    expect("-27.1 meV" in _g or "−27.1 meV" in _g,
+           "the gate records the q=0 endpoint asymmetry")
+    expect("condition 5" in _g and ("remaining blocker" in _g or "sole blocker" in _g),
+           "the archive harness is named as the single remaining blocker")
+    expect("No CI-NEB submission" in _g, "the gate still forbids CI-NEB submission")
 
 print("\n[29] preflight must emit a local->remote staging manifest -- PI REQUEST")
 if _os.path.exists("scripts/25_preflight.py"):
@@ -691,6 +697,29 @@ if _os.path.exists("scripts/25_preflight.py"):
     expect("remote_destination" in _pf and "sha256" in _pf,
            "the manifest records remote destination and hash per file")
     expect("local_source" in _pf, "the manifest records the local source per file")
+
+print("\n[30] a str.replace edit must be ASSERTED, and table rows must match the body -- INCIDENT")
+# Two reviewer findings from one root cause: I edited Q0_NEB_GATE.md with s.replace(old, new)
+# where old did not match the file (different wording than I remembered), so the edit silently
+# no-oped. The summary table said IN PROGRESS while the body said converged, and I REPORTED the
+# edit as made. An edit without an assert is a status claim without evidence.
+_GT2 = "results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md"
+if _os.path.exists(_GT2):
+    _g2 = open(_GT2).read()
+    # the summary table row and the body must agree about condition 1
+    _row1 = next((l for l in _g2.splitlines() if l.startswith("| 1 |")), "")
+    expect("PASS" in _row1 and "IN PROGRESS" not in _row1,
+           f"condition-1 table row states PASS, not a stale IN PROGRESS (row: {_row1[:80]})")
+    expect("q0_final: CONVERGED" in _g2,
+           "body records q0_final as converged")
+    expect("approaching monotonically" not in _g2,
+           "no stale 'approaching monotonically' text survives anywhere in the gate")
+    # table/body consistency for every condition: a row claiming PASS must not have body text
+    # still calling that condition open, and vice versa for condition 5
+    _row5 = next((l for l in _g2.splitlines() if l.startswith("| 5 |")), "")
+    expect("PARTIAL" in _row5 or "OPEN" in _row5,
+           "condition-5 row still shows the archive harness as the open item")
+    expect("No CI-NEB submission" in _g2, "the gate still forbids CI-NEB submission")
 
 print("\n" + "=" * 70)
 if FAILS:
