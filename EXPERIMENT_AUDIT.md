@@ -142,7 +142,7 @@ partially occupied state (occupation 0.5000 at 4.3259 eV) as expected for an odd
 count under smearing. Every prior *forced*-moment attempt failed after 47-200 iterations, and
 the forced-moment plateau sits **above** this non-magnetic solution.
 
-## 1.8 q = 0 geometry relaxation — one endpoint ESTABLISHED, one IN PROGRESS
+## 1.8 q = 0 geometry relaxation — BOTH endpoints converged (final: QE convergence block, 2026-07-28)
 
 **q0_initial: converged in ZERO BFGS steps.**
 
@@ -183,7 +183,7 @@ input hash) so the convergence block is checkable from the primary record, not t
 The q=+1 pair reads +11.9 meV (final above initial): the two charge states prefer opposite ends
 of the path. Recorded as an observation; interpretation awaits the NEBs.
 
-## 1.9 q = 0 NEB entry gate — NOT OPEN
+## 1.9 q = 0 NEB entry gate — ALL FIVE CONDITIONS PASS (2026-07-28); launch awaits explicit PI go
 
 | # | condition | status |
 |---|---|---|
@@ -193,7 +193,7 @@ of the path. Recorded as an observation; interpretation awaits the NEBs.
 | 4 | q=0 and q=+1 at identical theory fingerprint | PASS by construction |
 | 5 | NEB input, restart, archive, state-ID tooling ready | **PASS (2026-07-28)** — live HARNESS_TRIAL: real restart proven as re-evaluation; state-ID cosines 0.974–0.979 recomputable from committed per-atom weights; production pair (q0/q1) at conv_thr=1e-8 with machine-verified fingerprint identity. `HARNESS_TRIAL_RESULT.md` |
 
-**Condition 1 closed 2026-07-28. No large HPC allocation until condition 5 closes.** `Q0_NEB_GATE.md`.
+**Condition 1 closed 2026-07-28; condition 5 closed later the same day (HARNESS_TRIAL + four PI closure items). Gate passed ≠ launch approved: the production CI-NEB pair waits for the PI's explicit go.** `Q0_NEB_GATE.md`.
 
 ---
 
