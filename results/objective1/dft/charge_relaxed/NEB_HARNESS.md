@@ -40,7 +40,7 @@ detectable — `verify_restartable()` re-hashes and fails on mismatch.
 matched by the cosine of the per-atom weight vector against the stored reference. Adding empty
 bands renumbers bands; it does not change where the state lives in space.
 
-## Condition 5 status: components complete, end-to-end pending
+## Condition 5 status: PASS (2026-07-28) — all components validated, live trial complete
 
 | component | state |
 |---|---|
