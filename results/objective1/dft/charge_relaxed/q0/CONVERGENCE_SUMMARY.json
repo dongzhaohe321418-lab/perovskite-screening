@@ -1,0 +1,55 @@
+{
+ "theory": "PBE+D3(BJ) dftd3_version=4, degauss 0.005 Ry, ecut 50/400 Ry, Gamma, nosym/noinv, nspin=1",
+ "criteria": {
+  "etot_conv_thr_Ry": 0.0001,
+  "forc_conv_thr_Ry_bohr": 0.001945
+ },
+ "endpoints": [
+  {
+   "tag": "q0_initial",
+   "source_gz": "q0_initial.out.gz",
+   "sha256_of_gz": "1e37d1b5e1481a3c6a6f016573454229ae0b90e2bd2be9313ce0b1eb6b6ee80d",
+   "qe_convergence_block": true,
+   "bfgs_converged_line": "1 scf cycles, 0 bfgs steps",
+   "final_energy_Ry": -9247.62643363,
+   "final_energy_error_Ry": "7.0E-05",
+   "final_gradient_error_Ry_bohr": "1.7E-03",
+   "gradient_trajectory": [
+    "1.7E-03"
+   ],
+   "n_scf_energies": 1
+  },
+  {
+   "tag": "q0_final",
+   "source_gz": "q0_final_ns1.out.gz",
+   "sha256_of_gz": "a41491aa20bfed838e6207b8d3a5e6e7c9eb8ad00cc2a63c2cd130be04ba980e",
+   "qe_convergence_block": true,
+   "bfgs_converged_line": "11 scf cycles, 10 bfgs steps",
+   "final_energy_Ry": -9247.62842357,
+   "final_energy_error_Ry": "9.8E-05",
+   "final_gradient_error_Ry_bohr": "1.6E-03",
+   "gradient_trajectory": [
+    "3.1E-03",
+    "2.9E-03",
+    "2.7E-03",
+    "2.4E-03",
+    "1.9E-03",
+    "1.4E-03",
+    "1.9E-03",
+    "2.3E-03",
+    "2.2E-03",
+    "2.0E-03",
+    "1.6E-03"
+   ],
+   "n_scf_energies": 11
+  }
+ ],
+ "inputs": {
+  "q0_initial.in": "a254dace9a24816bcdc9bb202a52b8af8bebe0a18e44244d21c5ddc566d3a5da",
+  "q0_final_ns1.in": "d00cb400e05e7b38387813ee205d357f21a28ed13e0e83f25a586f79c493e0e4"
+ },
+ "structures": {
+  "q0_initial_relaxed.extxyz": "7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121",
+  "q0_final_relaxed.extxyz": "08b0b7f606cce73dcbbc9e82d4170bde146e109fbadcf53102ecdd1b6f5893dd"
+ }
+}
