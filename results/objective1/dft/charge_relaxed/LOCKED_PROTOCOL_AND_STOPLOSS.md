@@ -40,6 +40,27 @@ Stage-2 number. Deviating from any row invalidates the charge-state comparison.
 | symmetry | `nosym=.true.`, `noinv=.true.` |
 | supercell | identical cell for both charge states |
 | SCF `conv_thr` | 1e-6 Ry (explore) / 1e-8 Ry (production) |
+
+### Amendment 2026-07-28 — production CI-NEB parameters, PAIR-LOCKED (PI-approved)
+
+Both charge-state production CI-NEBs run with settings **identical except `tot_charge`**,
+machine-verified by `ehpc/inputs_stage2/neb_q0_production/fingerprint_check.json`:
+
+| parameter | production value |
+|---|---|
+| SCF `conv_thr` | **1e-8 Ry** (the earlier generated q0 input at 1e-6 was an explore-level error, caught in PI review before submission) |
+| `CI_scheme` | `auto` |
+| `path_thr` | **0.05 eV/Å** (tightened from the 0.10 used in the q=+1 *explore* run; explore results stay valid as explore) |
+| images | 5 (3 interior) |
+| `nstep_path` | 100 |
+| optimiser | broyden |
+| degauss / ecut / D3 / Γ / pseudos | unchanged from the locked table above |
+
+The comparison object for any fingerprint check is **q0-production vs q1-production** — never
+production vs explore. The q=+1 leg therefore RE-RUNS at these settings before any
+charge-state comparison; the earlier q=+1 explore NEB (path_thr 0.10, no-CI, conv_thr 1e-6)
+is not directly comparable to a production result and is never mixed with one.
+
 | NEB images | identical count for both charge states |
 | NEB `path_thr` | **0.10 eV/A for both legs** |
 
