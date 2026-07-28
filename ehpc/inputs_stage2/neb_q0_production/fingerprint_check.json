@@ -8,9 +8,22 @@
   "dftd3_version": "4",
   "nosym": ".true.",
   "noinv": ".true.",
-  "conv_thr": "1e-6",
+  "conv_thr": "1e-8",
   "smearing": "'gaussian'",
-  "kpoints": "automatic"
+  "CI_scheme": "'auto'",
+  "string_method": "'neb'",
+  "path_thr": "0.050",
+  "num_of_images": "5",
+  "nstep_path": "100",
+  "opt_scheme": "'broyden'",
+  "tot_charge": "0.0",
+  "nspin": "1",
+  "kgrid_full": "1 1 1 0 0 0",
+  "pseudos": {
+   "Pb": "Pb.pbe-dn-rrkjus_psl.1.0.0.UPF",
+   "I": "I.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "Cs": "Cs.pbe-spn-rrkjus_psl.1.0.0.UPF"
+  }
  },
  "q1": {
   "ecutwfc": "50.0",
@@ -21,9 +34,34 @@
   "dftd3_version": "4",
   "nosym": ".true.",
   "noinv": ".true.",
-  "conv_thr": "1e-6",
+  "conv_thr": "1e-8",
   "smearing": "'gaussian'",
-  "kpoints": "automatic"
+  "CI_scheme": "'auto'",
+  "string_method": "'neb'",
+  "path_thr": "0.050",
+  "num_of_images": "5",
+  "nstep_path": "100",
+  "opt_scheme": "'broyden'",
+  "tot_charge": "1",
+  "nspin": "1",
+  "kgrid_full": "1 1 1 0 0 0",
+  "pseudos": {
+   "Pb": "Pb.pbe-dn-rrkjus_psl.1.0.0.UPF",
+   "I": "I.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "Cs": "Cs.pbe-spn-rrkjus_psl.1.0.0.UPF"
+  }
  },
- "differences": {}
+ "allowed_differences": [
+  "tot_charge"
+ ],
+ "defaults_resolved": {
+  "tot_charge": "0.0",
+  "nspin": "1"
+ },
+ "note": "q0 omits tot_charge (QE default 0.0) -- resolved explicitly so the charge check is non-vacuous",
+ "differences_beyond_allowed": {},
+ "input_sha256": {
+  "ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in": "04acee190675ec82c3d5132a61079506955413afcc4c871b39d4c9d6edfd12c7",
+  "ehpc/inputs_stage2/neb_q1_production/q1_cineb.neb.in": "9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267"
+ }
 }
