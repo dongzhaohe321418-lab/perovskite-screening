@@ -29,7 +29,7 @@ Anything not listed here is historical. Restructured 2026-07-28.
   + `CHARGE_STATE_ANCHOR.md` (PROVISIONAL anchor)
 - **Raw data:** `results/objective1/dft/charge_relaxed/q0/` (QE outputs .gz, inputs,
   CONVERGENCE_SUMMARY.json), `q1_explore_restart/q1_explore_state.tar.gz`
-- **Next:** HARNESS_TRIAL (workflow validation, running); then decide the full q=0 CI-NEB.
+- **Next:** HARNESS_TRIAL **complete** (restart-as-re-evaluation proven; `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md`); condition 5 stays PARTIAL pending the PI's four closure items (state-ID on real wavefunctions, degauss-0.005 production inputs + fingerprint check, doc sync, clean-clone green suite); then the full q=0 CI-NEB decision.
 
 ## Q3. Is V_I⁰ a polaron or a shallow donor?
 
