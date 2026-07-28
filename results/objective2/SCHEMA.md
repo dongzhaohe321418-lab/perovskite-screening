@@ -2,7 +2,7 @@
 
 **Tier discipline.** Every row carries a `tier` field. `EXPLORE` rows may never be
 presented as a ranking. Promotion to `PRODUCTION` requires all six entry gates
-(`results/objective1/OBJECTIVE2_READINESS_AUDIT.md`) to be met.
+(`results/objective1/archive/objective2_interim/OBJECTIVE2_READINESS_AUDIT.md (archived)`) to be met.
 
 ## Design rule: the configurational ensemble is a column, not a footnote
 
