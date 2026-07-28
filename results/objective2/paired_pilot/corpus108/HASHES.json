@@ -1,0 +1,34 @@
+{
+ "paired_raw_24.json": {
+  "size_bytes": 33837,
+  "sha256": "73bee9e8bae403ef23b59eed67425d771e28b46c93217fcf6733b8f2b6a3af2b"
+ },
+ "paired_raw_108.json": {
+  "size_bytes": 149337,
+  "sha256": "0cb2f86fb8f0a33cbe1b2df829066e76ce79db4796ab978fe1dff3e7a440f674"
+ },
+ "return_test_24.json": {
+  "size_bytes": 9742,
+  "sha256": "63b9e88bcae657884c719f005bced46267f8ae89487e9007f34e61a832aec89c"
+ },
+ "corpus108_new_bands.tar.gz": {
+  "size_bytes": 1527102,
+  "sha256": "e230beae9145bb9dcb6bc5e719c10bddaca3840b609a8c74a1ba92b1fbfdf403"
+ },
+ "corpus108_stats.json": {
+  "size_bytes": 846,
+  "sha256": "4d783c3553db22e7a6f94076386687a8b9a2058f91ac71c52a5c44093cac4ebf"
+ },
+ "admission_108.json": {
+  "size_bytes": 1368,
+  "sha256": "d3da7908d0a39eb2f29e0e153c7242be2971ce8c79d4610046f90ec8b435a24f"
+ },
+ "integrity_audit_24.json": {
+  "size_bytes": 505,
+  "sha256": "3279e0ff501c52a81bbd59656e9eb5623ad8db9a2c301a908d16046e7428d044"
+ },
+ "input_manifest_24.json": {
+  "size_bytes": 2823,
+  "sha256": "cc8e7c0058fae376680987fb4cf3d349980b75db633e5360e205311f228ca0e6"
+ }
+}
