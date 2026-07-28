@@ -68,7 +68,7 @@ plateaued, random-walking in the 4–7×10⁻³ Ry band while the *absolute* mag
 wandered 1.5–2.6: the moment's magnitude is pinned while its **spatial distribution keeps
 rearranging**. This is a multi-minimum spin-localisation problem, which is why three
 successive mixing and seeding adjustments all struck the same wall. Diagnosis and the
-ranked list of remaining fixes: Q0_SPIN_SCF_UNRESOLVED.md.
+ranked list of remaining fixes: ../../../../archive/objective1_q0_diagnostics/Q0_SPIN_SCF_UNRESOLVED.md (archived; resolved by Q0_RESOLVED.md).
 
 ---
 
@@ -91,7 +91,7 @@ Stage-1 127 meV. The relaxed band is preserved (`q1_explore_state.tar.gz`, conta
 
 ## What must happen before this anchor becomes VALIDATED
 
-1. Resolve the V_I⁰ spin-SCF (Q0_SPIN_SCF_UNRESOLVED.md, options ranked by cost).
+1. Resolve the V_I⁰ spin-SCF (../../../../archive/objective1_q0_diagnostics/Q0_SPIN_SCF_UNRESOLVED.md (archived; resolved by Q0_RESOLVED.md), options ranked by cost).
 2. Run **both** legs to CI-NEB at the identical locked level, `path_thr < 0.10 eV/Å`
    (LOCKED_PROTOCOL_AND_STOPLOSS.md).
 3. Take each barrier as its own CI-NEB saddle relative to its own initial image; never
