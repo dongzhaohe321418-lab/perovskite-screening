@@ -9,7 +9,7 @@ CI-NEB. Current state, audited rather than assumed.
 | 2 | `nspin=1` stable and restartable across nearby geometries | **PASS** |
 | 3 | P1/P2 show no competing localised spin state | **PASS** |
 | 4 | q=0 and q=+1 at an identical theory fingerprint | **PASS (by construction)** |
-| 5 | NEB input, restart, archiving and state-identification tooling ready | **PARTIAL** |
+| 5 | NEB input, restart, archiving and state-identification tooling ready | **PARTIAL — 4 of 5 components validated** (`NEB_HARNESS.md`); the harness is not yet exercised on a live q=0 job |
 
 ## Condition 1 — endpoints
 
@@ -71,14 +71,29 @@ Ready: `scripts/11_generate_neb_input.py` (neb.x input generation, exercised on 
 leg), `scripts/13` (d_max), `scripts/23_q0_state_metrics.py` (state identification by
 per-atom weight overlap rather than band index — needed because band numbering shifts).
 
-Missing: a restart/archive harness for the q=0 band specifically. The q=+1 explore band's
-`neb.path` is preserved in `q1_explore_state.tar.gz` and is the CI-NEB restart point for
-that leg; the q=0 leg needs the same treatment provisioned before launch.
+**Built 2026-07-28:** `scripts/26_neb_harness.py` — append-only iteration archive, restart
+verification, and state identification by per-atom weight cosine (never band index). Validated
+by round-tripping the **real** q=+1 explore band written by `neb.x` itself (5 images × 159
+atoms, 2 snapshots, hash-verified), not a synthetic fixture. Regression test [31] pins every
+value. Detail in `NEB_HARNESS.md`.
+
+**Still missing, and honestly circular:** the harness has not been exercised on a *live* q=0
+job, and it cannot be until a q=0 NEB runs — which this gate exists to prevent. The proposed
+resolution is to treat the **first** q=0 NEB as the harness's live trial: archiving enabled
+from iteration 1, archive verified after the first few iterations, job stopped immediately if
+the round-trip fails. That is a bounded commitment, not a full CI-NEB, and it closes the
+circularity rather than declaring the component done by assertion.
 
 ## Verdict
 
-**Gate: 4 of 5 conditions now PASS. The single remaining blocker is condition 5** — the q=0
-band restart/archive harness. No CI-NEB submission until it exists and this file records it.
+**Gate: 4 of 5 conditions PASS. Condition 5 is PARTIAL — 4 of its 5 components are built and
+validated; the harness has not been exercised on a live q=0 job.**
+
+No CI-NEB submission. What *is* now defensible is a **bounded harness trial**: a short q=0 NEB
+(explore tier, no CI, low iteration cap) run solely to exercise archiving and restart on a live
+band, stopped as soon as the round-trip is verified or fails. That trial is not a scientific
+result and its barrier must not be quoted. A full q=0 CI-NEB waits until this file records the
+trial's outcome.
 
 Also worth stating: a false alarm during this audit. A grep for band-convergence warnings
 returned a hit that turned out to be routine `c_bands` memory-report lines, not a warning.
