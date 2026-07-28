@@ -62,7 +62,7 @@ and nothing was computing. The claim was false when made. Corrections:
 **Rule adopted:** a track is described as running only after its own preflight has reported
 success and output exists. Job submission is not evidence of execution.
 
-**q=0 NEB gate: condition 1 CLOSED (both endpoints converged); the sole remaining blocker is condition 5 — the band restart/archive/state-ID harness.** No CI-NEB submission until it exists. See `../objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
+**q=0 NEB gate: ALL FIVE conditions PASS (2026-07-28)** — condition 5 closed via the live HARNESS_TRIAL plus the PI's four closure items (state-ID recomputable from committed weights; production pair at conv_thr=1e-8 with fingerprint identity; docs synced; clean-clone green). Production inputs for both legs are ready; **launch requires the PI's explicit go**. See `../objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
 
 **Sr methodology note.** The χ² sample-size threshold falls as n rises even at constant
 variance (n_req 16 at n=10 → 13 at n=13 → 10 at n=20, holding sd at 65.2 meV). The final Sr
