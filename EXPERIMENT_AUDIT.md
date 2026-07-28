@@ -191,7 +191,7 @@ of the path. Recorded as an observation; interpretation awaits the NEBs.
 | 2 | `nspin=1` stable/restartable across nearby geometries | PASS (4 distinct geometries) |
 | 3 | no competing localised spin state | PASS (§1.7, §1.6) |
 | 4 | q=0 and q=+1 at identical theory fingerprint | PASS by construction |
-| 5 | NEB input, restart, archive, state-ID tooling ready | **PARTIAL — archive harness missing (SOLE remaining blocker)** |
+| 5 | NEB input, restart, archive, state-ID tooling ready | **PASS (2026-07-28)** — live HARNESS_TRIAL: real restart proven as re-evaluation; state-ID cosines 0.974–0.979 recomputable from committed per-atom weights; production pair (q0/q1) at conv_thr=1e-8 with machine-verified fingerprint identity. `HARNESS_TRIAL_RESULT.md` |
 
 **Condition 1 closed 2026-07-28. No large HPC allocation until condition 5 closes.** `Q0_NEB_GATE.md`.
 
