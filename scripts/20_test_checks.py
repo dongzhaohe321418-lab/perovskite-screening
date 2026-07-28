@@ -694,11 +694,14 @@ if _os.path.exists(_GT):
            "condition 5 is recorded as PARTIAL, not passed")
     expect("not yet exercised on a live q=0 job" in _g or "live q=0 job" in _g,
            "the un-exercised live-job component is named explicitly")
-    expect("bounded harness trial" in _g,
-           "the gate proposes a bounded trial rather than quietly permitting a full CI-NEB")
-    expect("its barrier must not be quoted" in _g,
-           "the trial is explicitly barred from producing a quotable barrier")
-    expect("No CI-NEB submission" in _g, "the gate still forbids CI-NEB submission")
+    # 2026-07-28 (later): the trial RAN; the gate now records the PI verdict instead of the
+    # proposal. The invariants: prohibition stands, trial output unquotable, closure items named.
+    expect("PI verdict on the trial" in _g, "the gate records the PI verdict on the trial")
+    expect("remain unquotable" in _g or "stay unquotable" in _g,
+           "the trial energies are explicitly unquotable")
+    expect("No full q=0 CI-NEB submission" in _g,
+           "the gate still forbids the full CI-NEB")
+    expect("No full q=0 CI-NEB submission" in _g, "the gate still forbids CI-NEB submission")
 
 print("\n[29] preflight must emit a local->remote staging manifest -- PI REQUEST")
 if _os.path.exists("scripts/25_preflight.py"):
@@ -729,7 +732,7 @@ if _os.path.exists(_GT2):
     _row5 = next((l for l in _g2.splitlines() if l.startswith("| 5 |")), "")
     expect("PARTIAL" in _row5 or "OPEN" in _row5,
            "condition-5 row still shows the archive harness as the open item")
-    expect("No CI-NEB submission" in _g2, "the gate still forbids CI-NEB submission")
+    expect("No full q=0 CI-NEB submission" in _g2, "the gate still forbids CI-NEB submission")
 
 # PI request: the q0_final convergence state must be CONSISTENT across gate, canonical index
 # and audit record -- the previous fix touched only the gate. Also: the convergence claim must
@@ -850,6 +853,40 @@ if _os.path.exists(_TR):
     _dmax = max(abs(a - b) for a, b in zip(_E0, _E1))
     expect(3e-9 < _dmax < 1e-7 and abs(_dmax - 4e-8) < 1e-9,
            f"pinned snapshot energies give max delta 4e-8 au (got {_dmax:.1e}) -- the old bound was wrong")
+
+print("\n[34] production q=0 NEB input: degauss 0.005 + machine fingerprint match -- PI GATE")
+# The trial ran at the generator DEFAULT degauss=0.01 -- fine for the harness, prohibited for
+# production. The PI requires the production input regenerated at 0.005 with an automated
+# fingerprint comparison against the q=+1 leg.
+_Q0P = "ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in"
+_Q1P = "ehpc/inputs_stage2/neb_q1/q1_explore.neb.in"
+if _os.path.exists(_Q0P) and _os.path.exists(_Q1P):
+    def _fp(path):
+        _t = open(path).read()
+        _f = {}
+        for _k in ["ecutwfc", "ecutrho", "degauss", "occupations", "vdw_corr",
+                   "dftd3_version", "nosym", "noinv", "conv_thr", "smearing"]:
+            _m = _re2.search(rf"^\s*{_k}\s*=\s*(\S+?)\s*$", _t, _re2.M)
+            if _m: _f[_k] = _m.group(1).rstrip(",")
+        _m = _re2.search(r"K_POINTS\s+\w+\s*\n\s*([\d ]+)", _t)
+        _f["kgrid"] = _m.group(1).strip() if _m else None
+        return _f
+    _f0, _f1 = _fp(_Q0P), _fp(_Q1P)
+    expect(_f0.get("degauss") == "0.005",
+           f"production q=0 input uses degauss=0.005 (got {_f0.get('degauss')})")
+    _dif = {k for k in set(_f0) | set(_f1) if _f0.get(k) != _f1.get(k)}
+    expect(not _dif, f"q=0 and q=+1 theory fingerprints are IDENTICAL (diffs: {_dif})")
+    expect(_f0.get("kgrid") == "1 1 1 0 0 0", "k-grid is Gamma (1x1x1 unshifted)")
+    # the TRIAL input must never be promoted to production
+    _TRI = "ehpc/inputs_stage2/neb_q0_trial/q0_trial.neb.in"
+    if _os.path.exists(_TRI):
+        expect(_fp(_TRI).get("degauss") == "0.01",
+               "the trial input is recorded as-run (0.01) -- regenerate, never promote")
+# archive banners: EVERY archive/*.md must open with a banner (the clean-clone failure)
+import glob as _gl2
+_missing = [f for f in _gl2.glob("archive/**/*.md", recursive=True)
+            if not open(f).read(60).startswith("> # SUPERSEDED")]
+expect(not _missing, f"every archive/ doc opens with a SUPERSEDED banner (missing: {_missing})")
 
 print("\n" + "=" * 70)
 if FAILS:
