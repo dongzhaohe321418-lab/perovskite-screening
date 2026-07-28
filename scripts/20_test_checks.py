@@ -365,6 +365,31 @@ if _os.path.exists(_pol):
     expect(abs(_depth - 8.0) < 0.5, f"2x-residual well-depth bound recomputes to {_depth:.1f} meV")
     expect(_depth < 25.7, "even the extreme bound stays below room-temperature kT")
 
+print("\n[18] a retraction must cover PARAPHRASES, not just literal strings -- INCIDENT")
+# I retracted "no bound polaron at any amplitude" in the body of Q0_POLARON_EXCLUDED.md but
+# the ABSTRACT still said the conclusion "does not depend on the amplitude chosen" -- the same
+# claim in different words. My verification grepped literal strings only, so it survived.
+import re as _re2
+_pol2 = "results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md"
+if _os.path.exists(_pol2):
+    _tp2 = open(_pol2).read()
+    _abstract = _tp2[:_tp2.index("## The three calculations")]
+    for _phr in ["does not depend on the amplitude", "independent of the amplitude",
+                 "at any amplitude", "no polaron exists"]:
+        expect(_phr not in _abstract,
+               f"abstract does not assert {_phr!r} (the retracted claim, in any wording)")
+    expect("BOUND" in _abstract or "bound" in _abstract,
+           "abstract states the result as a bound")
+    expect("not excluded" in _abstract or "is not excluded" in _abstract
+           or "cannot be excluded" in _abstract or "not excluded by these data" in _abstract,
+           "abstract admits a weakly bound state is not excluded")
+    # the earlier status doc predicted the strong wording -- it must carry the real outcome
+    _st = "results/objective1/dft/charge_relaxed/Q0_RELAXATION_STATUS.md"
+    if _os.path.exists(_st):
+        _ts = open(_st).read()
+        expect("thermally significant" in _ts,
+               "the pre-test status doc is annotated with the bounded outcome")
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
