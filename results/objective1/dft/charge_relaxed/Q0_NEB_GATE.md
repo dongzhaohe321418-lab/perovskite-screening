@@ -9,7 +9,7 @@ CI-NEB. Current state, audited rather than assumed.
 | 2 | `nspin=1` stable and restartable across nearby geometries | **PASS** |
 | 3 | P1/P2 show no competing localised spin state | **PASS** |
 | 4 | q=0 and q=+1 at an identical theory fingerprint | **PASS (by construction)** |
-| 5 | NEB input, restart, archiving and state-identification tooling ready | **PARTIAL — 4 of 5 components validated** (`NEB_HARNESS.md`); the harness is not yet exercised on a live q=0 job |
+| 5 | NEB input, restart, archiving and state-identification tooling ready | **PASS** (2026-07-28) — live trial + all four PI closure items met: real restart proven as re-evaluation; state-ID cosine 0.974–0.979 on all 3 interior images from real wavefunctions; production input at degauss 0.005 with machine-verified fingerprint identity to q=+1; suite green from clean clone. `HARNESS_TRIAL_RESULT.md` |
 
 ## Condition 1 — endpoints
 
@@ -94,13 +94,16 @@ clone.
 
 ## Verdict
 
-**Gate: 4 of 5 conditions PASS. Condition 5 is PARTIAL — the live harness trial SUCCEEDED
-(see above) and the PI has conditioned PARTIAL → PASS on four small closure items** (state-ID
-closure on real wavefunctions; degauss=0.005 production inputs + fingerprint check; document
-sync; clean-clone green suite).
+**Gate: ALL FIVE CONDITIONS PASS (2026-07-28).** Condition 5 closed per the PI's conditional
+ruling with all four closure items met (state-ID on real wavefunctions: cosine 0.9789/0.9755/
+0.9743 on images 2/3/4; production input regenerated at degauss 0.005 with machine-verified
+fingerprint identity to the q=+1 leg; documents synced; suite green from a clean clone —
+`HARNESS_TRIAL_RESULT.md` closure table).
 
-No full q=0 CI-NEB submission until this file records condition 5 as PASS. The trial's
-intermediate energies stay unquotable.
+**The full q=0 CI-NEB submission decision is now OPEN — it requires an explicit go from the
+PI; passing the gate authorises asking, not launching.** The production input is
+`ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` (CI auto, path_thr 0.05, degauss 0.005).
+The trial's intermediate energies stay unquotable permanently.
 
 Also worth stating: a false alarm during this audit. A grep for band-convergence warnings
 returned a hit that turned out to be routine `c_bands` memory-report lines, not a warning.
