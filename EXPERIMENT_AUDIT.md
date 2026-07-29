@@ -200,6 +200,13 @@ archiving with parse-before-archive and verification, stop-on-persistent-archive
 image-count anomaly with raw outputs preserved. **No barrier from either leg is extracted or
 reported until BOTH legs converge; explore/trial intermediates remain unquotable.**
 
+**Snapshot-numbering convention (audited on the live q=0 archive, PI query):** archive snapshot
+`iter_00N` holds the band with QE `istep = N` (zero-based; `iter_000` is the initial
+interpolated band written before iteration 1's SCF). Verified on the first six snapshots: all
+`neb.path` SHA-256 values distinct, each snapshot's recorded `istep` equals its archive index,
+watcher appends only on band-hash change. An earlier progress message that called `iter_000`
+"after iteration 1" was a wording error, not a data problem.
+
 | # | condition | status |
 |---|---|---|
 | 1 | both endpoints ionically converged | **PASS — both converged** (final: QE block, 10 steps) |
