@@ -1096,6 +1096,32 @@ for _bad in ("are not committed", "cannot be independently reproduced"):
                    f"Q3 row: '{_bad}' appears only inside an explicit retraction")
 
 
+print("\n[40] XRD DOC range: every unmarked range must match the committed source (F-014)")
+import csv as _csv40, re as _re40, os as _os40
+# Source of truth: the committed summary table, which an isolated raw recomputation
+# (xrd_protocol_kernel.analyse_single on the raw .txt/.mdi) reproduces to 1e-3 %.
+_lo = _hi = None
+for _row in _csv40.reader(open("xrd/results/summary_metrics.csv")):
+    if _row and _row[0].strip().lower().startswith("degree of crystallinity"):
+        _lo, _hi = float(_row[2]), float(_row[3]); break
+expect(_lo is not None, "summary_metrics.csv records the degree-of-crystallinity range")
+if _lo is not None:
+    _cur = (round(_lo), round(_hi))
+    expect(_cur == (49, 65), f"committed DOC range rounds to 49-65%, got {_cur}")
+    _txt40 = open("xrd/README.md").read()
+    for _ln in _txt40.splitlines():
+        for _m40 in _re40.finditer(r"(\d{2})\s*[–-]\s*(\d{2})\s*%", _ln):
+            _pair = (int(_m40.group(1)), int(_m40.group(2)))
+            # only DOC-shaped statements matter; skip unrelated percentage ranges
+            if not _re40.search(r"crystallin|DOC", _ln, _re40.I): continue
+            if _pair == _cur: continue
+            _low = _ln.lower()
+            expect("superseded" in _low or "previously" in _low or "shifted" in _low
+                   or "→" in _ln or "retract" in _low or "~~" in _ln,
+                   f"xrd/README.md: stale DOC range {_pair[0]}-{_pair[1]}% is marked superseded "
+                   f"(current is {_cur[0]}-{_cur[1]}%)")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
