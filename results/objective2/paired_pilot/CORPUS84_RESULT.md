@@ -61,7 +61,7 @@ interval; Sr does not (10 < 16), so its equivalence is provisional pending ~6 mo
 `m14` gives −139.8 meV and `m20` gives +129.3 meV.
 
 **Correction.** An earlier version of this report said both "pass every gate". That was
-false and is retracted. Checking `paired_raw_84.json`: `Sr_m14` has
+false and is retracted. Checking `results/objective2/paired_pilot/corpus84/paired_raw_84.json`: `Sr_m14` has
 `gate_endpoints.passed = False` ("initial endpoint above its adjacent interior image by
 71.2 meV"), and `undoped_m20` likewise ("…by 124.4 meV"). Both entered the statistic through
 the **return-test rescue** route, not the strict gate. My keep/remove argument claimed there

@@ -137,7 +137,7 @@ first-order (60 meV/f.u.), so the Stage-4 migration matrix must sample it, not f
 - `fa_parent_relaxed.extxyz` / `.cif`, `fa_parent_2x2x2.cif` — MACE-relaxed parent
 - `fa19cs1_pb20i60_233.extxyz` / `.cif` — candidate pristine cell (lowest-E orientation)
 - `fa19cspb20i59_232_vI.extxyz` / `.cif` — V_I cell, FA₁₉CsPb₂₀I₅₉ (232 atoms)
-- `fa_ensemble_00..07.extxyz` — the 8 relaxed orientation configs
+- `fa_ensemble_00..07.extxyz (range of 8 remote files)` — the 8 relaxed orientation configs
 - `fa_host_build.json` — full record (HNF table, d_min, ensemble, asserts, coordination)
 - `fa_host_structures.png` — 3-panel figure
 
@@ -171,8 +171,8 @@ Ran on the GPU once it returned (`scripts/08_fa_md_ensemble.py`, job `725791a1`)
   decorrelation. MD used only as an orientation sampler (no kinetic claim — zero-shot
   FA rotation quality is not validated).
 
-Files in `md_ensemble/`: `fa_orient_00..08.extxyz`, `fa_md_ensemble.json`,
-`fa_md_traj_samples.extxyz.gz`, `fa_pure_2x2x2_96.extxyz`.
+Files in `md_ensemble/`: `fa_orient_00..08.extxyz (range of 9 remote files)`, `results/fa_host/md_ensemble/fa_md_ensemble.json`,
+`fa_md_traj_samples.extxyz.gz`, `results/fa_host/md_ensemble/fa_pure_2x2x2_96.extxyz`.
 
 ## W2-3 — zero-shot FA baseline Eₐ distribution (COMPLETE, RTX 5090)
 
@@ -207,7 +207,7 @@ brackets both dominant DFT pathways (340, 450 meV fall inside the sampled range)
 zero-shot FA baseline is in the correct physical regime. This validates carrying the
 FA regression path into Stage 4/5.
 
-Files in `neb_distribution/`: `fa_neb_distribution.json` (per-config + distribution +
+Files in `neb_distribution/`: `results/fa_host/neb_distribution/fa_neb_distribution.json` (per-config + distribution +
 literature check), `fa_neb_distribution.png`, `bands/fa_neb_band_00..08.extxyz.gz`.
 
 ## Lane-2 acceptance checklist (EXECUTION_GUIDE 泳道二验收)

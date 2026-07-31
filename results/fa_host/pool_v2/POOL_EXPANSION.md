@@ -2,7 +2,7 @@
 
 **Result: 18 of 18 candidates accepted**, all with every Pb 6-fold coordinated, every FA
 intact, and relaxation converged (161-381 FIRE steps). Stored as
-`results/fa_host/pool_v2/m00..m17.extxyz`, renumbered contiguously so member ids are stable
+`results/fa_host/pool_v2/ m00..m17 (range of 18 files)`, renumbered contiguously so member ids are stable
 and gap-free.
 
 | | mean E (eV) | sd | range |

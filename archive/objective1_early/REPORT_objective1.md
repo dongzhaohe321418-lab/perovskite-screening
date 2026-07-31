@@ -128,8 +128,8 @@ with the vacancy has **168 atoms** (159 undoped + 10-atom GA − 1 Cs), not 159.
 
 Status: **preliminary qualitative pass — sign confirmed robust (orientation +
 site + control), magnitude configuration-dependent.** Quantitative pinning
-strength remains DFT- and averaging-gated. Data: `ga.json` (all configs +
-fingerprints), saddle geometry `ga_saddle_path.extxyz`.
+strength remains DFT- and averaging-gated. Data: `results/objective1/ga.json` (all configs +
+fingerprints), saddle geometry `results/objective1/ga_saddle_path.extxyz`.
 
 ## Anchor (d) — strain–E_a trend: reproduced (biaxial); hydrostatic branch unresolved
 
@@ -196,7 +196,7 @@ charged defects at all — not a formality that merely awaits compute. No number
 reported. The full ready-to-run workflow (DFT settings, FNV finite-size
 correction, per-charge-state fine-tuning, active-learning closure to
 |E_a^MLIP − E_a^DFT| < 0.05 eV, and the anchor test) is in
-**`CHARGE_STATE_PROTOCOL.md`**. Gating item: **CSD3 (or equivalent) DFT
+**`results/objective1/CHARGE_STATE_PROTOCOL.md`**. Gating item: **CSD3 (or equivalent) DFT
 allocation — not yet in hand.**
 
 ---
@@ -215,7 +215,7 @@ the identical path in a **3×3×3 (~540-atom)** cell versus the production
 | **tensile +1 % ΔE_a** | −41.5 meV | −40.8 meV | +0.7 meV | **cancels cleanly** |
 | **GA-near ΔE_a** | +70 meV | +335 meV | **+264 meV** | **does *not* cancel** |
 
-*(Change column computed from the raw `finite_size.json` values, not the rounded display columns; both non-GA deltas are <1 meV.)*
+*(Change column computed from the raw `results/objective1/finite_size.json` values, not the rounded display columns; both non-GA deltas are <1 meV.)*
 
 Three distinct outcomes:
 
@@ -238,7 +238,7 @@ Three distinct outcomes:
 **elastic / defect-concentration** (overlapping strain fields of the periodic
 vacancy and, for GA, the cation), **not** a charged-defect electrostatic
 self-image — the "self-image cancels" framing in an earlier draft named the
-wrong mechanism. Data: `finite_size.json`.
+wrong mechanism. Data: `results/objective1/finite_size.json`.
 
 **Consequence for the anchors.** (a) undoped and (d) strain-slope are
 finite-size-safe at 2×2×2; (c) GA magnitude is not, reinforcing that GA needs
@@ -283,24 +283,24 @@ are DFT-gated and wait on an allocation.
    saddle, and the two images flanking it, for both. *(DFT-gated.)*
 2. ~~**GA configurational sampling**~~ — **DONE.** 3 orientations at the near site
    + far-site control: sign robust (all near pin, far ≈ 0), magnitude spans
-   +70…+278 meV (207 meV spread). See Anchor (c) and `ga.json`.
+   +70…+278 meV (207 meV spread). See Anchor (c) and `results/objective1/ga.json`.
 3. **Biaxial DFT 3-point** — −1.5 %, 0, +1.5 % DFT check against the zero-shot
    slope. *(DFT-gated.)*
 4. ~~**γ-phase finite-size check**~~ — **DONE.** 3×3×3 vs 2×2×2 for undoped / GA /
    tensile: undoped + strain-slope size-converged, GA magnitude is not. See the
-   finite-size section and `finite_size.json`.
+   finite-size section and `results/objective1/finite_size.json`.
 5. **V_I⁺ vs V_I⁰ (anchor b)** — the charged-DFT + per-charge-state fine-tune, as
    soon as a DFT allocation lands; it gates whether the pipeline can rank charged
-   defects at all. *(DFT-gated — `CHARGE_STATE_PROTOCOL.md`.)*
+   defects at all. *(DFT-gated — `results/objective1/CHARGE_STATE_PROTOCOL.md`.)*
 
 ## Files
 
 - `strain_Ea.png` — anchors (c) & (d) figure (strain sweep + GA barrier overlay)
 - `obj1_refine.png` — post-review figure: GA configurational robustness + γ finite-size
-- `anchors_summary.json` — consolidated, analysis-ready results (with honest status flags)
-- `regression.json`, `strain.json`, `strain_tight.json`, `ga.json`, `finite_size.json` — raw per-anchor data
-- `regression_saddle_path.extxyz`, `ga_saddle_path.extxyz` — NEB image trajectories
-- `CHARGE_STATE_PROTOCOL.md` — anchor (b) ready-to-run DFT + fine-tune recipe
+- `results/objective1/anchors_summary.json` — consolidated, analysis-ready results (with honest status flags)
+- `results/objective1/regression.json`, `results/objective1/strain.json`, `results/objective1/strain_tight.json`, `results/objective1/ga.json`, `results/objective1/finite_size.json` — raw per-anchor data
+- `results/objective1/regression_saddle_path.extxyz`, `results/objective1/ga_saddle_path.extxyz` — NEB image trajectories
+- `results/objective1/CHARGE_STATE_PROTOCOL.md` — anchor (b) ready-to-run DFT + fine-tune recipe
 - `../../scripts/04_objective1_anchors.py` — the driver (`--mode` regression/strain/ga/finite_size/all)
 
 ## Caveats (summary)

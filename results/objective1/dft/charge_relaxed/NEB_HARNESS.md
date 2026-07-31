@@ -8,7 +8,7 @@ requirement the PI set:
 | function | requirement | validation |
 |---|---|---|
 | `archive_iteration()` | snapshot the band after every NEB iteration, nothing overwritten | 2 snapshots written to `iter_000/`, `iter_001/`; a third write to an existing index **raises** |
-| `verify_restartable()` | prove the latest snapshot is a usable `neb.x` restart | re-parses the archived `.path`, re-hashes it against `INDEX.json`, checks image/atom-count consistency |
+| `verify_restartable()` | prove the latest snapshot is a usable `neb.x` restart | re-parses the archived `.path`, re-hashes it against `INDEX.json (cluster-side archive file, not committed)`, checks image/atom-count consistency |
 | `identify_state()` | match the defect state **without** band index | per-atom weight cosine against the stored q=0 reference; band index is never read |
 
 ## Selftest — against the preserved q=+1 explore band
@@ -33,7 +33,7 @@ copies it if parsing succeeds. An unreadable snapshot is never written, so the a
 accumulate files that look like restarts but aren't.
 
 **Append-only, enforced not just documented.** Writing to an existing `iter_NNN/` raises
-`FileExistsError`. Combined with the hash ledger in `INDEX.json`, a silently-mutated snapshot is
+`FileExistsError`. Combined with the hash ledger in `INDEX.json (cluster-side archive file, not committed)`, a silently-mutated snapshot is
 detectable — `verify_restartable()` re-hashes and fails on mismatch.
 
 **No band index anywhere in state identification.** Per the standing rule, the defect state is

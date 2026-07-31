@@ -85,9 +85,9 @@ apparent size to infinity. That divergence is the diagnostic working, not a bug.
 
 ## Deliverables per batch
 
-- `comparison.csv` — one row per sample, each quantity with its status
-- `peak_table.csv` — full-precision p-values via `write_peak_table()`
-- `geometry_diagnostics.csv` — the substrate evidence behind the verdicts
+- `comparison.csv (not committed)` — one row per sample, each quantity with its status
+- `xrd/results/peak_table.csv` — full-precision p-values via `write_peak_table()`
+- `xrd/results/geometry_diagnostics.csv` — the substrate evidence behind the verdicts
 - a figure whose panels show the diagnostics, not only the results
 - a dated entry in this repo's record, and a push
 

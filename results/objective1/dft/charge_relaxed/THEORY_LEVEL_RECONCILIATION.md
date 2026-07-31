@@ -7,9 +7,9 @@ bookkeeping issue, not a calculation error, and it constrains what may be compar
 
 | quantity | source band / geometry | value |
 |---|---|---|
-| MACE-MP-0 barrier, anchor-(a) reference | `regression_saddle_path.extxyz` | 259.0 meV |
-| MACE-MP-0 barrier, γ production NEB (5 interior) | `gamma_neb_band_5int.extxyz` | 253.3 meV |
-| MACE-MP-0 barrier, γ production NEB (7 interior) | `gamma_neb_band_7int.extxyz` | 248.7 meV |
+| MACE-MP-0 barrier, anchor-(a) reference | `results/objective1/regression_saddle_path.extxyz` | 259.0 meV |
+| MACE-MP-0 barrier, γ production NEB (5 interior) | `results/objective1/dft/gamma_production_neb/gamma_neb_band_5int.extxyz` | 253.3 meV |
+| MACE-MP-0 barrier, γ production NEB (7 interior) | `results/objective1/dft/gamma_production_neb/gamma_neb_band_7int.extxyz` | 248.7 meV |
 | Fixed-path single-point **plain PBE**, V_I⁰ | on `regression_saddle_path` img3 | 141 meV |
 | Fixed-path single-point **plain PBE**, V_I⁺ | on `regression_saddle_path` img3 | 127 meV |
 | **Stage-2 relaxed NEB (PBE+D3), V_I⁺ (iter 6, UNCONVERGED)** | this work | **431 meV, still descending** |

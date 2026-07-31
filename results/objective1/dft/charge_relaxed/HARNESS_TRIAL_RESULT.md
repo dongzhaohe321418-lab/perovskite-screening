@@ -9,7 +9,7 @@ result. The trial exists solely to answer: can the harness archive a live q=0 ba
 | # | criterion | outcome |
 |---|---|---|
 | 1 | ≤2 NEB updates fresh + 1 restart evaluation, no CI | **MET** — phase 1: nstep_path=2 (2 updates, `JOB DONE`); restart: nstep_path=3=istep+1 (1 evaluation) |
-| 2 | per-snapshot neb.path, per-image structures, hashes, energies | **MET** — both snapshots carry `neb.path` (sha256), 5-frame `images.extxyz` (sha256), 5 energies; state-ID field present in META (see gap below) |
+| 2 | per-snapshot neb.path, per-image structures, hashes, energies | **MET** — both snapshots carry `neb.path` (sha256), 5-frame `images.extxyz (cluster-side archive file, not committed)` (sha256), 5 energies; state-ID field present in META (see gap below) |
 | 3 | genuine restart from the archive, not mere re-reading | **MET as re-evaluation, NOT as position update** — QE resumed the iteration counter and spent 1h16m recomputing SCF from the archived state (bit-non-identical re-converged values); no Broyden move ran at this budget, so zero atoms moved. See decomposition below. |
 | 4 | stop on any failure, raw outputs preserved | **MET** — demonstrated live: v1 halted in env setup (exit 1), v3 halted at the archive step (exit 4) with the raw traceback preserved; v4's asserts all passed |
 | 5 | all products tagged, no barrier reported | **MET** — no activation-energy value from any trial output appears in any report or statistic |
@@ -84,7 +84,7 @@ state-ID wiring gap recorded.** The PI makes the call.
 | # | PI item | outcome |
 |---|---|---|
 | 1 | real state-ID on preserved wavefunctions | **DONE** (job `c19efa6f`): `projwfc.x` on all 3 interior images → per-atom weights → cosine vs the q0A reference. **Image 2: 0.9789, image 3: 0.9755, image 4: 0.9743**; energies 4.317–4.332 eV vs reference 4.3259 eV; IPR 0.027 (reference 0.026). Records cite snapshot sha `ef471a4ce8…` and live in `harness_trial/state_id_img{2,3,4}.json`. Identification by weight cosine — band index never used. The original snapshots were not modified (append-only preserved). First attempt OOM-killed on 1 node; the proven 2-node/64-rank projwfc layout succeeded. |
-| 2 | production inputs at degauss 0.005 + fingerprint check | **DONE**: `ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` regenerated at 0.005; automated comparison vs the q=+1 leg (`fingerprint_check.json`) — identical on every field, Γ grid confirmed; test [34] pins it and pins the trial input as-run (0.01), never promotable. |
+| 2 | production inputs at degauss 0.005 + fingerprint check | **DONE**: `ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` regenerated at 0.005; automated comparison vs the q=+1 leg (`ehpc/inputs_stage2/neb_q0_production/fingerprint_check.json`) — identical on every field, Γ grid confirmed; test [34] pins it and pins the trial input as-run (0.01), never promotable. |
 | 3 | authority documents synced | **DONE**: gate, harness doc, results index all record the trial as run, with scope. |
 | 4 | suite green from clean clone | **DONE**: GitHub zipball of `main` extracted to a fresh directory, suite run there: exit 0, 385 assertions. The four unbannered pre-existing `archive/` files (the clean-clone failures) are bannered; test [34] sweeps all of `archive/`. |
 

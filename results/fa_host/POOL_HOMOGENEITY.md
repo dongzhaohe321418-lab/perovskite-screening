@@ -75,8 +75,8 @@ pool; they are superseded only as the baseline for the expansion.
 ## Prevention
 
 The pool's relaxation target is now part of its identity, not an incidental CLI argument.
-`pool_v3_harmonised/` carries `harmonise.json` (per-member before/after) and
-`expansion.json` (generation record), and any future pool extension must state and match
+`pool_v3_harmonised/` carries `results/fa_host/pool_v3_harmonised/harmonise.json` (per-member before/after) and
+`results/fa_host/pool_v3_harmonised/expansion.json` (generation record), and any future pool extension must state and match
 `fmax` explicitly. On this soft octahedral-tilt-plus-FA-rotation landscape, 0.03 and 0.02
 are not cosmetically different: they differ by hundreds of meV and by atomic motions
 approaching 1 Å.

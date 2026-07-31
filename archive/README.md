@@ -7,8 +7,8 @@
 # archive/ — superseded planning documents
 
 These three planning documents were **merged into and superseded by
-`../EXECUTION_GUIDE.md`** (the 2026-07-23 merged authority). They are kept here
-for provenance only; do not execute from them. `EXECUTION_GUIDE.md` is the
+`archive/EXECUTION_GUIDE_stage2.md`** (the 2026-07-23 merged authority). They are kept here
+for provenance only; do not execute from them. `archive/EXECUTION_GUIDE_stage2.md` is the
 single authoritative execution document.
 
 | file | what it was | superseded by |

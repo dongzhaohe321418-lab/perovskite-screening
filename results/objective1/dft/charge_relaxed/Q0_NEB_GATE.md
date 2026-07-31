@@ -7,7 +7,7 @@ CI-NEB. Current state, audited rather than assumed.
 |---|---|---|
 | 1 | both q=0 endpoints genuinely ionically converged | **PASS — both converged** (final: QE block, 10 BFGS steps, 2026-07-28) |
 | 2 | `nspin=1` stable and restartable across nearby geometries | **PASS** |
-| 3 | P1/P2 show no competing localised spin state | **PASS** |
+| 3 | P1/P2 show no competing localised spin state | **PASS** — raw evidence committed: `q3_raw/dd88d5d3_P1.out.gz`, `q3_raw/dd88d5d3_P2.out.gz` (+ projwfc, ELAS, POL) with cluster-side SHA-256 custody and `q3_raw/derive_q3.py` recomputing every cited value (exit 0). Pending independent re-verification per CYCLE-000002 F-006. |
 | 4 | q=0 and q=+1 at an identical theory fingerprint | **PASS (by construction)** |
 | 5 | NEB input, restart, archiving and state-identification tooling ready | **PASS** (2026-07-28) — live trial + all four PI closure items met: real restart proven as re-evaluation; state-ID cosine 0.974–0.979 on all 3 interior images from real wavefunctions; production input at degauss 0.005 with machine-verified fingerprint identity to q=+1; suite green from clean clone. `HARNESS_TRIAL_RESULT.md` |
 
@@ -64,6 +64,15 @@ moment with it; converged in **6 iterations** to 1.0×10⁻⁶ Ry; exactly one p
 state (occupation 0.5000 at 4.3259 eV) as expected for an odd electron count under smearing;
 no stable finite moment anywhere. The seeded polaron test independently found no magnetic
 basin worth ~110 meV of elastic cost.
+
+**Raw provenance (added 2026-07-31, CYCLE-000002 F-006):** the P1/P2 outputs, projwfc
+outputs, and the ELAS/POL discriminator records backing this condition are committed at
+`results/objective1/dft/charge_relaxed/q3_raw/` with a cluster-side SHA-256 chain of custody
+(`REMOTE_SHA256_UNCOMPRESSED.txt`) and an executable derivation script (`results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py`) that
+recomputes P2's 6-iteration m=0 convergence, the 112.6 meV elastic cost, the decaying POL
+moment trace, and the ≤3 meV fixed-geometry spin gain, asserting each. This condition's PASS
+now cites committed, recomputable evidence; independent re-verification is owed to the next
+audit cycle before the demotion is lifted.
 
 ## Condition 5 — tooling, and what is missing
 

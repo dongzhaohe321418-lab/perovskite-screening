@@ -371,7 +371,7 @@ auditable against the file. p-values are written at full precision
   `round(1)` key, which silently dropped every row whose fitted centroid crossed
   a rounding boundary relative to its seed — 21.05→21.151, 26.35→26.331 and
   30.05→30.199, i.e. the substrate line and both marginal candidates left blank
-  in `peak_table.csv` while the README quoted precise values for them. Replaced
+  in `xrd/results/peak_table.csv` while the README quoted precise values for them. Replaced
   with a nearest-seed tolerance join (`attach_detection`) that also exports
   `seed_offset` and `detection_unmatched`; all 14 rows now populated.
   (ii) *Precision loss*: `.round(6)` on export flattened p-values like 3.6×10⁻¹⁶

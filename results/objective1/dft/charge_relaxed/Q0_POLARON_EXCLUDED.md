@@ -1,3 +1,13 @@
+> **Q3 PROVENANCE STATUS (2026-07-31, audit CYCLE-000002 F-006/F-008):** demoted to
+> UNVERIFIED/NOT CITABLE at CYCLE-000001 because the raw discriminator outputs were not
+> committed. **The raw records are now committed** at
+> `results/objective1/dft/charge_relaxed/q3_raw/` (P1/P2/proj/ELAS/POL outputs + inputs,
+> cluster-side SHA-256 chain of custody, `results/objective1/dft/charge_relaxed/q3_raw/INPUT_MANIFEST.json`, and an executable
+> `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` that recomputes and asserts every quoted value — exit 0 at this commit).
+> Citability is restored **only when the next audit cycle independently re-verifies this**;
+> until then treat every number below as provisionally recomputable, not independently
+> verified.
+
 # Polaron test — no thermally significant polaron. V_I⁰ behaves as a shallow donor.
 
 **A deliberately strong seed — 0.20 Å cage contraction plus a spin moment on the two Pb

@@ -148,4 +148,4 @@ vacancies — out of reach on this CPU. Reported as a qualitative trend only.
 - `mechanism_fingerprints.csv` — saddle geometry descriptors
 - `results/*.json` — raw numbers for every stage
 - `results/*_saddle.cif` — saddle structures for each config
-- `neb_pipeline.py` — the underlying reproducible NEB driver
+- `neb_pipeline.py (superseded early script, not committed)` — the underlying reproducible NEB driver

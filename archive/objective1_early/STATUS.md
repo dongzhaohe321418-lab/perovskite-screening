@@ -8,10 +8,10 @@
 
 > **⚠️ SUPERSEDED ESCALATION ADVICE (2026-07-27).** Any recommendation below to apply a
 > Hubbard U is HISTORICAL and must not drive an HPC decision. The spin-free projection
-> (`Q0_PROJECTION_RESULT.md`) shows the q=0 half-occupied state is **delocalised** —
+> (`archive/objective1_q0_diagnostics/Q0_PROJECTION_RESULT.md`) shows the q=0 half-occupied state is **delocalised** —
 > IPR 0.0261 ≈ 38 effective atoms of 159, with the two vacancy-flanking Pb carrying only
 > 2.66% and 2.44% — so a U would *impose* a localisation the physics does not support and
-> yield an artefact. The convergence ladder (`Q0_CONVERGENCE_LADDER.md`) further shows the
+> yield an artefact. The convergence ladder (`archive/objective1_q0_diagnostics/Q0_CONVERGENCE_LADDER.md`) further shows the
 > result is robust to `nbnd` and the Davidson subspace. **The agreed next HPC step is a
 > LARGER-SUPERCELL spin-free q=0 SCF + projection**, to decide whether the delocalisation
 > is intrinsic or an artefact of periodic images in the 159-atom cell. Until the q=0 state
@@ -42,7 +42,7 @@ RELAXED-CHARGE-STATE MIGRATION BARRIER:      PROVISIONAL — q=+1 partial, q=0 U
 a **2.722 Ry = 37.03 eV** absolute-energy offset, verified from the QE inputs. The two sets
 **must never be compared, combined, or tabulated together**, and the fixed-geometry pair
 cannot substitute for a missing relaxed leg. See
-`dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md`.
+`results/objective1/dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md`.
 
 The charged-supercell DFT machinery runs end-to-end and gives a converged,
 self-consistent *fixed-geometry* number (V_I⁰ 141 meV vs V_I⁺ 127 meV on the same
@@ -62,7 +62,7 @@ order-of-magnitude separation — that requires *relaxed* charged geometries.
   iterations — but the SCF still random-walks at 4–7×10⁻³ Ry while *absolute* magnetisation
   wanders 1.5–2.6: the moment's magnitude is pinned while its spatial distribution keeps
   rearranging between the Pb 139 / Pb 70 dangling bonds. Multi-minimum spin localisation,
-  not a mixing problem. Ranked fixes in `dft/charge_relaxed/Q0_SPIN_SCF_UNRESOLVED.md`.
+  not a mixing problem. Ranked fixes in `archive/objective1_q0_diagnostics/Q0_SPIN_SCF_UNRESOLVED.md`.
 - **d_max = 0.462 Å** (≥ 0.4 Å threshold, and a *lower* bound since the path was still
   relaxing): the MACE geometry is not an adequate proxy for the relaxed charged path, so
   **full CI-NEB is required**. The *mechanism* nonetheless agrees with MACE — single-ion
@@ -84,7 +84,7 @@ requires the hop attempt-frequency prefactor, which is not computed here.
 | b-prof | 2026-07-23 | job `673e904d` (all-images; 2 nodes) | ehpc Slurm `comp` / γ-P1 / 2×2×2 | QE 7.5 PBE, imgs 1/5/6 both q, non-spin | fixed-path single-point | full 7-image profile; **img3 is the saddle for both q** (not a hidden max) | ✅ Stage 1.3 profile complete |
 | c-GA | 2026-07-22 | `anchors_summary.json:anchor_c` | local CPU / γ-P1 / 2×2×2 (168 at) | MACE-MP-0 zero-shot, GA⁺ for Cs, 3 orient × near/far | MACE-relaxed CI-NEB | near +70/+278/+182 meV (spread 207); far −23 meV | ✅ sign robust / magnitude NOT converged |
 | d-strain | 2026-07-22 | `anchors_summary.json:anchor_d` | local CPU / γ-P1 / 2×2×2 | MACE-MP-0 zero-shot, biaxial + isotropic strain | MACE-relaxed CI-NEB per strain | biaxial dE_a/dε = **−2.25 eV/strain** (r=−0.98) | ✅ trend reproduced (biaxial); iso branch unresolved |
-| fs | 2026-07-22 | `finite_size.json` | local CPU / γ-P1 / 3×3×3 (540 at) | MACE-MP-0 zero-shot vs 2×2×2 | MACE-relaxed CI-NEB | undoped 0.259→0.258 eV; strain −41=−41; GA +70→+335 | ✅ undoped+strain size-converged; GA not |
+| fs | 2026-07-22 | `results/objective1/finite_size.json` | local CPU / γ-P1 / 3×3×3 (540 at) | MACE-MP-0 zero-shot vs 2×2×2 | MACE-relaxed CI-NEB | undoped 0.259→0.258 eV; strain −41=−41; GA +70→+335 | ✅ undoped+strain size-converged; GA not |
 
 Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
 
@@ -115,7 +115,7 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
   0.01), in-QE D3(BJ) validated to 0.9 meV vs the geometry-only estimate, 32-rank ≡ 64-rank.
   New PBE+D3 fixed-path baseline: **q0 = 163.3 meV, q1 = 152.8 meV**. Honest caveat:
   ecut60 (159 GB) and 2×2×2-k exceed the 124 GB cluster, so cutoff/k convergence is
-  **untested** (documented, user-approved). See `dft/CONVERGENCE_GATE.md`.
+  **untested** (documented, user-approved). See `results/objective1/dft/rebaseline/CONVERGENCE_GATE.md`.
 - **Stage 2.1 endpoint relaxation IN PROGRESS:** DFT-relaxing the 4 charge-state endpoints
   (q0/q1 × initial/final), fixed-cell `relax`, PBE+D3(BJ), degauss=0.005, q0 spin / q1
   closed-shell. This is the first genuine step past fixed-geometry — it relaxes the nuclei
@@ -148,7 +148,7 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
   polaron at PBE**. q=+1 is closed-shell (mag→0), barrier unchanged at **126.6 meV**.
 - **Full 7-image profile (Stage 1.3, job 673e904d):** all 7 images evaluated for both
   charge states; **image 3 is the saddle (highest point) for both** — the benchmark
-  barrier was not missing a hidden maximum. See `dft/fixed_path/FIXED_PATH_BENCHMARK.md`.
+  barrier was not missing a hidden maximum. See `results/objective1/dft/fixed_path/FIXED_PATH_BENCHMARK.md`.
 - **Allowed claim:** "the fixed-path benchmark reproduces from the repo to <0.1 meV;
   image 3 is the fixed-path saddle; the q=0 barrier is spin-sensitive (141 non-spin /
   153 spin)." NOT allowed: "DFT found the true saddle" (fixed MACE path, not DFT-relaxed).
@@ -161,7 +161,7 @@ Legend: ✅ complete · ⚠️ partial (see limits) · 🔄 in progress.
 ### d3 — D3(BJ) dispersion correction (Stage 1.2, COMPLETE)
 - **Result:** D3(BJ) computed from geometry alone (charge-independent) raises the
   fixed-path barrier by **+25.3 meV**: PBE+D3 = **165.9 meV** (q=0) / **151.9 meV**
-  (q=+1). File `dft/fixed_path/d3_check.json`.
+  (q=+1). File `results/objective1/dft/fixed_path/d3_check.json`.
 - **Limits:** additive dispersion term on the fixed MACE path (not a self-consistent
   PBE+D3 relaxation). ~18% of the barrier — well above noise.
 - **Allowed claim:** "D3 is a non-negligible (+25 meV) contribution; project-wide

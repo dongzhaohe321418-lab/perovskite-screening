@@ -98,8 +98,8 @@ FA₀.₉₅Cs₀.₀₅PbI₃ 的任何结论。
 
 ### 目标
 
-GitHub 成为唯一可追溯事实源;消除 README/`REPORT_objective1.md`/
-`anchors_summary.json`/`HANDOFF.md`/`DFT_BENCHMARK.md` 对 anchor (b) 完成度的
+GitHub 成为唯一可追溯事实源;消除 README/`archive/objective1_early/REPORT_objective1.md`/
+`results/objective1/anchors_summary.json`/`HANDOFF.md (archived, superseded)`/`results/objective1/DFT_BENCHMARK.md` 对 anchor (b) 完成度的
 不一致表述。
 
 ### 执行
@@ -125,7 +125,7 @@ results/objective1/dft/*.json + README.md
 
 ### 单一状态表
 
-创建 `results/objective1/STATUS.md`,每行含:日期、计算 ID、host/phase/supercell、
+创建 `archive/objective1_early/STATUS.md`,每行含:日期、计算 ID、host/phase/supercell、
 方法/模型/charge/spin、几何状态(fixed-path 或 relaxed-path)、结果、局限、
 允许的主张、下一步、**实际花费**。anchor (b) 当前必须写为:
 
@@ -136,7 +136,7 @@ RELAXED-CHARGE-STATE MIGRATION BARRIER: PENDING
 
 ### 两处文档修正(本 Stage 内完成)
 
-1. `DFT_BENCHMARK.md` 的 "The true barrier likely sits between PBE (141 meV)
+1. `results/objective1/DFT_BENCHMARK.md` 的 "The true barrier likely sits between PBE (141 meV)
    and MACE (259 meV)" → 改为 "PBE and MACE disagree by 118 meV at fixed
    geometry; neither is the converged physical barrier (spin state, path
    relaxation, SOC and finite-T effects unresolved)";

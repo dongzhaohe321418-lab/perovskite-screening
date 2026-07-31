@@ -984,6 +984,25 @@ expect("NOT OPEN" not in _aud, "the audit no longer describes the gate as NOT OP
 expect("launch awaits explicit PI go" in _aud or "waits for the" in _aud,
        "the audit records gate-passed-but-launch-needs-PI-go")
 
+print("\n[37] Q3 provenance: demotion sweep + derivation recomputes (CYCLE-000002 F-006/F-008)")
+import subprocess as _sp, sys as _sys, os as _os
+# (a) if RESULTS_INDEX demotes a question to UNVERIFIED/NOT CITABLE, every named authority
+#     document must carry a matching status marker -- no unmarked current claims.
+_idx = open("RESULTS_INDEX.md").read()
+if "UNVERIFIED / NOT CITABLE" in _idx:
+    for _doc in ["results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md",
+                 "results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md",
+                 "EXPERIMENT_AUDIT.md"]:
+        _t = open(_doc).read()
+        expect("Q3 PROVENANCE STATUS" in _t or "F-006" in _t,
+               f"{_os.path.basename(_doc)} carries the Q3 provenance status marker")
+# (b) the committed Q3 derivation script must recompute every quoted value (exit 0)
+_r = _sp.run([_sys.executable, "results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py"],
+             capture_output=True, text=True)
+expect(_r.returncode == 0, f"derive_q3.py exits 0 (recomputes all quoted Q3 values); got {_r.returncode}")
+expect("every quoted value reproduces" in _r.stdout, "derivation asserts full reproduction")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")

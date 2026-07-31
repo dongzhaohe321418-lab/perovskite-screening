@@ -23,7 +23,7 @@ FA₀.₉₅Cs₀.₀₅PbI₃ 筛选》(Stage 0–5 版)。**裁定:该计划�
 
 ### A+. Stage 0 追加两项(执行时并入)
 
-1. `DFT_BENCHMARK.md` 中已存在被禁句 "The true barrier likely sits between PBE
+1. `results/objective1/DFT_BENCHMARK.md` 中已存在被禁句 "The true barrier likely sits between PBE
    (141 meV) and MACE (259 meV)" —— 改为 "PBE and MACE disagree by 118 meV at
    fixed geometry; neither is the converged physical barrier (spin state, path
    relaxation, SOC and finite-T effects unresolved)";

@@ -38,21 +38,21 @@ Three labels are used throughout and mean specific things:
 The D3 correction alone shifts the total energy by **2.722 Ry = 37.03 eV**. Any comparison
 across these two fingerprints is invalid. The old fixed-path pair (141 meV for V_I⁰,
 127 meV for V_I⁺) belongs to Stage 1 and **must never be quoted alongside Stage-2 numbers**.
-Recorded in `THEORY_LEVEL_RECONCILIATION.md`.
+Recorded in `results/objective1/dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md`.
 
 ## 1.2 q = +1 endpoints — ESTABLISHED
 
 | quantity | value | source |
 |---|---|---|
-| initial endpoint | **−9247.94069589 Ry** | `q1/q1_initial_relaxed.extxyz` |
-| final endpoint | **−9247.93981770 Ry** | `q1/q1_final_relaxed.extxyz` |
+| initial endpoint | **−9247.94069589 Ry** | `q1/ q1_initial_relaxed.extxyz (never committed — see F-003)` |
+| final endpoint | **−9247.93981770 Ry** | `q1/ q1_final_relaxed.extxyz (never committed — see F-003)` |
 | endpoint asymmetry | **+11.9 meV** | computed |
 | Pb flanking the vacancy | indices 139, 70 at 3.446 / 3.511 Å | computed |
 
 Both closed-shell (1400 electrons), converged. A known limitation: the γ-CsPbI₃ V_I cell has
 soft octahedral-tilt modes, so BFGS floors at fmax ≈ 0.04 eV/Å rather than reaching 0.02.
 The accepted geometries are the lowest-fmax ionic steps, documented in
-`LOCKED_PROTOCOL_AND_STOPLOSS.md`.
+`results/objective1/dft/charge_relaxed/LOCKED_PROTOCOL_AND_STOPLOSS.md`.
 
 ## 1.3 q = +1 explore NEB — PROVISIONAL (unconverged)
 
@@ -71,18 +71,18 @@ coordinate with minimum-image convention:
 
 | reference band | d_max | clears 0.4 Å threshold |
 |---|---|---|
-| `gamma_neb_band_5int.extxyz` | **0.462 Å** | yes |
-| `gamma_neb_band_7int.extxyz` (finer) | **0.472 Å** | yes |
+| `results/objective1/dft/gamma_production_neb/gamma_neb_band_5int.extxyz` | **0.462 Å** | yes |
+| `results/objective1/dft/gamma_production_neb/gamma_neb_band_7int.extxyz` (finer) | **0.472 Å** | yes |
 
 Robust to the reference-band choice, and both are **lower bounds** since the DFT band is not
 converged. MACE geometries therefore cannot serve as a fixed-path proxy. Recorded in
-`THEORY_LEVEL_RECONCILIATION.md` with explicit band provenance (an earlier version of that
+`results/objective1/dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md` with explicit band provenance (an earlier version of that
 note conflated two different MACE bands — see Section 4.1).
 
 ## 1.5 The q = 0 electronic state — ESTABLISHED, with the energy metric BOUNDED
 
 The half-occupied state in the V_I⁰ cell is **CBM-like**. Evidence, all from
-`P1_REFERENCE_AUDIT.md`:
+`results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`:
 
 | metric | pristine (160-atom, P1) | defective (159-atom, q0A) | verdict |
 |---|---|---|---|
@@ -103,9 +103,17 @@ isolated donor level, but the *pristine* Γ-point CBM is already isolated by 311
 pulled out of the conduction band**. There is no in-gap level, which is why DFT+U has no
 premise here.
 
-## 1.6 No thermally significant polaron — BOUNDED
+## 1.6 No thermally significant polaron — BOUNDED (raw provenance committed 2026-07-31)
 
-Three calculations, `Q0_POLARON_EXCLUDED.md`:
+> **Status (audit CYCLE-000002 F-006/F-008):** this result was demoted to UNVERIFIED/NOT
+> CITABLE at CYCLE-000001 because its raw records were absent from the tree. The raw
+> P1/P2/proj/ELAS/POL outputs are now committed at
+> `results/objective1/dft/charge_relaxed/q3_raw/` with SHA-256 custody and an executable
+> `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` (exit 0 recomputes every figure quoted in this section). Independent
+> re-verification by the next audit cycle is required before the demotion is lifted;
+> until then these numbers are provisionally recomputable, not independently verified.
+
+Three calculations, `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md`:
 
 | run | geometry | spin | E (Ry) | status |
 |---|---|---|---|---|
@@ -187,19 +195,19 @@ of the path. Recorded as an observation; interpretation awaits the NEBs.
 
 > **CURRENT EVIDENCED STATE (authoritative; supersedes the 2026-07-28 LAUNCH RECORD below).**
 > Reconciled against committed artifacts only, per audit CYCLE-000001 F-004.
-> - **Gate: all five conditions PASS**, consistent with `Q0_NEB_GATE.md` and `RESULTS_INDEX.md`.
+> - **Gate: all five conditions PASS**, consistent with `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` and `RESULTS_INDEX.md`.
 >   The supporting evidence is committed in-tree: q0_final's QE convergence block is
 >   independently verifiable in `results/objective1/dft/charge_relaxed/q0/q0_final_ns1.out.gz`
 >   (energy error 9.8e-05 Ry < 1e-4; gradient 1.6e-03 Ry/Bohr < 1.945e-3 — condition 1 met), the
 >   state-ID cosines are recomputable from committed per-atom weights (regression group [35]),
 >   and the archive/restart harness round-trips a real band (group [31]). The stale "two of five
->   remain open" wording in `Q0_POLARON_EXCLUDED.md` predates q0_final's convergence and is marked
+>   remain open" wording in `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` predates q0_final's convergence and is marked
 >   historical there.
 > - **Launch: NOT performed.** No committed job outputs, `hpc/` records, or archived barriers
 >   exist in-tree to evidence a RUNNING/PENDING SLURM state, so no launch/submission may be
 >   treated as current. Job submission is not evidence of execution (see §closing rule 7). The
 >   q=+1 leg additionally cannot be validly staged: its PI-approved input source
->   `results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz` is absent from the tree
+>   `results/objective1/dft/charge_relaxed/q1/ q1_initial_relaxed.extxyz (never committed — see F-003)` is absent from the tree
 >   (audit F-003). Passing the gate authorises ASKING the PI, not launching; no production
 >   submission is authorized while the audit BLOCK stands.
 
@@ -235,9 +243,9 @@ watcher appends only on band-hash change. An earlier progress message that calle
 | 2 | `nspin=1` stable/restartable across nearby geometries | PASS (4 distinct geometries) |
 | 3 | no competing localised spin state | PASS (§1.7, §1.6) |
 | 4 | q=0 and q=+1 at identical theory fingerprint | PASS by construction |
-| 5 | NEB input, restart, archive, state-ID tooling ready | **PASS (2026-07-28)** — live HARNESS_TRIAL: real restart proven as re-evaluation; state-ID cosines 0.974–0.979 recomputable from committed per-atom weights; production pair (q0/q1) at conv_thr=1e-8 with machine-verified fingerprint identity. `HARNESS_TRIAL_RESULT.md` |
+| 5 | NEB input, restart, archive, state-ID tooling ready | **PASS (2026-07-28)** — live HARNESS_TRIAL: real restart proven as re-evaluation; state-ID cosines 0.974–0.979 recomputable from committed per-atom weights; production pair (q0/q1) at conv_thr=1e-8 with machine-verified fingerprint identity. `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md` |
 
-**Condition 1 closed 2026-07-28; condition 5 closed later the same day (HARNESS_TRIAL + four PI closure items). Gate passed ≠ launch approved: the production CI-NEB pair waits for the PI's explicit go.** `Q0_NEB_GATE.md`.
+**Condition 1 closed 2026-07-28; condition 5 closed later the same day (HARNESS_TRIAL + four PI closure items). Gate passed ≠ launch approved: the production CI-NEB pair waits for the PI's explicit go.** `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
 
 ---
 
@@ -259,14 +267,14 @@ a doped path, so the difference ΔE_a cancels the host's own configurational spr
 state verified as a local minimum. Endpoint asymmetry and a mechanism label are recorded
 alongside. Forward and reverse barriers need not match in a disordered host, and a much lower
 final state is a property of the material, not an error to symmetrise away.
-`BARRIER_DEFINITION.md`.
+`results/objective2/BARRIER_DEFINITION.md`.
 
 **Mechanism classes are never pooled:** `pure_hop_asymmetric`, `hop_plus_FA_reorientation`,
 `band_collapsed`, `endpoint_energy_unconverged`, `multi_basin_ambiguous`.
 
 ## 2.2 The 84-path corpus — integrity audit ran BEFORE any statistics
 
-Job `13fabdfd`. 28 hosts × 3 systems = 84 paths. `paired_raw_84.json`.
+Job `13fabdfd`. 28 hosts × 3 systems = 84 paths. `results/objective2/paired_pilot/corpus84/paired_raw_84.json`.
 
 | check | result |
 |---|---|
@@ -293,13 +301,13 @@ silently used.
 
 Return test protocol: perturb along the path direction, both signs, two amplitudes
 (±0.02, ±0.05 Å), re-relax, require return to the initial basin. 108 perturbation relaxations,
-all converged; median max displacement 0.034 Å. `return_test_84.json`.
+all converged; median max displacement 0.034 Å. `results/objective2/paired_pilot/corpus84/return_test_84.json`.
 
 ## 2.3b MERGED 108-path corpus — SUPERSEDES §2.4 below
 
 The 24-path extension has completed, been integrity-audited, and been merged. **`§2.4`-`§2.6`
 below describe the 84-path corpus and are retained for provenance; the authoritative result is
-now `paired_pilot/CORPUS108_RESULT.md`.**
+now `results/objective2/paired_pilot/CORPUS108_RESULT.md`.**
 
 Pooling was not automatic. The extension's strict yield was 4/24 against 30/84, tested before
 merging: **Fisher exact odds ratio 2.78, p = 0.0867** — consistent with chance, same
@@ -393,7 +401,7 @@ on three independent grounds (n = 9 vs 7, CI well inside the band, TOST p = 0.00
 
 ## 2.7 Host pool ledger — 36 members
 
-`HOST_MANIFEST.md` / `.json` is the single authority. Three counts appear in earlier prose and
+`results/fa_host/pool_v3_harmonised/HOST_MANIFEST.md` / `.json` is the single authority. Three counts appear in earlier prose and
 mean different things:
 
     36 = total members in pool_v3_harmonised (m00-m35)
@@ -405,8 +413,8 @@ mean different things:
 
 Integrity: **36 unique IDs**, no gaps, **zero duplicate structure hashes**, **measured
 fmax ≤ 0.02000 across all 36 members** (range [0.01250, 0.02000] — measured, not asserted),
-energy coverage **36/36** all from measured sources (18 `harmonise.json` E_after, 8
-`expansion_plus8.json`, 10 fresh MACE single points).
+energy coverage **36/36** all from measured sources (18 `results/fa_host/pool_v3_harmonised/harmonise.json` E_after, 8
+`results/fa_host/pool_v3_harmonised/expansion_plus8.json`, 10 fresh MACE single points).
 
 **Homogeneity gate on the complete pool** (the earlier reported gate used only 18 of 28):
 
@@ -426,7 +434,7 @@ offset roughly threefold.
 
 Of the rejections, the pool is dominated by **site-energy asymmetry in the disordered host**
 (the final endpoint sits far below the initial), with only a handful of genuine mid-path
-basins. `BASIN_IDENTIFICATION.md` (v2 — the v1 analysis was wrong; see Section 4.3).
+basins. `results/objective2/paired_pilot/BASIN_IDENTIFICATION.md` (v2 — the v1 analysis was wrong; see Section 4.3).
 
 ---
 
@@ -478,7 +486,7 @@ regression test where a test is meaningful.
 **Actual:** three different bands exist — `regression_saddle_path` (259 meV, the anchor-(a)
 reference) and `gamma_neb_band_5int` (253.3 meV, what d_max actually used).
 **Impact:** none on the decision — d_max clears 0.4 Å against both (0.462 and 0.472 Å).
-**Fix:** `THEORY_LEVEL_RECONCILIATION.md` now lists all bands with explicit provenance.
+**Fix:** `results/objective1/dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md` now lists all bands with explicit provenance.
 
 ## 4.2 "Unphysical spin collapse" — my own diagnosis was wrong
 
@@ -489,7 +497,7 @@ converged to m = 0 in 6 iterations; the forced-moment plateau sits *above* it.
 **Impact:** substantial — I spent four attempts and roughly 7 hours of cluster time forcing a
 moment the physics was telling me not to force. The convergence failure was self-inflicted
 from the moment `tot_magnetization` was imposed.
-**Fix:** retracted in `Q0_RESOLVED.md`; DFT+U demoted for lack of premise.
+**Fix:** retracted in `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md`; DFT+U demoted for lack of premise.
 
 ## 4.3 Basin identification v1 — statistics carried across a correction
 
@@ -499,7 +507,7 @@ reclassification then carried pre-correction statistics forward and **understate
 mislabelling by an order of magnitude**, and the class-B reading was contradicted by its own
 recorded displacements.
 **Fix:** redone from scratch with the two questions separated, each with its own displacement
-field. The corrected picture **inverted** the original reading. `BASIN_IDENTIFICATION.md`
+field. The corrected picture **inverted** the original reading. `results/objective2/paired_pilot/BASIN_IDENTIFICATION.md`
 carries a superseding banner naming v1's specific errors.
 
 ## 4.4 Return-test perturbation scaled by atom count
@@ -540,7 +548,7 @@ the conclusion. Regression test [16].
 ## 4.8 A retraction that reached one file but not the index
 
 **Claimed:** §4.7 fixed.
-**Actual:** fixed in `CORPUS84_RESULT.md` but **not** in `CURRENT_STATUS.md`, the self-declared
+**Actual:** fixed in `results/objective2/paired_pilot/CORPUS84_RESULT.md` but **not** in `results/objective2/CURRENT_STATUS.md`, the self-declared
 canonical index, written and pushed in the same window. My sweep and my new regression test
 were both scoped to one file.
 **Fix:** index corrected; regression test broadened from one file to a repo-wide scan of every
@@ -577,8 +585,8 @@ which differs when the composition differs. Re-anchored: **+75.9 meV** VBM-refer
 **Impact:** the identification survives (all references place the state at the band edge) but
 at ~50-80 meV resolution, not 7 meV. Downstream conclusions unaffected — they rest on the
 spatial overlap, not the eigenvalue.
-**Fix:** `Q0_RESOLVED.md` retitled to "CBM-like" with a correction banner;
-`P1_REFERENCE_AUDIT.md` documents all three alignments.
+**Fix:** `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` retitled to "CBM-like" with a correction banner;
+`results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md` documents all three alignments.
 
 ## 4.12 A false execution-status claim
 
@@ -587,7 +595,7 @@ spatial overlap, not the eigenvalue.
 was false when made.
 **Impact:** this is the most serious entry in the log — not because of the science, but because
 a status claim that cannot be backed undermines every other claim in the record.
-**Fix:** `CURRENT_STATUS.md` carries a per-track true-state table and the rule now adopted:
+**Fix:** `results/objective2/CURRENT_STATUS.md` carries a per-track true-state table and the rule now adopted:
 *a track is described as running only after its own preflight reports success and output
 exists; job submission is not evidence of execution.*
 
@@ -605,7 +613,7 @@ wrong — see §4.15.** The correct full-pool gate is −31.5 meV, p = 0.6422, 0
 full-pool homogeneity gate of **−102.6 meV, p = 0.1632, 0.59σ**.
 
 **Actual:** the recovery step built its energy map by assuming **member index == seed offset**
-(`seed_map[8+j]`). `harmonise.json` shows the harmonised members `m00`–`m17` correspond to
+(`seed_map[8+j]`). `results/fa_host/pool_v3_harmonised/harmonise.json` shows the harmonised members `m00`–`m17` correspond to
 pool_v2 seeds 8–25, so the mapping was shifted. Consequences:
 
 1. Eight members (`m18`–`m25`) were assigned energies belonging to **different** members, and
@@ -617,11 +625,11 @@ pool_v2 seeds 8–25, so the mapping was shifted. Consequences:
 3. `fmax_target = 0.02` was written as a **hardcoded literal on every row**, never measured, so
    the "relaxation depth is uniform" integrity check asserted something the file did not check.
 
-**Corrected:** no index arithmetic anywhere. Energies now come from `harmonise.json` matched
-**by filename** (`E_after`), from `expansion_plus8.json` for `m28`–`m35`, or from fresh MACE
+**Corrected:** no index arithmetic anywhere. Energies now come from `results/fa_host/pool_v3_harmonised/harmonise.json` matched
+**by filename** (`E_after`), from `results/fa_host/pool_v3_harmonised/expansion_plus8.json` for `m28`–`m35`, or from fresh MACE
 single points for `m18`–`m27` where no trustworthy record existed. Every `fmax` is measured:
 range **[0.01250, 0.02000]** across all 36, so uniformity is verified rather than asserted.
-Mapping cross-check: `harmonise.json` gives `m00` E_after = −1066.2244 eV, matching the value
+Mapping cross-check: `results/fa_host/pool_v3_harmonised/harmonise.json` gives `m00` E_after = −1066.2244 eV, matching the value
 read from that file's own attached calculator.
 
 **The three versions of this gate:**
@@ -677,7 +685,7 @@ a different theory fingerprint and cannot be used to sustain an ordering.
 No converged DFT migration barrier exists for either charge state. The only converged
 DFT-level quantities are endpoint energies and the electronic-structure results of §1.5-1.7.
 
-## 5.3 A weakly bound polaron
+## 5.3 A weakly bound polaron (see §1.6 status note — Q3 provenance committed, re-verification pending)
 
 Excluded only down to a bound of ~8 meV under the most generous reading of POL's residual
 (§1.6). A few-meV bound state is compatible with the data. Converging POL to 10⁻⁶ Ry would
@@ -730,7 +738,7 @@ Kept because a record of results without a record of process is not auditable.
 | 4 | `nspin=2` from `nspin=1` density diverged | works at the SAME geometry (6 iterations), catastrophic at a different one (accuracy 10⁶ Ry, \|m\| ~7000 μB) | hours | recorded in provider notes with the `"some spin components not found"` signature |
 | 5 | pool population split | mismatched relaxation depth between batches | one full corpus re-run | §4.6; fmax is now part of pool identity |
 | 6 | return-test perturbation void | scaled by atom count | 1 run | §4.4 |
-| 7-11 | five consecutive failed submissions of one job | invented `--base`/`--seed`; missing required `--members`; unstaged `checks.py` crashing `--help`; unstaged `--vac-ref` default; unstaged pristine file read from inside `--pool` | minutes each (all failed fast) | `scripts/25_preflight.py`, validated against all five |
+| 7-11 | five consecutive failed submissions of one job | invented `--base`/`--seed`; missing required `--members`; unstaged `scripts/checks.py` crashing `--help`; unstaged `--vac-ref` default; unstaged pristine file read from inside `--pool` | minutes each (all failed fast) | `scripts/25_preflight.py`, validated against all five |
 | 12 | my own guards misreported twice | wrong glob pattern; `--help` crash misread as a flag error | 1 false alarm each | §4.14 |
 
 **Preflight tool.** `scripts/25_preflight.py` parses the driver source and checks: `--help`
@@ -758,7 +766,7 @@ an actual historical incident from this project rather than on a hypothetical. A
 | barrier definition | `results/objective2/BARRIER_DEFINITION.md` |
 | path rejection classes | `results/objective2/paired_pilot/BASIN_IDENTIFICATION.md` (v2) |
 | endpoint metastability | `results/objective2/paired_pilot/RETURN_TEST_RESULT.md` |
-| q=0 electronic state | `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` + `P1_REFERENCE_AUDIT.md` |
+| q=0 electronic state | `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` + `results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md` |
 | polaron bound | `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` |
 | q=0 relaxation state | `results/objective1/dft/charge_relaxed/Q0_RELAXATION_STATUS.md` |
 | NEB entry gate | `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` |
@@ -767,27 +775,27 @@ an actual historical incident from this project rather than on a hypothetical. A
 
 ## 7.2 Superseded — do NOT cite
 
-- `paired_pilot/PAIRED_PILOT.md` — retracted first run (index bug).
-- `paired_pilot/RERUN_RESULT.md`, `RETURN_TEST_RESULT.md` **statistics** — 18-host pool; their
+- `results/objective2/paired_pilot/PAIRED_PILOT.md` — retracted first run (index bug).
+- `results/objective2/paired_pilot/RERUN_RESULT.md`, `results/objective2/paired_pilot/RETURN_TEST_RESULT.md` **statistics** — 18-host pool; their
   *method* stands, their n = 7 numbers are superseded by the 28-host corpus.
-- `objective2/AUDIT_RESPONSE.md`, `noise_floor/NOISE_FLOOR_REPORT.md` — old 8-member pool.
-- `charge_relaxed/CHARGE_STATE_ANCHOR.md` — marked PROVISIONAL; the q=0 leg it awaited has
-  since been partly delivered, so read `Q0_RESOLVED.md` and `Q0_NEB_GATE.md` instead.
-- `charge_relaxed/Q0_SPIN_SCF_UNRESOLVED.md` — the problem it describes was self-inflicted
+- `results/objective2/AUDIT_RESPONSE.md`, `results/objective2/noise_floor/NOISE_FLOOR_REPORT.md` — old 8-member pool.
+- `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` — marked PROVISIONAL; the q=0 leg it awaited has
+  since been partly delivered, so read `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` and `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` instead.
+- `archive/objective1_q0_diagnostics/Q0_SPIN_SCF_UNRESOLVED.md` — the problem it describes was self-inflicted
   (§4.2); kept as the diagnostic record only.
 
 ## 7.3 Raw evidence committed
 
 | file | contents |
 |---|---|
-| `corpus84/paired_raw_84.json` | all 84 rows: profiles, gate outcomes, endpoint fmax/steps, migrating index |
-| `corpus84/return_test_84.json` | 27 candidates × 4 perturbations |
+| `results/objective2/paired_pilot/corpus84/paired_raw_84.json` | all 84 rows: profiles, gate outcomes, endpoint fmax/steps, migrating index |
+| `results/objective2/paired_pilot/corpus84/return_test_84.json` | 27 candidates × 4 perturbations |
 | `corpus84/corpus84_bands.tar.gz` | all 84 band trajectories (5.3 MB) |
-| `corpus84/corpus84_stats.json` | the published statistics |
-| `pool_v3_harmonised/HOST_MANIFEST.json` | 36 members: seed, source, hash, fmax, energy + provenance |
-| `pool_v3_harmonised/expansion_plus8.json` | the +8 expansion record |
-| `q1/q1_initial_relaxed.extxyz`, `q1_final_relaxed.extxyz` | relaxed q=+1 endpoints |
-| `q0/q0_initial_relaxed.extxyz` | relaxed q=0 initial endpoint |
+| `results/objective2/paired_pilot/corpus84/corpus84_stats.json` | the published statistics |
+| `results/fa_host/pool_v3_harmonised/HOST_MANIFEST.json` | 36 members: seed, source, hash, fmax, energy + provenance |
+| `results/fa_host/pool_v3_harmonised/expansion_plus8.json` | the +8 expansion record |
+| `q1/ q1_initial_relaxed.extxyz (never committed — see F-003)`, `q1_final_relaxed.extxyz (never committed — see F-003)` | relaxed q=+1 endpoints |
+| `results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz` | relaxed q=0 initial endpoint |
 | `q1_explore_state.tar.gz` | preserved `neb.path` — the CI-NEB restart point |
 
 ## 7.4 Analysis code
@@ -796,7 +804,7 @@ an actual historical incident from this project rather than on a hypothetical. A
 `16` enumeration · `17` ensemble spread · `18` explore screen · `19` GPU regression ·
 `20` regression suite (36 groups) · `21` pool expansion · `22` paired pilot ·
 `23` q=0 state metrics (overlap-based, not band-index) · `24` return test · `25` preflight ·
-`checks.py` shared gates.
+`scripts/checks.py` shared gates.
 
 ## 7.5 Figures
 
@@ -822,7 +830,7 @@ Adopted during the campaign and in force:
    expensive calculation.
 7. A track is described as running only after its own preflight reports success **and** output
    exists. Job submission is not evidence of execution.
-8. Sample-size and pool-count claims are counted from `HOST_MANIFEST.json`, never from prose.
+8. Sample-size and pool-count claims are counted from `results/fa_host/pool_v3_harmonised/HOST_MANIFEST.json`, never from prose.
 9. Every retraction is swept **repo-wide** and checked for paraphrases, not just literal
    strings.
 10. The Tyagi-ordering claim stays closed until both legs are converged at identical theory

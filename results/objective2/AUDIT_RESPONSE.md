@@ -99,12 +99,12 @@ be re-measured after the rerun rather than trusted.
 
 ## Medium — stale repository state: CONFIRMED
 
-- `checks.py` docstring still described the superseded "below every interior image"
+- `scripts/checks.py` docstring still described the superseded "below every interior image"
   criterion — **fixed**, and it now states why that criterion was wrong.
 - `scripts/22` default `--pool`/`--vac-ref` point at two structure files that exist in my
   workspace only because a shell step copied them; **they were never committed**, so a
   fresh clone fails on the default command. Now committed.
-- `STATUS.md`, `PROGRESS.md`, and the `archive/objective1_q0_diagnostics/ACCEPTANCE_GATE.md (archived)` attempt log are behind.
+- `archive/objective1_early/STATUS.md`, `archive/objective2_interim/PROGRESS.md`, and the `archive/objective1_q0_diagnostics/ACCEPTANCE_GATE.md (archived)` attempt log are behind.
 
 ---
 
@@ -125,7 +125,7 @@ be re-measured after the rerun rather than trusted.
 1. **P0, local CPU** — done in this pass: tag-based migrating-atom tracking, convergence
    required for validity, force norms, docstring, committed structure files, and 14 new
    test assertions covering the index bug, the force metric, Student-t, and paired rates
-   (39 total, all passing). Remaining: refresh `STATUS.md` and `PROGRESS.md`.
+   (39 total, all passing). Remaining: refresh `archive/objective1_early/STATUS.md` and `archive/objective2_interim/PROGRESS.md`.
 2. **P1, GPU 2-6 h** — rerun all 54 paths on the same 18 members. Not just the 8 broken GA
    arms: no path in the existing set recorded a true endpoint `fmax`, so none can be
    audited against the new criterion.

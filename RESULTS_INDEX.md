@@ -26,7 +26,7 @@ Anything not listed here is historical. Restructured 2026-07-28.
   formally converged (asymmetry −27.1 meV); NEB not yet run.
 - **Scope:** PBE+D3(BJ), degauss 0.005, Γ, 159-atom γ-like cell — one vacancy, one path.
 - **Authoritative:** `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` (gate: ALL FIVE conditions PASS)
-  + `CHARGE_STATE_ANCHOR.md` (PROVISIONAL anchor)
+  + `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` (PROVISIONAL anchor)
 - **Raw data:** `results/objective1/dft/charge_relaxed/q0/` (QE outputs .gz, inputs,
   CONVERGENCE_SUMMARY.json), `q1_explore_restart/q1_explore_state.tar.gz`
 - **Next:** HARNESS_TRIAL **complete** (restart-as-re-evaluation proven; `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md`); condition 5 is PASS (all four PI closure items met: state-ID recomputable from committed weights, production pair at conv_thr=1e-8/degauss=0.005 with machine-verified fingerprint identity, docs synced, clean-clone green). The full q=0+q=+1 production CI-NEB pair awaits the PI's explicit go.
@@ -46,13 +46,16 @@ Anything not listed here is historical. Restructured 2026-07-28.
   spin gain. These figures are **not** independently traceable at this commit.
 - **Scope:** one distortion mode probed, 159-atom cell, PBE-level gap caveats apply.
 - **Authoritative documents (themselves rely on absent raw data — see F-006):**
-  `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` + `Q0_RESOLVED.md` +
-  `P1_REFERENCE_AUDIT.md`
-- **Raw data:** ABSENT at this commit — the referenced `hpc/` job outputs and the P1/P2/ELAS/POL
-  discriminator outputs are **not committed** to the tree. Until they (plus input manifests,
-  hashes, and a derivation script) are committed, no value in this section is recomputable.
-- **Next:** commit immutable raw outputs + provenance to restore citability, OR keep this
-  question demoted to non-citable/unverified status. Not closed.
+  `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` + `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` +
+  `results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`
+- **Raw data:** COMMITTED 2026-07-31 at `results/objective1/dft/charge_relaxed/q3_raw/` —
+  P1/P2 outputs, projwfc outputs, ELAS/POL discriminator outputs and inputs, cluster-side
+  SHA-256 chain of custody (`REMOTE_SHA256_UNCOMPRESSED.txt`), `results/objective1/dft/charge_relaxed/q3_raw/INPUT_MANIFEST.json`, and an
+  executable `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` that recomputes and asserts every quoted value (exit 0 at this
+  commit).
+- **Next:** independent re-verification by the next audit cycle (CYCLE-000002 F-006
+  disposition). **Status stays NOT CITABLE until the re-audit confirms**; the demotion is
+  lifted by the controller, not by this repository.
 
 ## Q4. Is the host-pool / noise floor sound for screening? (methodology)
 

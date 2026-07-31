@@ -42,7 +42,7 @@
 
 ### 目标
 
-让GitHub成为唯一可追溯事实源。当前README、`REPORT_objective1.md`、`anchors_summary.json`、`HANDOFF.md`和`DFT_BENCHMARK.md`对DFT与anchor (b)的完成度存在不一致表述。
+让GitHub成为唯一可追溯事实源。当前README、`archive/objective1_early/REPORT_objective1.md`、`results/objective1/anchors_summary.json`、`HANDOFF.md (archived, superseded)`和`results/objective1/DFT_BENCHMARK.md`对DFT与anchor (b)的完成度存在不一致表述。
 
 ### 执行
 

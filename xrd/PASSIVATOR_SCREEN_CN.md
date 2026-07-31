@@ -2,8 +2,8 @@
 
 数据：Generations-0726-XRD，control + 钝化剂 1–5，全部沉积在 ITO 基底上。
 分析工具：`perovskite-xrd-protocol`（固定协议测量层）。
-本文所有数值均取自已保存的结果表 `master_figure_data.csv` 与
-`passivator_peak_tables.csv`，未凭记忆书写。
+本文所有数值均取自已保存的结果表 `xrd/results/master_figure_data.csv` 与
+`xrd/results/passivator_peak_tables.csv`，未凭记忆书写。
 
 ## 0. 采集条件与数据完整性
 

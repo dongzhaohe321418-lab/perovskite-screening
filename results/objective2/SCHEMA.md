@@ -16,7 +16,7 @@ dopant-level result — it is one row of a group, and the group is what gets com
 This matches the proposal, which already specifies "mechanism-annotated ΔE_a
 *distributions*", and it is what gate 6 requires.
 
-## Table 1 — `paths.csv` (one row per computed migration path)
+## Table 1 — `paths.csv (not committed)` (one row per computed migration path)
 
 | column | type | meaning |
 |---|---|---|
@@ -40,7 +40,7 @@ This matches the proposal, which already specifies "mechanism-annotated ΔE_a
 initial state. Absolute total energies are never compared across rows — different
 charge states, theory levels, and cells are not on a common energy origin.
 
-## Table 2 — `dopant_summary.csv` (one row per dopant, derived)
+## Table 2 — `dopant_summary.csv (not committed)` (one row per dopant, derived)
 
 | column | meaning |
 |---|---|
@@ -97,7 +97,7 @@ widths** — the metric that actually governs defect self-interaction in a tricl
 | near-cubic det-20 (built) | 1.016 | 15.98 / 16.09 / 14.55 | **7.28 Å** |
 
 The built cell is better, but by **1.12×**, not the 1.48× that edge lengths suggest. The
-`d_min_A` field in `fa_host_build.json` (19.33 Å for the built cell) is an edge-derived
+`d_min_A` field in `results/fa_host/fa_host_build.json` (19.33 Å for the built cell) is an edge-derived
 quantity and must **not** be read as a minimum-image distance — that is the same
 edge-length metric superseded above. The built cell's actual minimum-image distance is
 2 × 7.28 = 14.55 Å.

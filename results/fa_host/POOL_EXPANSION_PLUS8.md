@@ -29,7 +29,7 @@ Relaxation depth is part of the pool's identity, which is the rule adopted after
 failure.
 
 Acceptance of the new members: **8/8**, all with fmax ≤ 0.0192, all Pb 6-fold coordinated,
-all 19 FA molecules intact. Installed as `m28`–`m35`; record in `expansion_plus8.json`.
+all 19 FA molecules intact. Installed as `m28`–`m35`; record in `results/fa_host/pool_v3_harmonised/expansion_plus8.json`.
 
 ## Expected effect on the statistics
 

@@ -33,16 +33,16 @@ ones. Full admission-route accounting in `paired_pilot/CORPUS108_RESULT.md` §6.
 | question | authoritative document |
 |---|---|
 | paired result (GA/Sr) | **`paired_pilot/CORPUS108_RESULT.md`** + `corpus108/` raw records |
-| extension provenance | `corpus108/paired_raw_24.json`, `integrity_audit_24.json`, `input_manifest_24.json`, `HASHES.json` |
+| extension provenance | `results/objective2/paired_pilot/corpus108/paired_raw_24.json`, `results/objective2/paired_pilot/corpus108/integrity_audit_24.json`, `results/objective2/paired_pilot/corpus108/input_manifest_24.json`, `results/objective2/paired_pilot/corpus108/HASHES.json` |
 | host pool | `../fa_host/pool_v3_harmonised/HOST_MANIFEST.md` (v2 — 36 members, all fmax measured ≤ 0.02000, gate −31.5 meV / p 0.6422 / 0.20σ) |
 | why paths are rejected | `paired_pilot/BASIN_IDENTIFICATION.md` (v2) |
-| endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` (method) + `corpus84/return_test_84.json` (27 candidates) + **`corpus108/return_test_24.json`** (14 candidates, 14/14 metastable) |
+| endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` (method) + `results/objective2/paired_pilot/corpus84/return_test_84.json` (27 candidates) + **`results/objective2/paired_pilot/corpus108/return_test_24.json`** (14 candidates, 14/14 metastable) |
 | barrier definition + tiers | `BARRIER_DEFINITION.md` |
 | GPU validity | `gpu_regression/GATE1_GPU_REGRESSION.md` |
-| automated gates | `../../scripts/checks.py` + `20_test_checks.py` (36 check groups, all passing) |
+| automated gates | `../../scripts/checks.py` + `scripts/20_test_checks.py` (36 check groups, all passing) |
 
 **Superseded / historical (do not cite):** `paired_pilot/PAIRED_PILOT.md` (retracted first
-run), `paired_pilot/RERUN_RESULT.md` and `RETURN_TEST_RESULT.md` statistics (18-host pool —
+run), `paired_pilot/RERUN_RESULT.md` and `results/objective2/paired_pilot/RETURN_TEST_RESULT.md` statistics (18-host pool —
 their *method* stands, their n = 7 numbers are superseded by the 28-host corpus),
 `paired_pilot/CORPUS84_RESULT.md` (superseded by the 108-path merge; its method and retractions stand), `AUDIT_RESPONSE.md`, `noise_floor/NOISE_FLOOR_REPORT.md` (old 8-member pool).
 
@@ -57,7 +57,7 @@ and nothing was computing. The claim was false when made. Corrections:
 | HPC — P1 / P2 | **audited and closed.** P1 wording corrected to CBM-like (see `../objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`); P2 passes all four criteria. |
 | HPC — `q0_final` | **CONVERGED FORMALLY** (2026-07-28, job `f9993838`): QE convergence block at 10 BFGS steps, energy error 9.8×10⁻⁵ Ry / gradient error 1.6×10⁻³ Ry/bohr, both within criteria. E = −9247.62842357 Ry. The earlier "crossed its force target" claim at a transient sub-threshold reading stays retracted; the run later converged genuinely. Both q=0 endpoints now exist at identical theory level (asymmetry −27.1 meV). |
 | GPU — 8 new hosts | **built and through the homogeneity gate.** m28–m35, see `../fa_host/pool_v3_harmonised/HOST_MANIFEST.md`. |
-| GPU — 24-path extension | **was NOT running when I claimed it was.** Five submissions failed on four distinct causes (invented flags; missing required `--members`; unstaged `checks.py` crashing `--help` so the guard misreported a flag problem; two unstaged input paths). The sixth submission (all inputs staged and inventoried) **completed: 24/24 bands, exit 0**, integrity-audited, return test complete (14/14 metastable), and **merged into the published 108-path result**. |
+| GPU — 24-path extension | **was NOT running when I claimed it was.** Five submissions failed on four distinct causes (invented flags; missing required `--members`; unstaged `scripts/checks.py` crashing `--help` so the guard misreported a flag problem; two unstaged input paths). The sixth submission (all inputs staged and inventoried) **completed: 24/24 bands, exit 0**, integrity-audited, return test complete (14/14 metastable), and **merged into the published 108-path result**. |
 
 **Rule adopted:** a track is described as running only after its own preflight has reported
 success and output exists. Job submission is not evidence of execution.

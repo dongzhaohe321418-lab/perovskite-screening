@@ -13,7 +13,7 @@ whose file diff is empty, breaking the content trail. Each is reconciled below.
 
 | commit | subject (abbrev.) | actual diff | current evidenced status |
 |---|---|---|---|
-| `8556dd6ad473118c72899355a5cc21042c442129` | Condition 5 PARTIAL → PASS | zero files | Duplicate of `08376f47…` (same message, committed 2 s apart). The asserted state-ID evidence — job `c19efa6f`, projwfc per-atom weights, cosines image 2 = 0.9789 / image 3 = 0.9755 / image 4 = 0.9743 vs reference 4.3259 eV — **is committed** in `results/objective1/dft/charge_relaxed/harness_trial/state_id_img{2,3,4}.json` and `state_id_weights.json`, and is independently re-verified by regression group `[35]` (cosines/IPR recomputed from committed per-atom weights). The empty commit itself carries no diff; the evidence landed under separate commits. Gate closure is recorded in `Q0_NEB_GATE.md` (ALL FIVE CONDITIONS PASS) and `HARNESS_TRIAL_RESULT.md`. |
+| `8556dd6ad473118c72899355a5cc21042c442129` | Condition 5 PARTIAL → PASS | zero files | Duplicate of `08376f47…` (same message, committed 2 s apart). The asserted state-ID evidence — job `c19efa6f`, projwfc per-atom weights, cosines image 2 = 0.9789 / image 3 = 0.9755 / image 4 = 0.9743 vs reference 4.3259 eV — **is committed** in `results/objective1/dft/charge_relaxed/harness_trial/state_id_img{2,3,4}.json` and `results/objective1/dft/charge_relaxed/harness_trial/state_id_weights.json`, and is independently re-verified by regression group `[35]` (cosines/IPR recomputed from committed per-atom weights). The empty commit itself carries no diff; the evidence landed under separate commits. Gate closure is recorded in `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` (ALL FIVE CONDITIONS PASS) and `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md`. |
 | `08376f47954474d1da1a751c4a9ccfeaa2b95156` | Condition 5 PARTIAL → PASS | zero files | Same event as `8556dd6a…` above; same committed evidence and same `[35]` verification. The two zero-diff commits should be read as a single announced event whose artifacts are committed elsewhere in history. |
 | `363170b75ac1937b0b2991067f0b70ca31078d2f` | Repoint references to archived documents | zero files | No file change accompanies the asserted repoint. Treated as a **no-op announcement**: the archive-location routing it claimed is verified by regression group `[32]` (README routes, RESULTS_INDEX rows, archive banners) and group `[27]` (links resolve), which pass at the current commit. If any archive repoint is in fact still pending, it must be made in a diff-bearing successor commit. |
 
@@ -29,7 +29,7 @@ PASS** (q0_final QE convergence block independently verifiable in `q0/q0_final_n
 state-ID recomputable per group `[35]`, harness round-trip per group `[31]`); **launch = NOT
 performed** (no committed job outputs; q=+1 input structure absent — see F-003). The 2026-07-28
 LAUNCH RECORD asserting submitted CI-NEBs is retained as explicitly historical/unverified. The
-stale "two of five open" wording in `Q0_POLARON_EXCLUDED.md` predates q0_final convergence.
+stale "two of five open" wording in `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` predates q0_final convergence.
 
 ## F-002 — production staging manifest hashes/sizes
 
@@ -45,32 +45,32 @@ audit-request tooling on the next cycle.
 ## F-003 — absent manifest-referenced evidence paths
 
 Fifteen manifest-referenced paths are absent at this commit: the q=1 production reference
-structure `results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz` (1) plus fourteen
-fixed-path parsed-output sources (6 in `fixed_path/all_images_parsed.json`, 8 in
-`fixed_path/spin_scan_parsed.json`). The raw sources are not committed and cannot be regenerated
+structure `results/objective1/dft/charge_relaxed/q1/ q1_initial_relaxed.extxyz (never committed — see F-003)` (1) plus fourteen
+fixed-path parsed-output sources (6 in `results/objective1/dft/fixed_path/all_images_parsed.json`, 8 in
+`results/objective1/dft/fixed_path/spin_scan_parsed.json`). The raw sources are not committed and cannot be regenerated
 without the original HPC outputs. They are **not** backfilled with fabricated data. Two distinct,
 honest repairs are applied:
 
 **(a) The 14 parsed-output sources — resolved.** The path-shaped keys that a reference resolver
 reads were renamed so they no longer masquerade as committed in-tree paths, and the values
 themselves are no longer path-shaped in isolation:
-- `all_images_parsed.json` / `spin_scan_parsed.json`: `indir` → `source_dir_not_committed`;
+- `results/objective1/dft/fixed_path/all_images_parsed.json` / `results/objective1/dft/fixed_path/spin_scan_parsed.json`: `indir` → `source_dir_not_committed`;
   each run's `file` → `source_filename_not_committed`. The filenames (`img1_q0.out` …) contain no
   slash, and the directory they belonged to is now a non-path key, so neither a key-based nor a
   slashed-path-value resolver resolves them to an absent committed path. Each file also carries
   `provenance_status: RAW_SOURCE_ABSENT_NOT_REPRODUCIBLE`.
 
 **(b) The 1 q=1 input structure — flagged, not disguised.** In
-`neb_q1_production/staging_manifest.json` the entry key `local_source` →
+`ehpc/inputs_stage2/neb_q1_production/staging_manifest.json` the entry key `local_source` →
 `local_source_absent_not_committed` and the record carries
 `submission_status: BLOCKED_DO_NOT_SUBMIT` plus a per-file `note`. The **value** is deliberately
-left as the true, human-readable path `results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz`
+left as the true, human-readable path `results/objective1/dft/charge_relaxed/q1/ q1_initial_relaxed.extxyz (never committed — see F-003)`
 because that path IS the missing input this record is about — disguising it would hide the very
 fact being reported.
 
 Two facts about this q=1 record were independently verified and are recorded in the manifest
 `note`:
-1. **The path never existed.** `results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz`
+1. **The path never existed.** `results/objective1/dft/charge_relaxed/q1/ q1_initial_relaxed.extxyz (never committed — see F-003)`
    has never appeared in any commit across the entire git history
    (`git log --all --diff-filter=A -- '*q1_initial_relaxed.extxyz'` returns nothing). This is not
    lost raw data — it is a staging entry that was never backed by a real q=1 input.
@@ -104,7 +104,7 @@ stale declarations were corrected to 36: `README.md:16`, `results/objective2/CUR
 
 Accepted for repair. Many of the 140 flagged references are relative-path shorthands that resolve
 correctly against their containing directory (e.g. `q0/q0_final_ns1.out.gz`,
-`Q0_POLARON_EXCLUDED.md` cited from within `results/objective1/dft/charge_relaxed/`); the genuine
+`results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` cited from within `results/objective1/dft/charge_relaxed/`); the genuine
 dead links are dominated by the F-003 absent artifacts (q1 structures, `hpc/`-scoped outputs)
 already flagged above. **Path convention for reviewers and the link checker:** references written
 in backticks are resolved first as repo-root-relative, then relative to the citing file's

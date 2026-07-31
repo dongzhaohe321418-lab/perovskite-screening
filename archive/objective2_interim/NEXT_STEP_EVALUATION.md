@@ -25,7 +25,7 @@ Verified independently; the proposal's numbers match mine to the decimal.
 At df = 1 the critical value is 12.706, not 1.96. Using the normal approximation at n = 2
 understated the GA interval by more than sixfold. The qualitative conclusion (neither dopant
 resolvable) is unchanged and in fact strengthened, but the intervals as published were
-indefensible. **Corrected in `PAIRED_PILOT.md`.**
+indefensible. **Corrected in `results/objective2/paired_pilot/PAIRED_PILOT.md`.**
 
 The related point is equally right and I had not made it: **an sd estimated from n = 2
 cannot set a sample size.** The 95% upper confidence bound on σ from a χ² distribution:
@@ -106,7 +106,7 @@ symmetry U cannot break by itself.
 
 *Correction to my own reasoning:* I first framed this as a Pb-Pb dimer whose two-centre
 character U would damage. The 6.71 Å separation rules that out — there is no bond to
-protect. Separately, the 0.5000 occupation cited in `Q0_DIAGNOSTIC_RESULT.md` is an artefact
+protect. Separately, the 0.5000 occupation cited in `archive/objective1_q0_diagnostics/Q0_DIAGNOSTIC_RESULT.md` is an artefact
 of the spin-free probe (an odd electron count forces half occupancy there) and is not
 evidence about spatial localisation in either direction. The projection step remains the
 only thing that settles it.
@@ -127,7 +127,7 @@ only thing that settles it.
 
 ## Execution order
 
-1. Fix the statistics in `PAIRED_PILOT.md` — done.
+1. Fix the statistics in `results/objective2/paired_pilot/PAIRED_PILOT.md` — done.
 2. HPC: `projwfc.x` on the converged q0C/q0D densities → Pb-6p vs I-5p weights, IPR, and
    **whether the state sits on one Pb or is split across both**.
 3. GPU: re-run the 18 existing members with endpoint `fmax` recorded and a larger relaxation

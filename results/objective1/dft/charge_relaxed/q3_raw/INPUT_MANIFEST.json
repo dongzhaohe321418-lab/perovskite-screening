@@ -1,0 +1,84 @@
+{
+ "purpose": "Q3 (V_I0 polaron / CBM-like) raw provenance \u2014 audit CYCLE-000002 F-006",
+ "harvested_utc": "2026-07-31",
+ "source_jobs": {
+  "dd88d5d3-1cd9-4a79-9c73-111648d8af88": "P1 (pristine 160-atom) + P2 (nspin=2 unconstrained) + projwfc runs",
+  "464c52ff-4936-4c63-b3b1-6ebbefa0f800": "ELAS (non-magnetic single point at POL distorted geometry)",
+  "652b5174-3ee1-476d-9de7-fde0282c431b": "POL (seeded polaron relax; plateaued, cancelled \u2014 the plateau IS the record)"
+ },
+ "remote_uncompressed_sha256": "REMOTE_SHA256_UNCOMPRESSED.txt (recorded on the cluster at harvest)",
+ "files": {
+  "464c52ff_ELAS.in.gz": {
+   "sha256": "b456b9150fc21c0f5f04feb82fd63e2d9e10d3a2bbdb7325af4bfeb2029fbc62",
+   "bytes": 3653
+  },
+  "464c52ff_ELAS.out.gz": {
+   "sha256": "b5154bf2781710f52ecb2058e28f37a12d7625cd90943801409b36232b14ed9d",
+   "bytes": 36564
+  },
+  "464c52ff_cmd.sh.gz": {
+   "sha256": "08ea5ada04391fdbc77edba9fa1f4525f857b998fba67ce1b7ee4ae828f6d1f2",
+   "bytes": 414
+  },
+  "464c52ff_slurm-45.out.gz": {
+   "sha256": "35a9a674a86ea3f17fc4a92ae4736a8bdec12b032b61abb3da76b2ad5a472e08",
+   "bytes": 167
+  },
+  "652b5174_POL.in.gz": {
+   "sha256": "e1456520dfdcf41c8d15ed0e826877d6ee1841ac1f7d4459444b082fd8de7cde",
+   "bytes": 3728
+  },
+  "652b5174_POL.out.gz": {
+   "sha256": "a620baa93dfc90531f07aaf99c7337e5dfc12e753f68302f067e116066e4a203",
+   "bytes": 16190
+  },
+  "652b5174_cmd.sh.gz": {
+   "sha256": "5b51f56dc580a59710c8a1d3e039161a224c69a9d2714ec2086024a2653b0f04",
+   "bytes": 478
+  },
+  "652b5174_slurm-44.out.gz": {
+   "sha256": "70c7cd641e74b733c0732e2bcadb6c700bad0872d0256c98b5f0855b2de91998",
+   "bytes": 144
+  },
+  "REMOTE_SHA256_UNCOMPRESSED.txt": {
+   "sha256": "ddd8f0eea826d8552a72efd3d9c1cdf1aa35def5a01290b0bba14cb21070dbc9",
+   "bytes": 931
+  },
+  "dd88d5d3_P1.out.gz": {
+   "sha256": "b63f6fb265616d96a73e0e909245216125114c6c2d8053cebe222bb5652818a9",
+   "bytes": 37222
+  },
+  "dd88d5d3_P2.in.gz": {
+   "sha256": "92a7dbd03949f93bc3008dbecab54b3306fc564d5df99e548bb05fcbbb27c905",
+   "bytes": 4038
+  },
+  "dd88d5d3_P2.out.gz": {
+   "sha256": "45a1ba3248da568226b17db8f905f74e58a524e0a06ad29679cc69cd8b5ce2a6",
+   "bytes": 37145
+  },
+  "dd88d5d3_cmd.sh.gz": {
+   "sha256": "c7902f236645872a4cfc23b94e42fcf972a582a00ef8c97bc4ce3ad139fb2279",
+   "bytes": 1106
+  },
+  "dd88d5d3_proj_P1.in.gz": {
+   "sha256": "d8b14f492e5ac2fd7ffdb3ff139109e3988deb7f1fd2bf89a5aa7c25076a5549",
+   "bytes": 130
+  },
+  "dd88d5d3_proj_P1.out.gz": {
+   "sha256": "76d855a3b4703141eab425e7345496605dff5bf0d154b059451fb63fc819521b",
+   "bytes": 224258
+  },
+  "dd88d5d3_proj_P2.in.gz": {
+   "sha256": "c13c8fdee3b849b1e112e476aee0bf590e0a32e6a4f81e549e2d08d84a501c1a",
+   "bytes": 130
+  },
+  "dd88d5d3_proj_P2.out.gz": {
+   "sha256": "ce8bb42fa2ebec5bb6f8698e57a7eaf2debb7ae84f9cd96ba0c357ec10aa6c45",
+   "bytes": 454188
+  },
+  "dd88d5d3_slurm-40.out.gz": {
+   "sha256": "f535f7a877297ea733aadf6f4f8420ce225ae48d8ed16031e952f5611a58259b",
+   "bytes": 265
+  }
+ }
+}

@@ -263,9 +263,9 @@ unchanged, say so with the rank correlation.
 
 ### Deliverables for every run
 
-- `comparison.csv` — one row per sample, every quantity with its status column
-- `peak_table.csv` via `write_peak_table()` — full-precision p-values, never rounded
-- `geometry_diagnostics.csv` — substrate drift/width evidence behind the verdicts
+- `comparison.csv (not committed)` — one row per sample, every quantity with its status column
+- `xrd/results/peak_table.csv` via `write_peak_table()` — full-precision p-values, never rounded
+- `xrd/results/geometry_diagnostics.csv` — substrate drift/width evidence behind the verdicts
 - a figure whose panels show the diagnostics, not only the results
 - a dated entry in the experiment record, and a push to the project repo
 

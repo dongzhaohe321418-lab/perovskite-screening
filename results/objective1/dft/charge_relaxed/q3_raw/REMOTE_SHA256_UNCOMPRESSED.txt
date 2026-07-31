@@ -1,0 +1,6 @@
+5c000cdf8e12efe053673e68f10daf76b10c5a8a71eca8a86a3ebc29816e1445  /home/ericdft/scratch/.claude-science/jobs/dd88d5d3-1cd9-4a79-9c73-111648d8af88/P1.out
+bd706ab4721b431dd03b07acc1da912326a5ffd64bf589526ac180f7da8021c2  /home/ericdft/scratch/.claude-science/jobs/dd88d5d3-1cd9-4a79-9c73-111648d8af88/P2.out
+81dc5096aa671b5d186fb3737b58fa88300545efe1a65af81e3f1ad39c73f339  /home/ericdft/scratch/.claude-science/jobs/dd88d5d3-1cd9-4a79-9c73-111648d8af88/proj_P1.out
+dd07f892c2e19bec213258605d17465a7fad4dc71a4863d73a123147ce15f479  /home/ericdft/scratch/.claude-science/jobs/dd88d5d3-1cd9-4a79-9c73-111648d8af88/proj_P2.out
+cc07c54f465ca97a258c079b7a49df7335b5e2325af8633207215f06f2afeb0d  /home/ericdft/scratch/.claude-science/jobs/464c52ff-4936-4c63-b3b1-6ebbefa0f800/ELAS.out
+11bb9a46f28fae0416b40259c7d377c06a92a1796f45d1f927a288091a295e5a  /home/ericdft/scratch/.claude-science/jobs/652b5174-3ee1-476d-9de7-fde0282c431b/POL.out
