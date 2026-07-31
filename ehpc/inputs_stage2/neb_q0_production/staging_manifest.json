@@ -11,8 +11,8 @@
   {
    "local_source": "scripts/26_neb_harness.py",
    "remote_destination": "26_neb_harness.py",
-   "size_bytes": 12910,
-   "sha256": "b3cc0149589b1ef11c999ac30315214c60c0763ada909173fdb054e7a7daf69e"
+   "size_bytes": 12243,
+   "sha256": "2de0057fc5c81614d7f5cae85c129f22d523a2a093d00271baf468dab339132d"
   },
   {
    "local_source": "results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz",

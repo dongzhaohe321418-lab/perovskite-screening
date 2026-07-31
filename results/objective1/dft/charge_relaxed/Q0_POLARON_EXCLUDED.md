@@ -89,13 +89,22 @@ Consequences:
   to correct, and no localised solution for it to stabilise.
 - **q=0 forces are usable** — the non-magnetic solution converges (6 iterations from a
   matched density) and the relaxation is well-behaved.
-- **The q=0 NEB is unblocked on METHOD grounds — but the gate is not open.** This line
+- **The q=0 NEB is unblocked on METHOD grounds.** This line
   previously read "a matter of compute, not method", which overstated readiness. What is
   settled is the *method*: `nspin=1` is correct, forces are trustworthy, and there is no
-  competing localised state. What is **not** settled: `q0_final` has not reached a QE
-  convergence block (its gradient oscillates at the documented soft-tilt floor), and the band
-  archive/restart harness does not exist. Two of five entry conditions remain open — see
-  `Q0_NEB_GATE.md`. No large allocation should be committed until they close.
+  competing localised state.
+
+  > **SUPERSEDED — historical (this paragraph predates q0_final's formal convergence; retained
+  > for trail, NOT current).** As originally written, this said: "What is **not** settled:
+  > `q0_final` has not reached a QE convergence block (its gradient oscillates at the documented
+  > soft-tilt floor), and the band archive/restart harness does not exist. Two of five entry
+  > conditions remain open." **That state has since been met and is no longer current.** As of
+  > 2026-07-28, q0_final reached a QE convergence block (energy error 9.8e-05 Ry, gradient
+  > 1.6e-03 Ry/Bohr — independently verifiable in `q0/q0_final_ns1.out.gz`), the archive/restart
+  > harness round-trips a real band (regression group `[31]`), and all four PI closure items were
+  > met. The **current** gate state is **ALL FIVE CONDITIONS PASS** per `Q0_NEB_GATE.md`;
+  > production launch still requires the PI's explicit go and has NOT been performed. This
+  > superseding note reconciles the doc with audit CYCLE-000001 F-004.
 
 ## Limits, stated
 

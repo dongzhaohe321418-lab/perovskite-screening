@@ -1,5 +1,7 @@
 {
  "leg": "q1",
+ "submission_status": "BLOCKED_DO_NOT_SUBMIT",
+ "status_reason": "audit CYCLE-000001 F-003: local_source results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz is absent from the committed tree, so this staging record does not identify a reproducible input set. Do not submit_production_job from this manifest until the referenced structure is committed and its sha256/size are independently verified.",
  "pi_approved_input_sha256": "9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267",
  "files": [
   {
@@ -11,14 +13,15 @@
   {
    "local_source": "scripts/26_neb_harness.py",
    "remote_destination": "26_neb_harness.py",
-   "size_bytes": 12910,
-   "sha256": "b3cc0149589b1ef11c999ac30315214c60c0763ada909173fdb054e7a7daf69e"
+   "size_bytes": 12243,
+   "sha256": "2de0057fc5c81614d7f5cae85c129f22d523a2a093d00271baf468dab339132d"
   },
   {
-   "local_source": "results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz",
+   "local_source_absent_not_committed": "results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz",
    "remote_destination": "ref.extxyz",
    "size_bytes": 8819,
-   "sha256": "7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121"
+   "sha256": "7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121",
+   "note": "This record does not describe a real staging operation that ever occurred. Two independently verified facts: (1) the path results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz has NEVER existed in any commit across the entire git history (git log --all --diff-filter=A returns nothing); (2) the recorded sha256 7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121 is the hash of the q0 file results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz, not of any q1 structure. Therefore this is not lost raw data but a staging entry that was never backed by a real q1 input. submit_production_job from this record is prohibited until a genuine q1 relaxed structure is produced, committed, and its own hash/size independently verified."
   }
  ]
 }

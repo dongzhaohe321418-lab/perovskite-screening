@@ -183,19 +183,41 @@ input hash) so the convergence block is checkable from the primary record, not t
 The q=+1 pair reads +11.9 meV (final above initial): the two charge states prefer opposite ends
 of the path. Recorded as an observation; interpretation awaits the NEBs.
 
-## 1.9 q = 0 NEB entry gate — ALL FIVE CONDITIONS PASS (2026-07-28); launch awaits explicit PI go
+## 1.9 q = 0 NEB entry gate — ALL FIVE CONDITIONS PASS (2026-07-28); launch NOT performed (awaits explicit PI go) — reconciled 2026-07-31
 
-**LAUNCH RECORD (2026-07-28, PI-approved):** both production CI-NEBs submitted after the PI's
-explicit go, scoped to the exact approved input hashes.
+> **CURRENT EVIDENCED STATE (authoritative; supersedes the 2026-07-28 LAUNCH RECORD below).**
+> Reconciled against committed artifacts only, per audit CYCLE-000001 F-004.
+> - **Gate: all five conditions PASS**, consistent with `Q0_NEB_GATE.md` and `RESULTS_INDEX.md`.
+>   The supporting evidence is committed in-tree: q0_final's QE convergence block is
+>   independently verifiable in `results/objective1/dft/charge_relaxed/q0/q0_final_ns1.out.gz`
+>   (energy error 9.8e-05 Ry < 1e-4; gradient 1.6e-03 Ry/Bohr < 1.945e-3 — condition 1 met), the
+>   state-ID cosines are recomputable from committed per-atom weights (regression group [35]),
+>   and the archive/restart harness round-trips a real band (group [31]). The stale "two of five
+>   remain open" wording in `Q0_POLARON_EXCLUDED.md` predates q0_final's convergence and is marked
+>   historical there.
+> - **Launch: NOT performed.** No committed job outputs, `hpc/` records, or archived barriers
+>   exist in-tree to evidence a RUNNING/PENDING SLURM state, so no launch/submission may be
+>   treated as current. Job submission is not evidence of execution (see §closing rule 7). The
+>   q=+1 leg additionally cannot be validly staged: its PI-approved input source
+>   `results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz` is absent from the tree
+>   (audit F-003). Passing the gate authorises ASKING the PI, not launching; no production
+>   submission is authorized while the audit BLOCK stands.
 
-| leg | job id | SLURM | input sha256 (PI-approved = staged, verified remote) | manifest commit |
+**HISTORICAL — SUPERSEDED (2026-07-28 LAUNCH RECORD, retained for trail; NOT current):** the
+table below asserted both production CI-NEBs submitted after PI go. It cannot be evidenced from
+committed artifacts (no in-tree job outputs; q=+1 input absent) and conflicts with the current
+"launch NOT performed" state above; it is preserved here only as an unverified historical
+assertion and must not be cited as current status.
+
+| leg | job id (claimed) | SLURM (claimed) | input sha256 | manifest commit |
 |---|---|---|---|---|
-| q=0 | `374e51f1` | 54, RUNNING | `04acee190675ec82c3d5132a61079506955413afcc4c871b39d4c9d6edfd12c7` | `1b0add68` |
-| q=+1 | `98199034` | 55, PENDING (Resources — normal; 2-node cluster runs the legs serially) | `9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267` | `aa64a8f5` |
+| q=0 | `374e51f1` | 54, claimed RUNNING — UNVERIFIED | `04acee190675ec82c3d5132a61079506955413afcc4c871b39d4c9d6edfd12c7` | `1b0add68` |
+| q=+1 | `98199034` | 55, claimed PENDING — UNVERIFIED; input source absent | `9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267` | `aa64a8f5` |
 
-Two-step rule followed: staging manifests committed BEFORE submission; remote hashes verified
-in place (input + harness `b3cc0149…` + reference `7af20ebb…`) before the tasks were reported
-running. In-job guards: hash gate at start (exit 2 on mismatch), per-advance append-only
+Two-step rule (as originally recorded): staging manifests committed BEFORE submission; remote
+hashes were reported verified in place (input + harness + reference) before the tasks were
+reported running — this remote verification is NOT independently reproducible from the committed
+tree and is therefore not treated as current evidence. In-job guards: hash gate at start (exit 2 on mismatch), per-advance append-only
 archiving with parse-before-archive and verification, stop-on-persistent-archive-failure or
 image-count anomaly with raw outputs preserved. **No barrier from either leg is extracted or
 reported until BOTH legs converge; explore/trial intermediates remain unquotable.**
@@ -718,7 +740,7 @@ argparse default exists; and every filename read from *inside* a directory argum
 the class no flag-level check can see. It fails all five historical invocations and passes the
 correct one.
 
-**Regression suite.** `scripts/20_test_checks.py`, 22 numbered check groups, every one firing on
+**Regression suite.** `scripts/20_test_checks.py`, 36 numbered check groups, every one firing on
 an actual historical incident from this project rather than on a hypothetical. All pass.
 
 ---
@@ -772,7 +794,7 @@ an actual historical incident from this project rather than on a hypothetical. A
 
 `05` QE inputs · `06` QE parsing · `11` neb.x input · `12` relax frames · `13` d_max ·
 `16` enumeration · `17` ensemble spread · `18` explore screen · `19` GPU regression ·
-`20` regression suite (22 groups) · `21` pool expansion · `22` paired pilot ·
+`20` regression suite (36 groups) · `21` pool expansion · `22` paired pilot ·
 `23` q=0 state metrics (overlap-based, not band-index) · `24` return test · `25` preflight ·
 `checks.py` shared gates.
 

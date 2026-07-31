@@ -1,9 +1,11 @@
 {
-  "indir": "hpc/673e904d-e08f-4775-afa3-70c5cecc44cd",
+  "provenance_status": "RAW_SOURCE_ABSENT_NOT_REPRODUCIBLE",
+  "provenance_note": "audit CYCLE-000001 F-003/F-006: the parsed source outputs under indir (hpc/673e904d-e08f-4775-afa3-70c5cecc44cd/img*.out) are NOT committed to this tree. The values in this file cannot be independently recomputed from committed records and must not be cited as gate/production evidence until the raw .out outputs and their hashes are committed.",
+  "source_dir_not_committed": "hpc/673e904d-e08f-4775-afa3-70c5cecc44cd",
   "n_files": 6,
   "runs": [
     {
-      "file": "img1_q0.out",
+      "source_filename_not_committed": "img1_q0.out",
       "image": 1,
       "charge": 0,
       "case": "A",
@@ -19,7 +21,7 @@
       "converged": true
     },
     {
-      "file": "img1_q1.out",
+      "source_filename_not_committed": "img1_q1.out",
       "image": 1,
       "charge": 1,
       "case": "A",
@@ -35,7 +37,7 @@
       "converged": true
     },
     {
-      "file": "img5_q0.out",
+      "source_filename_not_committed": "img5_q0.out",
       "image": 5,
       "charge": 0,
       "case": "A",
@@ -51,7 +53,7 @@
       "converged": true
     },
     {
-      "file": "img5_q1.out",
+      "source_filename_not_committed": "img5_q1.out",
       "image": 5,
       "charge": 1,
       "case": "A",
@@ -67,7 +69,7 @@
       "converged": true
     },
     {
-      "file": "img6_q0.out",
+      "source_filename_not_committed": "img6_q0.out",
       "image": 6,
       "charge": 0,
       "case": "A",
@@ -83,7 +85,7 @@
       "converged": true
     },
     {
-      "file": "img6_q1.out",
+      "source_filename_not_committed": "img6_q1.out",
       "image": 6,
       "charge": 1,
       "case": "A",

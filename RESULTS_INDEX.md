@@ -33,15 +33,26 @@ Anything not listed here is historical. Restructured 2026-07-28.
 
 ## Q3. Is V_I⁰ a polaron or a shallow donor?
 
-- **Current conclusion:** **no thermally significant polaron** at PBE+D3(BJ); the state is
-  CBM-like (per-atom cosine 0.976 vs pristine CBM; energy agreement ~50–80 meV once properly
-  referenced — the earlier 7 meV claim is retracted). A weakly bound few-meV state is not
-  excluded. Seeded distortion costs ~113 meV elastic vs ≤ a-few-meV spin gain.
+- **STATUS: UNVERIFIED / NOT CITABLE (demoted 2026-07-31, audit CYCLE-000001 F-006).** The
+  raw inputs required to recompute this conclusion are not committed to the tree (see Raw data
+  below), so the quoted energies, residual, moment trace, P1/P2 metrics, and derived bound
+  **cannot be independently reproduced from committed records**. This result is removed as gate
+  evidence and must not be cited or used to support any production/publication claim until the
+  raw provenance is committed and a clean-clone recomputation reaches each quoted value.
+- **Prior conclusion (UNVERIFIED, retained for context only):** "no thermally significant
+  polaron" at PBE+D3(BJ); state described as CBM-like (per-atom cosine 0.976 vs pristine CBM;
+  energy agreement ~50–80 meV once properly referenced — the earlier 7 meV claim is retracted);
+  a weakly bound few-meV state not excluded; seeded distortion ~113 meV elastic vs ≤ a-few-meV
+  spin gain. These figures are **not** independently traceable at this commit.
 - **Scope:** one distortion mode probed, 159-atom cell, PBE-level gap caveats apply.
-- **Authoritative:** `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` +
-  `Q0_RESOLVED.md` + `P1_REFERENCE_AUDIT.md`
-- **Raw data:** `hpc/` job outputs referenced in each document; discriminator outputs P1/P2.
-- **Next:** none — closed at this theory level.
+- **Authoritative documents (themselves rely on absent raw data — see F-006):**
+  `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` + `Q0_RESOLVED.md` +
+  `P1_REFERENCE_AUDIT.md`
+- **Raw data:** ABSENT at this commit — the referenced `hpc/` job outputs and the P1/P2/ELAS/POL
+  discriminator outputs are **not committed** to the tree. Until they (plus input manifests,
+  hashes, and a derivation script) are committed, no value in this section is recomputable.
+- **Next:** commit immutable raw outputs + provenance to restore citability, OR keep this
+  question demoted to non-citable/unverified status. Not closed.
 
 ## Q4. Is the host-pool / noise floor sound for screening? (methodology)
 
