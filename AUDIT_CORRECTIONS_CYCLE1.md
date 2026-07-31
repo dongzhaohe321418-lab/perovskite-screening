@@ -95,7 +95,7 @@ manifests/hashes and a derivation script; otherwise Q3 stays demoted.
 
 ## F-007 — regression-suite group count
 
-The executable suite `scripts/20_test_checks.py` emits 36 numbered groups (`[1]`–`[36]`). All
+The executable suite `scripts/20_test_checks.py` emits 38 numbered groups (`[1]`–`[38]`). All
 stale declarations were corrected to 36: `README.md:16`, `results/objective2/CURRENT_STATUS.md:42`,
 `EXPERIMENT_AUDIT.md` (regression-suite line and analysis-code list). Measure:
 `python3 scripts/20_test_checks.py | grep -cE '^\[[0-9]+\]'` → 36.

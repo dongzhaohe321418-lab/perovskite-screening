@@ -802,17 +802,17 @@ an actual historical incident from this project rather than on a hypothetical. A
 
 `05` QE inputs · `06` QE parsing · `11` neb.x input · `12` relax frames · `13` d_max ·
 `16` enumeration · `17` ensemble spread · `18` explore screen · `19` GPU regression ·
-`20` regression suite (36 groups) · `21` pool expansion · `22` paired pilot ·
+`20` regression suite (38 groups) · `21` pool expansion · `22` paired pilot ·
 `23` q=0 state metrics (overlap-based, not band-index) · `24` return test · `25` preflight ·
 `scripts/checks.py` shared gates.
 
 ## 7.5 Figures
 
-`corpus84.png` (equivalence + power) · `q0_polaron_excluded.png` (bound) ·
-`q0_resolved.png` (CBM identification) · `return_test.png` · `rerun_paired.png` ·
-`q0_projection.png` · `q0_seed_comparison.png` · `q1_explore_neb.png` ·
-`noise_floor.png` · `fixed_path_profile.png` · `ga_anchor_audit.png` · `q0_gap_state.png` ·
-`fa_host_structures.png` (×2) · `paired_pilot.png`
+`results/objective2/paired_pilot/corpus84.png` (equivalence + power) · `results/objective1/dft/charge_relaxed/q0_polaron_excluded.png` (bound) ·
+`results/objective1/dft/charge_relaxed/q0_resolved.png` (CBM identification) · `results/objective2/paired_pilot/return_test.png` · `results/objective2/paired_pilot/rerun_paired.png` ·
+`results/objective1/dft/charge_relaxed/q0_projection.png` · `results/objective1/dft/charge_relaxed/q0_seed_comparison.png` · `results/objective1/dft/charge_relaxed/q1_explore_neb.png` ·
+`results/objective2/noise_floor/noise_floor.png` · `results/objective1/dft/fixed_path/fixed_path_profile.png` · `results/objective1/ga_anchor_audit.png` · `results/objective1/dft/charge_relaxed/q0_gap_state.png` ·
+`results/fa_host/fa_host_structures.png` (×2) · `results/objective2/paired_pilot.png`
 
 ---
 

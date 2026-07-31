@@ -189,7 +189,7 @@ SOC:     img0/img3 一对全相对论单点;若不做,STATUS.md 显式写
 避免 Stage 3 训练集将来重算),γ-CsPbI₃ 侧同步换轨。
 
 验收:|Ea(tight) − Ea(production)| ≤ 10 meV。生产设置写入
-`configs/qe_gamma_vi_production.yaml` + `results/objective1/dft/convergence.{csv,md}`。
+`configs/qe_gamma_vi_production.yaml (figure not committed)` + `results/objective1/dft/convergence.{csv,md}`。
 
 ### 1.3 补齐固定路径全部图像
 

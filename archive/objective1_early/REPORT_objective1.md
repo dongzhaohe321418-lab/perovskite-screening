@@ -272,7 +272,7 @@ python scripts/04_objective1_anchors.py --mode strain --device cuda --dtype floa
 ```
 
 Outputs: `results/objective1/{regression,strain,strain_tight,ga,anchors,anchors_summary}.json`,
-saddle paths (`*_saddle_path.extxyz`), and this figure (`strain_Ea.png`).
+saddle paths (`*_saddle_path.extxyz`), and this figure (`results/objective1/strain_Ea.png`).
 
 ## Next steps (to convert "trends physical" → "method validated")
 
@@ -295,8 +295,8 @@ are DFT-gated and wait on an allocation.
 
 ## Files
 
-- `strain_Ea.png` — anchors (c) & (d) figure (strain sweep + GA barrier overlay)
-- `obj1_refine.png` — post-review figure: GA configurational robustness + γ finite-size
+- `results/objective1/strain_Ea.png` — anchors (c) & (d) figure (strain sweep + GA barrier overlay)
+- `results/objective1/obj1_refine.png` — post-review figure: GA configurational robustness + γ finite-size
 - `results/objective1/anchors_summary.json` — consolidated, analysis-ready results (with honest status flags)
 - `results/objective1/regression.json`, `results/objective1/strain.json`, `results/objective1/strain_tight.json`, `results/objective1/ga.json`, `results/objective1/finite_size.json` — raw per-anchor data
 - `results/objective1/regression_saddle_path.extxyz`, `results/objective1/ga_saddle_path.extxyz` — NEB image trajectories

@@ -208,7 +208,7 @@ zero-shot FA baseline is in the correct physical regime. This validates carrying
 FA regression path into Stage 4/5.
 
 Files in `neb_distribution/`: `results/fa_host/neb_distribution/fa_neb_distribution.json` (per-config + distribution +
-literature check), `fa_neb_distribution.png`, `bands/fa_neb_band_00..08.extxyz.gz`.
+literature check), `results/fa_host/neb_distribution/fa_neb_distribution.png`, `bands/fa_neb_band_00..08.extxyz.gz`.
 
 ## Lane-2 acceptance checklist (EXECUTION_GUIDE 泳道二验收)
 

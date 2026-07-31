@@ -45,7 +45,7 @@ now fixed and non-fatal.
 Delivered, all `EXPLORE` tier:
 
 - `scripts/16` — enumerates 156 configurations, 13 dopants × 4 host members,
-  distance-binned. Candidate table taken from `proposal_v2.tex`, not invented.
+  distance-binned. Candidate table taken from `proposal/proposal_v2.tex`, not invented.
 - `scripts/17` — gate-6 noise floor: undoped barrier spread across all 8 FA-orientation
   members.
 - `scripts/18` — MACE EXPLORE screen with the validity gate and distribution-only output.

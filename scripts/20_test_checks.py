@@ -1003,6 +1003,18 @@ expect(_r.returncode == 0, f"derive_q3.py exits 0 (recomputes all quoted Q3 valu
 expect("every quoted value reproduces" in _r.stdout, "derivation asserts full reproduction")
 
 
+print("\n[38] declared group count must equal the count this file actually emits (F-010)")
+import re as _re2
+_n = len(_re2.findall(r'print\("\\n\[(\d+)\]', open(__file__).read()))
+for _doc, _pat in [("README.md", r"Regression suite \((\d+) groups"),
+                   ("results/objective2/CURRENT_STATUS.md", r"\((\d+) check groups"),
+                   ("EXPERIMENT_AUDIT.md", r"regression suite \((\d+) groups\)"),
+                   ("AUDIT_CORRECTIONS_CYCLE1.md", r"emits (\d+) numbered groups")]:
+    _m = _re2.search(_pat, open(_doc).read())
+    expect(_m is not None, f"{_doc} declares a group count")
+    if _m: expect(int(_m.group(1)) == _n, f"{_doc} declares {_m.group(1) if _m else '?'} groups, file emits {_n}")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
