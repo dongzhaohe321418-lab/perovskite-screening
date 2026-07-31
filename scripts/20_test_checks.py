@@ -984,24 +984,54 @@ expect("NOT OPEN" not in _aud, "the audit no longer describes the gate as NOT OP
 expect("launch awaits explicit PI go" in _aud or "waits for the" in _aud,
        "the audit records gate-passed-but-launch-needs-PI-go")
 
-print("\n[37] Q3 provenance: demotion sweep + derivation recomputes (CYCLE-000002 F-006/F-008)")
-import subprocess as _sp, sys as _sys, os as _os
-# (a) if RESULTS_INDEX demotes a question to UNVERIFIED/NOT CITABLE, every named authority
-#     document must carry a matching status marker -- no unmarked current claims.
+print("\n[37] Q3 provenance: index-discovered authority sweep + full derivation (F-006/F-008/F-011)")
+import subprocess as _sp, sys as _sys, os as _os, re as _re37
+
+# (a) DISCOVER authorities from the canonical index rather than a hand-maintained list
+#     (CYCLE-000004 F-008: the previous hand-list omitted two authorities the index names).
 _idx = open("RESULTS_INDEX.md").read()
-if "UNVERIFIED / NOT CITABLE" in _idx:
-    for _doc in ["results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md",
-                 "results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md",
-                 "EXPERIMENT_AUDIT.md"]:
-        _t = open(_doc).read()
-        expect("Q3 PROVENANCE STATUS" in _t or "F-006" in _t,
-               f"{_os.path.basename(_doc)} carries the Q3 provenance status marker")
-# (b) the committed Q3 derivation script must recompute every quoted value (exit 0)
+_demoted_blocks = []
+for _m in _re37.finditer(r"UNVERIFIED / NOT CITABLE", _idx):
+    # the question block: from the preceding "## " heading to the next one
+    _s = _idx.rfind("\n## ", 0, _m.start()); _e = _idx.find("\n## ", _m.start())
+    _demoted_blocks.append(_idx[_s if _s >= 0 else 0 : _e if _e > 0 else len(_idx)])
+expect(len(_demoted_blocks) > 0, "the index carries at least one UNVERIFIED/NOT CITABLE demotion")
+_auths = set()
+for _blk in _demoted_blocks:
+    for _p in _re37.findall(r"`([A-Za-z0-9_./-]+\.md)`", _blk):
+        if _os.path.exists(_p) and _p != "RESULTS_INDEX.md":
+            _auths.add(_p)
+expect(len(_auths) >= 3, f"index-discovered Q3 authorities: found {len(_auths)}, expected >= 3")
+for _doc in sorted(_auths):
+    _t = open(_doc).read()
+    expect("Q3 PROVENANCE STATUS" in _t or "UNVERIFIED / NOT CITABLE" in _t
+           or "HISTORICAL" in _t or "SUPERSEDED" in _t,
+           f"index-named authority {_os.path.basename(_doc)} carries the demotion/superseded marker")
+
+# (b) F-011: no current document may assert q0_final failed to converge without a marker
+for _doc in sorted(_auths) + ["RESULTS_INDEX.md", "EXPERIMENT_AUDIT.md",
+                              "results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md"]:
+    if not _os.path.exists(_doc): continue
+    for _ln in open(_doc).read().splitlines():
+        if "plateaued without converging" in _ln:
+            expect(_ln.lstrip().startswith("- ~~") or "~~" in _ln or "SUPERSEDED" in _ln,
+                   f"{_os.path.basename(_doc)}: stale q0_final plateau claim is struck/superseded")
+
+# (c) the committed Q3 derivation must recompute EVERY published value, cosine included
 _r = _sp.run([_sys.executable, "results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py"],
              capture_output=True, text=True)
-expect(_r.returncode == 0, f"derive_q3.py exits 0 (recomputes all quoted Q3 values); got {_r.returncode}")
+expect(_r.returncode == 0, f"derive_q3.py exits 0; got {_r.returncode}: {_r.stderr[-200:]}")
+for _need in ("[map]", "[cos]", "[align]", "[record]"):
+    expect(_need in _r.stdout, f"derivation reports {_need} (mapping/cosine/alignment/record check)")
 expect("every quoted value reproduces" in _r.stdout, "derivation asserts full reproduction")
 
+# (d) the mapping record must exist and be non-trivial — deleting it must fail the derivation
+_mp = "results/objective1/dft/charge_relaxed/q3_raw/P1_P2_MAPPING_AND_WEIGHTS.json"
+expect(_os.path.exists(_mp), "the P1->P2 shared-atom mapping record is committed")
+import json as _json37
+_mr = _json37.load(open(_mp))
+expect(len(_mr["mapping_P1_to_P2"]) == 159, "mapping covers all 159 shared atoms")
+expect(abs(_mr["recomputed"]["shared_atom_cosine"] - 0.9757) < 5e-4, "recorded cosine matches published")
 
 print("\n[38] declared group count must equal the count this file actually emits (F-010)")
 import re as _re2

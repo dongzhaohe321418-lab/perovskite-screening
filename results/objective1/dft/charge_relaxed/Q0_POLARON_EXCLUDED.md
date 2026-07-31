@@ -128,8 +128,14 @@ Consequences:
   measuring it, which is why the amplitude analysis above reports an upper bound on the well
   depth instead of a value. This is the weakest link in the argument and the one worth
   closing first if the polaron question becomes load-bearing.
-- `q0_final` plateaued without converging, so only the *initial* endpoint has a relaxed q=0
-  geometry. The NEB needs both.
+- ~~`q0_final` plateaued without converging, so only the *initial* endpoint has a relaxed q=0
+  geometry.~~ **SUPERSEDED 2026-07-28 (audit CYCLE-000004 F-011).** That sentence recorded the
+  state of an earlier, cancelled attempt. `q0_final` subsequently converged formally: QE printed
+  its own convergence block (energy error 9.8E-05 Ry against 1.0E-04; gradient error 1.6E-03
+  Ry/bohr against 1.945E-03; bfgs converged in 11 scf cycles and 10 bfgs steps), preserved at
+  `results/objective1/dft/charge_relaxed/q0/q0_final_ns1.out.gz`. **Both q=0 endpoints are
+  formally converged**, in agreement with `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`
+  and `RESULTS_INDEX.md`.
 
 **This does not license a charge-state ordering.** Both legs must still be relaxed and run at
 identical theory level; the ban on claiming the literature ordering stands.

@@ -1,3 +1,12 @@
+> **Q3 PROVENANCE STATUS (2026-07-31, audit CYCLE-000002 F-006/F-008, CYCLE-000004 F-008):**
+> `RESULTS_INDEX.md` names this file as a Q3 authority and marks Q3 **UNVERIFIED / NOT CITABLE**.
+> The raw records are committed at `results/objective1/dft/charge_relaxed/q3_raw/`, and
+> `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` recomputes every value quoted
+> here — including the 159-shared-atom cosine, its controls, the IPRs and both valid alignment
+> references — from those raws plus a mapping rebuilt from the raw site lists (exit 0 at this
+> commit). **Citability is restored only when an audit cycle independently re-verifies this**;
+> until then every number below is provisionally recomputable, not independently verified.
+
 # P1 audit — energy reference, and why the wording becomes "CBM-like"
 
 **Audit requested by the guide: check that pristine and vacancy cells share theory
