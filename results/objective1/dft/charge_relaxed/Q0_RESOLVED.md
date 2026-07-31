@@ -13,7 +13,11 @@
 > result "the state IS the conduction band minimum" and cited a 7 meV energy agreement
 > (pristine 4.3188 vs defective 4.3259 eV). That comparison used raw eigenvalues from two
 > separate periodic calculations, which share no common energy zero — it was not valid.
-> Re-anchored: VBM-referenced the difference is +75.9 meV, semicore-aligned +52.1 meV. All
+> Re-anchored: VBM-referenced the difference is +75.8 meV, semicore-aligned +52.1 meV
+> (one declared convention — defective minus aligned pristine, semicore = mean of the
+> lowest 32 bands — implemented and asserted in
+> `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py`; the earlier +75.9 was a
+> 0.1 meV rounding artifact, audit CYCLE-000005 F-012). All
 > references place the state at the conduction band edge, so the identification stands, but
 > at ~50–80 meV resolution rather than 7 meV. The claim is therefore **CBM-like /
 > consistent with the pristine CBM**, not identity. The per-atom overlap (cosine 0.9757 vs

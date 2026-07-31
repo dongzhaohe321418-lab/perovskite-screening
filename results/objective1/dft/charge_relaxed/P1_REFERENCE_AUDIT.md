@@ -44,8 +44,19 @@ Re-done against two defensible internal references:
 | reference | pristine CBM | defective state | difference |
 |---|---|---|---|
 | raw eigenvalue (**invalid**) | 4.3188 | 4.3259 | +7.1 meV |
-| VBM-referenced | +1.5560 above VBM | +1.6319 above VBM | **+75.9 meV** |
+| VBM-referenced | +1.5560 above VBM | +1.6318 above VBM | **+75.8 meV** |
 | semicore-aligned (mean of lowest 32 bands, −45 meV shift) | 4.2738 | 4.3259 | **+52.1 meV** |
+
+> **Alignment values normalised 2026-07-31 (audit CYCLE-000005 F-012).** One definition now
+> governs every Q3 alignment figure and is implemented in
+> `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py`: **direction = defective state
+> minus aligned pristine CBM**; VBM reference = each cell's own valence-band maximum;
+> semicore reference = mean of the **lowest 32 bands** of each cell. Recomputed from the raw
+> outputs this gives **+75.8 meV** (VBM) and **+52.1 meV** (semicore, shift −45.0 meV). The
+> earlier `+75.9 meV` in this file came from a rounded intermediate (1.6319 rather than the
+> exact 1.6318 eV above VBM) — a 0.1 meV transcription artifact, not a different calculation.
+> The derivation asserts these values and asserts that this document quotes them verbatim.
+
 
 All defensible references agree the state sits at the conduction band edge and place it
 slightly *above* the aligned pristine CBM, but they spread over ~70 meV. **The energy metric

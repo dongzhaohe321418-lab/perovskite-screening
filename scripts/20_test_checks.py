@@ -1045,6 +1045,57 @@ for _doc, _pat in [("README.md", r"Regression suite \((\d+) groups"),
     if _m: expect(int(_m.group(1)) == _n, f"{_doc} declares {_m.group(1) if _m else '?'} groups, file emits {_n}")
 
 
+print("\n[39] Q3 numeric + status coherence (CYCLE-000005 F-012 / F-013)")
+import subprocess as _sp39, sys as _sys39, os as _os39, re as _re39
+_dv = "results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py"
+_r39 = _sp39.run([_sys39.executable, _dv], capture_output=True, text=True)
+expect(_r39.returncode == 0, f"derive_q3.py exits 0; got {_r39.returncode}")
+
+# (a) F-012: ONE declared convention; every authority must quote the derived values verbatim.
+_m = _re39.search(r"VBM-referenced ([+-][\d.]+) meV, semicore-aligned ([+-][\d.]+) meV", _r39.stdout)
+expect(_m is not None, "derivation prints both normalized alignment values")
+if _m:
+    _v, _s = _m.group(1), _m.group(2)
+    expect("convention:" in _r39.stdout, "derivation declares its subtraction convention explicitly")
+    for _doc in ["results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md",
+                 "results/objective1/dft/charge_relaxed/Q0_RESOLVED.md"]:
+        _t39 = open(_doc).read()
+        expect(f"{_v} meV" in _t39,
+               f"{_os39.path.basename(_doc)} quotes the derived VBM value {_v} meV")
+        expect(f"{_s} meV" in _t39,
+               f"{_os39.path.basename(_doc)} quotes the derived semicore value {_s} meV")
+        # No CONFLICTING alignment value may appear unmarked. A doc that quotes the
+        # right number in a note while its TABLE still shows a stale one must fail --
+        # that is exactly the hole the first version of this check left open.
+        _ok_vals = {_v, _s, "+7.1", "-7.1"}   # +-7.1 is the explicitly-invalid raw difference
+        for _ln in _t39.splitlines():
+            _low = _ln.lower()
+            if not any(_k in _low for k_ in [0] for _k in
+                       ("vbm-referenced", "semicore-aligned", "semicore-referenced")):
+                continue
+            for _num in _re39.findall(r"([+-]\d+\.\d+)\s*meV", _ln):
+                if _num in _ok_vals:
+                    continue
+                expect("rounding artifact" in _low or "earlier" in _low or "~~" in _ln
+                       or "superseded" in _low or "invalid" in _low or "retract" in _low,
+                       f"{_os39.path.basename(_doc)}: conflicting alignment value {_num} meV "
+                       f"on an alignment line is marked superseded/invalid")
+
+# (b) F-013: when the index row names committed q3_raw evidence AND the derivation exits 0,
+#     no unmarked "raw absent / not reproducible" assertion may survive in that row.
+_idx39 = open("RESULTS_INDEX.md").read()
+_s39 = _idx39.find("## Q3.")
+_e39 = _idx39.find("\n## ", _s39 + 4)
+_row = _idx39[_s39:_e39 if _e39 > 0 else len(_idx39)]
+expect("q3_raw/" in _row and "COMMITTED" in _row, "the Q3 row names the committed raw evidence")
+for _bad in ("are not committed", "cannot be independently reproduced"):
+    for _ln in _row.splitlines():
+        if _bad in _ln:
+            _ctx = _row[max(0, _row.find(_ln) - 400): _row.find(_ln) + 200]
+            expect("Superseded wording" in _ctx or "previously said" in _ctx or "retracted" in _ctx,
+                   f"Q3 row: '{_bad}' appears only inside an explicit retraction")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")

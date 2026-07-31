@@ -33,19 +33,28 @@ Anything not listed here is historical. Restructured 2026-07-28.
 
 ## Q3. Is V_I⁰ a polaron or a shallow donor?
 
-- **STATUS: UNVERIFIED / NOT CITABLE (demoted 2026-07-31, audit CYCLE-000001 F-006).** The
-  raw inputs required to recompute this conclusion are not committed to the tree (see Raw data
-  below), so the quoted energies, residual, moment trace, P1/P2 metrics, and derived bound
-  **cannot be independently reproduced from committed records**. This result is removed as gate
-  evidence and must not be cited or used to support any production/publication claim until the
-  raw provenance is committed and a clean-clone recomputation reaches each quoted value.
-- **Prior conclusion (UNVERIFIED, retained for context only):** "no thermally significant
-  polaron" at PBE+D3(BJ); state described as CBM-like (per-atom cosine 0.976 vs pristine CBM;
-  energy agreement ~50–80 meV once properly referenced — the earlier 7 meV claim is retracted);
-  a weakly bound few-meV state not excluded; seeded distortion ~113 meV elastic vs ≤ a-few-meV
-  spin gain. These figures are **not** independently traceable at this commit.
+- **STATUS: UNVERIFIED / NOT CITABLE (demoted 2026-07-31, audit CYCLE-000001 F-006; still
+  demoted as of CYCLE-000005).** The raw records **are now committed** (see Raw data below) and
+  `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` recomputes every quoted value from
+  them in a clean clone (exit 0), which CYCLE-000005 independently confirmed. What remains
+  outstanding is not missing evidence but **independent closure**: this result stays removed as
+  gate evidence and must not be cited or used to support any production/publication claim until
+  an audit cycle closes the Q3 findings. The demotion is lifted by the controller, not by this
+  repository.
+  *(Superseded wording, CYCLE-000005 F-013: this row previously said the raw inputs "are not
+  committed" and "cannot be independently reproduced from committed records". That was true at
+  CYCLE-000001 and is no longer true — it contradicted the Raw data row below and the authority
+  banners, and is retracted here.)*
+- **Conclusion (UNVERIFIED pending audit closure):** "no thermally significant polaron" at
+  PBE+D3(BJ); state described as CBM-like (per-atom cosine 0.9757 vs pristine CBM, against
+  pristine-internal controls 0.788/0.741; alignment +75.8 meV VBM-referenced and +52.1 meV
+  semicore-aligned under one declared convention — the earlier 7 meV raw-eigenvalue claim is
+  retracted as invalid); a weakly bound few-meV state not excluded; seeded distortion 112.6 meV
+  elastic vs ≤2.8 meV spin gain. Every figure here **is** recomputable from committed records
+  via `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py`; it is not yet **independently
+  verified closed**, which is why the row stays NOT CITABLE.
 - **Scope:** one distortion mode probed, 159-atom cell, PBE-level gap caveats apply.
-- **Authoritative documents (themselves rely on absent raw data — see F-006):**
+- **Authoritative documents (each carries the Q3 provenance banner; raw data committed):**
   `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` + `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` +
   `results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`
 - **Raw data:** COMMITTED 2026-07-31 at `results/objective1/dft/charge_relaxed/q3_raw/` —
@@ -53,9 +62,10 @@ Anything not listed here is historical. Restructured 2026-07-28.
   SHA-256 chain of custody (`REMOTE_SHA256_UNCOMPRESSED.txt`), `results/objective1/dft/charge_relaxed/q3_raw/INPUT_MANIFEST.json`, and an
   executable `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` that recomputes and asserts every quoted value (exit 0 at this
   commit).
-- **Next:** independent re-verification by the next audit cycle (CYCLE-000002 F-006
-  disposition). **Status stays NOT CITABLE until the re-audit confirms**; the demotion is
-  lifted by the controller, not by this repository.
+- **Next:** independent closure of the remaining Q3 findings. CYCLE-000005 verified F-006,
+  F-008 and F-011 closed and raised F-012 (alignment convention — fixed) and F-013 (this row's
+  contradiction — fixed). **Status stays NOT CITABLE until an audit cycle closes those**; the
+  demotion is lifted by the controller, not by this repository.
 
 ## Q4. Is the host-pool / noise floor sound for screening? (methodology)
 

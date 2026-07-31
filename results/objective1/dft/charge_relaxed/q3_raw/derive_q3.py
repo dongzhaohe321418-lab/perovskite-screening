@@ -10,7 +10,8 @@ source job dirs; this script re-verifies each gunzipped file against it before p
 """
 import gzip, hashlib, re, os, sys
 
-D = os.path.join(os.path.dirname(__file__) or ".", "")
+D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "")
+_ROOT = os.path.abspath(os.path.join(D, "..", "..", "..", "..", "..")) + os.sep
 RY = 13.605693122994
 
 def rd(name):
@@ -187,13 +188,38 @@ def _eigs(t):
     return [float(x) for x in m.group(1).split()]
 def _ef(t): return float(re.findall(r"the Fermi energy is\s+([-\d.]+)", t)[-1])
 _ev1, _ev2 = _eigs(_pw1), _eigs(_pw2)
+# ALIGNMENT CONVENTION (declared once; audit CYCLE-000005 F-012).
+#   direction: defective state MINUS aligned pristine CBM  (positive = defective sits higher)
+#   VBM reference:      each cell's own valence-band maximum
+#   semicore reference: mean of the LOWEST 32 bands of each cell
+# An earlier version of this script used the lowest 6 bands and the opposite
+# subtraction direction, producing -33.5 meV where the authority documents
+# (correctly) quote +52.1 meV. The documents were right; this script was wrong.
+_N_SEMICORE = 32
 _vb1 = max(x for x in _ev1 if x < _ef(_pw1)); _vb2 = max(x for x in _ev2 if x < _ef(_pw2))
-_al_v = ((_e1 - _vb1) - (_e2 - _vb2)) * 1000
-_al_s = ((_e1 - sum(sorted(_ev1)[:6])/6) - (_e2 - sum(sorted(_ev2)[:6])/6)) * 1000
-assert 30 <= abs(_al_v) <= 90, f"VBM-referenced alignment {_al_v:.1f} meV outside the published 50-80 meV band"
-print(f"[align] VBM-referenced {_al_v:+.1f} meV, semicore-referenced {_al_s:+.1f} meV "
-      f"(raw eigenvalue difference {(_e1-_e2)*1000:+.1f} meV is INVALID — no common zero; "
-      f"the published resolution is ~50-80 meV, not 7 meV)")
+_al_v = ((_e2 - _vb2) - (_e1 - _vb1)) * 1000
+_sc1 = sum(sorted(_ev1)[:_N_SEMICORE]) / _N_SEMICORE
+_sc2 = sum(sorted(_ev2)[:_N_SEMICORE]) / _N_SEMICORE
+_shift = (_sc2 - _sc1) * 1000
+_al_s = (_e2 - (_e1 + (_sc2 - _sc1))) * 1000
+assert abs(_al_v - 75.9) < 0.2, f"VBM-referenced alignment {_al_v:+.1f} meV != published +75.9"
+assert abs(_al_s - 52.1) < 0.2, f"semicore-aligned {_al_s:+.1f} meV != published +52.1"
+assert abs(_shift - (-45.0)) < 0.5, f"semicore shift {_shift:+.1f} meV != documented -45"
+print(f"[align] convention: defective - aligned pristine; semicore = mean of lowest {_N_SEMICORE} bands")
+print(f"[align] VBM-referenced {_al_v:+.1f} meV, semicore-aligned {_al_s:+.1f} meV "
+      f"(semicore shift {_shift:+.1f} meV); raw eigenvalue difference {(_e2-_e1)*1000:+.1f} meV "
+      f"is INVALID — no common zero. Published resolution ~50-80 meV, not 7 meV.")
+
+# the authority documents must quote exactly these two values
+for _doc, _need in ((_ROOT + "results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md",
+                     (f"+{_al_v:.1f} meV", f"+{_al_s:.1f} meV")),
+                    (_ROOT + "results/objective1/dft/charge_relaxed/Q0_RESOLVED.md",
+                     (f"+{_al_v:.1f} meV", f"+{_al_s:.1f} meV"))):
+    if os.path.exists(_doc):
+        _t = open(_doc).read()
+        for _v in _need:
+            assert _v in _t, f"{os.path.basename(_doc)} does not quote the derived value {_v}"
+print("[align] both Q3 authority documents quote the derived alignment values verbatim")
 
 # the committed record must agree with what we just derived
 _recp = D + "P1_P2_MAPPING_AND_WEIGHTS.json"
