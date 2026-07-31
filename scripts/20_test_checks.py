@@ -1039,7 +1039,7 @@ _n = len(_re2.findall(r'print\("\\n\[(\d+)\]', open(__file__).read()))
 for _doc, _pat in [("README.md", r"Regression suite \((\d+) groups"),
                    ("results/objective2/CURRENT_STATUS.md", r"\((\d+) check groups"),
                    ("EXPERIMENT_AUDIT.md", r"regression suite \((\d+) groups\)"),
-                   ("AUDIT_CORRECTIONS_CYCLE1.md", r"emits (\d+) numbered groups")]:
+                   ]:  # AUDIT_CORRECTIONS_CYCLE1.md is a HISTORICAL record (F-015) -- excluded
     _m = _re2.search(_pat, open(_doc).read())
     expect(_m is not None, f"{_doc} declares a group count")
     if _m: expect(int(_m.group(1)) == _n, f"{_doc} declares {_m.group(1) if _m else '?'} groups, file emits {_n}")
@@ -1120,6 +1120,34 @@ if _lo is not None:
                    or "→" in _ln or "retract" in _low or "~~" in _ln,
                    f"xrd/README.md: stale DOC range {_pair[0]}-{_pair[1]}% is marked superseded "
                    f"(current is {_cur[0]}-{_cur[1]}%)")
+
+
+print("\n[41] every regression-count assertion is current or explicitly historical (F-015)")
+import re as _re41, glob as _glob41, os as _os41
+_n41 = len(_re41.findall(r'print\("\\n\[(\d+)\]', open("scripts/20_test_checks.py").read()))
+_docs41 = [f for f in _glob41.glob("**/*.md", recursive=True)
+           if not f.startswith(("archive/", "hpc/", ".git"))]
+_pats41 = [r"emits (\d+) numbered groups", r"Regression suite \((\d+) groups",
+           r"\((\d+) check groups", r"regression suite \((\d+) groups\)",
+           r"suite (?:now )?(?:emits|has) (\d+) group", r"corrected to (\d+)\b",
+           r"→\s*(\d+)\s*$"]
+for _d41 in sorted(_docs41):
+    _lines41 = open(_d41, errors="ignore").read().splitlines()
+    _hist_doc = any("HISTORICAL RECORD" in l for l in _lines41[:40])
+    for _i41, _ln41 in enumerate(_lines41):
+        # gate on the PARAGRAPH, not the single line: the sentence carrying the stale
+        # count often names neither "group" nor the script (F-015's own fixture did not).
+        _para41 = " ".join(_lines41[max(0, _i41-4):_i41+3])
+        if not _re41.search(r"group|20_test_checks|regression suite", _para41, _re41.I): continue
+        for _p41 in _pats41:
+            for _m41 in _re41.finditer(_p41, _ln41):
+                _v41 = int(_m41.group(1))
+                if _v41 == _n41: continue
+                if _v41 < 5 or _v41 > 500: continue      # not a suite-size claim
+                _ctx41 = " ".join(_lines41[max(0, _i41-6):_i41+3]).lower()
+                expect(_hist_doc or "historical" in _ctx41 or "superseded" in _ctx41
+                       or "~~" in _ln41 or "retract" in _ctx41,
+                       f"{_d41}:{_i41+1} count {_v41} != current {_n41} and is not marked historical")
 
 
 print("\n" + "=" * 70)

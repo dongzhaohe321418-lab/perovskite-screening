@@ -95,10 +95,20 @@ manifests/hashes and a derivation script; otherwise Q3 stays demoted.
 
 ## F-007 — regression-suite group count
 
-The executable suite `scripts/20_test_checks.py` emits 40 numbered groups (`[1]`–`[40]`). All
-stale declarations were corrected to 36: `README.md:16`, `results/objective2/CURRENT_STATUS.md:42`,
-`EXPERIMENT_AUDIT.md` (regression-suite line and analysis-code list). Measure:
-`python3 scripts/20_test_checks.py | grep -cE '^\[[0-9]+\]'` → 36.
+**HISTORICAL RECORD — the numbers below are the CYCLE-000001 state, not current.**
+At that cycle the executable suite `scripts/20_test_checks.py` emitted **36** numbered groups,
+and the stale declarations in `README.md`, `results/objective2/CURRENT_STATUS.md` and
+`EXPERIMENT_AUDIT.md` were corrected to 36 to match it.
+
+*Superseded (audit CYCLE-000007 F-015): the suite has grown since — every subsequent cycle added
+regression groups — and the count is no longer 36. The **current** count is not restated here on
+purpose: it is derived from the source by regression `[38]`, which asserts that every live
+declaration equals the number of numbered-group prints in `scripts/20_test_checks.py`. Read the
+current figure from `README.md`, never from this historical record.*
+
+An earlier automated count-sync pass rewrote the 36 in this paragraph to the then-current value
+while leaving the surrounding sentences at 36, which is the contradiction F-015 caught. That
+sync is now scoped to live navigation documents only and skips historical/correction records.
 
 ## F-005 — unresolved repository-path-shaped references (LOW, non-blocking)
 
