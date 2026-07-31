@@ -1,26 +1,31 @@
 {
-  "algorithm": "sha256sum-list-v1",
-  "canonical_stream": "For every tracked path outside .audit, sort paths bytewise and append '<file_sha256><two spaces><path><LF>'; SHA-256 the resulting byte stream.",
-  "evidence_parent_commit": "871d369c7bed8f0196f1b438b501d330b1ca2714",
-  "excluded_paths": [
-    ".audit/**"
-  ],
-  "file_count": 440,
-  "project_id": "perovskite-screening",
-  "recompute_command": "git ls-files -z -- ':!.audit/**' | xargs -0 shasum -a 256 | shasum -a 256",
-  "scope_roots": [
-    "archive/",
-    "ehpc/",
-    "literature_survey/",
-    "proposal/",
-    "results/",
-    "scripts/",
-    "structures/",
-    "xrd/",
-    "README.md",
-    "RESULTS_INDEX.md",
-    "EXPERIMENT_AUDIT.md"
-  ],
-  "total_bytes": 23087698,
-  "tree_sha256": "2952973b99ec1c62c09a57c445b680fd20b52d91293015f5cded9710cbc7970c"
+ "algorithm": "sha256sum-list-v1",
+ "canonical_stream": "For every tracked path outside .audit, sort paths bytewise and append '<file_sha256><two spaces><path><LF>'; SHA-256 the resulting byte stream.",
+ "evidence_parent_commit": "af0dc58713b9bcf675fb324a262024f39127f8a7",
+ "excluded_paths": [
+  ".audit/**"
+ ],
+ "file_count": 462,
+ "project_id": "perovskite-screening",
+ "recompute_command": "git ls-files -z -- ':!.audit/**' | xargs -0 shasum -a 256 | shasum -a 256",
+ "scope_roots": [
+  ".gitignore",
+  "AUDIT_CORRECTIONS_CYCLE1.md",
+  "EHPC_SETUP.md",
+  "EXPERIMENT_AUDIT.md",
+  "NEXT_STEP_GUIDE.md",
+  "README.md",
+  "RESULTS_INDEX.md",
+  "archive/",
+  "ehpc/",
+  "literature_survey/",
+  "proposal/",
+  "requirements.txt",
+  "results/",
+  "scripts/",
+  "structures/",
+  "xrd/"
+ ],
+ "total_bytes": 23969758,
+ "tree_sha256": "0c2537660794d54e026df28fce27029909d6525537901202ceeb5ea54ebcfacf"
 }

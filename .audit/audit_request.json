@@ -1,8 +1,8 @@
 {
-  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
-  "evidence_manifest_path": ".audit/evidence_manifest.json",
-  "evidence_manifest_sha256": "c546b4176ddf115ec90f5daf88ee8cece8a91e15d504d3b16b08307d402c5db4",
-  "notes": "The evidence manifest covers every tracked file outside .audit. Audit artifacts must be written only to the configured Audit Repo cycle directory.",
-  "project_id": "perovskite-screening",
-  "requested_by": "science-audit-controller-bootstrap"
+ "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
+ "evidence_manifest_path": ".audit/evidence_manifest.json",
+ "evidence_manifest_sha256": "203ca0be8bbae30231c472b4d5f643745f25ebfcc9b7a023a4bcc219001ca571",
+ "notes": "Requested via audit-mcp: Closure review for F-005 and F-009 \u2014 both had their re-audit cycle voided (CYCLE-000003) and have not been named in any report since. Tier-0 at the current commit shows C-LINK-001 PASS (387/387 resolved) and C-TEST-001 HARD PASS. Auditor must return an explicit closed/not-closed verdict for each; silence is now rejected by the orchestrator.",
+ "project_id": "perovskite-screening",
+ "requested_by": "claude-science-via-audit-mcp"
 }
