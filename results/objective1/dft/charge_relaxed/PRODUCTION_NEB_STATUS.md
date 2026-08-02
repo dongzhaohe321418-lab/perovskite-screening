@@ -21,9 +21,9 @@ CI auto, 5 images, Γ, PBE+D3(BJ)), differing only in `tot_charge`.
 
 ## Raw records committed (hashes in each leg's SHA256/REMOTE_SHA256 file)
 - `q0_production/`: `q0_neb.out.gz`, `q0_neb.path.final.gz`, `q0_neb.dat.gz`, `q0_neb.xyz.gz`,
-  full append-only archive tarball, `q0_verify_last.json`, `q0_cmd.sh`.
+  full append-only archive tarball, `q0_production/q0_verify_last.json`, `q0_cmd.sh`.
 - `q1_production/`: `q1_neb.out.gz`, `q1_neb.path.gz`, `q1_cineb.neb.in` (run copy), full
-  archive tarball, `CONVERGENCE_SUMMARY_q1.json` (parsed from the archived raw itself).
+  archive tarball, `q1_production/CONVERGENCE_SUMMARY_q1.json` (parsed from the archived raw itself).
 - `q1/q1_initial_relaxed.extxyz`, `q1/q1_final_relaxed.extxyz`: the q=+1 endpoint structures
   (closes the F-003 'input source absent' gap).
 
