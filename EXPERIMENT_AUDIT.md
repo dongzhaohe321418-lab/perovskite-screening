@@ -230,6 +230,16 @@ archiving with parse-before-archive and verification, stop-on-persistent-archive
 image-count anomaly with raw outputs preserved. **No barrier from either leg is extracted or
 reported until BOTH legs converge; explore/trial intermediates remain unquotable.**
 
+**CURRENT (2026-08-02) — BOTH PRODUCTION LEGS CONVERGED, evidence now IN-TREE:** the
+"launch NOT performed / not evidenced from the committed tree" demotion above described the
+tree as it stood at that audit. As of this commit the raw outputs ARE committed:
+`results/objective1/dft/charge_relaxed/q0_production/` (36 iterations, JOB DONE, exit 0,
+38 archived snapshots) and `.../q1_production/` (37 iterations, JOB DONE, exit 0, 39 archived
+snapshots), each with hash lists; the q=+1 endpoint structures are committed under `.../q1/`
+(closing F-003's absent-input gap). Authority for the current state:
+`results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`. Barriers remain UNEXTRACTED;
+the Tyagi-ordering ban stands.
+
 **Snapshot-numbering convention (audited on the live q=0 archive, PI query):** archive snapshot
 `iter_00N` holds the band with QE `istep = N` (zero-based; `iter_000` is the initial
 interpolated band written before iteration 1's SCF). Verified on the first six snapshots: all

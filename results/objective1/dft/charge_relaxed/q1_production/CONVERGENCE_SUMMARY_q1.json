@@ -1,0 +1,29 @@
+{
+ "leg": "q1_production",
+ "job_id": "98199034-99f8-45a3-9e64-bca559aa3af8",
+ "input_sha256": "0f512b4ad00c6e2fd85695d8247de585e624ab10aa55bdf542b66ae1846bc2a2",
+ "converged_iterations": 37,
+ "final_per_image_error_eV_A": [
+  0.045149,
+  0.026096,
+  0.032756,
+  0.046238,
+  0.049868
+ ],
+ "path_thr_eV_A": 0.05,
+ "exit": "JOB DONE, exit 0",
+ "archive_snapshots": 39,
+ "raw_files": {
+  "q1_neb.out.gz": "a574c14d338efde4f79fe9883d8d6f98bd2696a14a81060026efd0885eaa2141",
+  "q1_neb.path.gz": "5b36ea68c951e0bf5fe917a01ea4942fb60a37b343d0f8fb88b4d94cce462c1c",
+  "q1_cineb.neb.in": "0f512b4ad00c6e2fd85695d8247de585e624ab10aa55bdf542b66ae1846bc2a2",
+  "q1_neb_archive.tar.gz": "988c22f3c16377e65462ff13f001fcc984250d82d2bb6a98527050c4db081520",
+  "uncompressed:neb.out": "0529a57971d100e66d9b3151aa83a40c4d50320466731f07e647ebdf09264079",
+  "uncompressed:neb.path": "fce8018783be335869ee07db3908b849a84e9550a69635e6111a842820a1beab"
+ },
+ "note": "Barrier values exist in the raw output but are NOT extracted here; extraction is gated on the PI-authorized analysis step covering BOTH legs.",
+ "approved_input_sha256": "9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267",
+ "run_input_sha256": "0f512b4ad00c6e2fd85695d8247de585e624ab10aa55bdf542b66ae1846bc2a2",
+ "input_delta": "run copy differs from the approved input by EXACTLY one line: the job preamble's documented pseudo_dir substitution ('$HOME/pseudo' -> '/home/ericdft/pseudo'). The committed repo input matches the PI-approved sha 9954e6b1... byte-exactly; verified by unified diff (1 changed line).",
+ "activation_energy_note": "activation-energy lines ARE present in the raw output (74 occurrences) and are deliberately not extracted or quoted here"
+}
