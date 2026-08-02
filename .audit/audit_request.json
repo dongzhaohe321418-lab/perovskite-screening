@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "b10395d17dbecbf852c2028c9018ed9c1a85dafdc62bd9f875d5d5810737bdc8",
- "notes": "Requested via audit-mcp: Audit the both-legs-converged evidence commit e967e471: raw CI-NEB outputs, archives and hash custody for q=0 (36 iter) and q=+1 (37 iter), q1 endpoint structures closing F-003, PRODUCTION_NEB_STATUS.md, and the authority-doc sync. Verify NO barrier/activation value is extracted or quoted anywhere in tree. This audit gates the subsequent barrier-extraction request.",
+ "evidence_manifest_sha256": "b186cda7d3d8569ed0832f901f039a85cd4333b8af6813592d7e7b993a09deab",
+ "notes": "Requested via audit-mcp: Re-audit at the F-016 fix (89db467e): three path references repointed, zero C-LINK-001 violations expected. This is also the commit at which barrier extraction (publish_claim) was DENIED pending FINAL audit + PI authorization; a FINAL verdict here clears the NO_FINAL_AUDIT_FOR_COMMIT reason.",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
