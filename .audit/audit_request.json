@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "203ca0be8bbae30231c472b4d5f643745f25ebfcc9b7a023a4bcc219001ca571",
- "notes": "Requested via audit-mcp: Closure review for F-005 and F-009 \u2014 both had their re-audit cycle voided (CYCLE-000003) and have not been named in any report since. Tier-0 at the current commit shows C-LINK-001 PASS (387/387 resolved) and C-TEST-001 HARD PASS. Auditor must return an explicit closed/not-closed verdict for each; silence is now rejected by the orchestrator.",
+ "evidence_manifest_sha256": "b10395d17dbecbf852c2028c9018ed9c1a85dafdc62bd9f875d5d5810737bdc8",
+ "notes": "Requested via audit-mcp: Audit the both-legs-converged evidence commit e967e471: raw CI-NEB outputs, archives and hash custody for q=0 (36 iter) and q=+1 (37 iter), q1 endpoint structures closing F-003, PRODUCTION_NEB_STATUS.md, and the authority-doc sync. Verify NO barrier/activation value is extracted or quoted anywhere in tree. This audit gates the subsequent barrier-extraction request.",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
