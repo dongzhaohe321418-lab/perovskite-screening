@@ -1244,6 +1244,41 @@ if _q3_citable:
                    f"Q0_NEB_GATE.md:{_k43+1} pending-re-verification wording without historical marker")
 
 
+print("\n[44] staging manifests agree with production authorities (F-022 / C-STATE-007)")
+import json as _js44, re as _re44, os as _os44
+_pn44 = open("results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md").read()
+_both44 = "BOTH LEGS CONVERGED" in _pn44
+for _leg44 in ("q0", "q1"):
+    _mp44 = f"ehpc/inputs_stage2/neb_{_leg44}_production/staging_manifest.json"
+    if not _os44.path.exists(_mp44): continue
+    _m44 = _js44.load(open(_mp44))
+    _st44 = _m44.get("submission_status", "")
+    if _both44:
+        expect(_st44 not in ("BLOCKED_DO_NOT_SUBMIT",),
+               f"{_leg44} staging manifest still says {_st44} while the authority says the run completed")
+    # every current (non-historical) file entry naming a local_source path must exist
+    for _f44 in _m44.get("files", []):
+        _ls44 = _f44.get("local_source")
+        if _ls44:
+            expect(_os44.path.exists(_ls44), f"{_leg44} manifest current entry missing on disk: {_ls44}")
+        _abs44 = _f44.get("local_source_absent_not_committed")
+        if _abs44:
+            expect(not _os44.path.exists(_abs44),
+                   f"{_leg44} manifest claims {_abs44} absent but it EXISTS in tree (stale claim)")
+
+print("\n[45] canonical index carries a current XRD row when PASSIVATOR_SCREEN exists (F-023 / C-NAV-005)")
+import os as _os45
+if _os45.path.exists("xrd/PASSIVATOR_SCREEN.md"):
+    _sc45 = open("xrd/PASSIVATOR_SCREEN.md").read()
+    _cur45 = not (_sc45.startswith("> # SUPERSEDED") or "SUPERSEDED AS CURRENT" in _sc45[:600])
+    if _cur45:
+        _ix45 = open("RESULTS_INDEX.md").read()
+        expect("PASSIVATOR_SCREEN.md" in _ix45, "index names the passivator-screen authority")
+        expect("xrd/data/" in _ix45, "index names the XRD raw-data locator")
+        _blk45 = _ix45[_ix45.index("PASSIVATOR_SCREEN.md")-2000:_ix45.index("PASSIVATOR_SCREEN.md")+800]
+        expect("Current conclusion" in _blk45, "the XRD row has a Current-conclusion field")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")

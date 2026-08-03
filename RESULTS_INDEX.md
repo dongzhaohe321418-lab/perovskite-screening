@@ -100,3 +100,18 @@ Anything not listed here is historical. Restructured 2026-07-28.
 
 - **`xrd/`** — experimental XRD passivator screening. Separate evidence chain, separate
   README, no shared conclusions with Q1–Q4.
+
+### QX (XRD sub-project). Do the P1–P5 passivators change the film? (Generations-0726 screen)
+
+- **Current conclusion:** all six films (control + P1–P5) are the same pseudo-cubic perovskite
+  phase; the apparent lattice/crystallite-size differences are instrumental artifacts (the ITO
+  substrate line moves — built-in control). Composition dispositions: P5 shows ~10% PbI₂
+  (≈3.8× control, VALID); P3 PbI₂ below detection; remaining films per the per-film
+  VALID/PROVISIONAL/NOT COMPARABLE table. **No efficacy/stability claim** — XRD composition
+  and artifact analysis only, one generation of films.
+- **Scope:** six films on ITO, DX-27Mini, identical protocol (absolute-intensity comparison
+  permitted); sample-height/displacement artifacts dominate peak-position differences.
+- **Authoritative:** `xrd/PASSIVATOR_SCREEN.md` (English) / `xrd/PASSIVATOR_SCREEN_CN.md`
+- **Raw data:** `xrd/data/` (.txt + .mdi, byte-verified pairs), `xrd/results/summary_metrics.csv`,
+  analysis code `xrd/analysis/`
+- **Next:** nothing open — single-generation screen, complete as measured.

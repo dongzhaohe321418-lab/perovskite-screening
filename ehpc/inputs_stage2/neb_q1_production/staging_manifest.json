@@ -1,7 +1,7 @@
 {
  "leg": "q1",
- "submission_status": "BLOCKED_DO_NOT_SUBMIT",
- "status_reason": "audit CYCLE-000001 F-003: local_source results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz is absent from the committed tree, so this staging record does not identify a reproducible input set. Do not submit_production_job from this manifest until the referenced structure is committed and its sha256/size are independently verified.",
+ "submission_status": "SUBMITTED_AND_COMPLETED",
+ "status_reason": "Supersedes the BLOCKED_DO_NOT_SUBMIT status preserved under 'historical_v1' below (audit CYCLE-000020 F-022). The block's condition is resolved: the referenced q1 endpoint structures ARE now committed (commit e967e471, closing audit F-003), the PI authorized the launch on 2026-07-28 against input sha 9954e6b1..., remote file hashes were verified in place before the job was marked running (PI-confirmed), and the run completed: job 98199034, converged in 37 iterations, JOB DONE exit 0 \u2014 raw records under results/objective1/dft/charge_relaxed/q1_production/ (see PRODUCTION_NEB_STATUS.md).",
  "pi_approved_input_sha256": "9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267",
  "files": [
   {
@@ -17,11 +17,48 @@
    "sha256": "2de0057fc5c81614d7f5cae85c129f22d523a2a093d00271baf468dab339132d"
   },
   {
-   "local_source_absent_not_committed": "results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz",
+   "local_source": "results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz",
    "remote_destination": "ref.extxyz",
    "size_bytes": 8819,
    "sha256": "7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121",
-   "note": "This record does not describe a real staging operation that ever occurred. Two independently verified facts: (1) the path results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz has NEVER existed in any commit across the entire git history (git log --all --diff-filter=A returns nothing); (2) the recorded sha256 7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121 is the hash of the q0 file results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz, not of any q1 structure. Therefore this is not lost raw data but a staging entry that was never backed by a real q1 input. submit_production_job from this record is prohibited until a genuine q1 relaxed structure is produced, committed, and its own hash/size independently verified."
+   "note": "Committed at e967e471. This file is byte-identical to results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz (same sha256 7af20ebb...) BY ESTABLISHED PROJECT PHYSICS, not by error: the q=0 relaxation of the initial endpoint converged in ZERO BFGS steps, i.e. the q=+1-relaxed initial geometry is already a q=0 stationary point (EXPERIMENT_AUDIT \u00a71.8; the artifact store deduplicated the two files by checksum on 2026-07-28). The historical note below read the identical hash as evidence the q1 input 'never existed'; that over-concluded \u2014 the structure existed in the workspace and on the remote (hash-verified at submission), it was merely not yet committed to git."
+  },
+  {
+   "local_source": "results/objective1/dft/charge_relaxed/q1/q1_final_relaxed.extxyz",
+   "remote_destination": null,
+   "size_bytes": 8819,
+   "sha256": "7bbec8e80231a48588db3b69bcf46c6bd3d885fef40d09a8d231714bba2b0d83",
+   "note": "q1 final endpoint, committed at e967e471 (not staged remotely by this manifest; listed for input-set completeness)."
   }
- ]
+ ],
+ "historical_v1": {
+  "note": "HISTORICAL RECORD retained verbatim (preserve-history rule). Its BLOCKED_DO_NOT_SUBMIT status and 'does not describe a real staging operation' wording were correct ABOUT THE COMMITTED TREE at audit CYCLE-000001 F-003 (the input file was not committed) but are superseded as current state.",
+  "record": {
+   "leg": "q1",
+   "submission_status": "BLOCKED_DO_NOT_SUBMIT",
+   "status_reason": "audit CYCLE-000001 F-003: local_source results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz is absent from the committed tree, so this staging record does not identify a reproducible input set. Do not submit_production_job from this manifest until the referenced structure is committed and its sha256/size are independently verified.",
+   "pi_approved_input_sha256": "9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267",
+   "files": [
+    {
+     "local_source": "ehpc/inputs_stage2/neb_q1_production/q1_cineb.neb.in",
+     "remote_destination": "q1_cineb.neb.in",
+     "size_bytes": 21329,
+     "sha256": "9954e6b171c56551f1fda9eee0935327e4eb593dc5d961fe9a297e56a4f22267"
+    },
+    {
+     "local_source": "scripts/26_neb_harness.py",
+     "remote_destination": "26_neb_harness.py",
+     "size_bytes": 12243,
+     "sha256": "2de0057fc5c81614d7f5cae85c129f22d523a2a093d00271baf468dab339132d"
+    },
+    {
+     "local_source_absent_not_committed": "results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz",
+     "remote_destination": "ref.extxyz",
+     "size_bytes": 8819,
+     "sha256": "7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121",
+     "note": "This record does not describe a real staging operation that ever occurred. Two independently verified facts: (1) the path results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz has NEVER existed in any commit across the entire git history (git log --all --diff-filter=A returns nothing); (2) the recorded sha256 7af20ebb7a069ea0ae3ca8cb3c3867aa3dc6be0a63338e4fb6644b9f0274a121 is the hash of the q0 file results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz, not of any q1 structure. Therefore this is not lost raw data but a staging entry that was never backed by a real q1 input. submit_production_job from this record is prohibited until a genuine q1 relaxed structure is produced, committed, and its own hash/size independently verified."
+    }
+   ]
+  }
+ }
 }
