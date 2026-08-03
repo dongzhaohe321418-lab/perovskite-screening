@@ -812,7 +812,7 @@ an actual historical incident from this project rather than on a hypothetical. A
 
 `05` QE inputs · `06` QE parsing · `11` neb.x input · `12` relax frames · `13` d_max ·
 `16` enumeration · `17` ensemble spread · `18` explore screen · `19` GPU regression ·
-`20` regression suite (45 groups) · `21` pool expansion · `22` paired pilot ·
+`20` regression suite (46 groups) · `21` pool expansion · `22` paired pilot ·
 `23` q=0 state metrics (overlap-based, not band-index) · `24` return test · `25` preflight ·
 `scripts/checks.py` shared gates.
 

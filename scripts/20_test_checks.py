@@ -16,12 +16,20 @@ from checks import (check_composition, check_index_map, check_endpoints,
                     theory_fingerprint, check_comparable, structure_hash, run_all)
 
 FAILS = []
-def expect(cond, msg):
+def expect(cond, msg, ok_msg=None):
+    """cond True -> print ok_msg (or msg); cond False -> record and print msg.
+
+    Audit F-024: sweep-style checks phrase `msg` as the VIOLATION they hunt for
+    ("count 36 != current 43 and is not marked historical"). Printing that after
+    "ok" asserted a proposition the check had just disproved, so the receipt was
+    not derived from the condition it reported. Such call sites must pass ok_msg
+    stating the verified fact; regression [46] enforces this statically.
+    """
     if not cond:
         FAILS.append(msg)
         print(f"  FAIL  {msg}")
     else:
-        print(f"  ok    {msg}")
+        print(f"  ok    {ok_msg if ok_msg else msg}")
 
 
 def _cell(a=19.43, b=19.65, c=19.75):
@@ -1130,28 +1138,43 @@ print("\n[41] every regression-count assertion is current or explicitly historic
 import re as _re41, glob as _glob41, os as _os41
 _n41 = len(_re41.findall(r'print\("\\n\[(\d+)\]', open("scripts/20_test_checks.py").read()))
 _docs41 = [f for f in _glob41.glob("**/*.md", recursive=True)
-           if not f.startswith(("archive/", "hpc/", ".git"))]
+           if not f.startswith(("archive/", "hpc/", ".git", "tests/fixtures/"))]
 _pats41 = [r"emits (\d+) numbered groups", r"Regression suite \((\d+) groups",
            r"\((\d+) check groups", r"regression suite \((\d+) groups\)",
            r"suite (?:now )?(?:emits|has) (\d+) group", r"corrected to (\d+)\b",
            r"→\s*(\d+)\s*$"]
-for _d41 in sorted(_docs41):
-    _lines41 = open(_d41, errors="ignore").read().splitlines()
-    _hist_doc = any("HISTORICAL RECORD" in l for l in _lines41[:40])
-    for _i41, _ln41 in enumerate(_lines41):
+
+def _count_receipt(doc, lineno, val, cur, marked):
+    """Shared wording for BOTH outcomes (F-024): the receipt states what holds."""
+    tail = ("but IS marked historical/superseded" if marked
+            else "and is not marked historical")
+    return f"{doc}:{lineno} count {val} != current {cur} {tail}"
+
+def _count_claim_hits(path, cur):
+    """-> [(lineno, value, marked_historical)] for every stale suite-size claim."""
+    _ls = open(path, errors="ignore").read().splitlines()
+    _hist_doc = any("HISTORICAL RECORD" in l for l in _ls[:40])
+    out = []
+    for _i, _ln in enumerate(_ls):
         # gate on the PARAGRAPH, not the single line: the sentence carrying the stale
         # count often names neither "group" nor the script (F-015's own fixture did not).
-        _para41 = " ".join(_lines41[max(0, _i41-4):_i41+3])
-        if not _re41.search(r"group|20_test_checks|regression suite", _para41, _re41.I): continue
-        for _p41 in _pats41:
-            for _m41 in _re41.finditer(_p41, _ln41):
-                _v41 = int(_m41.group(1))
-                if _v41 == _n41: continue
-                if _v41 < 5 or _v41 > 500: continue      # not a suite-size claim
-                _ctx41 = " ".join(_lines41[max(0, _i41-6):_i41+3]).lower()
-                expect(_hist_doc or "historical" in _ctx41 or "superseded" in _ctx41
-                       or "~~" in _ln41 or "retract" in _ctx41,
-                       f"{_d41}:{_i41+1} count {_v41} != current {_n41} and is not marked historical")
+        _para = " ".join(_ls[max(0, _i-4):_i+3])
+        if not _re41.search(r"group|20_test_checks|regression suite", _para, _re41.I): continue
+        for _p in _pats41:
+            for _m in _re41.finditer(_p, _ln):
+                _v = int(_m.group(1))
+                if _v == cur or _v < 5 or _v > 500: continue   # current, or not a suite size
+                _ctx = " ".join(_ls[max(0, _i-6):_i+3]).lower()
+                out.append((_i + 1, _v,
+                            bool(_hist_doc or "historical" in _ctx or "superseded" in _ctx
+                                 or "~~" in _ln or "retract" in _ctx)))
+    return out
+
+for _d41 in sorted(_docs41):
+    for _ln41, _v41, _mk41 in _count_claim_hits(_d41, _n41):
+        expect(_mk41,
+               _count_receipt(_d41, _ln41, _v41, _n41, False),
+               ok_msg=_count_receipt(_d41, _ln41, _v41, _n41, True))
 
 
 print("\n[42] Q2 production-NEB state is consistent across every current authority (F-017)")
@@ -1176,7 +1199,8 @@ for _d42 in sorted(_glob42.glob("**/*.md", recursive=True)):
                 _ctx42 = " ".join(_lines42[max(0,_i42-6):_i42+2]).lower()
                 expect(_sup_doc or "historical" in _ctx42 or "superseded" in _ctx42
                        or "~~" in _ln42 or "retract" in _ctx42,
-                       f"{_d42}:{_i42+1} pre-production state asserted without historical marker")
+                       f"{_d42}:{_i42+1} pre-production state asserted without historical marker",
+                       ok_msg=f"{_d42}:{_i42+1} pre-production state carries an explicit historical marker")
 
 
 print("\n[43] Q3 citability and Q0 gate condition 3 assert ONE state (F-019 / C-STATE-004)")
@@ -1200,7 +1224,10 @@ for _j43, _l43 in enumerate(_lines43):
         if not ("historical" in _para43 or "superseded" in _para43 or "retract" in _para43):
             _live_bans43.append(_j43+1)
 expect(not (_q3_citable and _live_bans43),
-       f"Q3 block asserts CITABLE and NOT-CITABLE simultaneously (unmarked ban at block lines {_live_bans43})")
+       f"Q3 block asserts CITABLE and NOT-CITABLE simultaneously (unmarked ban at block lines {_live_bans43})",
+       ok_msg=("Q3 block has ONE current citability state"
+               + (" (CITABLE; every retained NOT-CITABLE line is marked historical)"
+                  if _q3_citable else " (demoted; no CITABLE claim)")))
 _q3_banned = bool(_live_bans43) and not _q3_citable
 _m43 = _re43.search(r"\|\s*3\s*\|[^|]*competing localised spin state[^|]*\|\s*([^|]+)\|", _gate43)
 expect(_m43 is not None, "Q0 gate table has a condition-3 row")
@@ -1232,7 +1259,8 @@ if _q3_citable:
             if _re43.search(r"restored only when|NOT CITABLE|re-verification is owed", _ln2):
                 _c2 = " ".join(_dl43[max(0,_k43-1):_k43+2]).lower()
                 expect("historical" in _c2 or "superseded" in _c2,
-                       f"{_os43.path.basename(_doc43)}:{_k43+1} demotion-era wording without historical marker")
+                       f"{_os43.path.basename(_doc43)}:{_k43+1} demotion-era wording without historical marker",
+                       ok_msg=f"{_os43.path.basename(_doc43)}:{_k43+1} demotion-era wording is marked historical/superseded")
     _g43 = open("results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md").read()
     expect("re-verification COMPLETE" in _g43 or "Q3_CLOSURE_RECORD" in _g43,
            "Q0 gate condition 3 cites the closure record")
@@ -1241,7 +1269,8 @@ if _q3_citable:
         if _re43.search(r"Pending independent re-verification|re-verification is owed", _ln2):
             _c2 = " ".join(_gl43[max(0,_k43-1):_k43+2]).lower()
             expect("historical" in _c2 or "superseded" in _c2,
-                   f"Q0_NEB_GATE.md:{_k43+1} pending-re-verification wording without historical marker")
+                   f"Q0_NEB_GATE.md:{_k43+1} pending-re-verification wording without historical marker",
+                   ok_msg=f"Q0_NEB_GATE.md:{_k43+1} pending-re-verification wording is marked historical/superseded")
 
 
 print("\n[44] staging manifests agree with production authorities (F-022 / C-STATE-007)")
@@ -1255,16 +1284,20 @@ for _leg44 in ("q0", "q1"):
     _st44 = _m44.get("submission_status", "")
     if _both44:
         expect(_st44 not in ("BLOCKED_DO_NOT_SUBMIT",),
-               f"{_leg44} staging manifest still says {_st44} while the authority says the run completed")
+               f"{_leg44} staging manifest still says {_st44} while the authority says the run completed",
+               ok_msg=f"{_leg44} staging manifest status {_st44} agrees with the production authority")
     # every current (non-historical) file entry naming a local_source path must exist
     for _f44 in _m44.get("files", []):
         _ls44 = _f44.get("local_source")
         if _ls44:
-            expect(_os44.path.exists(_ls44), f"{_leg44} manifest current entry missing on disk: {_ls44}")
+            expect(_os44.path.exists(_ls44),
+                   f"{_leg44} manifest current entry missing on disk: {_ls44}",
+                   ok_msg=f"{_leg44} manifest current entry present on disk: {_ls44}")
         _abs44 = _f44.get("local_source_absent_not_committed")
         if _abs44:
             expect(not _os44.path.exists(_abs44),
-                   f"{_leg44} manifest claims {_abs44} absent but it EXISTS in tree (stale claim)")
+                   f"{_leg44} manifest claims {_abs44} absent but it EXISTS in tree (stale claim)",
+                   ok_msg=f"{_leg44} manifest absent-claim for {_abs44} is still accurate (not in tree)")
 
 print("\n[45] canonical index carries a current XRD row when PASSIVATOR_SCREEN exists (F-023 / C-NAV-005)")
 import os as _os45
@@ -1277,6 +1310,49 @@ if _os45.path.exists("xrd/PASSIVATOR_SCREEN.md"):
         expect("xrd/data/" in _ix45, "index names the XRD raw-data locator")
         _blk45 = _ix45[_ix45.index("PASSIVATOR_SCREEN.md")-2000:_ix45.index("PASSIVATOR_SCREEN.md")+800]
         expect("Current conclusion" in _blk45, "the XRD row has a Current-conclusion field")
+
+
+print("\n[46] a passing guard receipt states what was VERIFIED, not the violation (F-024 / C-GUARD-003)")
+import ast as _ast46, re as _re46, os as _os46
+# (a) EXECUTE group [41]'s scanner + receipt builder against committed fixtures: the marked
+#     case must yield a receipt asserting the marker, the unmarked case the violation.
+_fh46 = "tests/fixtures/count_claim_historical.md"
+_fu46 = "tests/fixtures/count_claim_unmarked.md"
+for _f46 in (_fh46, _fu46):
+    expect(_os46.path.exists(_f46), f"receipt fixture committed: {_f46}")
+_hits_h = _count_claim_hits(_fh46, _n41)
+_hits_u = _count_claim_hits(_fu46, _n41)
+expect(len(_hits_h) == 1 and _hits_h[0][1] == 36 and _hits_h[0][2] is True,
+       f"marked fixture: scanner finds the stale count and reads it as historical (got {_hits_h})")
+expect(len(_hits_u) == 1 and _hits_u[0][1] == 36 and _hits_u[0][2] is False,
+       f"unmarked fixture: scanner finds the stale count and reads it as UNmarked (got {_hits_u})")
+if _hits_h and _hits_u:
+    _rh = _count_receipt(_fh46, _hits_h[0][0], 36, _n41, True)
+    _ru = _count_receipt(_fu46, _hits_u[0][0], 36, _n41, False)
+    expect("IS marked historical" in _rh and "is not marked" not in _rh,
+           f"passing receipt asserts the marker, not its absence: {_rh}")
+    expect("is not marked historical" in _ru,
+           f"failing receipt asserts the violation: {_ru}")
+    expect(_rh != _ru, "the two outcomes produce DIFFERENT receipts")
+# (b) STATIC sweep: no violation-phrased expect() may print its message on success.
+_VIOL46 = _re46.compile(r"is not marked|without historical marker|simultaneously|still says"
+                        r"|but it EXISTS|missing on disk|!= *current|asserted without", _re46.I)
+def _lit46(_n):
+    if isinstance(_n, _ast46.Constant) and isinstance(_n.value, str): return _n.value
+    if isinstance(_n, _ast46.JoinedStr):
+        return "".join(v.value for v in _n.values
+                       if isinstance(v, _ast46.Constant) and isinstance(v.value, str))
+    return ""
+_offenders46 = []
+for _node46 in _ast46.walk(_ast46.parse(open("scripts/20_test_checks.py").read())):
+    if (isinstance(_node46, _ast46.Call) and isinstance(_node46.func, _ast46.Name)
+            and _node46.func.id == "expect" and len(_node46.args) >= 2):
+        if _VIOL46.search(_lit46(_node46.args[1])) and not any(
+                _k.arg == "ok_msg" for _k in _node46.keywords):
+            _offenders46.append(_node46.lineno)
+expect(not _offenders46,
+       f"violation-phrased expect() without ok_msg at lines {_offenders46}",
+       ok_msg="every violation-phrased expect() supplies an ok_msg for its passing receipt")
 
 
 print("\n" + "=" * 70)
