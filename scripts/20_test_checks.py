@@ -990,23 +990,27 @@ import subprocess as _sp, sys as _sys, os as _os, re as _re37
 # (a) DISCOVER authorities from the canonical index rather than a hand-maintained list
 #     (CYCLE-000004 F-008: the previous hand-list omitted two authorities the index names).
 _idx = open("RESULTS_INDEX.md").read()
-_demoted_blocks = []
-for _m in _re37.finditer(r"UNVERIFIED / NOT CITABLE", _idx):
-    # the question block: from the preceding "## " heading to the next one
-    _s = _idx.rfind("\n## ", 0, _m.start()); _e = _idx.find("\n## ", _m.start())
-    _demoted_blocks.append(_idx[_s if _s >= 0 else 0 : _e if _e > 0 else len(_idx)])
-expect(len(_demoted_blocks) > 0, "the index carries at least one UNVERIFIED/NOT CITABLE demotion")
+# The Q3 block's state is now CONDITIONAL (F-019 closure): while demoted, every index-named
+# authority must carry the demotion marker; after closure (STATUS: CITABLE), the marker
+# requirement applies only to documents that predate closure — the closure record itself and
+# any post-closure document must instead be consistent with group [43]'s one-state check.
+_q3blk = _idx[_idx.index("## Q3"):]
+_q3blk = _q3blk[:_q3blk.index("\n## ") if "\n## " in _q3blk[4:] else len(_q3blk)]
+_demoted_now = ("NOT CITABLE" in _q3blk) and ("STATUS: CITABLE" not in _q3blk)
 _auths = set()
-for _blk in _demoted_blocks:
-    for _p in _re37.findall(r"`([A-Za-z0-9_./-]+\.md)`", _blk):
-        if _os.path.exists(_p) and _p != "RESULTS_INDEX.md":
-            _auths.add(_p)
+for _p in _re37.findall(r"`([A-Za-z0-9_./-]+\.md)`", _q3blk):
+    if _os.path.exists(_p) and _p != "RESULTS_INDEX.md":
+        _auths.add(_p)
 expect(len(_auths) >= 3, f"index-discovered Q3 authorities: found {len(_auths)}, expected >= 3")
-for _doc in sorted(_auths):
-    _t = open(_doc).read()
-    expect("Q3 PROVENANCE STATUS" in _t or "UNVERIFIED / NOT CITABLE" in _t
-           or "HISTORICAL" in _t or "SUPERSEDED" in _t,
-           f"index-named authority {_os.path.basename(_doc)} carries the demotion/superseded marker")
+if _demoted_now:
+    for _doc in sorted(_auths):
+        _t = open(_doc).read()
+        expect("Q3 PROVENANCE STATUS" in _t or "UNVERIFIED / NOT CITABLE" in _t
+               or "HISTORICAL" in _t or "SUPERSEDED" in _t,
+               f"index-named authority {_os.path.basename(_doc)} carries the demotion/superseded marker")
+else:
+    expect("Q3_CLOSURE_RECORD.md" in _q3blk,
+           "CITABLE Q3 block must name the closure record")
 
 # (b) F-011: no current document may assert q0_final failed to converge without a marker
 for _doc in sorted(_auths) + ["RESULTS_INDEX.md", "EXPERIMENT_AUDIT.md",
@@ -1173,6 +1177,28 @@ for _d42 in sorted(_glob42.glob("**/*.md", recursive=True)):
                 expect(_sup_doc or "historical" in _ctx42 or "superseded" in _ctx42
                        or "~~" in _ln42 or "retract" in _ctx42,
                        f"{_d42}:{_i42+1} pre-production state asserted without historical marker")
+
+
+print("\n[43] Q3 citability and Q0 gate condition 3 assert ONE state (F-019 / C-STATE-004)")
+import re as _re43, os as _os43
+_idx43 = open("RESULTS_INDEX.md").read()
+_gate43 = open("results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md").read()
+_i43 = _idx43[_idx43.index("## Q3"):]
+_i43 = _i43[:_i43.index("\n## ") if "\n## " in _i43[4:] else len(_i43)]
+_q3_citable = bool(_re43.search(r"STATUS: CITABLE", _i43))
+_q3_banned  = bool(_re43.search(r"NOT CITABLE|stays removed as gate evidence", _i43)) and not _q3_citable
+_m43 = _re43.search(r"\|\s*3\s*\|[^|]*competing localised spin state[^|]*\|\s*([^|]+)\|", _gate43)
+expect(_m43 is not None, "Q0 gate table has a condition-3 row")
+_c3_pass = "PASS" in (_m43.group(1) if _m43 else "")
+# one state: either Q3 citable AND condition 3 may PASS, or Q3 demoted AND condition 3 not PASS
+expect(not (_q3_banned and _c3_pass),
+       "Q3 demoted in index while Q0 gate condition 3 claims PASS on the same evidence")
+if _q3_citable:
+    expect(_os43.path.exists("results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md"),
+           "CITABLE status requires the closure record artifact")
+    _cr43 = open("results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md").read()
+    for _f43 in ("F-006", "F-012", "F-013"):
+        expect(_f43 in _cr43, f"closure record names {_f43}")
 
 
 print("\n" + "=" * 70)

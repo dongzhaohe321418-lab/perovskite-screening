@@ -35,19 +35,22 @@ Anything not listed here is historical. Restructured 2026-07-28.
 
 ## Q3. Is V_I⁰ a polaron or a shallow donor?
 
-- **STATUS: UNVERIFIED / NOT CITABLE (demoted 2026-07-31, audit CYCLE-000001 F-006; still
-  demoted as of CYCLE-000005).** The raw records **are now committed** (see Raw data below) and
-  `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` recomputes every quoted value from
-  them in a clean clone (exit 0), which CYCLE-000005 independently confirmed. What remains
-  outstanding is not missing evidence but **independent closure**: this result stays removed as
-  gate evidence and must not be cited or used to support any production/publication claim until
-  an audit cycle closes the Q3 findings. The demotion is lifted by the controller, not by this
-  repository.
+- **STATUS: CITABLE — demotion CLOSED (see
+  `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md`).** The demotion's own lifting
+  condition — an audit cycle closing the Q3 findings — was met by the controller's
+  verified-closed records: F-006 in CYCLE-000005, F-012/F-013 in CYCLE-000006, with three later
+  cycles (000010/000011/000016) independently re-running `q3_raw/derive_q3.py` and reproducing
+  every quoted value. Q3 is restored as admissible Q0-gate evidence (condition 3), consistent
+  with the gate's PASS.
+  *(Historical: this row carried an UNVERIFIED / NOT CITABLE demotion from 2026-07-31 — audit
+  CYCLE-000001 F-006 — which was correct until the controller's closures landed; the demotion
+  text outlived its own closure condition, which audit CYCLE-000016 F-019 caught as a
+  contradiction with the Q0 gate.)*
   *(Superseded wording, CYCLE-000005 F-013: this row previously said the raw inputs "are not
   committed" and "cannot be independently reproduced from committed records". That was true at
   CYCLE-000001 and is no longer true — it contradicted the Raw data row below and the authority
   banners, and is retracted here.)*
-- **Conclusion (UNVERIFIED pending audit closure):** "no thermally significant polaron" at
+- **Conclusion:** "no thermally significant polaron" at
   PBE+D3(BJ); state described as CBM-like (per-atom cosine 0.9757 vs pristine CBM, against
   pristine-internal controls 0.788/0.741; alignment +75.8 meV VBM-referenced and +52.1 meV
   semicore-aligned under one declared convention — the earlier 7 meV raw-eigenvalue claim is
