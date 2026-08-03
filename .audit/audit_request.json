@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "51d2d87450610115d4c543d2aed1cc039cd2fded9bb2fdad8a860acf71f81cc5",
- "notes": "Requested via audit-mcp: Re-audit after CYCLE-000012 F-017 ACCEPT_AND_FIX: all four stale Q2 authority statements reconciled with the converged production pair (superseding banners/strikethrough, history preserved); semantic state-sweep regression [42] added with verified failing fixture. A FINAL verdict here is prerequisite for the gated barrier-extraction publish_claim.",
+ "evidence_manifest_sha256": "6349fc6894e336a0b075e49d2fa7c4d7454ac5e43579956b7ab6dbbc70656ce3",
+ "notes": "Requested via audit-mcp: Re-audit after CYCLE-000015 F-018: evidence_manifest.json is now written in canonical byte form, so its raw-byte SHA-256 equals the canonical digest recorded in audit_request.json \u2014 one hash convention. F-017 fix (62160f0b) contained. A FINAL non-BLOCK verdict here is prerequisite for the gated Q2 barrier-extraction publish_claim.",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
