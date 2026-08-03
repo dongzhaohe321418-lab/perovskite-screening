@@ -39,7 +39,7 @@ Anything not listed here is historical. Restructured 2026-07-28.
   `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md`).** The demotion's own lifting
   condition — an audit cycle closing the Q3 findings — was met by the controller's
   verified-closed records: F-006 in CYCLE-000005, F-012/F-013 in CYCLE-000006, with three later
-  cycles (000010/000011/000016) independently re-running `q3_raw/derive_q3.py` and reproducing
+  cycles (000010/000011/000016) independently re-running `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` and reproducing
   every quoted value. Q3 is restored as admissible Q0-gate evidence (condition 3), consistent
   with the gate's PASS.
   *(Historical: this row carried an UNVERIFIED / NOT CITABLE demotion from 2026-07-31 — audit
@@ -56,8 +56,11 @@ Anything not listed here is historical. Restructured 2026-07-28.
   semicore-aligned under one declared convention — the earlier 7 meV raw-eigenvalue claim is
   retracted as invalid); a weakly bound few-meV state not excluded; seeded distortion 112.6 meV
   elastic vs ≤2.8 meV spin gain. Every figure here **is** recomputable from committed records
-  via `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py`; it is not yet **independently
-  verified closed**, which is why the row stays NOT CITABLE.
+  via `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py`, and the closure condition IS
+  met (see the STATUS row and `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md`).
+  *(Historical: this sentence previously ended "…which is why the row stays NOT CITABLE" —
+  written before the controller's closures; caught by audit CYCLE-000017 F-019 as a
+  contradiction with the CITABLE status above.)*
 - **Scope:** one distortion mode probed, 159-atom cell, PBE-level gap caveats apply.
 - **Authoritative documents (each carries the Q3 provenance banner; raw data committed):**
   `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` + `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` +
@@ -67,10 +70,11 @@ Anything not listed here is historical. Restructured 2026-07-28.
   SHA-256 chain of custody (`REMOTE_SHA256_UNCOMPRESSED.txt`), `results/objective1/dft/charge_relaxed/q3_raw/INPUT_MANIFEST.json`, and an
   executable `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` that recomputes and asserts every quoted value (exit 0 at this
   commit).
-- **Next:** independent closure of the remaining Q3 findings. CYCLE-000005 verified F-006,
-  F-008 and F-011 closed and raised F-012 (alignment convention — fixed) and F-013 (this row's
-  contradiction — fixed). **Status stays NOT CITABLE until an audit cycle closes those**; the
-  demotion is lifted by the controller, not by this repository.
+- **Next:** none open for Q3 — closure is complete. *(Historical: this row previously said
+  "Status stays NOT CITABLE until an audit cycle closes those"; the closures landed —
+  F-006 in CYCLE-000005, F-012/F-013 in CYCLE-000006, recorded in
+  `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md` — and the stale sentence was
+  caught by audit CYCLE-000017 F-019.)*
 
 ## Q4. Is the host-pool / noise floor sound for screening? (methodology)
 

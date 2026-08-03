@@ -1186,7 +1186,22 @@ _gate43 = open("results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md").read()
 _i43 = _idx43[_idx43.index("## Q3"):]
 _i43 = _i43[:_i43.index("\n## ") if "\n## " in _i43[4:] else len(_i43)]
 _q3_citable = bool(_re43.search(r"STATUS: CITABLE", _i43))
-_q3_banned  = bool(_re43.search(r"NOT CITABLE|stays removed as gate evidence", _i43)) and not _q3_citable
+# F-020: detect CONTRADICTORY current predicates instead of letting CITABLE mask a surviving
+# NOT-CITABLE. Any NOT-CITABLE assertion in the Q3 block must sit in historical/superseded
+# context (the paragraph around it names Historical/Superseded/retract) — otherwise it is a
+# live contradiction and the check fails regardless of the STATUS row.
+_lines43 = _i43.splitlines()
+_live_bans43 = []
+for _j43, _l43 in enumerate(_lines43):
+    if _re43.search(r"NOT CITABLE|stays removed as gate evidence", _l43):
+        # context = the ban's own line plus one line either side ONLY -- a wide window
+        # absorbed a NEIGHBOURING historical note and passed the auditor's exact fixture.
+        _para43 = " ".join(_lines43[max(0,_j43-1):_j43+2]).lower()
+        if not ("historical" in _para43 or "superseded" in _para43 or "retract" in _para43):
+            _live_bans43.append(_j43+1)
+expect(not (_q3_citable and _live_bans43),
+       f"Q3 block asserts CITABLE and NOT-CITABLE simultaneously (unmarked ban at block lines {_live_bans43})")
+_q3_banned = bool(_live_bans43) and not _q3_citable
 _m43 = _re43.search(r"\|\s*3\s*\|[^|]*competing localised spin state[^|]*\|\s*([^|]+)\|", _gate43)
 expect(_m43 is not None, "Q0 gate table has a condition-3 row")
 _c3_pass = "PASS" in (_m43.group(1) if _m43 else "")
