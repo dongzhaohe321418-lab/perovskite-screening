@@ -1355,6 +1355,36 @@ expect(not _offenders46,
        ok_msg="every violation-phrased expect() supplies an ok_msg for its passing receipt")
 
 
+print("\n[47] the barrier extractor refuses without a gate token and prints no value (C-GATE-002)")
+import subprocess as _sp47, sys as _sys47, os as _os47, tempfile as _tf47, re as _re47
+_scr47 = "scripts/27_extract_barriers.py"
+expect(_os47.path.exists(_scr47), "extractor script is committed")
+if _os47.path.exists(_scr47):
+    _tmp47 = _os47.path.join(_tf47.gettempdir(), "barrier_refuse_probe.json")
+    if _os47.path.exists(_tmp47): _os47.remove(_tmp47)
+    # PLACEHOLDER is >=8 chars so it passes the FORMAT check and is caught ONLY by the
+    # explicit blocklist -- this is what makes the blocklist load-bearing in this fixture.
+    for _tok47 in ("PENDING", "NONE", "DENY", "PLACEHOLDER"):
+        _r47 = _sp47.run([_sys47.executable, _scr47, "--gate-token", _tok47, "--out", _tmp47],
+                         capture_output=True, text=True)
+        _blob47 = _r47.stdout + _r47.stderr
+        expect(_r47.returncode != 0, f"placeholder token {_tok47} is refused (nonzero exit)")
+        expect(not _os47.path.exists(_tmp47), f"token {_tok47}: no output file written")
+        # no eV-shaped value may appear on the refusal path
+        expect(not _re47.search(r"\d\.\d+\s*eV", _blob47),
+               f"token {_tok47}: refusal output contains an eV-shaped value",
+               ok_msg=f"token {_tok47}: refusal output contains no eV-shaped value")
+    # invoking with no token at all must also fail
+    _r47 = _sp47.run([_sys47.executable, _scr47, "--out", _tmp47], capture_output=True, text=True)
+    expect(_r47.returncode != 0, "missing --gate-token is refused")
+    expect(not _os47.path.exists(_tmp47), "no token: no output file written")
+    # SELF-CLEANUP: if a future edit ever weakens the guard, this probe would leave an
+    # ungated extraction record on disk. Remove it unconditionally and unread.
+    if _os47.path.exists(_tmp47):
+        _os47.remove(_tmp47)
+        expect(False, "probe wrote an extraction record -- the gate token guard is NOT effective")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
