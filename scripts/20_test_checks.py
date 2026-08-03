@@ -1150,6 +1150,31 @@ for _d41 in sorted(_docs41):
                        f"{_d41}:{_i41+1} count {_v41} != current {_n41} and is not marked historical")
 
 
+print("\n[42] Q2 production-NEB state is consistent across every current authority (F-017)")
+import re as _re42, glob as _glob42, os as _os42
+# Ground truth is the committed raw record: both legs converged.
+_pn = "results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md"
+expect(_os42.path.exists(_pn), "PRODUCTION_NEB_STATUS.md exists")
+_pns = open(_pn).read()
+expect("BOTH LEGS CONVERGED" in _pns, "production status records both legs converged")
+# Sweep: any current doc asserting a pre-run/missing state must be marked historical.
+_stale_pats = [r"NEB not yet run", r"required leg is missing", r"q\s*=\s*0.{0,40}not delivered",
+               r"decision is now OPEN[^~]*requires an explicit go",
+               r"charge-state comparison.{0,30}impossible"]
+for _d42 in sorted(_glob42.glob("**/*.md", recursive=True)):
+    if _d42.startswith(("archive/", "hpc/")): continue
+    _txt42 = open(_d42, errors="ignore").read()
+    _lines42 = _txt42.splitlines()
+    _sup_doc = "SUPERSEDED AS CURRENT STATE" in _txt42[:1500] or _txt42.startswith("> # SUPERSEDED")
+    for _i42, _ln42 in enumerate(_lines42):
+        for _p42 in _stale_pats:
+            if _re42.search(_p42, _ln42):
+                _ctx42 = " ".join(_lines42[max(0,_i42-6):_i42+2]).lower()
+                expect(_sup_doc or "historical" in _ctx42 or "superseded" in _ctx42
+                       or "~~" in _ln42 or "retract" in _ctx42,
+                       f"{_d42}:{_i42+1} pre-production state asserted without historical marker")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")

@@ -109,8 +109,13 @@ ruling with all four closure items met (state-ID on real wavefunctions: cosine 0
 fingerprint identity to the q=+1 leg; documents synced; suite green from a clean clone —
 `HARNESS_TRIAL_RESULT.md` closure table).
 
-**The full q=0 CI-NEB submission decision is now OPEN — it requires an explicit go from the
-PI; passing the gate authorises asking, not launching.** The production input is
+**HISTORICAL (2026-07-28) — the decision below was subsequently taken:** the PI granted the
+explicit go on 2026-07-28 (input hashes 04acee19…/9954e6b1…), both production legs were
+submitted under the two-step staging rule, and **both converged** (q=0: 36 iterations, q=+1: 37
+— `PRODUCTION_NEB_STATUS.md`). The paragraph below is retained as the pre-launch record.
+
+~~The full q=0 CI-NEB submission decision is now OPEN — it requires an explicit go from the
+PI; passing the gate authorises asking, not launching.~~ The production input is
 `ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` (CI auto, path_thr 0.05, degauss 0.005).
 The trial's intermediate energies stay unquotable permanently.
 

@@ -1,3 +1,14 @@
+> **SUPERSEDED AS CURRENT STATE — 2026-08-03 (audit CYCLE-000012, F-017).**
+> This document describes the project state of 2026-07-25/26: at that time the q=0 spin-SCF was
+> unresolved and only a q=+1 explore band existed. BOTH statements are now historical:
+> the q=0 electronic structure was resolved (see `Q0_RESOLVED.md`), both q=0 endpoints converged
+> formally, and the **full production CI-NEB pair ran and converged** (q=0: 36 iterations,
+> q=+1: 37 iterations — see `PRODUCTION_NEB_STATUS.md`, the current authority for Q2 state).
+> Barriers remain UNEXTRACTED pending the gated publish_claim step; the Tyagi-ordering ban
+> stands. This file is retained verbatim below as the historical record of the provisional
+> anchor and its reasoning; every "missing/not delivered/impossible" entry below refers to the
+> 2026-07-25 state, not the present.
+
 # CHARGE_STATE_ANCHOR — **PROVISIONAL**
 
 **Anchor (b), the V_I⁺ / V_I⁰ charge-state separation, is NOT validated.**
