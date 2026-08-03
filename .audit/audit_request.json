@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "2989dd0d6cb4174c061781f4778f4991fc91b33e99a8bbcccb886692d4216624",
- "notes": "Requested via audit-mcp: Re-audit after CYCLE-000016 F-019 ACCEPT_AND_FIX: Q3 restored as citable gate evidence via Q3_CLOSURE_RECORD.md citing the controller's verified-closed entries; index/gate now assert one state; C-STATE-004 regression [43] with two verified fixtures. Canonical-byte manifest (F-018 convention). A FINAL non-BLOCK verdict is prerequisite for the gated Q2 barrier-extraction publish_claim.",
+ "evidence_manifest_sha256": "c9b2f142ea19c50ace471b3b8130b36802eadbe2aa758de6618931c971bb7447",
+ "notes": "Requested via audit-mcp: Re-audit after CYCLE-000017 fixes (F-019 residual NOT-CITABLE assertions marked historical; F-020 regression [43] hardened, fails on the auditor's exact mixed-state fixture; F-021 locator qualified). One current Q3 status; gate/index one-state. A FINAL non-BLOCK verdict is prerequisite for the gated Q2 barrier-extraction publish_claim.",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
