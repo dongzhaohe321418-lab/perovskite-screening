@@ -20,7 +20,7 @@ Version 1 built its energy table by assuming **member index == seed offset**
   never measured, so the "relaxation depth is uniform" integrity check asserted something the
   file did not actually check.
 
-**Version 2 uses no index arithmetic and no assumed values.** Energies come from
+**Version 2 uses no index arithmetic, and every value is measured or read from a record — none is inferred from position.** *(Reviewer warn, 2026-08-03: the earlier absolute phrasing "no assumed values" overstated this. v2 does rely on the filename→member mapping being correct, which is a verified assumption, not the absence of one — it is checked against `m00`'s own attached calculator below.)* Energies come from
 `harmonise.json` matched **by filename** (`E_after`, post-harmonisation), from
 `expansion_plus8.json` for `m28`–`m35`, or from a fresh MACE single point where no trustworthy
 record existed (`m18`–`m27`). **Every `fmax` in the table is measured, not assumed.**

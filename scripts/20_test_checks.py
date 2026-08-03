@@ -1385,6 +1385,26 @@ if _os47.path.exists(_scr47):
         expect(False, "probe wrote an extraction record -- the gate token guard is NOT effective")
 
 
+print("\n[48] a retracted wording does not survive in headings or absolute claims (reviewer warns)")
+import glob as _g48, re as _re48
+# Each entry: (retracted phrase, the document that retracted it). A retraction is only
+# complete when the phrase appears nowhere in that document EXCEPT inside explicit
+# retraction/scope context -- headings included, which is how msg3499's warn arose.
+_RETRACTED = [
+    (r"the state IS the CBM", "results/objective1/dft/charge_relaxed/Q0_RESOLVED.md"),
+    (r"no assumed values", "results/fa_host/pool_v3_harmonised/HOST_MANIFEST.md"),
+]
+for _ph48, _doc48 in _RETRACTED:
+    _lines48 = open(_doc48, errors="ignore").read().splitlines()
+    for _i48, _ln48 in enumerate(_lines48):
+        if _re48.search(_ph48, _ln48):
+            _ctx48 = " ".join(_lines48[max(0, _i48-2):_i48+4]).lower()
+            expect(any(k in _ctx48 for k in ("retract", "previously read", "overstated",
+                                             "scope note", "historical", "superseded")),
+                   f"{_doc48}:{_i48+1} retracted wording '{_ph48}' without retraction context",
+                   ok_msg=f"{_doc48}:{_i48+1} retracted wording '{_ph48}' sits in retraction context")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")

@@ -66,6 +66,10 @@ Re-done against two defensible internal references:
 > outputs this gives **+75.8 meV** (VBM) and **+52.1 meV** (semicore, shift −45.0 meV). The
 > earlier `+75.9 meV` in this file came from a rounded intermediate (1.6319 rather than the
 > exact 1.6318 eV above VBM) — a 0.1 meV transcription artifact, not a different calculation.
+> *Verification of that attribution (reviewer warn, 2026-08-03): it is arithmetic, not a story —
+> 1.6319 − 1.5560 = 75.9 meV and 1.6318 − 1.5560 = 75.8 meV, so the 4th-decimal difference
+> reproduces the discrepancy exactly and no other source is needed to explain it. The exact
+> 1.6318 value is itself asserted by `q3_raw/derive_q3.py` against the committed raw output.*
 > The derivation asserts these values and asserts that this document quotes them verbatim.
 
 

@@ -47,7 +47,14 @@ and unconstrained-spin PBE+D3**, the extra electron occupies the delocalised con
 band minimum, not a vacancy-localised polaron. Lattice relaxation around a localised charge
 remains untested — see the caveat at the end.
 
-## P1 — pristine cell: the state IS the CBM
+## P1 — pristine cell: the state is CBM-like (heading corrected; see the scope note below)
+
+> **Scope note (reviewer warn, 2026-08-03):** this heading previously read "the state
+> IS the CBM" — the unqualified form retracted in the title. What the evidence supports
+> is CBM-*like*: per-atom weight cosine 0.9757 against the pristine CBM, far above the
+> pristine-internal controls (0.788 / 0.741), with Pb-p character 91.4 / 90.8%. That is
+> a strong identification, not a proof of identity, and the softened wording is the
+> claim of record.
 
 A 160-atom pristine cell (vacancy filled, every Pb 6-coordinate, 1408 electrons = closed
 shell), same theory level, spin-free. Three comparisons, as specified:
