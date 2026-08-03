@@ -1,7 +1,7 @@
 {
  "algorithm": "sha256sum-list-v1",
  "canonical_stream": "For every tracked path outside .audit, sort paths bytewise and append '<file_sha256><two spaces><path><LF>'; SHA-256 the resulting byte stream.",
- "evidence_parent_commit": "89db467e627b2c998a85e8e1ef01c50e170a3801",
+ "evidence_parent_commit": "62160f0b05f1ff100ba570de3dcfa8a83597d22f",
  "excluded_paths": [
   ".audit/**"
  ],
@@ -26,6 +26,6 @@
   "structures/",
   "xrd/"
  ],
- "total_bytes": 28063539,
- "tree_sha256": "56ade989266b9f7db5a7fcbe19304fd551bc152c70f426994e0f06d64c0c5408"
+ "total_bytes": 28066678,
+ "tree_sha256": "609c9015c5948a9f16fa85da6e18d5f75c900857e5af0d6a24bcf8431903d158"
 }
