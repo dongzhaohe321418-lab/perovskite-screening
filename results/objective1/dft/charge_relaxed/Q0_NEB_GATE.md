@@ -7,7 +7,7 @@ CI-NEB. Current state, audited rather than assumed.
 |---|---|---|
 | 1 | both q=0 endpoints genuinely ionically converged | **PASS — both converged** (final: QE block, 10 BFGS steps, 2026-07-28) |
 | 2 | `nspin=1` stable and restartable across nearby geometries | **PASS** |
-| 3 | P1/P2 show no competing localised spin state | **PASS** — raw evidence committed: `q3_raw/dd88d5d3_P1.out.gz`, `q3_raw/dd88d5d3_P2.out.gz` (+ projwfc, ELAS, POL) with cluster-side SHA-256 custody and `q3_raw/derive_q3.py` recomputing every cited value (exit 0). Pending independent re-verification per CYCLE-000002 F-006. |
+| 3 | P1/P2 show no competing localised spin state | **PASS** — raw evidence committed: `q3_raw/dd88d5d3_P1.out.gz`, `q3_raw/dd88d5d3_P2.out.gz` (+ projwfc, ELAS, POL) with cluster-side SHA-256 custody and `q3_raw/derive_q3.py` recomputing every cited value (exit 0). Independent re-verification COMPLETE — closure recorded in `Q3_CLOSURE_RECORD.md` (F-006 closed CYCLE-000005; re-verified in cycles 000010/000011/000016). |
 | 4 | q=0 and q=+1 at an identical theory fingerprint | **PASS (by construction)** |
 | 5 | NEB input, restart, archiving and state-identification tooling ready | **PASS** (2026-07-28) — live trial + all four PI closure items met: real restart proven as re-evaluation; state-ID cosine 0.974–0.979 on all 3 interior images from real wavefunctions; production input at degauss 0.005 with machine-verified fingerprint identity to q=+1; suite green from clean clone. `HARNESS_TRIAL_RESULT.md` |
 
@@ -71,8 +71,10 @@ outputs, and the ELAS/POL discriminator records backing this condition are commi
 (`REMOTE_SHA256_UNCOMPRESSED.txt`) and an executable derivation script (`results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py`) that
 recomputes P2's 6-iteration m=0 convergence, the 112.6 meV elastic cost, the decaying POL
 moment trace, and the ≤3 meV fixed-geometry spin gain, asserting each. This condition's PASS
-now cites committed, recomputable evidence; independent re-verification is owed to the next
-audit cycle before the demotion is lifted.
+cites committed, recomputable evidence, and the independent re-verification it owed **has been
+rendered**: F-006 verified closed in CYCLE-000005, with isolated-clone re-runs of the derivation
+in cycles 000010/000011/000016 (`Q3_CLOSURE_RECORD.md`). *(Historical wording "re-verification
+is owed to the next audit cycle" superseded — audit CYCLE-000019 F-019.)*
 
 ## Condition 5 — tooling, and what is missing
 

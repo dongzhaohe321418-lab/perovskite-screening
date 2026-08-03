@@ -1214,6 +1214,34 @@ if _q3_citable:
     _cr43 = open("results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md").read()
     for _f43 in ("F-006", "F-012", "F-013"):
         expect(_f43 in _cr43, f"closure record names {_f43}")
+    # F-019 (CYCLE-000019): citability must PROPAGATE to every index-named Q3 authority --
+    # each must open with the CLOSED/CITABLE banner, and any surviving demotion-era wording
+    # ("restored only when", "NOT CITABLE", "re-verification is owed") must sit inside
+    # explicitly historical/superseded context.
+    for _doc43 in sorted(_auths if '_auths' in dir() else []):
+        pass
+    _q3_docs43 = ["results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md",
+                  "results/objective1/dft/charge_relaxed/Q0_RESOLVED.md",
+                  "results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md"]
+    for _doc43 in _q3_docs43:
+        _t43 = open(_doc43).read()
+        expect(_t43.startswith("> **Q3 PROVENANCE STATUS — CLOSED / CITABLE"),
+               f"{_os43.path.basename(_doc43)} opens with the CLOSED/CITABLE banner")
+        _dl43 = _t43.splitlines()
+        for _k43, _ln2 in enumerate(_dl43):
+            if _re43.search(r"restored only when|NOT CITABLE|re-verification is owed", _ln2):
+                _c2 = " ".join(_dl43[max(0,_k43-1):_k43+2]).lower()
+                expect("historical" in _c2 or "superseded" in _c2,
+                       f"{_os43.path.basename(_doc43)}:{_k43+1} demotion-era wording without historical marker")
+    _g43 = open("results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md").read()
+    expect("re-verification COMPLETE" in _g43 or "Q3_CLOSURE_RECORD" in _g43,
+           "Q0 gate condition 3 cites the closure record")
+    _gl43 = _g43.splitlines()
+    for _k43, _ln2 in enumerate(_gl43):
+        if _re43.search(r"Pending independent re-verification|re-verification is owed", _ln2):
+            _c2 = " ".join(_gl43[max(0,_k43-1):_k43+2]).lower()
+            expect("historical" in _c2 or "superseded" in _c2,
+                   f"Q0_NEB_GATE.md:{_k43+1} pending-re-verification wording without historical marker")
 
 
 print("\n" + "=" * 70)

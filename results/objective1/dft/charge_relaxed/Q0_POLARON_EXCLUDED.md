@@ -1,12 +1,22 @@
-> **Q3 PROVENANCE STATUS (2026-07-31, audit CYCLE-000002 F-006/F-008):** demoted to
+> **Q3 PROVENANCE STATUS — CLOSED / CITABLE (2026-08-03, see
+> `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md`).** The demotion's lifting
+> condition is met: the controller's verified-closed records cover F-006 (CYCLE-000005) and
+> F-012/F-013 (CYCLE-000006), and cycles 000010/000011/000016 independently re-ran
+> `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` in isolated clones, reproducing
+> every quoted value (custody, 160→159 mapping, cosine + controls, IPRs, both alignments).
+> The banner below this one is the HISTORICAL demotion-era text, retained per the
+> preserve-history rule; its "restored only when…" wording described the pre-closure state
+> (superseded — audit CYCLE-000019 F-019).
+
+> **[HISTORICAL demotion-era banner — superseded by the CLOSED/CITABLE banner above] Q3 PROVENANCE STATUS (2026-07-31, audit CYCLE-000002 F-006/F-008):** demoted to
 > UNVERIFIED/NOT CITABLE at CYCLE-000001 because the raw discriminator outputs were not
 > committed. **The raw records are now committed** at
 > `results/objective1/dft/charge_relaxed/q3_raw/` (P1/P2/proj/ELAS/POL outputs + inputs,
 > cluster-side SHA-256 chain of custody, `results/objective1/dft/charge_relaxed/q3_raw/INPUT_MANIFEST.json`, and an executable
 > `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` that recomputes and asserts every quoted value — exit 0 at this commit).
-> Citability is restored **only when the next audit cycle independently re-verifies this**;
+> **[superseded — historical]** Citability is restored **only when the next audit cycle independently re-verifies this**;
 > until then treat every number below as provisionally recomputable, not independently
-> verified.
+> verified. *(That condition is now met — see the CLOSED/CITABLE banner above.)*
 
 # Polaron test — no thermally significant polaron. V_I⁰ behaves as a shallow donor.
 

@@ -1,11 +1,22 @@
-> **Q3 PROVENANCE STATUS (2026-07-31, audit CYCLE-000002 F-006/F-008, CYCLE-000004 F-008):**
+> **Q3 PROVENANCE STATUS — CLOSED / CITABLE (2026-08-03, see
+> `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md`).** The demotion's lifting
+> condition is met: the controller's verified-closed records cover F-006 (CYCLE-000005) and
+> F-012/F-013 (CYCLE-000006), and cycles 000010/000011/000016 independently re-ran
+> `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` in isolated clones, reproducing
+> every quoted value (custody, 160→159 mapping, cosine + controls, IPRs, both alignments).
+> The banner below this one is the HISTORICAL demotion-era text, retained per the
+> preserve-history rule; its "restored only when…" wording described the pre-closure state
+> (superseded — audit CYCLE-000019 F-019).
+
+> **[HISTORICAL demotion-era banner — superseded by the CLOSED/CITABLE banner above] Q3 PROVENANCE STATUS (2026-07-31, audit CYCLE-000002 F-006/F-008, CYCLE-000004 F-008):**
 > `RESULTS_INDEX.md` names this file as a Q3 authority and marks Q3 **UNVERIFIED / NOT CITABLE**.
 > The raw records are committed at `results/objective1/dft/charge_relaxed/q3_raw/`, and
 > `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` recomputes every value quoted
 > here — including the 159-shared-atom cosine, its controls, the IPRs and both valid alignment
 > references — from those raws plus a mapping rebuilt from the raw site lists (exit 0 at this
-> commit). **Citability is restored only when an audit cycle independently re-verifies this**;
+> commit). **[superseded — historical] Citability is restored only when an audit cycle independently re-verifies this**;
 > until then every number below is provisionally recomputable, not independently verified.
+> *(That condition is now met — see the CLOSED/CITABLE banner at the top of this file.)*
 
 # P1 audit — energy reference, and why the wording becomes "CBM-like"
 
