@@ -845,3 +845,46 @@ Adopted during the campaign and in force:
    strings.
 10. The Tyagi-ordering claim stays closed until both legs are converged at identical theory
     level.
+## 2026-08-03: audit cycles 000012-000023 — the authority-state propagation chain, and one receipt-truthfulness defect
+
+Twelve cycles, eight findings (F-017 … F-024), all raised while the barrier extraction stayed
+gated. Two lessons are worth keeping because they recurred:
+
+**1. A wholesale status change propagates one level at a time, and I stopped one level short
+each time.** The Q2 production transition and the Q3 demotion closure each took three rounds:
+
+| finding | what was stale | level missed |
+|---|---|---|
+| F-017 | *(historical quotations)* `RESULTS_INDEX:26` "NEB not yet run"; anchor's "missing leg"; gate's "decision is now OPEN" — all superseded | siblings of the row I had updated |
+| F-019 (c16) | index Q3 STATUS said NOT CITABLE although its own lifting condition was met | the status row itself |
+| F-019 (c17) | two later sentences in the SAME Q3 block still said NOT CITABLE | same block, deeper |
+| F-019 (c19) | the three authority documents' provenance banners + gate condition-3 text | named authorities |
+| F-022 | q1 staging manifest still `BLOCKED_DO_NOT_SUBMIT` after the run completed | provenance artifacts |
+| F-023 | canonical index had no row for the live XRD screen | a whole question |
+
+Each fix is now pinned by a semantic regression that sweeps for the *class* rather than the
+instance: [42] pre-production assertions, [43] Q3 one-state + banner propagation, [44] staging
+vs authority, [45] index coverage of live results. Every one was verified by a fixture that
+had to fail first — and in three cases the first version of the check *passed* its own fixture
+(a ±4-line context window absorbed a neighbouring historical note; a `_q3_banned` predicate
+was masked by the CITABLE flag; two fixture files carried marker words in their own titles).
+**A check is not evidence until its negative fixture has actually failed.**
+
+**2. F-024 was the most serious of the eight: my harness printed a false line on every green
+run.** Sweep checks phrase their message as the violation they hunt for
+("count 36 != current 43 and is not marked historical"), and `expect()` printed that same
+string after `ok` — so the receipt asserted a proposition the check had just *disproved*.
+`AUDIT_CORRECTIONS_CYCLE1.md:101` is explicitly marked historical, and the passing receipt
+said it was not. Fixed as a class: `expect(cond, msg, ok_msg=None)`; an AST sweep found 17
+violation-shaped messages of which 8 were genuine violation reports, all now supplying a
+truthful success wording; and C-GUARD-003 (regression [46]) both executes group [41]'s scanner
+against two committed fixtures — requiring the marked case to yield a marker-asserting receipt
+and the unmarked case a violation-asserting one — and statically forbids the pattern's return.
+
+**Barrier extraction:** still not performed. `check_action(publish_claim)` returned DENY on
+2026-08-02 (no FINAL audit at that commit; policy/budget/PI authorizations absent) and has not
+been retried. `scripts/27_extract_barriers.py` was written so the extraction will be one
+auditable command when authorized; it refuses without a recorded ALLOW consultation id,
+verifies custody hashes before parsing, and requires the two input fingerprints to differ by
+`tot_charge` alone. Regression [47] executes its refusal paths. The Tyagi-ordering ban stands.
+
