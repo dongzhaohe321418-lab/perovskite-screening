@@ -114,12 +114,25 @@ read as contradicting it. The reason is geometric:
   saddle), and it is that structural response, not the fixed-geometry electronic
   term, that produces the large separation.
 
-So the honest status of anchor (b) is: **the charge-state DFT machinery now runs
-end-to-end and gives a converged, self-consistent first number** (the single most
-important previously-unvalidated link is no longer untested), **but** capturing the
-Tyagi-scale separation requires a **relaxed charged path** — a charged-cell
-geometry optimisation at each image, or a full charged NEB. That is the clear next
-step, and it is now cheap on ehpc (~5 h for a relaxed charged endpoint pair).
+So the honest status of anchor (b) **at this fixed-geometry stage** was: the
+charge-state DFT machinery runs end-to-end and gives a converged, self-consistent
+first number, **but** capturing the Tyagi-scale separation needed a relaxed charged
+path — a charged-cell geometry optimisation at each image, or a full charged NEB.
+
+> **STATUS UPDATE (2026-08-04) — that relaxed charged path has since been run, so the
+> "next step" language above is historical.** Both production CI-NEB legs are formally
+> converged on relaxed endpoints at one locked theory level: **q=0 in 36 iterations,
+> q=+1 in 37**, every per-image force ≤ 0.05 eV/Å, both `JOB DONE` exit 0, with raw
+> outputs, final paths, 38/39-snapshot append-only archives and hash chains committed.
+> See `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`.
+>
+> **The barriers from those legs are NOT extracted and appear nowhere in this
+> repository.** Extraction is gated behind an explicit
+> `check_action(action="publish_claim")` ALLOW that only the PI can authorize; the
+> consultation has returned DENY every time it was asked and has not been retried.
+> The relaxed-path comparison that would settle the paragraph above therefore **exists
+> as raw evidence but not as a number**, and the fixed-geometry ratio below must not be
+> read as this project's answer on charge-state separation.
 
 This distinction matters for the project's central claim (dopants raise E_a to
 suppress migration): the ranking must ultimately be done per charge state on

@@ -1187,16 +1187,36 @@ expect("BOTH LEGS CONVERGED" in _pns, "production status records both legs conve
 # Sweep: any current doc asserting a pre-run/missing state must be marked historical.
 _stale_pats = [r"NEB not yet run", r"required leg is missing", r"q\s*=\s*0.{0,40}not delivered",
                r"decision is now OPEN[^~]*requires an explicit go",
-               r"charge-state comparison.{0,30}impossible"]
+               r"charge-state comparison.{0,30}impossible",
+               # Added 2026-08-04: DFT_BENCHMARK.md's anchor-(b) paragraph asserted that a
+               # relaxed charged path "is the clear next step" long after both production legs
+               # converged, and the sweep missed it because it hunted only literal phrases about
+               # a leg being absent. The defect class is any CURRENT text framing the relaxed
+               # charged path as future work -- same too-narrow-predicate error as F-024/F-025.
+               # NOTE: markdown hard-wraps sentences, so every multiword phrase below uses
+               # \s+ between words -- an earlier version used literal spaces and silently
+               # matched nothing because the text reads "relaxed\ncharged path".
+               r"(?:requires|needs|awaits)\s+a\s+\*{0,2}relaxed\s+charged\s+path",
+               r"relaxed\s+charged\s+path[^.~]{0,80}(?:clear\s+next\s+step|is\s+the\s+next\s+step|"
+               r"still\s+to\s+be|not\s+yet\s+(?:run|done|performed))",
+               r"(?:full\s+charged\s+NEB|charged.cell\s+geometry\s+optimisation)[^.~]{0,60}"
+               r"(?:is\s+the\s+clear\s+next\s+step|remains\s+to\s+be|has\s+not\s+been)"]
 for _d42 in sorted(_glob42.glob("**/*.md", recursive=True)):
     if _d42.startswith(("archive/", "hpc/")): continue
     _txt42 = open(_d42, errors="ignore").read()
     _lines42 = _txt42.splitlines()
     _sup_doc = "SUPERSEDED AS CURRENT STATE" in _txt42[:1500] or _txt42.startswith("> # SUPERSEDED")
+    # Match over a WINDOW, not a single line. Markdown hard-wraps sentences, so a phrase like
+    # "requires a **relaxed\ncharged path**" spans two lines and a per-line search can never
+    # see it -- this is why the anchor-(b) staleness survived the sweep until 2026-08-04.
     for _i42, _ln42 in enumerate(_lines42):
+        _win42 = " ".join(_lines42[_i42:_i42+3])
         for _p42 in _stale_pats:
-            if _re42.search(_p42, _ln42):
-                _ctx42 = " ".join(_lines42[max(0,_i42-6):_i42+2]).lower()
+            _m42 = _re42.search(_p42, _win42)
+            # attribute the hit to the line the match STARTS on, so a window does not
+            # smear one document's defect onto a neighbouring paragraph
+            if _m42 and _m42.start() <= len(_ln42):
+                _ctx42 = " ".join(_lines42[max(0,_i42-6):_i42+4]).lower()
                 expect(_sup_doc or "historical" in _ctx42 or "superseded" in _ctx42
                        or "~~" in _ln42 or "retract" in _ctx42,
                        f"{_d42}:{_i42+1} pre-production state asserted without historical marker",
