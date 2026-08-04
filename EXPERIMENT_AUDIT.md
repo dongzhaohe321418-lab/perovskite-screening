@@ -845,12 +845,72 @@ Adopted during the campaign and in force:
    strings.
 10. The Tyagi-ordering claim stays closed until both legs are converged at identical theory
     level.
+## 2026-08-04 (later): F-025 — the guard that guarded nothing
+
+The dispatcher came back (PI fixed it; the real cause was deeper than my diagnosis — see the
+correction below), the queue drained, F-024 was verified closed, and `ACTIVE_BLOCKER_F-024`
+cleared. Then CYCLE-000027 audited `ad875731` and found the worst defect of the campaign, in code
+I had written two commits earlier *specifically* to make extraction safe.
+
+**What happened.** The auditor ran `scripts/27_extract_barriers.py --gate-token arbitrary` in an
+isolated clone and it exited 0 and wrote a complete extraction record. The barrier values the
+whole gate exists to withhold were materialised by a five-character argument.
+
+**Why, and this is the part worth keeping.** The guard demanded "the consultation id of an ALLOW
+verdict". The controller's `action_ledger.jsonl` emits no consultation id — its rows carry
+`action`, `decision`, `science_commit`, `manifest_sha256`, `reason_codes`, `timestamp`, and
+nothing else. **I invented the field the guard checked.** With no real referent, the check could
+only degrade into what it became: a regex plus five blacklisted strings. The lesson is not "the
+predicate was too weak"; it is that a guard whose authority is a string supplied by its own caller
+is not a guard, however strictly the string is validated. Authorization has to be read from
+something the caller cannot author.
+
+**And the regression was complicit.** Group [47] passed on every run while the bypass was live,
+because it only tried blacklisted placeholders — `PENDING`, `NONE`, `DENY`, `PLACEHOLDER` — all of
+which the length check rejected anyway. It tested the branch that could not fail. This is the
+fourth time this session that a check earned trust it had not paid for, and the sharpest instance:
+the previous three were caught by *my* fixtures failing to fail; this one was caught by an
+auditor, after I had already cited [47] as evidence the guard was load-bearing.
+
+**Fix.** `authorize()` reads the controller's ledger and requires a row at the exact supplied
+timestamp with `action == publish_claim`, `decision == ALLOW`, **empty** `reason_codes` (an ALLOW
+carrying blockers is not an authorization), `science_commit ==` current HEAD (an ALLOW for another
+tree does not carry over), and `manifest_sha256 ==` the committed evidence binding — all evaluated
+before any scientific read or write. `--gate-token` is gone from the argument surface.
+
+Rewritten [47] tests **both polarities**: the auditor's exact bypass plus two other unrecorded
+values (nonzero exit, no file, no eV-shaped string in output), five synthetic near-miss ledger rows
+each isolating one binding, and a positive path with a correctly-bound row — because a guard that
+only ever refuses is indistinguishable from a broken one, and I had no way to tell those apart
+before. Three fixtures verified failing: F-025 reintroduced verbatim, the commit binding disabled,
+and the guard reduced to a permanent refusal. Probe records written during testing were deleted
+unread; no barrier value was printed, retained, or committed.
+
+**Correction to the I-009 diagnosis.** I reported the dispatcher stall as "the launchd agent is
+installed in no launchd directory". That was true but not the cause. The PI found the real one:
+macOS TCC. The trigger script and the venv interpreter both lived under `~/Desktop`, a
+TCC-protected directory, so neither `cron` nor `launchd` was permitted to execute them — installing
+the agent would not have helped. **The same wall explains the `request_audit` "Operation not
+permitted" I reported separately as a second, independent defect: it was one defect, not two.**
+Both were fixed by relocating the trigger and interpreter to `/opt/homebrew/var/audit-loop-bin/`
+and `/opt/homebrew/var/audit-loop-venv/`. I had the symptom and the ruled-out list right, and
+stopped one causal layer short — the same "stopped one level up" pattern as F-017/F-019, here in a
+diagnosis rather than a document.
+
 ## 2026-08-04: why the audit queue stopped — and what it blocked
 
 The barrier extraction, the FNV `pp.x` step, and even an energy-free structural extraction were
 all refused with `ACTIVE_BLOCKER_F-024` + `NO_FINAL_AUDIT_FOR_COMMIT`. Both reasons trace to one
 non-scientific cause, diagnosed read-only on 2026-08-04 and filed as **I-009** in
 `audit-loop/INCIDENTS.md` (that directory is not under version control, hence this mirror):
+
+> **SUPERSEDED 2026-08-04 (later) — the root cause below is one layer short.** The PI found the
+> actual cause: **macOS TCC**. The trigger script and venv interpreter both lived under
+> `~/Desktop`, a TCC-protected directory, so neither `cron` nor `launchd` was permitted to execute
+> them — installing the agent would not have fixed it. The same wall caused the `request_audit`
+> failure recorded below as a "second, independent defect": **it was one defect, not two.** Fixed
+> by relocating both to `/opt/homebrew/var/audit-loop-bin/` and `/opt/homebrew/var/audit-loop-venv/`.
+> The observation below is accurate as an observation and is kept for that reason.
 
 **The dispatcher's launchd agent is installed in no launchd directory.** The plist exists in the
 audit-loop tree and declares a 900 s interval with `RunAtLoad`, but zero matching entries exist in
@@ -869,7 +929,8 @@ deferral lines appear only alongside the escalation-pause message).
 installs a persistent background job that spawns an external auditor and spends budget every pass.
 The command is recorded in I-009.
 
-**A second, independent defect from the same inspection:** `request_audit` via the MCP server now
+**A second defect from the same inspection** *(superseded: the same TCC wall, not independent)*:
+`request_audit` via the MCP server now
 fails with `Operation not permitted` on `audit-loop/.venv/bin/python` (a symlink chain into a
 conda env the server's context cannot execute). Audit requests in this period were therefore
 generated by running `orchestrator/make_audit_request.py` directly, which produces an identical
