@@ -1355,35 +1355,74 @@ expect(not _offenders46,
        ok_msg="every violation-phrased expect() supplies an ok_msg for its passing receipt")
 
 
-print("\n[47] the barrier extractor refuses without a gate token and prints no value (C-GATE-002)")
-import subprocess as _sp47, sys as _sys47, os as _os47, tempfile as _tf47, re as _re47
+print("\n[47] extraction authorization is bound to a real controller ALLOW (F-025 / C-GATE-002)")
+import subprocess as _sp47, sys as _sys47, os as _os47, tempfile as _tf47, json as _js47, re as _re47
 _scr47 = "scripts/27_extract_barriers.py"
 expect(_os47.path.exists(_scr47), "extractor script is committed")
 if _os47.path.exists(_scr47):
-    _tmp47 = _os47.path.join(_tf47.gettempdir(), "barrier_refuse_probe.json")
-    if _os47.path.exists(_tmp47): _os47.remove(_tmp47)
-    # PLACEHOLDER is >=8 chars so it passes the FORMAT check and is caught ONLY by the
-    # explicit blocklist -- this is what makes the blocklist load-bearing in this fixture.
-    for _tok47 in ("PENDING", "NONE", "DENY", "PLACEHOLDER"):
-        _r47 = _sp47.run([_sys47.executable, _scr47, "--gate-token", _tok47, "--out", _tmp47],
-                         capture_output=True, text=True)
-        _blob47 = _r47.stdout + _r47.stderr
-        expect(_r47.returncode != 0, f"placeholder token {_tok47} is refused (nonzero exit)")
-        expect(not _os47.path.exists(_tmp47), f"token {_tok47}: no output file written")
-        # no eV-shaped value may appear on the refusal path
-        expect(not _re47.search(r"\d\.\d+\s*eV", _blob47),
-               f"token {_tok47}: refusal output contains an eV-shaped value",
-               ok_msg=f"token {_tok47}: refusal output contains no eV-shaped value")
-    # invoking with no token at all must also fail
-    _r47 = _sp47.run([_sys47.executable, _scr47, "--out", _tmp47], capture_output=True, text=True)
-    expect(_r47.returncode != 0, "missing --gate-token is refused")
-    expect(not _os47.path.exists(_tmp47), "no token: no output file written")
-    # SELF-CLEANUP: if a future edit ever weakens the guard, this probe would leave an
-    # ungated extraction record on disk. Remove it unconditionally and unread.
-    if _os47.path.exists(_tmp47):
-        _os47.remove(_tmp47)
-        expect(False, "probe wrote an extraction record -- the gate token guard is NOT effective")
-
+    _src47 = open(_scr47).read()
+    # (a) STRUCTURAL: authorization must not rest on a self-invented token. Audit F-025: the
+    #     previous guard checked syntax + five literal blacklist strings, so `--gate-token
+    #     arbitrary` produced a full extraction record while regression [47] still passed.
+    # Check the ARGPARSE SURFACE, not prose: the docstring names the retired flag on purpose,
+    # recording why it was removed. What must not exist is an accepted argument.
+    _args47 = _re47.findall(r'add_argument\(\s*["\']([^"\']+)["\']', _src47)
+    expect("--gate-token" not in _args47,
+           f"extractor still ACCEPTS the unauthenticated --gate-token argument (args: {_args47})",
+           ok_msg=f"extractor accepts only ledger-bound arguments: {_args47}")
+    expect("--allow-timestamp" in _args47, "extractor takes an ALLOW-row timestamp")
+    for _need47 in ("action_ledger", "publish_claim", "science_commit", "manifest_sha256",
+                    "reason_codes"):
+        expect(_need47 in _src47, f"authorization binds on {_need47}")
+    _tmp47 = _os47.path.join(_tf47.gettempdir(), "extract_probe.json")
+    _led47 = _os47.path.join(_tf47.gettempdir(), "probe_ledger.jsonl")
+    def _run47(args):
+        if _os47.path.exists(_tmp47): _os47.remove(_tmp47)
+        _r = _sp47.run([_sys47.executable, _scr47] + args + ["--out", _tmp47],
+                       capture_output=True, text=True)
+        _wrote = _os47.path.exists(_tmp47)
+        _blob = _r.stdout + _r.stderr
+        if _wrote: _os47.remove(_tmp47)          # never retain a gated record
+        return _r.returncode, _wrote, _blob
+    # (b) NEGATIVE: a syntactically valid but UNRECORDED value -- the auditor's exact bypass.
+    for _tok47 in ("arbitrary", "ALLOW", "2099-12-31T00:00:00.000000+00:00"):
+        _rc, _wrote, _blob = _run47(["--allow-timestamp", _tok47])
+        expect(_rc != 0, f"unrecorded authorization value {_tok47!r} is refused (nonzero exit)")
+        expect(not _wrote, f"unrecorded value {_tok47!r}: no extraction record written")
+        expect(not _re47.search(r"\d\.\d+\s*eV", _blob),
+               f"refusal for {_tok47!r} leaked an eV-shaped value",
+               ok_msg=f"refusal for {_tok47!r} leaked no eV-shaped value")
+    _rc, _wrote, _b = _run47(["--allow-timestamp", "x", "--ledger", "/nonexistent/ledger.jsonl"])
+    expect(_rc != 0 and not _wrote, "a missing ledger is refused and writes nothing")
+    # (c) BOTH POLARITIES against a synthetic ledger. A guard that only ever refuses is
+    #     indistinguishable from a broken script, so the valid row MUST be honoured; and each
+    #     near-miss isolates exactly one binding.
+    _head47 = _sp47.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    _man47 = _js47.load(open(".audit/audit_request.json"))["evidence_manifest_sha256"]
+    def _row47(ts, **kw):
+        r = {"timestamp": ts, "action": "publish_claim", "decision": "ALLOW", "reason_codes": [],
+             "science_commit": _head47, "manifest_sha256": _man47, "source": "regression"}
+        r.update(kw); return r
+    _rows47 = [_row47("2099-01-01T00:00:00.000000+00:00"),
+               _row47("2099-01-02T00:00:00.000000+00:00", reason_codes=["PI_APPROVAL_REQUIRED"]),
+               _row47("2099-01-03T00:00:00.000000+00:00", science_commit="0"*40),
+               _row47("2099-01-04T00:00:00.000000+00:00", manifest_sha256="0"*64),
+               _row47("2099-01-05T00:00:00.000000+00:00", decision="DENY"),
+               _row47("2099-01-06T00:00:00.000000+00:00", action="commit_and_push_fixes")]
+    open(_led47, "w").write("\n".join(_js47.dumps(r) for r in _rows47) + "\n")
+    for _ts47, _why47 in [("2099-01-02T00:00:00.000000+00:00", "an ALLOW carrying blocking reason codes"),
+                          ("2099-01-03T00:00:00.000000+00:00", "an ALLOW bound to another commit"),
+                          ("2099-01-04T00:00:00.000000+00:00", "an ALLOW bound to another manifest"),
+                          ("2099-01-05T00:00:00.000000+00:00", "a DENY row"),
+                          ("2099-01-06T00:00:00.000000+00:00", "an ALLOW for a different action")]:
+        _rc, _wrote, _b = _run47(["--allow-timestamp", _ts47, "--ledger", _led47])
+        expect(_rc != 0 and not _wrote, f"{_why47} is refused and writes nothing")
+    _rc, _wrote, _b = _run47(["--allow-timestamp", "2099-01-01T00:00:00.000000+00:00",
+                              "--ledger", _led47])
+    expect(_rc == 0 and _wrote,
+           "a correctly-bound ALLOW is NOT honoured -- the guard may be a dead shell",
+           ok_msg="a correctly-bound ALLOW is honoured (guard is live, not a permanent refusal)")
+    _os47.remove(_led47)
 
 print("\n[48] a retracted wording does not survive in headings or absolute claims (reviewer warns)")
 import glob as _g48, re as _re48

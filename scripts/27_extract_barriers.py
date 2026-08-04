@@ -2,8 +2,18 @@
 """Extract the q=0 / q=+1 production CI-NEB activation energies — GATED.
 
 This script performs the barrier extraction that audit policy places behind
-`check_action(action="publish_claim")`. It REFUSES to produce any number unless
-invoked with --gate-token carrying the consultation id of an ALLOW verdict.
+`check_action(action="publish_claim")`. It REFUSES to produce any number unless it can
+find a DURABLE controller-written ALLOW record in the action ledger that is bound to
+THIS commit, to `publish_claim`, and to this repository's committed evidence manifest.
+
+Audit F-025 (2026-08-04) rejected the previous design and was right to: the old
+`--gate-token <consultation_id>` validated only token SYNTAX plus five literal
+blacklist strings, because the controller's ledger emits no consultation id at all --
+the field was invented here and therefore unverifiable. An auditor ran this script with
+the token `arbitrary` in an isolated clone and it produced a full extraction record.
+Authorization now derives from the ledger row itself, which the controller writes; the
+operator supplies only the row's timestamp so a specific decision is being invoked
+rather than "whatever ALLOW exists".
 
 Design rules (audit-driven):
   * Reads ONLY the committed raw outputs; never a workspace copy, never a remote file.
@@ -13,8 +23,9 @@ Design rules (audit-driven):
   * Emits a single JSON record with every value traceable to a file + hash + line.
   * Prints nothing barrier-shaped on the refusal path.
 
-Usage (only after an ALLOW):
-    python3 scripts/27_extract_barriers.py --gate-token <consultation_id> --out <path.json>
+Usage (only after an ALLOW appears in the ledger):
+    python3 scripts/27_extract_barriers.py --allow-timestamp <ISO8601 of the ALLOW row> \
+        --out <path.json> [--ledger <path to action_ledger.jsonl>]
 """
 from __future__ import annotations
 import argparse, gzip, hashlib, json, re, sys
@@ -31,6 +42,81 @@ LEGS = {
 }
 FP_KEYS = ("conv_thr", "degauss", "path_thr", "num_of_images", "CI_scheme",
            "ecutwfc", "ecutrho", "nspin", "occupations", "smearing")
+
+
+DEFAULT_LEDGER = Path("/Users/ericdong/Desktop/perovskite-project/audit-loop/state/action_ledger.jsonl")
+
+
+def git_head(repo: Path) -> str:
+    import subprocess
+    r = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        raise SystemExit("REFUSED: cannot resolve git HEAD; authorization cannot be bound.")
+    return r.stdout.strip()
+
+
+def committed_manifest_sha(repo: Path) -> str:
+    req = repo / ".audit" / "audit_request.json"
+    if not req.exists():
+        raise SystemExit("REFUSED: no .audit/audit_request.json; nothing to bind authorization to.")
+    return json.loads(req.read_text())["evidence_manifest_sha256"]
+
+
+def authorize(allow_timestamp: str, ledger: Path, repo: Path) -> dict:
+    """Return the controller's ALLOW row, or exit nonzero. Reads NOTHING scientific.
+
+    Every one of these conditions must hold. Each has an audit reason for existing:
+      * the ledger file exists and is the controller's (F-025: authority must be durable
+        and externally written, never a string this script invents or accepts on faith);
+      * a row exists with EXACTLY the supplied timestamp -- so the invocation names one
+        specific decision instead of matching "some ALLOW";
+      * that row's action is publish_claim and its decision is ALLOW;
+      * it carries no reason_codes (an ALLOW with blockers is not an authorization);
+      * its science_commit equals the CURRENT HEAD -- an ALLOW for an older tree does not
+        authorize extraction from a different one;
+      * its manifest_sha256 equals the committed evidence binding -- so the authorized
+        evidence set is the one on disk.
+    """
+    if not ledger.exists():
+        raise SystemExit(f"REFUSED: action ledger not found at {ledger}. "
+                         "No durable ALLOW record can be verified; no extraction performed.")
+    rows = []
+    for line in ledger.read_text().splitlines():
+        line = line.strip()
+        if line:
+            try:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+    hits = [r for r in rows if r.get("timestamp") == allow_timestamp]
+    if not hits:
+        raise SystemExit(f"REFUSED: no ledger row with timestamp {allow_timestamp!r}. "
+                         "The supplied value does not name a recorded controller decision; "
+                         "no extraction performed.")
+    row = hits[-1]
+    if row.get("action") != "publish_claim":
+        raise SystemExit(f"REFUSED: ledger row is action {row.get('action')!r}, not "
+                         "'publish_claim'; no extraction performed.")
+    if row.get("decision") != "ALLOW":
+        raise SystemExit(f"REFUSED: ledger row decision is {row.get('decision')!r}, not "
+                         "'ALLOW'; no extraction performed.")
+    if row.get("reason_codes"):
+        raise SystemExit(f"REFUSED: the ALLOW row carries blocking reason codes "
+                         f"{row['reason_codes']}; that is not an authorization. "
+                         "No extraction performed.")
+    head = git_head(repo)
+    if row.get("science_commit") != head:
+        raise SystemExit(f"REFUSED: the ALLOW is bound to commit "
+                         f"{str(row.get('science_commit'))[:12]} but HEAD is {head[:12]}. "
+                         "An authorization for another tree does not carry over; "
+                         "no extraction performed.")
+    man = committed_manifest_sha(repo)
+    if row.get("manifest_sha256") != man:
+        raise SystemExit(f"REFUSED: the ALLOW is bound to evidence manifest "
+                         f"{str(row.get('manifest_sha256'))[:12]} but the committed binding is "
+                         f"{man[:12]}; no extraction performed.")
+    return row
 
 
 def sha256(p: Path) -> str:
@@ -84,15 +170,13 @@ def parse_activation(text: str, leg: str) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--gate-token", required=True,
-                    help="consultation id of the ALLOW verdict for publish_claim")
+    ap.add_argument("--allow-timestamp", required=True,
+                    help="exact timestamp of the controller ALLOW row in the action ledger")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--ledger", default=str(DEFAULT_LEDGER))
     a = ap.parse_args()
-    if not re.fullmatch(r"[A-Za-z0-9:_-]{8,}", a.gate_token) or a.gate_token.upper() in (
-            "NONE", "PENDING", "DENY", "TODO", "PLACEHOLDER"):
-        print("REFUSED: --gate-token is not a recorded ALLOW consultation id. "
-              "No extraction performed.", file=sys.stderr)
-        return 2
+    # Authorization BEFORE any scientific read or write (F-025).
+    allow_row = authorize(a.allow_timestamp, Path(a.ledger), ROOT)
 
     legs, fps = {}, {}
     for leg, paths in LEGS.items():
@@ -107,7 +191,11 @@ def main() -> int:
     if diff:
         raise SystemExit(f"FINGERPRINT MISMATCH beyond charge: {sorted(diff)}; refusing.")
 
-    rec = {"gate_token": a.gate_token, "legs": legs,
+    rec = {"authorized_by": {"ledger": str(Path(a.ledger)), "timestamp": allow_row["timestamp"],
+                             "action": allow_row["action"], "decision": allow_row["decision"],
+                             "science_commit": allow_row["science_commit"],
+                             "manifest_sha256": allow_row["manifest_sha256"]},
+           "legs": legs,
            "fingerprint_differs_only_by": ["tot_charge", "sha256"],
            "delta_forward_eV": round(legs["q1"]["forward_eV"] - legs["q0"]["forward_eV"], 6),
            "delta_backward_eV": round(legs["q1"]["backward_eV"] - legs["q0"]["backward_eV"], 6),
