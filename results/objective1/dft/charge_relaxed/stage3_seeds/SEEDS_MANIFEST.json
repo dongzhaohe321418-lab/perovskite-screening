@@ -1,0 +1,37 @@
+{
+ "purpose": "Stage-3 MLIP training seeds: converged-SCF ionic-step frames from the q=0 ENDPOINT RELAXATIONS only.",
+ "excluded_on_purpose": "NEB-derived frames (q{0,1}_neb_archive) are NOT included: their per-image energies encode the migration barrier, which is gate-DENIED for extraction. Add them only after the publish_claim authorization.",
+ "n_frames": 12,
+ "natoms": 159,
+ "fmax_range_eV_per_A": [
+  0.0399,
+  0.081
+ ],
+ "energy_range_eV": [
+  -125820.3944,
+  -125820.3674
+ ],
+ "theory": "PBE+D3(BJ), degauss 0.005, Gamma, nspin=1, conv_thr 1e-8",
+ "provenance": [
+  {
+   "source": "results/objective1/dft/charge_relaxed/q0/q0_final_ns1.out.gz",
+   "sha256": "a41491aa20bfed838e6207b8d3a5e6e7c9eb8ad00cc2a63c2cd130be04ba980e",
+   "frames_parsed": 11,
+   "frames_with_energy_and_forces": 11,
+   "tot_charge": 0.0,
+   "natoms": [
+    159
+   ]
+  },
+  {
+   "source": "results/objective1/dft/charge_relaxed/q0/q0_initial.out.gz",
+   "sha256": "1e37d1b5e1481a3c6a6f016573454229ae0b90e2bd2be9313ce0b1eb6b6ee80d",
+   "frames_parsed": 1,
+   "frames_with_energy_and_forces": 1,
+   "tot_charge": 0.0,
+   "natoms": [
+    159
+   ]
+  }
+ ]
+}

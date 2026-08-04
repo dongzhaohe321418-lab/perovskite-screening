@@ -1425,6 +1425,26 @@ if _os49.path.exists(_fp49):
         expect("DENY" in _t49, "FNV record records the gate decision that stopped it")
 
 
+print("\n[50] Stage-3 seeds contain no NEB-derived frame while extraction is gated (C-GATE-004)")
+import os as _os50, json as _js50
+_sd50 = "results/objective1/dft/charge_relaxed/stage3_seeds"
+if _os50.path.exists(_sd50):
+    _mf50 = _js50.load(open(f"{_sd50}/SEEDS_MANIFEST.json"))
+    expect("excluded_on_purpose" in _mf50, "seeds manifest records what is deliberately excluded")
+    # every provenance source must be an ENDPOINT relaxation, never a NEB archive
+    for _p50 in _mf50.get("provenance", []):
+        _s50 = _p50["source"].lower()
+        expect("neb" not in _s50 and "archive" not in _s50,
+               f"seed provenance names a NEB-derived source: {_p50['source']}",
+               ok_msg=f"seed provenance is endpoint-relaxation only: {_os50.path.basename(_p50['source'])}")
+    # and the frame file itself must not carry a NEB source tag
+    _txt50 = open(f"{_sd50}/stage3_seeds.extxyz", errors="ignore").read()
+    expect("neb" not in _txt50.lower(),
+           "seed frame file carries a NEB source tag",
+           ok_msg="seed frame file carries no NEB source tag")
+    expect(_mf50["natoms"] == 159, f"seeds are 159-atom cells (got {_mf50['natoms']})")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
