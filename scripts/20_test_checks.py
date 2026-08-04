@@ -1391,6 +1391,15 @@ if _os47.path.exists(_scr47):
            f"extractor still ACCEPTS the unauthenticated --gate-token argument (args: {_args47})",
            ok_msg=f"extractor accepts only ledger-bound arguments: {_args47}")
     expect("--allow-timestamp" in _args47, "extractor takes an ALLOW-row timestamp")
+    # F-025 v2: the auditor pointed --ledger at a fabricated file whose row matched HEAD and
+    # the manifest, and every predicate passed. Authority the caller can redirect is not
+    # authority, so NO path may be caller-supplied.
+    expect("--ledger" not in _args47,
+           f"extractor still lets the caller choose the ledger path (args: {_args47})",
+           ok_msg="extractor exposes no caller-selectable authorization path")
+    expect("CONTROLLER_DIR" in _src47, "controller state location is a module constant")
+    expect("corroborated_by" in _src47 or "authorizations" in _src47,
+           "authorization requires cross-file corroboration")
     for _need47 in ("action_ledger", "publish_claim", "science_commit", "manifest_sha256",
                     "reason_codes"):
         expect(_need47 in _src47, f"authorization binds on {_need47}")
@@ -1441,19 +1450,62 @@ if _os47.path.exists(_scr47):
                           ("2099-01-06T00:00:00.000000+00:00", "an ALLOW for a different action")]:
         _rc, _wrote, _b = _run47(["--allow-timestamp", _ts47, "--ledger", _led47])
         expect(_rc != 0 and not _wrote, f"{_why47} is refused and writes nothing")
-    _rc, _wrote, _b = _run47(["--allow-timestamp", "2099-01-01T00:00:00.000000+00:00",
-                              "--ledger", _led47])
-    if _head47:
-        expect(_rc == 0 and _wrote,
-               "a correctly-bound ALLOW is NOT honoured -- the guard may be a dead shell",
-               ok_msg="a correctly-bound ALLOW is honoured (guard is live, not a permanent refusal)")
-    else:
-        # no resolvable HEAD: the commit binding cannot be satisfied, so refusal is CORRECT
-        expect(_rc != 0 and not _wrote,
-               "without a resolvable HEAD the guard must refuse (binding unsatisfiable)",
-               ok_msg="without a resolvable HEAD the guard refuses; positive path not assertable "
-                      "here (run in a git worktree to exercise it)")
+    # The old CLI positive path used --ledger, which no longer exists; and pointing the CLI at
+    # the REAL controller state cannot succeed while no authorization is granted (correctly).
+    # The positive path is now exercised in-process at (c) below, where CONTROLLER_DIR can be
+    # rebound to a fixture holding two agreeing records.
+    _rc, _wrote, _b = _run47(["--allow-timestamp", "2099-01-01T00:00:00.000000+00:00"])
+    expect(_rc != 0 and not _wrote,
+           "an uncorroborated timestamp via the CLI must be refused",
+           ok_msg="an uncorroborated timestamp via the CLI is refused (real state grants none)")
     _os47.remove(_led47)
+    # F-025 v2 NEGATIVE: a FULLY MATCHING forged ledger -- correct HEAD, correct manifest,
+    # decision ALLOW, no reason codes -- must still be refused, because one file the caller
+    # can write is not two independent controller records. Driven by importing the module and
+    # rebinding CONTROLLER_DIR, which the CLI deliberately cannot do.
+    import importlib.util as _iu47, tempfile as _tmpmod47
+    _spec47 = _iu47.spec_from_file_location("_bx47", _scr47)
+    _mod47 = _iu47.module_from_spec(_spec47); _spec47.loader.exec_module(_mod47)
+    _fake47 = _os47.path.join(_tf47.mkdtemp(), "state")
+    _os47.makedirs(_os47.path.join(_fake47, "controller"), exist_ok=True)
+    _row47f = {"timestamp": "2099-09-09T00:00:00+00:00", "action": "publish_claim",
+               "decision": "ALLOW", "reason_codes": [], "science_commit": _head47,
+               "manifest_sha256": _man47, "source": "FORGED"}
+    open(_os47.path.join(_fake47, "action_ledger.jsonl"), "w").write(_js47.dumps(_row47f) + "\n")
+    # (a) ledger forged, controller state has NO matching authorization -> must refuse
+    open(_os47.path.join(_fake47, "controller", "state.json"), "w").write(
+        _js47.dumps({"authorizations": []}))
+    _mod47.CONTROLLER_DIR = _mod47.Path(_fake47)
+    try:
+        _mod47.authorize("2099-09-09T00:00:00+00:00", _mod47.ROOT)
+        expect(False, "a fully matching FORGED ledger was accepted without corroboration")
+    except SystemExit as _e47:
+        expect("corroborat" in str(_e47).lower(),
+               f"forged-ledger refusal cites corroboration (got: {str(_e47)[:70]})",
+               ok_msg="a fully matching forged ledger is refused for lack of corroboration")
+    # (b) controller state present but bound to a DIFFERENT commit -> must still refuse
+    open(_os47.path.join(_fake47, "controller", "state.json"), "w").write(_js47.dumps(
+        {"authorizations": [{"action": "publish_claim", "science_commit": "0"*40,
+                             "manifest_sha256": _man47,
+                             "ledger_timestamp": "2099-09-09T00:00:00+00:00"}]}))
+    try:
+        _mod47.authorize("2099-09-09T00:00:00+00:00", _mod47.ROOT)
+        expect(False, "corroboration bound to another commit was accepted")
+    except SystemExit:
+        expect(True, "", ok_msg="corroboration bound to another commit is refused")
+    # (c) both records agree -> accepted, proving corroboration is not a blanket refusal
+    open(_os47.path.join(_fake47, "controller", "state.json"), "w").write(_js47.dumps(
+        {"authorizations": [{"action": "publish_claim", "science_commit": _head47,
+                             "manifest_sha256": _man47,
+                             "ledger_timestamp": "2099-09-09T00:00:00+00:00"}]}))
+    try:
+        _got47 = _mod47.authorize("2099-09-09T00:00:00+00:00", _mod47.ROOT)
+        expect(_got47.get("corroborated_by") is not None,
+               "corroborated authorization returns its corroborating record",
+               ok_msg="two agreeing controller records authorize (guard is live, not blanket)")
+    except SystemExit as _e47b:
+        expect(_head47 == "", f"two agreeing records were refused: {str(_e47b)[:80]}",
+               ok_msg="no resolvable HEAD here, so refusal is correct")
 
 print("\n[48] a retracted wording does not survive in headings or absolute claims (reviewer warns)")
 import glob as _g48, re as _re48
@@ -1521,3 +1573,43 @@ if FAILS:
     for f in FAILS: print("  -", f)
     sys.exit(1)
 print("ALL TESTS PASSED -- every check fires on its own historical incident")
+
+print("\n[51] the committed evidence manifest describes the committed tree (F-027 / C-EVD-003)")
+import json as _js51, hashlib as _hl51, subprocess as _sp51, os as _os51
+_mp51 = ".audit/evidence_manifest.json"
+if _os51.path.exists(_mp51):
+    _m51 = _js51.load(open(_mp51))
+    for _k51 in ("tree_sha256", "file_count", "recompute_command", "evidence_parent_commit"):
+        expect(_k51 in _m51, f"manifest declares {_k51}")
+    # Recompute from the COMMITTED objects at HEAD, not the working tree: the auditor runs on a
+    # clean checkout, and F-027 arose precisely because the digest was taken while files outside
+    # .audit were still uncommitted, so the committed manifest described a different tree.
+    _h51 = _sp51.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+    if _h51.returncode == 0:
+        _head51 = _h51.stdout.strip()
+        _ls51 = _sp51.run(["git", "ls-tree", "-r", "-z", "--name-only", _head51],
+                          capture_output=True).stdout
+        _paths51 = sorted(_p for _p in _ls51.split(b"\0")
+                          if _p and not _p.startswith(b".audit/"))
+        _st51 = b""
+        for _p51 in _paths51:
+            _blob51 = _sp51.run(["git", "show", f"{_head51}:{_p51.decode()}"],
+                                capture_output=True).stdout
+            _st51 += _hl51.sha256(_blob51).hexdigest().encode() + b"  " + _p51 + b"\n"
+        _calc51 = _hl51.sha256(_st51).hexdigest()
+        expect(_calc51 == _m51["tree_sha256"],
+               f"manifest tree_sha256 {_m51['tree_sha256'][:12]} does not describe the committed "
+               f"tree at {_head51[:12]} (recomputed {_calc51[:12]}) -- gate binding invalid",
+               ok_msg=f"manifest tree_sha256 {_calc51[:12]} matches the committed tree at "
+                      f"{_head51[:12]}")
+        expect(len(_paths51) == _m51["file_count"],
+               f"manifest file_count {_m51['file_count']} != {len(_paths51)} committed files",
+               ok_msg=f"manifest file_count {_m51['file_count']} matches the committed tree")
+    # the request's binding must hash the manifest's RAW bytes (F-018 convention)
+    _rq51 = ".audit/audit_request.json"
+    if _os51.path.exists(_rq51):
+        _raw51 = open(_mp51, "rb").read()
+        expect(_js51.load(open(_rq51))["evidence_manifest_sha256"]
+               == _hl51.sha256(_raw51).hexdigest(),
+               "audit_request evidence_manifest_sha256 != raw-byte digest of the manifest",
+               ok_msg="audit_request binds the manifest's raw-byte digest (F-018 convention)")

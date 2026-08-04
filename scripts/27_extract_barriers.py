@@ -6,14 +6,29 @@ This script performs the barrier extraction that audit policy places behind
 find a DURABLE controller-written ALLOW record in the action ledger that is bound to
 THIS commit, to `publish_claim`, and to this repository's committed evidence manifest.
 
-Audit F-025 (2026-08-04) rejected the previous design and was right to: the old
-`--gate-token <consultation_id>` validated only token SYNTAX plus five literal
-blacklist strings, because the controller's ledger emits no consultation id at all --
-the field was invented here and therefore unverifiable. An auditor ran this script with
-the token `arbitrary` in an isolated clone and it produced a full extraction record.
-Authorization now derives from the ledger row itself, which the controller writes; the
-operator supplies only the row's timestamp so a specific decision is being invoked
-rather than "whatever ALLOW exists".
+Audit F-025 rejected two designs before this one, and both rejections were correct.
+
+  v1 (`--gate-token <consultation_id>`) validated only token SYNTAX plus five literal
+  blacklist strings, because the controller's ledger emits no consultation id at all --
+  the field was invented here and so had no referent. An auditor ran the script with the
+  token `arbitrary` and got a full extraction record.
+
+  v2 read a real controller ledger row but took the ledger's PATH from `--ledger`. The
+  auditor supplied a fabricated ledger carrying the current HEAD and manifest hash; every
+  predicate passed. Authority that the caller can redirect is not authority.
+
+v3 (this version) therefore takes NO path from the caller: the controller's state
+directory is a module constant, and authorization must be corroborated in TWO files the
+controller writes independently -- `action_ledger.jsonl` and `controller/state.json`'s
+`authorizations` list. A single-file forgery fails on the missing corroboration.
+
+RESIDUAL TRUST ASSUMPTION, stated because it cannot be closed from inside this script:
+this process runs with the audited party's privileges, so any file it can read it could
+also write. No local read can prove a local file was not forged by the reader. What v3
+establishes is that (a) the CLI cannot be pointed at a substitute, and (b) a forgery must
+be consistent across two controller-written files. Closing the gap fully requires the
+controller to place its records where the executor cannot write, or to sign them -- an
+operator action, reported to the PI rather than asserted as solved here.
 
 Design rules (audit-driven):
   * Reads ONLY the committed raw outputs; never a workspace copy, never a remote file.
@@ -23,9 +38,12 @@ Design rules (audit-driven):
   * Emits a single JSON record with every value traceable to a file + hash + line.
   * Prints nothing barrier-shaped on the refusal path.
 
-Usage (only after an ALLOW appears in the ledger):
+Usage (only after a corroborated ALLOW exists):
     python3 scripts/27_extract_barriers.py --allow-timestamp <ISO8601 of the ALLOW row> \
-        --out <path.json> [--ledger <path to action_ledger.jsonl>]
+        --out <path.json>
+
+There is deliberately no path argument. Tests exercise both polarities by importing this
+module and rebinding CONTROLLER_DIR in-process, which the CLI cannot do.
 """
 from __future__ import annotations
 import argparse, gzip, hashlib, json, re, sys
@@ -44,7 +62,17 @@ FP_KEYS = ("conv_thr", "degauss", "path_thr", "num_of_images", "CI_scheme",
            "ecutwfc", "ecutrho", "nspin", "occupations", "smearing")
 
 
-DEFAULT_LEDGER = Path("/Users/ericdong/Desktop/perovskite-project/audit-loop/state/action_ledger.jsonl")
+# Controller-owned state. NOT caller-selectable (audit F-025 v2): the CLI exposes no path
+# argument, so an invocation cannot redirect authorization at a substitute file.
+CONTROLLER_DIR = Path("/Users/ericdong/Desktop/perovskite-project/audit-loop/state")
+
+
+def _ledger_path() -> Path:
+    return CONTROLLER_DIR / "action_ledger.jsonl"
+
+
+def _state_path() -> Path:
+    return CONTROLLER_DIR / "controller" / "state.json"
 
 
 def git_head(repo: Path) -> str:
@@ -63,7 +91,7 @@ def committed_manifest_sha(repo: Path) -> str:
     return json.loads(req.read_text())["evidence_manifest_sha256"]
 
 
-def authorize(allow_timestamp: str, ledger: Path, repo: Path) -> dict:
+def authorize(allow_timestamp: str, repo: Path) -> dict:
     """Return the controller's ALLOW row, or exit nonzero. Reads NOTHING scientific.
 
     Every one of these conditions must hold. Each has an audit reason for existing:
@@ -78,6 +106,7 @@ def authorize(allow_timestamp: str, ledger: Path, repo: Path) -> dict:
       * its manifest_sha256 equals the committed evidence binding -- so the authorized
         evidence set is the one on disk.
     """
+    ledger = _ledger_path()
     if not ledger.exists():
         raise SystemExit(f"REFUSED: action ledger not found at {ledger}. "
                          "No durable ALLOW record can be verified; no extraction performed.")
@@ -116,7 +145,33 @@ def authorize(allow_timestamp: str, ledger: Path, repo: Path) -> dict:
         raise SystemExit(f"REFUSED: the ALLOW is bound to evidence manifest "
                          f"{str(row.get('manifest_sha256'))[:12]} but the committed binding is "
                          f"{man[:12]}; no extraction performed.")
-    return row
+    # CORROBORATION (audit F-025 v2): the ledger alone is one file. The controller also
+    # records granted authorizations in controller/state.json. Requiring agreement means a
+    # forged ledger row must be matched by a forged state entry -- the auditor's fabricated
+    # single ledger no longer suffices.
+    state = _state_path()
+    if not state.exists():
+        raise SystemExit(f"REFUSED: controller state not found at {state}; the ALLOW cannot be "
+                         "corroborated. No extraction performed.")
+    try:
+        auths = json.loads(state.read_text()).get("authorizations") or []
+    except (json.JSONDecodeError, OSError) as exc:
+        raise SystemExit(f"REFUSED: controller state unreadable ({exc}); the ALLOW cannot be "
+                         "corroborated. No extraction performed.")
+    matches = [a for a in auths
+               if isinstance(a, dict)
+               and a.get("action") == "publish_claim"
+               and a.get("science_commit") == row.get("science_commit")
+               and a.get("manifest_sha256") == row.get("manifest_sha256")
+               and (a.get("ledger_timestamp") == allow_timestamp
+                    or a.get("timestamp") == allow_timestamp)]
+    if not matches:
+        raise SystemExit(
+            "REFUSED: the ledger row is not corroborated by any publish_claim authorization in "
+            f"{state} bound to the same commit, manifest and timestamp. A ledger row alone is a "
+            "single file the caller might have written; two independent controller records are "
+            "required. No extraction performed.")
+    return {**row, "corroborated_by": matches[-1]}
 
 
 def sha256(p: Path) -> str:
@@ -173,10 +228,10 @@ def main() -> int:
     ap.add_argument("--allow-timestamp", required=True,
                     help="exact timestamp of the controller ALLOW row in the action ledger")
     ap.add_argument("--out", required=True)
-    ap.add_argument("--ledger", default=str(DEFAULT_LEDGER))
     a = ap.parse_args()
-    # Authorization BEFORE any scientific read or write (F-025).
-    allow_row = authorize(a.allow_timestamp, Path(a.ledger), ROOT)
+    # Authorization BEFORE any scientific read or write (F-025). No path comes from the
+    # caller: CONTROLLER_DIR is a module constant.
+    allow_row = authorize(a.allow_timestamp, ROOT)
 
     legs, fps = {}, {}
     for leg, paths in LEGS.items():
@@ -191,7 +246,8 @@ def main() -> int:
     if diff:
         raise SystemExit(f"FINGERPRINT MISMATCH beyond charge: {sorted(diff)}; refusing.")
 
-    rec = {"authorized_by": {"ledger": str(Path(a.ledger)), "timestamp": allow_row["timestamp"],
+    rec = {"authorized_by": {"ledger": str(_ledger_path()), "timestamp": allow_row["timestamp"],
+                             "corroborated_by": allow_row.get("corroborated_by"),
                              "action": allow_row["action"], "decision": allow_row["decision"],
                              "science_commit": allow_row["science_commit"],
                              "manifest_sha256": allow_row["manifest_sha256"]},
