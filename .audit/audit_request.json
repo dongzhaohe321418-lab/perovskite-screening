@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "1945086881cf1d02019f2c1561479e02bf378a30a7bbae4085d9095a3c49e384",
- "notes": "Requested via audit-mcp: Re-audit after CYCLE-000022 F-024 fix (expect() ok_msg; 8 sweep receipts made outcome-truthful; C-GUARD-003 regression [46] driving group 41 from committed fixtures + static AST sweep). Contains F-019 (1cca3f64) and F-022/F-023 (bc98bda3) by ancestry. FINAL non-BLOCK verdict prerequisite for the gated Q2 barrier-extraction publish_claim.",
+ "evidence_manifest_sha256": "a34dcfac0f598e6d2bee25990f5ceb683fae1e0107cc70026d10d7ef5f71a84b",
+ "notes": "Requested via audit-mcp: Re-audit at the tip: contains F-024 fix 7a4f3b0e by ancestry (acceptance criteria met: ok_msg success branch, 8 sweep receipts corrected, C-GUARD-003 regression [46] driving group 41 from committed fixtures + static AST sweep; clean-clone rerun 49 groups exit 0, [41] emits 'but IS marked historical/superseded', [44] 'present on disk'), plus gated extractor ad875731, reviewer-warn corrections 21cf7f6c, FNV-PENDING record 236f3719. FINAL non-BLOCK verdict prerequisite for the gated Q2 barrier extraction, which remains DENIED and un-attempted; the same DENY blocks the pp.x step for FNV, hence that deliverable is PENDING.",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
