@@ -1084,6 +1084,32 @@ def geometry_diagnostics(patterns, sub_df, perov_peaks, reference_label=None,
     slope_pos, icept_pos, r_pos = _fit(shift_sub, shift_100)
     _, _, r_width = _fit(fwhm_sub, fwhm_film)
 
+    # Robustness of the position test to the reference sample.
+    #
+    # The reference film sits at (0, 0) by construction, which invites the
+    # question of whether it is propping the fit up. It is not: subtracting a
+    # reference is a rigid translation of both axes, and slope and r are
+    # translation-invariant, so the fitted line is identical whether you work
+    # in shifts or in absolute angles. The reference point is a real
+    # measurement that happens to land on the origin, not a fabricated anchor.
+    #
+    # What IS worth reporting is leave-one-out: refit with each sample in turn
+    # removed (re-referencing to another film), so a verdict that hangs on one
+    # scan is visible. Both are returned rather than argued about.
+    idx = np.arange(len(labels))
+    loo = []
+    for i, lab in enumerate(labels):
+        m = idx != i
+        xs = shift_sub - shift_sub[i]
+        ys = shift_100 - shift_100[i]
+        s_i, _, r_i = _fit(xs[m], ys[m])
+        loo.append(dict(dropped=lab, n=int(m.sum()), slope=s_i, r=r_i))
+    loo_slopes = np.array([d['slope'] for d in loo], float)
+    loo_r = np.array([d['r'] for d in loo], float)
+    loo_stable = bool(np.all(np.isfinite(loo_slopes))
+                      and np.all(np.abs(loo_slopes - 1.0) <= slope_tol)
+                      and np.all(np.abs(loo_r) >= r_pos_min))
+
     pos_contaminated = (np.isfinite(r_pos) and abs(r_pos) >= r_pos_min
                         and abs(slope_pos - 1.0) <= slope_tol)
     width_contaminated = np.isfinite(r_width) and r_width >= r_width_max
@@ -1102,6 +1128,10 @@ def geometry_diagnostics(patterns, sub_df, perov_peaks, reference_label=None,
         notes.append("substrate line is broader than the film peaks in %d/%d scans, so it is "
                      "grain-size limited and CANNOT be used as a resolution standard"
                      % (sum(sub_broader.values()), len(labels)))
+    if pos_contaminated and not loo_stable:
+        notes.append("position verdict is NOT stable to leave-one-out (slopes %.2f-%.2f): it "
+                     "leans on a single scan and should be treated as provisional"
+                     % (np.nanmin(loo_slopes), np.nanmax(loo_slopes)))
     if not notes:
         notes.append("no substrate-linked contamination detected at the configured thresholds")
 
@@ -1116,6 +1146,8 @@ def geometry_diagnostics(patterns, sub_df, perov_peaks, reference_label=None,
         size_comparable=not width_contaminated,
         substrate_usable_as_resolution_standard=usable_as_standard,
         substrate_broader_than_film=sub_broader,
+        leave_one_out=pd.DataFrame(loo),
+        leave_one_out_stable=loo_stable,
         notes=notes)
 
 

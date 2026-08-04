@@ -1,3 +1,5 @@
+> **INDEPENDENT SUB-PROJECT.** This directory is an experimental XRD passivator screen. It shares **no evidence chain** with the migration-barrier work (Objectives 1–2) in the rest of this repository — nothing here supports or is supported by the GA/Sr screening or the q=0/q=+1 NEB campaign. Repo-level navigation: `../RESULTS_INDEX.md`.
+
 # Perovskite screening — XRD analysis log
 
 Analysis of powder/thin-film XRD for the **control** perovskite sample.
@@ -97,7 +99,13 @@ consistent with either a cubic phase or an unresolved tetragonal one.
 Two different questions get conflated under "crystallinity", and only one of
 them is answerable from a single scan.
 
-**Absolute degree of crystallinity: 46–60%, and the range is irreducible here.**
+**Absolute degree of crystallinity: 49–65%, and the range is irreducible here.**
+*(Superseded value, audit CYCLE-000006 F-014: this line previously read 46–60%, which was
+the pre-correction figure. The background model was corrected to exclude the 30.2° substrate
+line from the Bragg total — see the 2026-07-26 changelog entry below — shifting the range to
+49–65%. The committed current source `xrd/results/summary_metrics.csv` records
+49.03075–65.21879%, and recomputation from the raw `.txt`/`.mdi` via
+`xrd/analysis/xrd_protocol_kernel.py` returns 49.030543–65.218596%.)*
 The amorphous fraction is inferred from a broad halo under the Bragg peaks, but
 a very broad Gaussian is mathematically degenerate with the flat instrumental
 background (air scatter, detector dark counts, fluorescence). Fitting
@@ -369,7 +377,7 @@ auditable against the file. p-values are written at full precision
   `round(1)` key, which silently dropped every row whose fitted centroid crossed
   a rounding boundary relative to its seed — 21.05→21.151, 26.35→26.331 and
   30.05→30.199, i.e. the substrate line and both marginal candidates left blank
-  in `peak_table.csv` while the README quoted precise values for them. Replaced
+  in `xrd/results/peak_table.csv` while the README quoted precise values for them. Replaced
   with a nearest-seed tolerance join (`attach_detection`) that also exports
   `seed_offset` and `detection_unmatched`; all 14 rows now populated.
   (ii) *Precision loss*: `.round(6)` on export flattened p-values like 3.6×10⁻¹⁶

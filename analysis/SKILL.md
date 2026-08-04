@@ -220,6 +220,16 @@ calibrate absolute angle.
 | perovskite shift vs substrate shift, slope ~1 and \|r\| high | film peaks move WITH the substrate — a common geometric offset, not a lattice change | `Delta-a` = **NOT COMPARABLE** |
 | film FWHM vs substrate FWHM, r positive | instrumental contribution differed between scans | `Delta-D` = **NOT COMPARABLE** |
 
+**Is the reference sample included in the regression?** Yes, and it must be.
+Subtracting a reference is a rigid translation of both axes, and slope and r are
+translation-invariant — the fitted line is identical whether you regress shifts
+or absolute angles. The reference lands on (0, 0) because that is where the
+coordinate origin was put, not because a point was invented; dropping it would
+discard a real measurement. `geometry_diagnostics()` additionally returns
+`leave_one_out` (refit with each sample removed in turn, re-referenced to
+another film) and `leave_one_out_stable`, so a verdict resting on one scan is
+flagged rather than assumed away.
+
 It also reports whether the substrate line is BROADER than the film peaks. When
 it is, its width is set by the substrate's own grain size, so it cannot serve as
 a resolution standard — deconvolving it sends the apparent size to infinity.
@@ -253,9 +263,9 @@ unchanged, say so with the rank correlation.
 
 ### Deliverables for every run
 
-- `comparison.csv` — one row per sample, every quantity with its status column
-- `peak_table.csv` via `write_peak_table()` — full-precision p-values, never rounded
-- `geometry_diagnostics.csv` — substrate drift/width evidence behind the verdicts
+- `comparison.csv (not committed)` — one row per sample, every quantity with its status column
+- `xrd/results/peak_table.csv` via `write_peak_table()` — full-precision p-values, never rounded
+- `xrd/results/geometry_diagnostics.csv` — substrate drift/width evidence behind the verdicts
 - a figure whose panels show the diagnostics, not only the results
 - a dated entry in the experiment record, and a push to the project repo
 
