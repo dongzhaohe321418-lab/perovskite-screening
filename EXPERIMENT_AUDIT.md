@@ -845,6 +845,45 @@ Adopted during the campaign and in force:
    strings.
 10. The Tyagi-ordering claim stays closed until both legs are converged at identical theory
     level.
+## 2026-08-04 (final): the independent audit端 is retired — what is closed and what is not
+
+On PI instruction the codex audit端 is retired and the PI assumes sole review responsibility. The
+`check_action` gate stays in force. Recorded here because the handover state is not uniform, and
+the non-uniform part is the part that matters.
+
+**Independently verified closed (5):** F-019, F-022, F-023, F-024, F-027.
+
+**Never independently closed (2), and both are mine:**
+
+- **F-025 [HIGH].** Three fixes; the auditor broke the first two. v1 validated a `--gate-token`
+  field I had invented, and it fell to the token `arbitrary`. v2 read a genuine controller ledger
+  row but let the caller choose the ledger's *path*, and it fell to a fabricated ledger carrying
+  the right HEAD and manifest. **v3 has been audited by no one.** My own worst-case test — a fully
+  matching forged row appended to the *genuine* ledger, refused, ledger then restored
+  byte-identical — is me testing my own guard, which is precisely the evidence class the auditor
+  twice found wanting. The residual gap is unchanged and unassessed: this process runs with my
+  privileges, so any file I can read I could write; corroboration across two controller files
+  raises the cost of forgery without authenticating the source.
+- **F-026 [LOW].** Two out-of-repo tool paths, qualified as external in the same commit.
+
+**"Run the loop until PASS" was not achieved, and I will not describe it as achieved.** The last
+three cycles failed *controller validation* rather than the science: 000037 was the last real
+verdict (FINAL BLOCK); 000038 was invalidated for citing a fix commit absent from the tree it
+audited; 000039 — the **first snapshot containing v3** — failed on `existing finding cannot change
+blocking class: F-026` and never produced an `audit_result.json`. The retirement instruction
+arrived before any cycle could re-run.
+
+**Consequence to hold onto.** Every earlier claim in this file that rests on independent
+verification keeps that support. Anything resting on F-025 v3 — specifically, that extraction
+authorization cannot be forged — now rests on **self-testing only**. That is a weaker evidentiary
+basis than the rest of this record, and the difference should not be flattened when the barrier
+authorization decision is eventually made.
+
+**Extraction remains blocked** by `ACTIVE_BLOCKER_F-025`, `ACTIVE_BLOCKER_F-026`,
+`NO_FINAL_AUDIT_FOR_COMMIT` and the three approvals. The extractor also refuses while
+`controller/state.json`'s `authorizations` list is empty, which it is. Barriers UNEXTRACTED; the
+Tyagi-ordering ban stands.
+
 ## 2026-08-04 (fourth): CYCLE-000037 — F-025 twice more, and a CRITICAL evidence-binding defect
 
 The `node`-PATH blocker cleared, nine queued cycles drained, and the first cycle to reach a verdict

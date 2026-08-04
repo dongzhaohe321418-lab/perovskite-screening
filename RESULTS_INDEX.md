@@ -24,7 +24,9 @@ Anything not listed here is historical. Restructured 2026-07-28.
   host's own configurational disorder. Power at the 10× target is 0.96 (GA) / 0.88 (Sr), so
   the null is informative, not merely underpowered — but detecting a 20 meV effect would need
   n≈47 (GA) / 72 (Sr), roughly 4–6× more members. See
-  `results/objective2/analysis/ANALYSIS_objective2.md`.
+  `results/objective2/analysis/ANALYSIS_objective2.md`, with the final result and ranked
+  next experiments in `results/objective2/analysis/FINAL_RESULT_AND_NEXT_STEPS.md`
+  (P1: expand to n≈50/72 for 20 meV resolution, ~2 GPU-hours at the measured 70 s/path).
 - **Next:** nothing blocking; corpus can grow if a tighter CI is wanted. A 20 meV-resolution
   question would need the 4–6× larger corpus quantified above.
 

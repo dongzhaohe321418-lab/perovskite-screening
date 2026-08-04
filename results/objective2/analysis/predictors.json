@@ -1,0 +1,59 @@
+{
+ "n_admissible": 49,
+ "predictors": {
+  "hop distance d_max (A)": {
+   "pearson_r": 0.2817367337899485,
+   "p_pearson": 0.04985875201584006,
+   "spearman_rho": 0.2923543968909693,
+   "p_spearman": 0.04150758213475056,
+   "p_holm": 0.206884991587097
+  },
+  "second displacement (A)": {
+   "pearson_r": 0.12620506090484734,
+   "p_pearson": 0.3875375136004454,
+   "spearman_rho": 0.09244897959183673,
+   "p_spearman": 0.5275228250305665,
+   "p_holm": 0.7750750272008908
+  },
+  "NEB fmax": {
+   "pearson_r": -0.29253379933724477,
+   "p_pearson": 0.0413769983174194,
+   "spearman_rho": -0.1630382264640662,
+   "p_spearman": 0.2630058721251227,
+   "p_holm": 0.206884991587097
+  },
+  "NEB nsteps": {
+   "pearson_r": -0.3151973627543236,
+   "p_pearson": 0.027384605053112982,
+   "spearman_rho": -0.05967034413685985,
+   "p_spearman": 0.683807629106507,
+   "p_holm": 0.1643076303186779
+  },
+  "initial endpoint fmax": {
+   "pearson_r": -0.10448632809567104,
+   "p_pearson": 0.4749290757246732,
+   "spearman_rho": -0.07677188273120908,
+   "p_spearman": 0.6000665293639326,
+   "p_holm": 0.7750750272008908
+  },
+  "final endpoint fmax": {
+   "pearson_r": -0.22741549452380233,
+   "p_pearson": 0.11607066281045786,
+   "spearman_rho": -0.1830346219578934,
+   "p_spearman": 0.20809065905434532,
+   "p_holm": 0.3482119884313736
+  }
+ },
+ "multiplicity": "Holm-Bonferroni across the 7 tests performed; NONE survive alpha=0.05",
+ "regression": {
+  "R2": 0.25911558015023817,
+  "note": "same data, more parameters - not independent evidence"
+ },
+ "next_experiment": {
+  "n_confirm_dmax_prereg": 97,
+  "n_confirm_dmax_holm": 152,
+  "n_20meV_GA": 47,
+  "n_20meV_Sr": 72,
+  "median_wall_s": 70.4
+ }
+}
