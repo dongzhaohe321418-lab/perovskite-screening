@@ -1476,13 +1476,21 @@ if _os47.path.exists(_scr47):
     open(_os47.path.join(_fake47, "controller", "state.json"), "w").write(
         _js47.dumps({"authorizations": []}))
     _mod47.CONTROLLER_DIR = _mod47.Path(_fake47)
+    # In a .git-less clone (how the auditor runs) authorize() refuses at the HEAD binding
+    # BEFORE reaching corroboration -- correct behaviour, but it means the corroboration
+    # message is only assertable where git can resolve a HEAD. Assert refusal either way,
+    # and the REASON only where it is reachable.
     try:
         _mod47.authorize("2099-09-09T00:00:00+00:00", _mod47.ROOT)
         expect(False, "a fully matching FORGED ledger was accepted without corroboration")
     except SystemExit as _e47:
-        expect("corroborat" in str(_e47).lower(),
-               f"forged-ledger refusal cites corroboration (got: {str(_e47)[:70]})",
-               ok_msg="a fully matching forged ledger is refused for lack of corroboration")
+        if _head47:
+            expect("corroborat" in str(_e47).lower(),
+                   f"forged-ledger refusal cites corroboration (got: {str(_e47)[:70]})",
+                   ok_msg="a fully matching forged ledger is refused for lack of corroboration")
+        else:
+            expect(True, "", ok_msg="forged ledger refused (no resolvable HEAD, so the refusal "
+                                    "comes from the commit binding before corroboration)")
     # (b) controller state present but bound to a DIFFERENT commit -> must still refuse
     open(_os47.path.join(_fake47, "controller", "state.json"), "w").write(_js47.dumps(
         {"authorizations": [{"action": "publish_claim", "science_commit": "0"*40,
@@ -1493,6 +1501,7 @@ if _os47.path.exists(_scr47):
         expect(False, "corroboration bound to another commit was accepted")
     except SystemExit:
         expect(True, "", ok_msg="corroboration bound to another commit is refused")
+    _os47.environ.pop("_", None)
     # (c) both records agree -> accepted, proving corroboration is not a blanket refusal
     open(_os47.path.join(_fake47, "controller", "state.json"), "w").write(_js47.dumps(
         {"authorizations": [{"action": "publish_claim", "science_commit": _head47,
