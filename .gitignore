@@ -9,3 +9,6 @@ tmp/
 *.save/
 *.wfc*
 out/
+fnv_densities*.tar.gz
+fnv_densities_preserve/
+*.hdf5

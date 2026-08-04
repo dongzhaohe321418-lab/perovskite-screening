@@ -1,0 +1,15 @@
+# FNV charge-density preservation manifest
+# generated 2026-08-04T11:20:18Z on manager
+# q=0 leg = job 374e51f1 ; q=+1 leg = job 98199034
+# HDF5 densities = pp.x plot_num=11 input for the FNV charged-defect correction
+# sha256  bytes  relpath
+07de5f257c118d58e3587caa02f87685c4ea44aff7ec952489b849cd71e187e1  206260916  374e51f1/neb_1/charge-density.hdf5
+3a45bdb91fceb8304eb8afbf6533176f6bcf8126b63f34912bec9a5cbe59ad76  206260916  374e51f1/neb_2/charge-density.hdf5
+0c645a815e51fdd390c56efbbfb69fbb0a630d34b57613b3ba43f507d393b5d9  206260916  374e51f1/neb_3/charge-density.hdf5
+53fc679b63a5e250613781246c0f6c1eb3fd832f5ca0d3dfd443a7ce71d8035a  206260916  374e51f1/neb_4/charge-density.hdf5
+1e34a395a8c4644e29686f10beb2d4eb622da0f6e8ed2983fee1109a86919a85  206260916  374e51f1/neb_5/charge-density.hdf5
+0644ce8fd589bcf5d3c674804dcdc086d507cc25aebaa3e17e73fa05c9c0686d  206260916  98199034/neb_1/charge-density.hdf5
+591f35fa0ae9696b2dee849373c20c2f2246302d6777626678981062ea45bbe4  206260916  98199034/neb_2/charge-density.hdf5
+3f2023303e692be4258f056a9942cb2b5234f2ee57aa51e5da5cdeadb584a87d  206260916  98199034/neb_3/charge-density.hdf5
+63edabe85565d468cf74d3533e1f83c0fea58fc580ca91d8a52fa176aa75187a  206260916  98199034/neb_4/charge-density.hdf5
+3384653b48b542e07efc5ce78785ea1b9fa749cdf2f0234d3e834bef6533761d  206260916  98199034/neb_5/charge-density.hdf5

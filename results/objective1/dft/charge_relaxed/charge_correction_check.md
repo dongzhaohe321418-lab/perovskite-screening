@@ -69,5 +69,8 @@ confirms that fix on a descendant commit, nothing new should be derived from thi
 
 Then: `pp.x` on images 1 and 3 of both legs → planar-averaged potential → FNV alignment against
 the pristine reference → report Δ(ΔE_corr) as a range over ε∞…ε₀ with both endpoints stated.
-The remote densities are the perishable input — they live in scratch, so if that space is
-reclaimed this becomes a re-run of the NEB legs rather than a post-processing step.
+The remote densities were the perishable input — they lived only in scratch. **As of
+2026-08-04 they are preserved to durable storage** (see `FNV_DENSITY_PRESERVATION.md`):
+all 10 densities pulled off scratch, hash-verified end-to-end, ~1 GB tarball outside git.
+The perishability risk is therefore closed; the `pp.x` step and PI authorization remain
+the only things between here and a computed correction.
