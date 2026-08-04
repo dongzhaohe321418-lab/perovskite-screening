@@ -1405,6 +1405,26 @@ for _ph48, _doc48 in _RETRACTED:
                    ok_msg=f"{_doc48}:{_i48+1} retracted wording '{_ph48}' sits in retraction context")
 
 
+print("\n[49] the FNV record reports no correction magnitude while marked PENDING (C-GATE-003)")
+import os as _os49, re as _re49
+_fp49 = "results/objective1/dft/charge_relaxed/charge_correction_check.md"
+if _os49.path.exists(_fp49):
+    _t49 = open(_fp49).read()
+    _pending49 = bool(_re49.search(r"^#.*\*\*PENDING\*\*|Status: FNV .*NOT computed", _t49, _re49.M))
+    expect(_pending49 or "ΔE_corr =" in _t49,
+           "FNV record declares either PENDING or an actual computed value")
+    if _pending49:
+        # no eV/meV-valued correction may be asserted; formula symbols and ranges are fine
+        _bad49 = [l for l in _t49.splitlines()
+                  if _re49.search(r"(Delta\s*)?(ΔE_corr|E_corr)\s*(=|is|:)\s*[-+]?\d", l)]
+        expect(not _bad49,
+               f"PENDING FNV record asserts a numeric correction: {_bad49[:1]}",
+               ok_msg="PENDING FNV record asserts no numeric correction magnitude")
+        expect("dielectric" in _t49.lower() and ("range" in _t49.lower() or "sensitiv" in _t49.lower()),
+               "FNV record states the dielectric-choice sensitivity requirement")
+        expect("DENY" in _t49, "FNV record records the gate decision that stopped it")
+
+
 print("\n" + "=" * 70)
 if FAILS:
     print(f"{len(FAILS)} TEST(S) FAILED")
