@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "a34dcfac0f598e6d2bee25990f5ceb683fae1e0107cc70026d10d7ef5f71a84b",
- "notes": "Requested via audit-mcp: Re-audit at the tip: contains F-024 fix 7a4f3b0e by ancestry (acceptance criteria met: ok_msg success branch, 8 sweep receipts corrected, C-GUARD-003 regression [46] driving group 41 from committed fixtures + static AST sweep; clean-clone rerun 49 groups exit 0, [41] emits 'but IS marked historical/superseded', [44] 'present on disk'), plus gated extractor ad875731, reviewer-warn corrections 21cf7f6c, FNV-PENDING record 236f3719. FINAL non-BLOCK verdict prerequisite for the gated Q2 barrier extraction, which remains DENIED and un-attempted; the same DENY blocks the pp.x step for FNV, hence that deliverable is PENDING.",
+ "evidence_manifest_sha256": "320fb9ab8eb3175d4f4c5b94711c18dfff7e4359cf1f73c8167404fa7cf08e48",
+ "notes": "Requested via audit-mcp: Re-audit for F-025 closure: authorization now derives from the controller's action_ledger row (action=publish_claim, decision=ALLOW, empty reason_codes, science_commit==HEAD, manifest_sha256==committed binding), verified before any scientific read/write. Your exact bypass (--gate-token arbitrary) no longer exists as an accepted argument; the new regression [47] tests 3 unrecorded values, 5 near-miss ledger rows isolating each binding, and a positive path proving the guard is live rather than a permanent refusal. Three fixtures verified failing, including F-025 reintroduced verbatim. Barriers remain unextracted.",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
