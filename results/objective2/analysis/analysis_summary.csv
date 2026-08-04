@@ -1,0 +1,15 @@
+quantity,GA,Sr,note
+paired n,11,12,
+mean dEa_meV,+6.8,-4.3,
+sd_meV,47.4,59.6,
+CI95 halfwidth_meV,31.8,37.9,
+p (paired t),0.644,0.807,
+p (Wilcoxon),0.765,0.733,
+MDES at 80% power_meV,44,53,
+power at 10x target,0.96,0.88,
+n needed for 10x,8,10,
+n needed for 20 meV,47,72,
+strict-only pairs,6,7,
+CI95 low_meV,-25.0,-42.2,
+CI95 high_meV,+38.6,+33.6,
+excludes 10x target,True,True,target 59.5 meV

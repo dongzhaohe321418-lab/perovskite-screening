@@ -1628,3 +1628,49 @@ if _os51.path.exists(_mp51):
                == _hl51.sha256(_raw51).hexdigest(),
                "audit_request evidence_manifest_sha256 != raw-byte digest of the manifest",
                ok_msg="audit_request binds the manifest's raw-byte digest (F-018 convention)")
+
+print("\n[52] the Objective-2 analysis reproduces its audited source corpus (C-ANL-001)")
+import json as _js52, os as _os52
+_A52 = "results/objective2/analysis"
+if _os52.path.exists(f"{_A52}/analysis_stats.json"):
+    _st52 = _js52.load(open(f"{_A52}/analysis_stats.json"))
+    _pub52 = _js52.load(open(
+        "results/objective2/paired_pilot/corpus108/corpus108_stats.json"))
+    _raw52 = _js52.load(open(
+        "results/objective2/paired_pilot/corpus108/paired_raw_108.json"))["rows"]
+    _adm52 = _js52.load(open(
+        "results/objective2/paired_pilot/corpus108/admission_108.json"))
+    _by52 = {(r["member"], r["system"]): r for r in _raw52}
+    _ok52 = {tuple([int(k.split("-",1)[0]), k.split("-",1)[1]]) for k in _adm52["admissible"]}
+    for _d52 in ("GA", "Sr"):
+        _a52 = _st52["paired"][_d52]
+        # (a) the analysis must agree with the AUDITED published record
+        expect(_a52["n"] == _pub52[_d52]["n"],
+               f"{_d52} analysis n {_a52['n']} != audited record {_pub52[_d52]['n']}",
+               ok_msg=f"{_d52} analysis n {_a52['n']} matches the audited record")
+        expect(abs(_a52["mean"] - _pub52[_d52]["mean_meV"]) < 0.05,
+               f"{_d52} analysis mean {_a52['mean']:+.2f} != audited "
+               f"{_pub52[_d52]['mean_meV']:+.2f} meV",
+               ok_msg=f"{_d52} analysis mean {_a52['mean']:+.1f} meV matches the audited record")
+        expect(_a52["members"] == _pub52[_d52]["members"],
+               f"{_d52} member list differs from the audited record",
+               ok_msg=f"{_d52} member list matches the audited record")
+        # (b) and must be re-derivable from the RAW rows, so neither file is taken on trust
+        _pairs52 = [_by52[(_m52, _d52)]["Ea_meV"] - _by52[(_m52, "undoped")]["Ea_meV"]
+                    for _m52 in _a52["members"]]
+        _mu52 = sum(_pairs52) / len(_pairs52)
+        expect(abs(_mu52 - _a52["mean"]) < 0.05,
+               f"{_d52} mean not reproducible from paired_raw_108.json "
+               f"(raw {_mu52:+.2f} vs recorded {_a52['mean']:+.2f})",
+               ok_msg=f"{_d52} mean re-derives from paired_raw_108.json ({_mu52:+.1f} meV)")
+        # (c) every analysed pair must be ADMISSIBLE -- excluded rows may not enter a statistic
+        _bad52 = [_m52 for _m52 in _a52["members"]
+                  if (_m52, _d52) not in _ok52 or (_m52, "undoped") not in _ok52]
+        expect(not _bad52,
+               f"{_d52} analysis used non-admissible members {_bad52}",
+               ok_msg=f"{_d52}: all {len(_a52['members'])} analysed pairs are admissible")
+    # (d) the report must not quote a production barrier
+    _rep52 = open(f"{_A52}/ANALYSIS_objective2.md").read()
+    expect("no Q2 production CI-NEB" in _rep52 or "reads **no** Q2" in _rep52,
+           "the analysis report must state its Q2 exclusion scope",
+           ok_msg="the analysis report states its Q2 exclusion scope explicitly")

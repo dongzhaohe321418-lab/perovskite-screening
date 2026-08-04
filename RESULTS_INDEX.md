@@ -16,7 +16,17 @@ Anything not listed here is historical. Restructured 2026-07-28.
   `results/objective2/paired_pilot/CORPUS108_RESULT.md`
 - **Raw data:** `results/objective2/paired_pilot/corpus108/` (raw rows, return tests, admission
   lists, band archives, input manifest, HASHES.json)
-- **Next:** nothing blocking; corpus can grow if a tighter CI is wanted.
+- **Mechanism (2026-08-04):** on the balanced 9-host subset admissible in all three systems,
+  the **host configuration term exceeds the dopant term by 12.3×** (SD 57.3 vs 4.6 meV;
+  residual 29.7 meV). Per-system means differ by 9.3 meV while hosts span 151.7 meV; the
+  dopant factor is indistinguishable from zero (ANOVA p=0.955, Friedman p=0.895). So the null
+  is *structural*: at these concentrations the additive perturbs the barrier far less than the
+  host's own configurational disorder. Power at the 10× target is 0.96 (GA) / 0.88 (Sr), so
+  the null is informative, not merely underpowered — but detecting a 20 meV effect would need
+  n≈47 (GA) / 72 (Sr), roughly 4–6× more members. See
+  `results/objective2/analysis/ANALYSIS_objective2.md`.
+- **Next:** nothing blocking; corpus can grow if a tighter CI is wanted. A 20 meV-resolution
+  question would need the 4–6× larger corpus quantified above.
 
 ## Q2. Are V_I⁰ and V_I⁺ migration barriers separable at DFT level? (Objective 1)
 

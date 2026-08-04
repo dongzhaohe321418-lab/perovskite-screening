@@ -1,0 +1,151 @@
+{
+ "paired": {
+  "GA": {
+   "n": 11,
+   "mean": 6.807239813848685,
+   "sd": 47.35365699940643,
+   "ci": [
+    -25.005379826102516,
+    38.61985945379989
+   ],
+   "t": 0.47677543301012265,
+   "p_t": 0.6437694121804465,
+   "p_wilcoxon": 0.7646484375,
+   "ci_halfwidth": 31.8126196399512,
+   "widest_ci_bound": 38.61985945379989,
+   "mdes_80_meV": 44.26171670576811,
+   "power_at_10x": 0.960275,
+   "n_for_10x": 8,
+   "n_for_20meV": 47,
+   "members": [
+    5,
+    6,
+    8,
+    10,
+    12,
+    15,
+    18,
+    20,
+    21,
+    30,
+    32
+   ],
+   "strict_n": 6,
+   "excludes_10x": true
+  },
+  "Sr": {
+   "n": 12,
+   "mean": -4.310502387340875,
+   "sd": 59.609485492375434,
+   "ci": [
+    -42.18456254657175,
+    33.56355777189
+   ],
+   "t": -0.25049735220332686,
+   "p_t": 0.8068198829678361,
+   "p_wilcoxon": 0.7333984375,
+   "ci_halfwidth": 37.87406015923087,
+   "widest_ci_bound": 42.18456254657175,
+   "mdes_80_meV": 52.96365580717584,
+   "power_at_10x": 0.882675,
+   "n_for_10x": 10,
+   "n_for_20meV": 72,
+   "members": [
+    4,
+    5,
+    6,
+    8,
+    12,
+    14,
+    15,
+    20,
+    21,
+    27,
+    30,
+    32
+   ],
+   "strict_n": 7,
+   "excludes_10x": true
+  }
+ },
+ "structure": {
+  "undoped": {
+   "n": 17,
+   "Ea_mean": 166.66584579367256,
+   "Ea_sd": 70.75079215569501,
+   "Ea_range": [
+    55.10618603830153,
+    267.80329829580296
+   ],
+   "saddle_mode": 3,
+   "saddle_frac_mid": 1.0,
+   "nsteps_median": 50.0,
+   "neb_fmax_max": 0.05
+  },
+  "GA": {
+   "n": 17,
+   "Ea_mean": 169.35403575423473,
+   "Ea_sd": 67.17060213530172,
+   "Ea_range": [
+    48.330079455581654,
+    292.58389548431296
+   ],
+   "saddle_mode": 3,
+   "saddle_frac_mid": 1.0,
+   "nsteps_median": 51.0,
+   "neb_fmax_max": 0.05
+  },
+  "Sr": {
+   "n": 15,
+   "Ea_mean": 169.46251429338494,
+   "Ea_sd": 65.66338879718566,
+   "Ea_range": [
+    62.960594667629266,
+    279.64917113445154
+   ],
+   "saddle_mode": 3,
+   "saddle_frac_mid": 1.0,
+   "nsteps_median": 49.0,
+   "neb_fmax_max": 0.0498
+  }
+ },
+ "seeds": {
+  "n_frames": 12,
+  "natoms": 159,
+  "fmax_min": 0.03988686767508825,
+  "fmax_max": 0.08103701662698906,
+  "fmax_median": 0.05475707911508361,
+  "E_span_meV": 27.07451298192609,
+  "sources": [
+   "q0_final_ns1.out.gz",
+   "q0_initial.out.gz"
+  ],
+  "any_neb_source": false,
+  "manifest_fmax_range": [
+   0.0399,
+   0.081
+  ]
+ },
+ "variance": {
+  "host_sd": 57.28283566430279,
+  "dopant_sd": 4.648964578815724,
+  "resid_sd": 29.71374731379731,
+  "grand_mean": 162.8573155204591,
+  "n_members": 9,
+  "dopant_effects": {
+   "undoped": -4.523649795163237,
+   "GA": -0.24123643868699673,
+   "Sr": 4.764886233850262
+  },
+  "host_range_meV": 151.7420151524978,
+  "f_dopant": 0.04590013393126253,
+  "p_dopant_anova": 0.9552209797316995,
+  "p_friedman": 0.8948393168143733
+ },
+ "provenance": {
+  "corpus": "results/objective2/paired_pilot/corpus108/paired_raw_108.json",
+  "admission": "results/objective2/paired_pilot/corpus108/admission_108.json",
+  "published_stats_reproduced": true,
+  "audited_in": "CYCLE-000010 (auditor recomputed from paired_raw_108.json)"
+ }
+}
