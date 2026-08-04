@@ -845,6 +845,32 @@ Adopted during the campaign and in force:
    strings.
 10. The Tyagi-ordering claim stays closed until both legs are converged at identical theory
     level.
+## 2026-08-04 (third): the TCC fix worked, and the loop still produced no verdict
+
+Filed as **I-010** in `audit-loop/INCIDENTS.md`; mirrored here because that tree is not under
+version control.
+
+The relocated dispatcher runs correctly — passes every 15 minutes, every fix commit queued and
+deferring only on rate limit — and Tier-0 runs correctly too: CYCLE-000028 reports 12 checks,
+11 pass, 0 hard fail, 1 soft skip. But the auditor process dies at launch with
+`env: node: No such file or directory`, `out/` is empty, and the cycle never reaches a verdict.
+`node` exists at `/opt/homebrew/bin/node`; cron simply hands its jobs a minimal PATH. Cycles
+25-27 have populated `out/` directories, so this began with the relocation — moving the trigger
+and interpreter out of the TCC-protected directory also changed the environment they inherit.
+The fix is one `export PATH=/opt/homebrew/bin:$PATH` in the relocated trigger; I did not make it,
+because that file is what spawns the auditor and editing it is not the audited party's call.
+
+**The lesson is the one I keep re-learning at successive depths.** I-009's diagnosis was one causal
+layer short (launchd agent absent → actually TCC). The PI's fix for that was correct. And the loop
+still produced nothing, because a second blocker sat behind the first. A repair that removes *the*
+blocker is not the same as a repair that restores the function, and the only evidence the loop
+works is a cycle reaching FINAL — not a trigger that runs, not Tier-0 passing, not a status table
+that advances. Every local signal here was honest and the system still delivered no verdict.
+
+Consequence for the science: the barriers stay unextracted, not for any scientific reason and not
+for any open defect in the science repository, but because no cycle can currently render the FINAL
+verdict that the extraction gate requires.
+
 ## 2026-08-04 (later): F-025 — the guard that guarded nothing
 
 The dispatcher came back (PI fixed it; the real cause was deeper than my diagnosis — see the
