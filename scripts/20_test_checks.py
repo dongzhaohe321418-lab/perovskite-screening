@@ -1463,9 +1463,15 @@ if _os47.path.exists(_scr47):
     # decision ALLOW, no reason codes -- must still be refused, because one file the caller
     # can write is not two independent controller records. Driven by importing the module and
     # rebinding CONTROLLER_DIR, which the CLI deliberately cannot do.
-    import importlib.util as _iu47, tempfile as _tmpmod47
+    import importlib.util as _iu47, sys as _sysm47
+    # Importing the extractor writes scripts/__pycache__/*.pyc into the audited tree. It is
+    # gitignored so `git status` stays clean, but a filesystem-walking verifier (mine, earlier)
+    # counts those .pyc files as evidence and reports a bogus tree mismatch. Leave no trace.
+    _dwb47 = _sysm47.dont_write_bytecode
+    _sysm47.dont_write_bytecode = True
     _spec47 = _iu47.spec_from_file_location("_bx47", _scr47)
     _mod47 = _iu47.module_from_spec(_spec47); _spec47.loader.exec_module(_mod47)
+    _sysm47.dont_write_bytecode = _dwb47
     _fake47 = _os47.path.join(_tf47.mkdtemp(), "state")
     _os47.makedirs(_os47.path.join(_fake47, "controller"), exist_ok=True)
     _row47f = {"timestamp": "2099-09-09T00:00:00+00:00", "action": "publish_claim",
