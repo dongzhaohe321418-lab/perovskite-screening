@@ -1397,7 +1397,11 @@ if _os47.path.exists(_scr47):
     # (c) BOTH POLARITIES against a synthetic ledger. A guard that only ever refuses is
     #     indistinguishable from a broken script, so the valid row MUST be honoured; and each
     #     near-miss isolates exactly one binding.
-    _head47 = _sp47.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    # The positive path binds on HEAD, so it is only meaningful where git can resolve one.
+    # An extracted zipball (which is how the auditor runs an isolated clone) has no .git, and
+    # there the guard MUST still refuse -- assert that instead of a pass we cannot construct.
+    _h47 = _sp47.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+    _head47 = _h47.stdout.strip() if _h47.returncode == 0 else ""
     _man47 = _js47.load(open(".audit/audit_request.json"))["evidence_manifest_sha256"]
     def _row47(ts, **kw):
         r = {"timestamp": ts, "action": "publish_claim", "decision": "ALLOW", "reason_codes": [],
@@ -1419,9 +1423,16 @@ if _os47.path.exists(_scr47):
         expect(_rc != 0 and not _wrote, f"{_why47} is refused and writes nothing")
     _rc, _wrote, _b = _run47(["--allow-timestamp", "2099-01-01T00:00:00.000000+00:00",
                               "--ledger", _led47])
-    expect(_rc == 0 and _wrote,
-           "a correctly-bound ALLOW is NOT honoured -- the guard may be a dead shell",
-           ok_msg="a correctly-bound ALLOW is honoured (guard is live, not a permanent refusal)")
+    if _head47:
+        expect(_rc == 0 and _wrote,
+               "a correctly-bound ALLOW is NOT honoured -- the guard may be a dead shell",
+               ok_msg="a correctly-bound ALLOW is honoured (guard is live, not a permanent refusal)")
+    else:
+        # no resolvable HEAD: the commit binding cannot be satisfied, so refusal is CORRECT
+        expect(_rc != 0 and not _wrote,
+               "without a resolvable HEAD the guard must refuse (binding unsatisfiable)",
+               ok_msg="without a resolvable HEAD the guard refuses; positive path not assertable "
+                      "here (run in a git worktree to exercise it)")
     _os47.remove(_led47)
 
 print("\n[48] a retracted wording does not survive in headings or absolute claims (reviewer warns)")
