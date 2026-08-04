@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "83526148687a0a201f8c46579f3ffe605190d10b0b237a8ebe93ab2c497e96c5",
- "notes": "Requested via audit-mcp: F-027: add post-commit manifest verification; F-025 v3 corroboration",
+ "evidence_manifest_sha256": "fcda77bb7b1cf20df5f2d294d3845f62f0953a7a5227f1a05996aaf71615478d",
+ "notes": "Requested via audit-mcp: Re-audit at the F-025 v3 / F-027 / F-026 fix commit 7ffff5e7. F-025: CLI accepts no path argument (--ledger removed), CONTROLLER_DIR is a module constant, and an ALLOW must be corroborated across action_ledger.jsonl AND controller/state.json authorizations agreeing on action/commit/manifest/timestamp \u2014 a fully matching forged row appended to the GENUINE ledger was refused, then the ledger restored byte-identical. Negative fixture as you specified, plus a positive case proving the guard is not a blanket refusal. Residual gap documented in the script and reported to the PI: this process can write any file it can read, so full closure needs controller-side signing or non-writable placement. F-027: root cause was digesting the tree at HEAD then committing .audit on top while files outside .audit were uncommitted; make_audit_request.py now recomputes from COMMITTED objects post-commit and exits nonzero rather than leaving a bad binding. Clean-clone verified: declares 08608373, recomputes 08608373, file_count 486 both sides. Regression [51] enforces it. F-026: both paths qualified as external. 51 groups green. Barriers UNEXTRACTED.",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
