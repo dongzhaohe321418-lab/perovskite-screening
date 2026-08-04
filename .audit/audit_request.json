@@ -1,8 +1,8 @@
 {
  "audit_scope": "Independent audit of all tracked scientific code, data and input manifests, computed results, reports, XRD analysis, and scientific claims at the fixed Science Commit. Verify provenance, reproducibility, internal consistency, decision gates, and high-risk production or publication claims.",
  "evidence_manifest_path": ".audit/evidence_manifest.json",
- "evidence_manifest_sha256": "9dc32d6fb55e3b3ab494336991ce354eb627114b002378dce02150695c11be63",
- "notes": "Requested via audit-mcp: Re-audit at tip for F-025 closure. Contains: F-025 fix (authorization reads the controller action_ledger \u2014 action=publish_claim, decision=ALLOW, empty reason_codes, science_commit==HEAD, manifest_sha256==committed binding, checked before any scientific read/write; --gate-token removed from the argument surface; regression [47] tests your exact 'arbitrary' bypass plus 5 near-miss ledger rows and a positive path, git-HEAD-conditional so a .git-less clone asserts refusal instead); anchor-(b) status corrected in DFT_BENCHMARK.md with the sweep bug that hid it (per-line matching could not see a phrase spanning a markdown hard wrap); I-009 TCC correction and I-010 (auditor cannot launch: node absent from cron PATH). Barriers remain unextracted; publish_claim un-retried.",
+ "evidence_manifest_sha256": "83526148687a0a201f8c46579f3ffe605190d10b0b237a8ebe93ab2c497e96c5",
+ "notes": "Requested via audit-mcp: F-027: add post-commit manifest verification; F-025 v3 corroboration",
  "project_id": "perovskite-screening",
  "requested_by": "claude-science-via-audit-mcp"
 }
