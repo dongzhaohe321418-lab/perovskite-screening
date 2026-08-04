@@ -50,16 +50,18 @@ configurational disorder does. Two consequences that matter for how this system 
 
 ## 3. What predicts the barrier — nothing yet, honestly
 
-Seven structural/convergence predictors were tested against E_a on the 49 admissible paths.
-Three reached raw p<0.05 (hop distance d_max, NEB fmax, NEB nsteps). **None survives
-Holm–Bonferroni correction for the seven tests actually performed** (smallest corrected p = 0.16).
+Seven structural/convergence predictors were examined against E_a on the 49 admissible paths.
+One — the count of atoms displaced >1 Å — is constant across every admissible path (all pure
+single-atom hops) and yields no statistic, leaving **six correlation tests**. Three reached raw
+p<0.05 (hop distance d_max, NEB fmax, NEB nsteps). **None survives Holm–Bonferroni correction
+over the six tests** (smallest corrected p = 0.16).
 
 | predictor | r | raw p | Holm p |
 |---|---|---|---|
 | hop distance d_max | +0.28 | 0.050 | 0.21 |
 | NEB nsteps | −0.32 | 0.027 | 0.16 |
 | NEB fmax | −0.29 | 0.041 | 0.21 |
-| other four | — | ≥0.12 | ≥0.35 |
+| other three (non-sig) | — | 0.116–0.475 | 0.348–0.775 |
 
 A three-term regression reaches R²=0.26 with d_max and nsteps individually significant — but that
 is the *same data* fitted with more parameters, not independent evidence, and fmax/nsteps are

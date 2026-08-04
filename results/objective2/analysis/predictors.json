@@ -44,7 +44,7 @@
    "p_holm": 0.3482119884313736
   }
  },
- "multiplicity": "Holm-Bonferroni across the 7 tests performed; NONE survive alpha=0.05",
+ "multiplicity": "Holm-Bonferroni across the 6 valid correlation tests (the 7th predictor, 'n atoms moved >1A', is constant across all admissible paths and yields no statistic); NONE survives alpha=0.05",
  "regression": {
   "R2": 0.25911558015023817,
   "note": "same data, more parameters - not independent evidence"
@@ -55,5 +55,10 @@
   "n_20meV_GA": 47,
   "n_20meV_Sr": 72,
   "median_wall_s": 70.4
- }
+ },
+ "n_predictors_examined": 7,
+ "n_valid_tests": 6,
+ "constant_skipped": [
+  "n atoms moved >1A"
+ ]
 }

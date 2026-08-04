@@ -22,7 +22,8 @@ Reads **no** Q2 production CI-NEB output; no barrier extracted or quoted.
 - `paired_effects.csv` — all 23 pairs, per-member, strict/recovered flag.
 - `analysis_summary.csv` — the headline tables as data.
 - `analysis_stats.json` — full statistics with provenance and the reproduction check.
-- `predictors.json` — the 7-predictor screen with Holm-corrected p-values.
+- `predictors.json` — the predictor screen: 7 examined, 6 valid correlation tests (one is
+  constant across all admissible paths), with Holm-corrected p-values.
 
 ## One-line result
 
