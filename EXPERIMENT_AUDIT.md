@@ -845,6 +845,57 @@ Adopted during the campaign and in force:
    strings.
 10. The Tyagi-ordering claim stays closed until both legs are converged at identical theory
     level.
+## 2026-08-04 (fourth): CYCLE-000037 — F-025 twice more, and a CRITICAL evidence-binding defect
+
+The `node`-PATH blocker cleared, nine queued cycles drained, and the first cycle to reach a verdict
+returned BLOCK with three findings. Two are worth keeping in this record.
+
+### F-025 v2 was the same defect relocated
+
+My v2 fix read a genuine controller ledger row instead of a token I had invented — but it took the
+ledger's *path* from `--ledger`. The auditor supplied a fabricated ledger carrying the correct HEAD
+and manifest hash, and every predicate passed. **Authority the caller can redirect is not
+authority.** I had moved the defect rather than removed it, and the shape of my error was identical
+both times: I checked the *form* of the authorization carefully while leaving its *source* under my
+own control.
+
+v3 removes every caller-supplied path (`CONTROLLER_DIR` is a module constant) and requires the
+ALLOW to be corroborated across two files the controller writes independently. Tested against the
+worst case rather than a convenient one: a fully matching forged ALLOW appended to the **genuine**
+ledger, refused for lack of corroboration, ledger then restored byte-identical.
+
+**The residual gap is real and is stated in the script rather than papered over.** This process runs
+with the audited party's privileges: any file it can read, it could write. No local read proves a
+local file was not forged by its reader. v3 establishes only that the CLI cannot be redirected and
+that a forgery must be consistent across two controller records. Closing it needs the controller to
+sign its records or place them where the executor cannot write — an operator action, reported to the
+PI, not asserted as solved. Writing "authorization is now authenticated" would have been the same
+category of overclaim as the two guards the auditor already broke.
+
+### F-027 [CRITICAL] — the evidence binding did not describe the evidence
+
+The committed manifest at `44695492` declared `tree_sha256` `682d37c8`; recomputation over that
+commit's own objects gives `774a8441`. Confirmed independently before touching anything.
+
+Root cause is sequencing, and it had been latent all along: the generator digests the tree at HEAD,
+then commits `.audit` on top — so **the committed manifest always describes its parent tree.** When
+the commit touches only `.audit`, parent and child agree on the non-`.audit` evidence and the
+binding is valid. It is invalid exactly when something outside `.audit` was still uncommitted, which
+is what happened. Every prior cycle's binding was correct by circumstance, not by construction.
+
+Fix: the generator now recomputes the digest from the **committed objects** after committing and
+exits nonzero rather than leaving an invalid binding behind. Regression [51] does the same check
+from committed objects, so a clean clone catches it even if the generator is bypassed.
+
+### The pattern across F-024, F-025 and F-027
+
+All three are the same failure at different layers: **a check that could not reach the thing it
+claimed to establish.** [47] tested blacklisted placeholders the length check rejected anyway; the
+v2 guard verified a record whose location I supplied; the manifest bound a tree it was computed
+before. In each case the artifact looked rigorous and proved nothing, and in each case the negative
+fixture — a forged ledger, a stale digest — is what settled it. Every fixture in this session's
+five was verified failing before the fix was called done.
+
 ## 2026-08-04 (third): the TCC fix worked, and the loop still produced no verdict
 
 Filed as I-010 in the audit-loop tree's `INCIDENTS.md` (outside this repository); mirrored here because that tree is not under
