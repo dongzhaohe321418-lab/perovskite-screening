@@ -12,14 +12,20 @@ of the degradation kinetics. Every number is reproducible from `design_calcs.py`
 
 Cross-tabulating your 79 papers by keyword:
 
-| Topic | Hits / 79 |
+| Topic (exact keyword in title) | Papers / 79 |
 |---|---|
-| amorphous | **2** |
+| amorphous | **0** |
 | PDF / total scattering | **0** |
-| in situ / operando | 4 |
-| humidity | 3 |
+| Rietveld or crystallinity | **1** |
 | machine learning | **1** |
-| Rietveld / crystallinity | 11 |
+| in situ / operando | 3 |
+| humidity | 3 |
+
+Broadening the terms does not rescue the picture: allowing *glass* and *disorder*
+alongside *amorphous* reaches 2; allowing *crystallite*, *texture* and *strain*
+alongside *Rietveld/crystallinity* reaches 11 — but those 11 are strain- and
+texture-engineering papers, not crystallinity quantification. Under either
+counting the intersections are empty.
 
 Every intersection that matters is empty: amorphous ∩ total scattering = 0,
 in situ ∩ humidity = 0, ML ∩ crystallinity = 0, FA/Cs ∩ δ-phase = 0. A literature

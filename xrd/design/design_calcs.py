@@ -49,6 +49,38 @@ def sample_size(n_params=4, films=(12, 24, 40, 60)):
     time points within a film are autocorrelated, not independent."""
     return pd.DataFrame([dict(films=n, obs_per_param=n/n_params) for n in films])
 
+
+def literature_gap(csv_path='literature_index.csv'):
+    """Exact-keyword counts over the paper titles.
+
+    Counted with ONE keyword per row -- an earlier version of this table quoted
+    the hits of a broadened alternation (amorphous|glass|disorder, and
+    Rietveld|crystallinity|crystallite|texture|strain) against the narrow label,
+    which inflated 'amorphous' 0 -> 2 and 'Rietveld/crystallinity' 1 -> 11.
+    Both counts are reported here so the difference is visible.
+    """
+    import re
+    lit = pd.read_csv(csv_path)
+    narrow = {
+        'amorphous':               r'amorphous',
+        'PDF / total scattering':  r'\bPDF\b|pair distribution|total scattering',
+        'Rietveld or crystallinity': r'rietveld|crystallinit',
+        'machine learning':        r'machine learning|neural network|deep learning',
+        'in situ / operando':      r'in.?situ|operando',
+        'humidity':                r'humid',
+    }
+    broad = {
+        'amorphous':               r'amorphous|glass|disorder',
+        'Rietveld or crystallinity': r'rietveld|crystallinit|crystallite|texture|strain',
+    }
+    rows = []
+    for label, pat in narrow.items():
+        n = int(lit.title.str.contains(pat, case=False, regex=True, na=False).sum())
+        b = broad.get(label)
+        nb = int(lit.title.str.contains(b, case=False, regex=True, na=False).sum()) if b else n
+        rows.append(dict(topic=label, exact=n, broadened=nb))
+    return pd.DataFrame(rows)
+
 if __name__ == '__main__':
     a_mix, win = diagnostic_window()
     print(f'Vegard a = {a_mix:.4f} A\n')
@@ -62,3 +94,8 @@ if __name__ == '__main__':
     print(feasibility_sensitivity().pivot(index='Ea', columns='m', values='completable').to_string())
     print('\nsample size:')
     print(sample_size().to_string(index=False))
+    import os
+    _csv = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'literature_index.csv')
+    if os.path.exists(_csv):
+        print('\nliterature gap (exact keyword in title):')
+        print(literature_gap(_csv).to_string(index=False))
