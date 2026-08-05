@@ -2,7 +2,10 @@
 
 Drafted 2026-08-04, from a coverage analysis of the 79-paper index you supplied,
 diffraction-angle calculations for the FA/Cs system, and a feasibility estimate
-of the degradation kinetics. Every number is reproducible from `design_calcs.py`.
+of the degradation kinetics. The diffraction angles, t₅₀ grid, feasibility sensitivity, sample-size and
+literature-gap tables are reproducible from `design_calcs.py`; the stage volumes,
+instrument-time totals and iso-rate target times below are planning arithmetic
+stated inline.
 
 ---
 
@@ -129,18 +132,18 @@ t₅₀ (hours), Ea = 0.75 eV, RH exponent = 2:
 | 70 °C | 9290 | 1706 | **691** | **372** | **289** |
 | 85 °C | 3211 | **590** | **239** | **128** | **100** |
 
-**A 4272-fold span.** Within a 30-day budget only 5 points of a uniform 5×5 grid
-yield a complete curve; 14 will not move at all — those films are indistinguishable
+**A 4272-fold span.** Within a 30-day budget (720 h) only 7 points of a uniform
+5×5 grid yield a complete curve; 14 will not move at all — those films are indistinguishable
 from day one after a month on the shelf.
 
-Worse: **how many points are feasible swings between 3 and 25 depending on Ea and
+Worse: **how many points are feasible swings between 5 and 12 depending on Ea and
 m, which you do not know in advance.**
 
 | Ea (eV) | m=1 | m=2 | m=3 |
 |---|---|---|---|
-| 0.50 | 11 | 8 | 6 |
-| 0.75 | 8 | 5 | 5 |
-| 1.10 | 7 | 4 | 4 |
+| 0.50 | 12 | 9 | 7 |
+| 0.75 | 9 | 7 | 5 |
+| 1.10 | 8 | 5 | 5 |
 
 **So the grid cannot be fixed up front. Calibrate the kinetics on a few films
 first, then place the grid.**
@@ -200,8 +203,8 @@ At each time point:
 **Two replicate films per condition** — the minimum for reporting an error bar.
 
 **Volume**: ~20 conditions × 2 = 40 films, ~360 fast + 160 full scans.
-Instrument time ≈ **11 h fast + 107 h full ≈ 5 days of occupancy**, spread over
-6 weeks.
+Instrument time ≈ **12–18 h fast + 107 h full ≈ 5 days of occupancy**, spread
+over 6 weeks.
 
 ---
 
