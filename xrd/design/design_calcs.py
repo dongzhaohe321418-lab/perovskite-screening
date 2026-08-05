@@ -35,8 +35,11 @@ def t50_grid(Ea=0.75, m=2.0, T=(25,40,55,70,85), RH=(15,35,55,75,85),
                    for r in RH] for t in T])
     return pd.DataFrame(g, index=[f'{t}C' for t in T], columns=[f'{r}%' for r in RH])
 
-def feasibility_sensitivity(budget_h=576):
-    """How many of 25 grid points finish inside the budget, vs unknown Ea and m."""
+def feasibility_sensitivity(budget_h=720):
+    """How many of 25 grid points finish inside the budget, vs unknown Ea and m.
+
+    budget_h=720 is 30 days. An earlier version used 576 h while labelling it
+    "30 d" (576 h is 24 days), which under-reported the count as 5 of 25."""
     out = []
     for Ea in (0.5, 0.6, 0.75, 0.9, 1.1):
         for m in (1.0, 2.0, 3.0):
@@ -89,7 +92,7 @@ if __name__ == '__main__':
     g = t50_grid()
     print(g.round(0).to_string())
     print(f'\nspan = {g.values.max()/g.values.min():.0f}x')
-    print(f'completable in 30 d: {int((g.values < 576).sum())} of {g.size}')
+    print(f'completable in 30 d (720 h): {int((g.values < 720).sum())} of {g.size}')
     print('\nfeasibility vs unknown kinetics:')
     print(feasibility_sensitivity().pivot(index='Ea', columns='m', values='completable').to_string())
     print('\nsample size:')
