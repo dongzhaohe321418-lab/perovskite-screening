@@ -13,7 +13,7 @@ result. Last restructured 2026-07-28.**
 | Full audit record incl. all retractions | [`EXPERIMENT_AUDIT.md`](EXPERIMENT_AUDIT.md) |
 | Governing execution rules (PI) | [`NEXT_STEP_GUIDE.md`](NEXT_STEP_GUIDE.md) |
 | Historical / superseded documents | [`archive/`](archive/) — every file carries a `SUPERSEDED` banner |
-| Regression suite (52 groups; every check pins a real past incident) | [`scripts/20_test_checks.py`](scripts/20_test_checks.py) |
+| Regression suite (53 groups; every check pins a real past incident) | [`scripts/20_test_checks.py`](scripts/20_test_checks.py) |
 
 ## The three sub-projects in this repository
 

@@ -28,7 +28,9 @@ Anything not listed here is historical. Restructured 2026-07-28.
   next experiments in `results/objective2/analysis/FINAL_RESULT_AND_NEXT_STEPS.md`
   (P1: expand to n≈50/72 for 20 meV resolution, ~2 GPU-hours at the measured 70 s/path).
 - **Next:** nothing blocking; corpus can grow if a tighter CI is wanted. A 20 meV-resolution
-  question would need the 4–6× larger corpus quantified above.
+  question would need the 4–6× larger corpus quantified above. **Pinned next-stage design:
+  `results/objective2/analysis/NEXT_EXPERIMENT_DESIGN.md` (v2 — A1a/A1b/A2a/A2b/A3/E1 with the
+  equivalence and pooling gates).**
 
 ## Q2. Are V_I⁰ and V_I⁺ migration barriers separable at DFT level? (Objective 1)
 

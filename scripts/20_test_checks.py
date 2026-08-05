@@ -1674,3 +1674,45 @@ if _os52.path.exists(f"{_A52}/analysis_stats.json"):
     expect("no Q2 production CI-NEB" in _rep52 or "reads **no** Q2" in _rep52,
            "the analysis report must state its Q2 exclusion scope",
            ok_msg="the analysis report states its Q2 exclusion scope explicitly")
+
+print("\n[53] the pinned experiment design v2 keeps its review-corrected invariants (C-DSGN-001)")
+import os as _os53, re as _re53
+_dp53 = "results/objective2/analysis/NEXT_EXPERIMENT_DESIGN.md"
+if _os53.path.exists(_dp53):
+    _d53 = open(_dp53).read()
+    # (a) the 12.3x ratio is a POINT ESTIMATE with the resampling interval, never a constant
+    expect("point-estimate ratio of 12.3" in _d53 and "[1.7, 26.7]" in _d53,
+           "design must state 12.3x as a point estimate with the [1.7,26.7] resampling interval",
+           ok_msg="design states 12.3x as a point estimate with resampling CI [1.7,26.7]")
+    expect("not a material constant" in _d53,
+           "design must deny 12.3x is a material constant",
+           ok_msg="design explicitly denies 12.3x is a material constant")
+    # (b) E4 extremes are the m15/m30 UNDOPED host means, not the v1 GA mistake
+    expect("m15-undoped" in _d53 and "m30-undoped" in _d53,
+           "E4 must use m15/m30-undoped (same arm), not the v1 GA extremes",
+           ok_msg="E4 uses m15/m30-undoped same-arm extremes")
+    expect("m28-GA" not in _d53 or "wrongly used m28-GA" in _d53,
+           "the v1 m28-GA extreme must not appear except as the named correction",
+           ok_msg="v1 m28-GA mistake appears only as the named correction")
+    # (c) E1 is an EQUIVALENCE (TOST) question, not difference-detection
+    expect("TOST" in _d53 and "equivalence question, not difference-detection" in _d53,
+           "E1 must be framed as equivalence (TOST), not difference detection",
+           ok_msg="E1 framed as equivalence (TOST), not difference detection")
+    # (d) A1b bridge gates whether the old corpus may be pooled
+    expect("Pooling gate" in _d53 and "new-protocol-only" in _d53,
+           "design must carry the A1b pooling gate (old n only if the bridge agrees)",
+           ok_msg="design carries the A1b pooling gate")
+    # (e) A2a/A2b is a DIAGNOSTIC, 14 SCF != relaxed barrier; q=0 is a charge state
+    expect("fixed-path diagnostic, not a relaxed DFT barrier" in _d53,
+           "A2 must be labelled a fixed-path diagnostic, not a relaxed barrier",
+           ok_msg="A2 labelled a fixed-path diagnostic, not a relaxed barrier")
+    expect(_re53.search(r"V_I.{0,4}0.{0,40}q=0 charge state|q=0 charge state", _d53) is not None
+           or "a q=0 charge state" in _d53,
+           "design must state the undoped vacancy IS a q=0 charge state",
+           ok_msg="design states the undoped vacancy is a q=0 charge state")
+    # (f) 20 meV is NOT claimed as a device-lifetime threshold
+    expect("NOT an\nexperimentally-validated device-lifetime threshold" in _d53
+           or "NOT an experimentally-validated device-lifetime threshold" in _d53
+           or "2.17" in _d53,
+           "design must qualify 20 meV (2.17x rate), not a lifetime threshold",
+           ok_msg="design qualifies 20 meV as ~2.17x rate, not a lifetime threshold")
