@@ -1,0 +1,662 @@
+{
+ "summary": {
+  "protocol": "constrained-cage-then-free-release",
+  "cage_cutoff_A": 3.8,
+  "endpoint_fmax": 0.02,
+  "n_hosts": 6,
+  "n_recovered": 0,
+  "endpoint_group_recovered": 0,
+  "endpoint_group_total": 4,
+  "mechanism_group": [
+   14,
+   27
+  ],
+  "A1_gate": "insufficient (<4/6) \u2014 diagnose, no physical-exclusion claim",
+  "wall_s": 1124.2,
+  "NOTE": "protocol feasibility ONLY; these 6 do NOT enter main-effect statistics"
+ },
+ "results": [
+  {
+   "old_free": {
+    "endpoint_initial": {
+     "fmax": 0.0194,
+     "converged": true,
+     "nsteps": 73,
+     "E": -1063.6081957203667
+    },
+    "endpoint_final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 193,
+     "E": -1063.8197939731872
+    },
+    "constrain_initial": null,
+    "constrain_final": null,
+    "Ea_meV": 111.99,
+    "neb_fmax": 0.0469,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m3-undoped-old_free",
+     "passed": false,
+     "Ea_forward_meV": 111.98601803243946,
+     "band_span_meV": 211.6,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": "initial endpoint above its adjacent interior image by 26.4 meV -- not a local minimum"
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m3-undoped-old_free",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 4.025,
+     "second_disp_A": 0.345,
+     "reason": null
+    },
+    "admissible": false,
+    "largest_disp_A": 4.025,
+    "second_disp_A": 0.345
+   },
+   "new_constrained": {
+    "endpoint_initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 83,
+     "E": -1063.608928940874
+    },
+    "endpoint_final": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 189,
+     "E": -1063.8122197630084
+    },
+    "constrain_initial": {
+     "fmax_cage": 0.0196,
+     "nsteps": 28,
+     "n_relaxed": 5,
+     "converged": true
+    },
+    "constrain_final": {
+     "fmax_cage": 0.0168,
+     "nsteps": 32,
+     "n_relaxed": 5,
+     "converged": true
+    },
+    "Ea_meV": 114.87,
+    "neb_fmax": 0.0431,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m3-undoped-new_constrained",
+     "passed": false,
+     "Ea_forward_meV": 114.87087422710829,
+     "band_span_meV": 203.3,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": "initial endpoint above its adjacent interior image by 21.3 meV -- not a local minimum"
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m3-undoped-new_constrained",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 3.99,
+     "second_disp_A": 0.318,
+     "reason": null
+    },
+    "admissible": false,
+    "largest_disp_A": 3.99,
+    "second_disp_A": 0.318
+   },
+   "compare": {
+    "dEa_new_minus_old_meV": 2.88,
+    "old_admissible": false,
+    "new_admissible": false,
+    "new_recovers": false,
+    "both_basin_ok": true
+   },
+   "member": 3,
+   "system": "undoped",
+   "group": "endpoint",
+   "host_sha256_16": "1544848413f3c948"
+  },
+  {
+   "old_free": {
+    "endpoint_initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 210,
+     "E": -1076.717956064906
+    },
+    "endpoint_final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 422,
+     "E": -1077.0651078837504
+    },
+    "constrain_initial": null,
+    "constrain_final": null,
+    "Ea_meV": 16.27,
+    "neb_fmax": 0.04,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m4-GA-old_free",
+     "passed": false,
+     "Ea_forward_meV": 16.26633714658965,
+     "band_span_meV": 347.2,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": "initial endpoint above its adjacent interior image by 126.0 meV -- not a local minimum"
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m4-GA-old_free",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 4.15,
+     "second_disp_A": 0.386,
+     "reason": null
+    },
+    "admissible": false,
+    "largest_disp_A": 4.15,
+    "second_disp_A": 0.386
+   },
+   "new_constrained": {
+    "endpoint_initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 210,
+     "E": -1076.719398508493
+    },
+    "endpoint_final": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 411,
+     "E": -1077.0687026978953
+    },
+    "constrain_initial": {
+     "fmax_cage": 0.02,
+     "nsteps": 50,
+     "n_relaxed": 8,
+     "converged": true
+    },
+    "constrain_final": {
+     "fmax_cage": 0.0177,
+     "nsteps": 62,
+     "n_relaxed": 8,
+     "converged": true
+    },
+    "Ea_meV": 24.57,
+    "neb_fmax": 0.0491,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m4-GA-new_constrained",
+     "passed": false,
+     "Ea_forward_meV": 24.569839495370616,
+     "band_span_meV": 349.3,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": "initial endpoint above its adjacent interior image by 119.0 meV -- not a local minimum"
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m4-GA-new_constrained",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 4.116,
+     "second_disp_A": 0.393,
+     "reason": null
+    },
+    "admissible": false,
+    "largest_disp_A": 4.116,
+    "second_disp_A": 0.393
+   },
+   "compare": {
+    "dEa_new_minus_old_meV": 8.3,
+    "old_admissible": false,
+    "new_admissible": false,
+    "new_recovers": false,
+    "both_basin_ok": true
+   },
+   "member": 4,
+   "system": "GA",
+   "group": "endpoint",
+   "host_sha256_16": "d20dbea04703c4d6"
+  },
+  {
+   "old_free": {
+    "endpoint_initial": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 73,
+     "E": -1064.833349019818
+    },
+    "endpoint_final": {
+     "fmax": 0.0193,
+     "converged": true,
+     "nsteps": 151,
+     "E": -1065.1752457559548
+    },
+    "constrain_initial": null,
+    "constrain_final": null,
+    "Ea_meV": 88.72,
+    "neb_fmax": 0.0486,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m10-Sr-old_free",
+     "passed": true,
+     "Ea_forward_meV": 88.72116430597998,
+     "band_span_meV": 341.9,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": null
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m10-Sr-old_free",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 3.967,
+     "second_disp_A": 0.385,
+     "reason": null
+    },
+    "admissible": true,
+    "largest_disp_A": 3.967,
+    "second_disp_A": 0.385
+   },
+   "new_constrained": {
+    "endpoint_initial": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 74,
+     "E": -1064.835969609563
+    },
+    "endpoint_final": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 159,
+     "E": -1065.1688702433605
+    },
+    "constrain_initial": {
+     "fmax_cage": 0.0149,
+     "nsteps": 30,
+     "n_relaxed": 6,
+     "converged": true
+    },
+    "constrain_final": {
+     "fmax_cage": 0.0175,
+     "nsteps": 44,
+     "n_relaxed": 6,
+     "converged": true
+    },
+    "Ea_meV": 92.37,
+    "neb_fmax": 0.0488,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m10-Sr-new_constrained",
+     "passed": true,
+     "Ea_forward_meV": 92.36796105824396,
+     "band_span_meV": 332.9,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": null
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m10-Sr-new_constrained",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 3.921,
+     "second_disp_A": 0.364,
+     "reason": null
+    },
+    "admissible": true,
+    "largest_disp_A": 3.921,
+    "second_disp_A": 0.364
+   },
+   "compare": {
+    "dEa_new_minus_old_meV": 3.65,
+    "old_admissible": true,
+    "new_admissible": true,
+    "new_recovers": false,
+    "both_basin_ok": true
+   },
+   "member": 10,
+   "system": "Sr",
+   "group": "endpoint",
+   "host_sha256_16": "3dab7a3b565b7fbf"
+  },
+  {
+   "old_free": {
+    "endpoint_initial": {
+     "fmax": 0.0182,
+     "converged": true,
+     "nsteps": 59,
+     "E": -1064.921647426766
+    },
+    "endpoint_final": {
+     "fmax": 0.0191,
+     "converged": true,
+     "nsteps": 80,
+     "E": -1065.0543976955482
+    },
+    "constrain_initial": null,
+    "constrain_final": null,
+    "Ea_meV": 186.87,
+    "neb_fmax": 0.0479,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m18-Sr-old_free",
+     "passed": true,
+     "Ea_forward_meV": 186.87191231128963,
+     "band_span_meV": 186.9,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": null
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m18-Sr-old_free",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 4.029,
+     "second_disp_A": 0.224,
+     "reason": null
+    },
+    "admissible": true,
+    "largest_disp_A": 4.029,
+    "second_disp_A": 0.224
+   },
+   "new_constrained": {
+    "endpoint_initial": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 64,
+     "E": -1064.918734841723
+    },
+    "endpoint_final": {
+     "fmax": 0.0194,
+     "converged": true,
+     "nsteps": 83,
+     "E": -1065.0563153091125
+    },
+    "constrain_initial": {
+     "fmax_cage": 0.0195,
+     "nsteps": 34,
+     "n_relaxed": 6,
+     "converged": true
+    },
+    "constrain_final": {
+     "fmax_cage": 0.019,
+     "nsteps": 29,
+     "n_relaxed": 5,
+     "converged": true
+    },
+    "Ea_meV": 184.22,
+    "neb_fmax": 0.045,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m18-Sr-new_constrained",
+     "passed": true,
+     "Ea_forward_meV": 184.22257817223908,
+     "band_span_meV": 184.2,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": null
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m18-Sr-new_constrained",
+     "passed": true,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 3.983,
+     "second_disp_A": 0.232,
+     "reason": null
+    },
+    "admissible": true,
+    "largest_disp_A": 3.983,
+    "second_disp_A": 0.232
+   },
+   "compare": {
+    "dEa_new_minus_old_meV": -2.65,
+    "old_admissible": true,
+    "new_admissible": true,
+    "new_recovers": false,
+    "both_basin_ok": true
+   },
+   "member": 18,
+   "system": "Sr",
+   "group": "endpoint",
+   "host_sha256_16": "b8f3c1ef4c3de0e7"
+  },
+  {
+   "old_free": {
+    "endpoint_initial": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 727,
+     "E": -1076.91863172607
+    },
+    "endpoint_final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 134,
+     "E": -1076.64185913758
+    },
+    "constrain_initial": null,
+    "constrain_final": null,
+    "Ea_meV": 482.58,
+    "neb_fmax": 0.0458,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m14-GA-old_free",
+     "passed": false,
+     "Ea_forward_meV": 482.5786834214796,
+     "band_span_meV": 482.6,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": "final endpoint above its adjacent interior image by 99.0 meV -- not a local minimum"
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m14-GA-old_free",
+     "passed": false,
+     "n_atoms_moved_gt_1.0A": 3,
+     "largest_disp_A": 4.443,
+     "second_disp_A": 1.113,
+     "reason": "3 atoms moved >1.0 A (second largest 1.11 A) -> endpoints describe different configurations"
+    },
+    "admissible": false,
+    "largest_disp_A": 4.443,
+    "second_disp_A": 1.113
+   },
+   "new_constrained": {
+    "endpoint_initial": {
+     "fmax": 0.0229,
+     "converged": false,
+     "nsteps": 800,
+     "E": -1076.9227271637815
+    },
+    "endpoint_final": {
+     "fmax": 0.0195,
+     "converged": true,
+     "nsteps": 112,
+     "E": -1076.6325438484066
+    },
+    "constrain_initial": {
+     "fmax_cage": 0.0194,
+     "nsteps": 65,
+     "n_relaxed": 8,
+     "converged": true
+    },
+    "constrain_final": {
+     "fmax_cage": 0.0139,
+     "nsteps": 80,
+     "n_relaxed": 10,
+     "converged": true
+    },
+    "Ea_meV": 479.92,
+    "neb_fmax": 0.0438,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m14-GA-new_constrained",
+     "passed": false,
+     "Ea_forward_meV": 479.9206846155357,
+     "band_span_meV": 479.9,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": "final endpoint above its adjacent interior image by 107.5 meV -- not a local minimum"
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m14-GA-new_constrained",
+     "passed": false,
+     "n_atoms_moved_gt_1.0A": 3,
+     "largest_disp_A": 4.486,
+     "second_disp_A": 1.123,
+     "reason": "3 atoms moved >1.0 A (second largest 1.12 A) -> endpoints describe different configurations"
+    },
+    "admissible": false,
+    "largest_disp_A": 4.486,
+    "second_disp_A": 1.123
+   },
+   "compare": {
+    "dEa_new_minus_old_meV": -2.66,
+    "old_admissible": false,
+    "new_admissible": false,
+    "new_recovers": false,
+    "both_basin_ok": false
+   },
+   "member": 14,
+   "system": "GA",
+   "group": "mechanism",
+   "host_sha256_16": "39da29f0a3cb7e85"
+  },
+  {
+   "old_free": {
+    "endpoint_initial": {
+     "fmax": 0.02,
+     "converged": true,
+     "nsteps": 348,
+     "E": -1076.8037383566025
+    },
+    "endpoint_final": {
+     "fmax": 0.0198,
+     "converged": true,
+     "nsteps": 289,
+     "E": -1076.7725345863548
+    },
+    "constrain_initial": null,
+    "constrain_final": null,
+    "Ea_meV": 236.89,
+    "neb_fmax": 0.0482,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m27-GA-old_free",
+     "passed": true,
+     "Ea_forward_meV": 236.8858919091963,
+     "band_span_meV": 236.9,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": null
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m27-GA-old_free",
+     "passed": false,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 3.682,
+     "second_disp_A": 0.841,
+     "reason": "1 atoms moved >1.0 A (second largest 0.84 A) -> endpoints describe different configurations"
+    },
+    "admissible": false,
+    "largest_disp_A": 3.682,
+    "second_disp_A": 0.841
+   },
+   "new_constrained": {
+    "endpoint_initial": {
+     "fmax": 0.0197,
+     "converged": true,
+     "nsteps": 362,
+     "E": -1076.8108891863585
+    },
+    "endpoint_final": {
+     "fmax": 0.0199,
+     "converged": true,
+     "nsteps": 272,
+     "E": -1076.7731207647644
+    },
+    "constrain_initial": {
+     "fmax_cage": 0.0179,
+     "nsteps": 31,
+     "n_relaxed": 5,
+     "converged": true
+    },
+    "constrain_final": {
+     "fmax_cage": 0.0192,
+     "nsteps": 45,
+     "n_relaxed": 7,
+     "converged": true
+    },
+    "Ea_meV": 239.15,
+    "neb_fmax": 0.0449,
+    "neb_converged": true,
+    "gate_endpoints": {
+     "check": "endpoints",
+     "label": "m27-GA-new_constrained",
+     "passed": true,
+     "Ea_forward_meV": 239.15467820916092,
+     "band_span_meV": 239.2,
+     "magnitude_sane": true,
+     "saddle_index": 3,
+     "n_images": 7,
+     "reason": null
+    },
+    "gate_consistency": {
+     "check": "endpoint_consistency",
+     "label": "m27-GA-new_constrained",
+     "passed": false,
+     "n_atoms_moved_gt_1.0A": 1,
+     "largest_disp_A": 3.681,
+     "second_disp_A": 0.922,
+     "reason": "1 atoms moved >1.0 A (second largest 0.92 A) -> endpoints describe different configurations"
+    },
+    "admissible": false,
+    "largest_disp_A": 3.681,
+    "second_disp_A": 0.922
+   },
+   "compare": {
+    "dEa_new_minus_old_meV": 2.26,
+    "old_admissible": false,
+    "new_admissible": false,
+    "new_recovers": false,
+    "both_basin_ok": false
+   },
+   "member": 27,
+   "system": "GA",
+   "group": "mechanism",
+   "host_sha256_16": "8fe60aa1c89c5c2a"
+  }
+ ]
+}
