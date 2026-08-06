@@ -1,0 +1,45 @@
+{
+ "extraction_utc": "2026-08-06T05:51:28.452003+00:00",
+ "git_head_at_extraction": "",
+ "authorization": "PI verbal authorization 2026-08-05 (audit connectors science-audit-loop retired; gate no longer machine-enforced). Scientific custody discipline retained in full.",
+ "theory_level": "PBE+D3(BJ), degauss 0.005 Ry, Gamma-only, 159-atom gamma-like CsPbI3 supercell, ecutwfc 50 / ecutrho 400 Ry",
+ "method": "activation energy read from the FINAL (converged) NEB iteration of the committed raw neb.out.gz; no recomputation",
+ "custody": {
+  "q0": {
+   "compressed_sha256": "53e3a7337d46dd2cd26c009d7d41036aa269752aecf75f1c319965270f1f6853",
+   "decompressed_sha256": "1b040ee76ec790d36c6e54a3a1bd9d7a00b9a0ff585c6418d1179e06538c91c1"
+  },
+  "q1": {
+   "compressed_sha256": "a574c14d338efde4f79fe9883d8d6f98bd2696a14a81060026efd0885eaa2141",
+   "decompressed_sha256": "0529a57971d100e66d9b3151aa83a40c4d50320466731f07e647ebdf09264079"
+  }
+ },
+ "barriers": {
+  "q0_VI0": {
+   "forward_meV": 185.63,
+   "backward_meV": 210.19,
+   "n_iterations": 36,
+   "charge": 0
+  },
+  "q1_VIplus1": {
+   "forward_meV": 181.69,
+   "backward_meV": 169.74,
+   "n_iterations": 37,
+   "charge": 1,
+   "final_per_image_error_eV_A": [
+    0.045149,
+    0.026096,
+    0.032756,
+    0.046238,
+    0.049868
+   ]
+  }
+ },
+ "charge_state_difference": {
+  "definition": "forward barrier q=+1 minus q=0",
+  "value_meV": -3.94,
+  "fnv_status": "NOT applied \u2014 bare PBE+D3 barriers. FNV residual Delta(DE_corr)=DE_corr(saddle)-DE_corr(initial) not computed (pp.x needs remote 197MB/image densities; E-HPC currently unreachable).",
+  "interpretation": "At bare theory level the two barriers differ by 3.9 meV, far below the degauss 0.01->0.005 sensitivity of 15.8 meV and below the residual-force uncertainty \u2014 i.e. INDISTINGUISHABLE at current numerical precision."
+ },
+ "tyagi_ordering": "NOT reproduced. The literature (Tyagi) neutral-vs-charged ordering is not observed; the 3.9 meV difference does not support a charge-state barrier separation at this level. This is an honest negative result, empirically grounding the prior ban."
+}

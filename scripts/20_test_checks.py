@@ -825,8 +825,22 @@ if _os.path.exists("RESULTS_INDEX.md"):
         expect(_q in _x, f"results index has a row for {_q}")
     for _fld in ["Current conclusion", "Scope", "Authoritative", "Raw data", "Next"]:
         expect(_fld in _x, f"index rows carry the '{_fld}' field")
-    expect("OPEN" in _x, "the charge-state ordering is recorded as OPEN in the index")
-    expect("banned" in _x.lower(), "the Tyagi-ordering ban is visible at the index level")
+    # Q2 barriers were extracted 2026-08-05 (audit gate retired, PI-authorized). The old guard
+    # asserted Q2 must stay OPEN — now stale. These guards instead protect the EXTRACTION's honesty:
+    # the negative result and its qualifiers must remain, and the over-claim must never appear.
+    _q2 = _x[_x.index("## Q2."):_x.index("## Q3.")] if "## Q2." in _x and "## Q3." in _x else _x
+    expect("NOT reproduced" in _q2 or "not support a charge-state barrier separation" in _q2,
+           "the index states the Tyagi ordering is NOT reproduced")
+    expect("FNV residual" in _q2 and ("NOT yet applied" in _q2 or "pending" in _q2.lower()),
+           "the index flags the FNV residual as not yet applied (bare barriers)")
+    expect("INDISTINGUISHABLE" in _q2.upper(),
+           "the index records the barriers as indistinguishable at this precision")
+    # the retracted over-claim must never be asserted as fact anywhere in the index
+    import re as _re829
+    for _bad in [r"reproduc\w+ the tyagi", r"tyagi ordering (is |was )?(confirmed|reproduced|observed)",
+                 r"charge[- ]state ordering (is |was )?(confirmed|established)"]:
+        _m = _re829.search(_bad, _x.lower())
+        expect(_m is None, f"index does not assert the retracted Tyagi over-claim ({_bad!r})")
 # every file under archive/ that this session created must open with a SUPERSEDED banner
 import glob as _gl
 for _f in _gl.glob("archive/**/*.md", recursive=True):

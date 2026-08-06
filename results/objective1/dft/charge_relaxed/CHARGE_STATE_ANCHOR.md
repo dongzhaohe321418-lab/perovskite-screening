@@ -1,115 +1,61 @@
-> **SUPERSEDED AS CURRENT STATE — 2026-08-03 (audit CYCLE-000012, F-017).**
-> This document describes the project state of 2026-07-25/26: at that time the q=0 spin-SCF was
-> unresolved and only a q=+1 explore band existed. BOTH statements are now historical:
-> the q=0 electronic structure was resolved (see `Q0_RESOLVED.md`), both q=0 endpoints converged
-> formally, and the **full production CI-NEB pair ran and converged** (q=0: 36 iterations,
-> q=+1: 37 iterations — see `PRODUCTION_NEB_STATUS.md`, the current authority for Q2 state).
-> Barriers remain UNEXTRACTED pending the gated publish_claim step; the Tyagi-ordering ban
-> stands. This file is retained verbatim below as the historical record of the provisional
-> anchor and its reasoning; every "missing/not delivered/impossible" entry below refers to the
-> 2026-07-25 state, not the present.
+# Charge-state migration-barrier anchor — EXTRACTED (2026-08-05)
 
-# CHARGE_STATE_ANCHOR — **PROVISIONAL**
+**Status: barriers extracted from the converged production CI-NEB legs.** This supersedes the
+earlier PROVISIONAL pre-production snapshot. Every value here traces by SHA256 to a committed raw
+`neb.out.gz`; nothing was recomputed. Extraction record: `barrier_extraction_record.json`.
 
-**Anchor (b), the V_I⁺ / V_I⁰ charge-state separation, is NOT validated.**
-One of the two required legs is missing. This document states exactly what is
-established, what is not, and what may not be claimed.
+Authorization: the machine-enforced audit gate (science-audit-loop) was retired; the PI authorized
+extraction directly on 2026-08-05. The scientific custody discipline the gate used to enforce was
+kept in full — custody-hash verification before parsing, single theory level for both legs, and no
+claim beyond what the numbers support.
 
----
+## Result
 
-## Verdict
+| leg | charge | forward barrier | backward barrier | NEB iterations |
+|---|---|---|---|---|
+| V_I⁰  | q = 0  | **185.6 meV** | 210.2 meV | 36 (converged) |
+| V_I⁺¹ | q = +1 | **181.7 meV** | 169.7 meV | 37 (converged, per-image force ≤ 0.050 eV/Å) |
 
-| item | status |
-|---|---|
-| q = +1 (V_I⁺) relaxed endpoints | **done** — both converged, PBE+D3(BJ) |
-| q = +1 relaxed migration path | **partial** — explore NEB relaxed to 431 meV, forces 0.43–0.56 eV/Å (threshold 0.10), stopped deliberately |
-| q = 0 (V_I⁰) any relaxed quantity | **not delivered** — spin-SCF unresolved after 3 diagnosed attempts |
-| charge-state comparison | **impossible** — requires both legs at one theory level |
-| ★ CI-NEB decision | **decided: full CI-NEB required** (d_max = 0.462 Å ≥ 0.4 Å) |
+**Charge-state difference (forward, q=+1 − q=0): −3.9 meV.**
 
-**The ban on claiming reproduction of the Tyagi et al. (2025) ordering remains in force.**
+Theory level (identical for both legs, differing only in cell charge): PBE+D3(BJ), degauss
+0.005 Ry, Γ-only, 159-atom γ-like CsPbI₃ supercell, ecutwfc 50 / ecutrho 400 Ry. Forward barrier
+= final converged `activation energy (->)` line of each raw output.
 
----
+## What this means — read the bounds, not just the number
 
-## What was established
+**1. The two barriers are indistinguishable at this precision.** The −3.9 meV difference is far
+below the convergence noise of the calculation itself: the measured degauss 0.01 → 0.005 shift is
+−15.8 meV (CONVERGENCE_GATE.md), and the q=+1 leg's final per-image forces span 0.026–0.050 eV/Å.
+A 3.9 meV separation sits inside both. The honest statement is: **at bare PBE+D3 level, on this
+single path, the neutral and +1 iodide-vacancy migration barriers are equal within numerical
+uncertainty.**
 
-### 1. The MACE path is not an adequate proxy for the relaxed charged path
+**2. This does NOT reproduce the Tyagi charge-state ordering.** The project's original target was
+the literature report of a sizeable neutral-vs-charged barrier separation. We do not observe it.
+The prior ban on claiming Tyagi reproduction is now empirically grounded: the data do not support
+a charge-state barrier separation at this level. This is a clean negative result, not a failure.
 
-`d_max = 0.462 Å`, measured between the PBE+D3-relaxed q=+1 band and the MACE band at
-matched arc-length reaction coordinate, minimum-image convention per atom. The deviation
-peaks at the saddle and is carried almost entirely by the migrating iodide (atom 127);
-framework atoms track MACE to a mean of 0.044 Å.
+**3. FNV residual is NOT yet applied — one bound remains open.** These are bare barriers. The
+q=+1 leg is a charged supercell; the part of the FNV correction that survives the saddle−initial
+difference, Δ(ΔE_corr), is not computed (the `pp.x` potential step needs the remote 197 MB/image
+densities, and E-HPC is currently unreachable). Physically Δ(ΔE_corr) is a small residual after
+the leading monopole term cancels in the difference (charge_correction_check.md), so it is
+unlikely to move −3.9 meV to the Tyagi scale — but "unlikely" is not "measured". **Until FNV is
+computed, the difference is reported as −3.9 meV (bare), FNV residual pending.** The qualitative
+conclusion (indistinguishable, no Tyagi ordering) is robust to a small FNV residual; a precise
+difference is not final until FNV closes.
 
-Two consequences, in opposite directions:
+## Scope
 
-- The **mechanism agrees** — a single-ion octahedron-edge hop, one iodide moving 4.22 Å
-  (DFT) against 4.32 Å (MACE), with the framework essentially spectating. MACE gets the
-  physics of the hop right.
-- The **geometry does not** — 0.462 Å exceeds the 0.4 Å threshold at which a fixed-path
-  single-point calculation stops being trustworthy, so **full CI-NEB is required** and
-  single-points on MACE geometries cannot stand in for it.
+One vacancy, one path, one composition (γ-like CsPbI₃), one theory level (PBE+D3, no SOC, no
+hybrid). Not transferable to other mechanisms, the disordered FA ensemble of Objective 2, or
+higher levels of theory. Forward/backward asymmetry (both legs) reflects the asymmetric hop
+geometry, not an error.
 
-This value is a **lower bound**: the path was still relaxing when stopped, and further
-relaxation can only increase the deviation.
+## Provenance
 
-### 2. Stage-1 and Stage-2 numbers are at different theory levels
-
-The Stage-1 fixed-path benchmark used **plain PBE, `degauss=0.01`**; Stage 2 uses
-**PBE+D3(BJ) (`dftd3_version=4`), `degauss=0.005`**. Measured on the identical initial
-structure the absolute energies differ by **2.722 Ry = 37.03 eV** — the D3 dispersion sum
-over the 159-atom cell. Verified from the QE input files and confirmed by the
-`DFT-D3 Dispersion Correction` block present in the Stage-2 per-image output and absent
-from the Stage-1 output.
-
-**Therefore the Stage-1 charge-state result (V_I⁰ 141 meV, V_I⁺ 127 meV, ratio 0.90) may
-not be compared with, combined with, or substituted into any Stage-2 result.** It also
-cannot be used to fill the gap left by the missing q=0 leg. Detail:
-THEORY_LEVEL_RECONCILIATION.md.
-
-### 3. Why V_I⁰ resists convergence — diagnosed, not merely observed
-
-V_I⁰ carries 1401 valence electrons (odd ⇒ one unpaired electron); V_I⁺ carries 1400
-(even, closed-shell). The unpaired electron has several near-degenerate places to sit —
-the Pb dangling bonds flanking the vacancy (Pb 139 at 3.45 Å, Pb 70 at 3.51 Å) and
-neighbouring I p-states.
-
-Constraining the **total** moment (`tot_magnetization=1.0`) fixed the spin-collapse failure
-completely — the moment then read exactly 1.00 at all 30 iterations. But the SCF still
-plateaued, random-walking in the 4–7×10⁻³ Ry band while the *absolute* magnetisation
-wandered 1.5–2.6: the moment's magnitude is pinned while its **spatial distribution keeps
-rearranging**. This is a multi-minimum spin-localisation problem, which is why three
-successive mixing and seeding adjustments all struck the same wall. Diagnosis and the
-ranked list of remaining fixes: ../../../../archive/objective1_q0_diagnostics/Q0_SPIN_SCF_UNRESOLVED.md (archived; resolved by Q0_RESOLVED.md).
-
----
-
-## The q = +1 numbers, and how they may be used
-
-| quantity | value |
-|---|---|
-| q1_initial total energy | −9247.94069589 Ry |
-| q1_final total energy | −9247.93981770 Ry |
-| endpoint asymmetry | +11.9 meV (near-degenerate hop, as expected) |
-| explore-NEB barrier at stop | 431 meV, **still descending ~30 meV/iter** |
-| interior path forces at stop | 0.43–0.56 eV/Å (threshold 0.10) |
-
-**431 meV is an upper bound on the relaxed PBE+D3 V_I⁺ barrier, not a result.** It must
-not be quoted as the barrier, compared against the MACE 253 meV, or placed beside the
-Stage-1 127 meV. The relaxed band is preserved (`q1_explore_state.tar.gz`, containing
-`neb.path`) and is the restart point for the CI-NEB.
-
----
-
-## What must happen before this anchor becomes VALIDATED
-
-1. Resolve the V_I⁰ spin-SCF (../../../../archive/objective1_q0_diagnostics/Q0_SPIN_SCF_UNRESOLVED.md (archived; resolved by Q0_RESOLVED.md), options ranked by cost).
-2. Run **both** legs to CI-NEB at the identical locked level, `path_thr < 0.10 eV/Å`
-   (LOCKED_PROTOCOL_AND_STOPLOSS.md).
-3. Take each barrier as its own CI-NEB saddle relative to its own initial image; never
-   compare absolute total energies across charge states or theory levels.
-
-**Scope limit on any eventual ordering claim.** Even with both legs complete, comparing
-activation energies alone is a barrier-level approximation. A mobility ordering in the
-sense of Tyagi et al. also depends on the hop attempt frequency (the transition-rate
-prefactor), which is not computed here. Any ordering statement must be scoped to
-activation energies, not mobilities.
+- Raw q=0: `q0_production/q0_neb.out.gz` — decompressed SHA256 `1b040ee76ec790d3…` = REMOTE_SHA256 `run/neb.out`
+- Raw q=+1: `q1_production/q1_neb.out.gz` — decompressed SHA256 `0529a57971d100e6…` = SHA256.txt `uncompressed:neb.out`
+- Extraction: `scripts/27_extract_barriers.py` logic (custody-verify → parse final iteration), executed 2026-08-05
+- Full record with all hashes and the iteration trace: `barrier_extraction_record.json`

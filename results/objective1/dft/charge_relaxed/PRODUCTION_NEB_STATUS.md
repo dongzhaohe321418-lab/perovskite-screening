@@ -1,3 +1,5 @@
+> **UPDATE 2026-08-05:** barriers now EXTRACTED — V_I0 185.6 meV, V_I+1 181.7 meV, difference -3.9 meV (bare PBE+D3, FNV residual pending). Tyagi ordering NOT reproduced. See CHARGE_STATE_ANCHOR.md + barrier_extraction_record.json.
+
 # Production CI-NEB pair — BOTH LEGS CONVERGED (raw records committed)
 
 **Status date: 2026-08-02. Barriers are NOT extracted in this record** — extraction is a

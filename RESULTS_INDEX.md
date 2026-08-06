@@ -33,20 +33,26 @@ Anything not listed here is historical. Restructured 2026-07-28.
   equivalence and pooling gates).**
 
 ## Q2. Are V_I⁰ and V_I⁺ migration barriers separable at DFT level? (Objective 1)
-
-- **Current conclusion: OPEN.** No validated charge-state ordering exists. The historical
-  claim of reproducing the literature (Tyagi) ordering remains **banned**. q=+1 explore band:
-  barrier still descending at stop (431 meV, NOT converged, NOT quotable — historical explore
-  record). q=0: both endpoints formally converged (asymmetry −27.1 meV). **Production CI-NEB:
-  BOTH legs ran and converged** (q=0: 36 iterations, q=+1: 37; see
-  `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`) — barriers not yet extracted.
-- **Scope:** PBE+D3(BJ), degauss 0.005, Γ, 159-atom γ-like cell — one vacancy, one path.
-- **Authoritative:** `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` (gate: ALL FIVE conditions PASS)
-  + `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md` (current production state) + `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` (PROVISIONAL — pre-production historical snapshot, superseded banner inside; to be rewritten only after gated extraction)
-- **Raw data:** `results/objective1/dft/charge_relaxed/q0/` (QE outputs .gz, inputs,
-  CONVERGENCE_SUMMARY.json), `q1_explore_restart/q1_explore_state.tar.gz`
-- **Open sub-item:** the FNV charged-defect correction for the q=+1 leg is **PENDING** — input densities located but the `pp.x` potential step is gate-DENIED; see `results/objective1/dft/charge_relaxed/charge_correction_check.md` (no correction magnitude computed or quoted).
-- **Next:** HARNESS_TRIAL **complete** (restart-as-re-evaluation proven; `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md`); condition 5 is PASS (all four PI closure items met: state-ID recomputable from committed weights, production pair at conv_thr=1e-8/degauss=0.005 with machine-verified fingerprint identity, docs synced, clean-clone green). The full q=0+q=+1 production CI-NEB pair was PI-authorized, ran, and **both legs converged** (q=0: 36 iterations; q=+1: 37 iterations; raw records + archives committed under `results/objective1/dft/charge_relaxed/q{0,1}_production/` — see `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`). Barriers are NOT yet extracted; extraction/ordering awaits audit of the evidence commit and a `check_action` ALLOW.
+- **Current conclusion: EXTRACTED (2026-08-05) — barriers are INDISTINGUISHABLE at this level.**
+  V_I⁰ forward barrier **185.6 meV** (36 iters), V_I⁺¹ forward barrier **181.7 meV** (37 iters);
+  difference **−3.9 meV**, far below the degauss-0.005 convergence noise (15.8 meV) and the
+  residual-force uncertainty. **The Tyagi charge-state ordering is NOT reproduced** — the data do
+  not support a charge-state barrier separation at this level (the prior ban is now empirically
+  grounded). Bare PBE+D3 barriers; **FNV residual Δ(ΔE_corr) NOT yet applied** (pp.x needs remote
+  densities, E-HPC unreachable) — the qualitative conclusion is robust to a small FNV residual,
+  a precise difference is not final until FNV closes.
+- **Scope:** PBE+D3(BJ), degauss 0.005, Γ, 159-atom γ-like cell — one vacancy, one path, one
+  composition, one theory level. No SOC, no hybrid.
+- **Authoritative:** `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` (EXTRACTED) +
+  `barrier_extraction_record.json` (hash-locked record) +
+  `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`. NEB convergence gate:
+  `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` (gate: ALL FIVE conditions PASS).
+- **Raw data:** `results/objective1/dft/charge_relaxed/q{0,1}_production/` (committed neb.out.gz,
+  neb.path, archives, SHA256 custody records)
+- **Open sub-item:** FNV charged-defect residual for the q=+1 leg — see `charge_correction_check.md`
+  (needs pp.x on the remote densities; unblocks when E-HPC is rebuilt).
+- **Next:** compute the FNV residual once E-HPC is back to finalize the difference; otherwise the
+  qualitative charge-state conclusion is complete.
 
 ## Q3. Is V_I⁰ a polaron or a shallow donor?
 
