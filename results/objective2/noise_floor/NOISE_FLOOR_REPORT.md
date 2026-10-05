@@ -1,3 +1,12 @@
+> **HISTORICAL (old 8-member pool) — do not cite as the current floor.** *(Banner added
+> 2026-10-05.)* σ = 73.3 meV and n ≥ 13 are superseded by the 18-member pool's sd 83.9 meV and
+> unpaired n ≥ 16 (`../AUDIT_RESPONSE.md`, `../paired_pilot/RERUN_RESULT.md`) (83.9 meV is
+> itself the superseded 18-host value; the current 36-host spread is in
+> `../analysis/ANALYSIS_objective2.md`: undoped n=17, 166.7 ± 70.8 meV; host-configuration SD
+> 57.3 meV, see RESULTS_INDEX.md Q4); the screening
+> design has since moved to paired comparisons, final result
+> `../paired_pilot/CORPUS108_RESULT.md`. Method retained.
+
 # Gate-6 noise floor — MEASURED
 
 **The number that was missing.** Gate 6 requires that a dopant ranking be published only
@@ -79,6 +88,10 @@ Measured cost: 646-2215 s per path on 12 CPU cores including the endpoint stage 
 mean). At the required depth, 13 dopants × 13 configurations = 169 paths ≈ **70 h** of
 local CPU. The GPU host (`ssh:autodl`) is currently unreachable — connection closed — so
 screening at defensible sampling depth is **blocked on GPU access**, not on method.
+*(Superseded 2026-10-05: `ssh:autodl` became reachable again; its RTX 5090 passed the Gate 1 GPU
+regression on 2026-07-27 ("Batch screening is unblocked", commit `c38a2a3`) and the whole
+paired corpus ran there. See `../gpu_regression/GATE1_GPU_REGRESSION.md` and
+`../paired_pilot/CORPUS108_RESULT.md` §1.)*
 
 This is a scheduling constraint worth surfacing: the pre-screen is cheap *per path* but the
 required depth is set by the noise floor, and that makes it a GPU-scale job.

@@ -49,7 +49,8 @@ conditions. You cannot mix in a standard, the diffracting volume is tiny, and
 the amorphous halo is mathematically degenerate with substrate and air
 scattering. I hit exactly this on the control sample earlier in this project:
 the recovered crystallinity tracked whatever width bound I imposed on the halo,
-landing anywhere between 46% and 65%.
+landing anywhere between ~~46%~~ 49% and 65% *(corrected 2026-10-05: 46% was the
+superseded pre-correction bound; see `xrd/README.md` §2 and `xrd/results/summary_metrics.csv`)*.
 
 **If "absolute amorphous fraction" is the target, this experiment will fail.**
 
@@ -174,6 +175,10 @@ Skip this and none of the later numbers can be interpreted.
 
 Six points along a T line and six along an RH line, 11–15° window only, densely
 sampled in time:
+*(Inconsistency noted 2026-10-05: the lists below give five T and five RH points, 9 unique
+conditions with 75 °C / 60% RH shared, not six + six. `design_calcs.py` does not define
+Stage 1, so this arithmetic is unchecked. Reconcile the point count with the 12-film Stage 1
+heading and the 22-film Stage 0 + Stage 1 total in §9 before use.)*
 
 - T sweep: 55 / 65 / 75 / 85 / 95 °C at fixed RH = 60%
 - RH sweep: 30 / 45 / 60 / 75 / 85 % at fixed T = 75 °C

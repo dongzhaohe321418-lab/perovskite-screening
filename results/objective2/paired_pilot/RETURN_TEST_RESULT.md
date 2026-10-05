@@ -1,3 +1,9 @@
+> **Method current; statistics SUPERSEDED.** *(Banner added 2026-10-05.)* The displacement-only
+> return-test protocol here remains the admission rule (`../BARRIER_DEFINITION.md`); the 54-path
+> counts, the 26-host plan and the n = 7 statistics are superseded by the 108-path corpus
+> (49/108 pure-hop admissible; GA n=11, Sr n=12), see `CORPUS108_RESULT.md`,
+> `corpus84/return_test_84.json` and `corpus108/return_test_24.json`.
+
 # Priority A — local-stability return test: RESULT
 
 **23 of 27 asymmetric-well initial endpoints are verified metastable local minima. The

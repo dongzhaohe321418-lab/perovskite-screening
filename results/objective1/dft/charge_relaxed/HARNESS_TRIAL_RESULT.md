@@ -70,6 +70,11 @@ the wavefunctions for images 2–4 remain on the cluster (`phase2/out/neb_*/neb.
 ~4.2 GB each). The `identify_state()` function is validated; wiring it to a live projection is
 follow-up work and is NOT claimed as done.
 
+*(Closed 2026-07-28, later — superseded: real state-ID on the preserved wavefunctions was run
+(job `c19efa6f`, cosine 0.9789/0.9755/0.9743 on images 2/3/4); see closure item 1 in the table
+below and `Q0_NEB_GATE.md`. The "(unchanged)" in this heading describes the state when the
+section was written. Noted 2026-10-05.)*
+
 ## Condition-5 verdict proposal
 
 Archive ✓, per-image structures ✓, hashes ✓, genuine resume ✓ (scope above), stop-on-failure ✓,
@@ -94,5 +99,7 @@ state remains identifiable and CBM-like (cosine ≥ 0.974) at every interior ima
 band it will track. (Not a mechanism statement; HARNESS_TRIAL scope applies.)
 
 **Condition 5: PARTIAL → PASS**, per the PI's conditional ruling with all four items met.
-The full q=0 CI-NEB submission decision is now open; the trial's intermediate energies remain
-unquotable.
+~~The full q=0 CI-NEB submission decision is now open;~~ *(Historical: the PI granted the go on
+2026-07-28, and both production legs subsequently converged (q=0 36, q=+1 37 iterations;
+`PRODUCTION_NEB_STATUS.md`, `Q0_NEB_GATE.md` Verdict). Noted 2026-10-05.)* The trial's
+intermediate energies remain unquotable.

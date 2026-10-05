@@ -8,8 +8,11 @@ Reproduces, with the zero-shot MACE-MP-0 pipeline in the *production* gamma phas
   (c) sign & magnitude of the GA+ (guanidinium) A-site dEa          -> `ga`
   (d) strain-E_a correlation: tensile lowers, compressive raises    -> `strain`
 
-Post-review DFT-free refinements (see results/objective1/REPORT_objective1.md
-"Next steps"):
+Post-review DFT-free refinements (see ~~results/objective1/REPORT_objective1.md~~
+archive/objective1_early/REPORT_objective1.md "Next steps" *(path updated 2026-10-05: the
+report was archived and marked SUPERSEDED 2026-07-28; current Objective-1 authority is
+results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md + CHARGE_STATE_ANCHOR.md, per the
+archived file's banner and RESULTS_INDEX.md)*):
   (c+) GA configurational robustness — 3 orientations x {near,far} Cs site, plus
        mechanistic fingerprints (N-H...I, Pb-I, octahedral distortion) at initial
        and saddle                                                    -> `ga`
@@ -20,6 +23,13 @@ Anchor (b) — the V_I+ vs V_I0 charge-state ordering (Tyagi 2025) — is NOT he
 MACE is charge-agnostic, so it requires charged-supercell DFT + per-charge-state
 fine-tuning (DFT-gated). Likewise the undoped/GA DFT check and the biaxial DFT
 3-point remain DFT-gated. See results/objective1/CHARGE_STATE_PROTOCOL.md.
+*(Superseded 2026-10-05 for anchor (b) only: it has since been answered directly by
+charged-supercell DFT CI-NEB, without per-charge-state fine-tuning. EXTRACTED 2026-08-05:
+V_I0 185.6 meV (q=0, 36 iterations), V_I+1 181.7 meV (q=+1, 37 iterations), difference
+-3.9 meV, bare PBE+D3, FNV residual pending, Tyagi ordering NOT reproduced. Current
+authority: results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md (RESULTS_INDEX.md
+Q2); CHARGE_STATE_PROTOCOL.md is the original pre-compute scaffold. The undoped/GA DFT
+check and biaxial DFT 3-point clauses are unchanged by this note.)*
 
 Design notes (from the RTX 5090 benchmark, results/gpu/BENCHMARK.md):
   * per-image calculators (one MACE object per NEB image) are 3.4x faster than a

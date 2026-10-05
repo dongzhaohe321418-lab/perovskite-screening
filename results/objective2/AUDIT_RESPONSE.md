@@ -1,3 +1,9 @@
+> **HISTORICAL (2026-07-27 audit round) — do not cite as current.** *(Banner added 2026-10-05.)*
+> The GA rerun was completed (`paired_pilot/RERUN_RESULT.md`) and superseded by the 108-path
+> corpus (`paired_pilot/CORPUS108_RESULT.md`); the Objective-1 execution order below was
+> overtaken by the production CI-NEB, launched on the PI's go 2026-07-28 and extracted
+> 2026-08-05 (`../objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`).
+
 # Audit response — all seven findings confirmed
 
 **Every claim in the audit checks out against the data, including one arithmetic error I

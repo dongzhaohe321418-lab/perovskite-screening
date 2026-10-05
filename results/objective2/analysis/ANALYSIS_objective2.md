@@ -100,6 +100,9 @@ production theory level (PBE+D3(BJ), degauss 0.005, Γ, nspin=1, conv_thr 1e-8):
 The NEB archives hold far more converged frames, and they stay excluded: their per-image
 energies *are* the gate-withheld barrier, so including them would smuggle it into a
 training file.
+*(2026-10-05: the barrier has since been extracted (2026-08-05,
+`../../objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`), so it is no longer
+gate-withheld; the seed set built here is still endpoint-only.)*
 
 ## Files
 

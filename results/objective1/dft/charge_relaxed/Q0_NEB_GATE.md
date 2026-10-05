@@ -48,6 +48,10 @@ strong local force.
 
 (q=+1 pair: +11.9 meV, final above initial. The two charge states prefer opposite ends of the
 path — noted, not yet interpreted; it awaits the NEBs.)
+*(Updated 2026-10-05: the converged NEBs reproduce the opposite-end preference — q=0
+forward/backward 185.6/210.2 meV (final below initial), q=+1 181.7/169.7 meV (final above
+initial), per `barrier_extraction_record.json`. The anchor attributes the forward/backward
+asymmetry to the asymmetric hop geometry, not an error; see `CHARGE_STATE_ANCHOR.md` Scope.)*
 
 ## Condition 2 — `nspin=1` stability across geometries
 

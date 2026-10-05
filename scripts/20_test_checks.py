@@ -1153,7 +1153,10 @@ import re as _re41, glob as _glob41, os as _os41
 _n41 = len(_re41.findall(r'print\("\\n\[(\d+)\]', open("scripts/20_test_checks.py").read()))
 _docs41 = [f for f in _glob41.glob("**/*.md", recursive=True)
            if not f.startswith(("archive/", "hpc/", ".git", "tests/fixtures/"))]
-_pats41 = [r"emits (\d+) numbered groups", r"Regression suite \((\d+) groups",
+# 2026-10-05: was r"emits (\d+) numbered groups", which missed EXPERIMENT_AUDIT.md §6
+# ("`scripts/20_test_checks.py`, 36 numbered check groups ... All pass.") -- no "emits",
+# extra "check". Broadened (a superset of the old match; fixtures still yield one hit each).
+_pats41 = [r"(\d+) numbered (?:check )?groups", r"Regression suite \((\d+) groups",
            r"\((\d+) check groups", r"regression suite \((\d+) groups\)",
            r"suite (?:now )?(?:emits|has) (\d+) group", r"corrected to (\d+)\b",
            r"→\s*(\d+)\s*$"]
@@ -1179,8 +1182,12 @@ def _count_claim_hits(path, cur):
                 _v = int(_m.group(1))
                 if _v == cur or _v < 5 or _v > 500: continue   # current, or not a suite size
                 _ctx = " ".join(_ls[max(0, _i-6):_i+3]).lower()
+                # 2026-10-05: "historical incident(s)/invocation(s)" describes what a check
+                # pins, not the claim's status -- it made EXPERIMENT_AUDIT.md §6's unmarked
+                # "36 numbered check groups ... All pass." read as marked. Not a marker.
+                _hctx = _re41.sub(r"historical (?:incident|invocation)s?", "", _ctx)
                 out.append((_i + 1, _v,
-                            bool(_hist_doc or "historical" in _ctx or "superseded" in _ctx
+                            bool(_hist_doc or "historical" in _hctx or "superseded" in _ctx
                                  or "~~" in _ln or "retract" in _ctx)))
     return out
 
@@ -1596,13 +1603,6 @@ if _os50.path.exists(_sd50):
     expect(_mf50["natoms"] == 159, f"seeds are 159-atom cells (got {_mf50['natoms']})")
 
 
-print("\n" + "=" * 70)
-if FAILS:
-    print(f"{len(FAILS)} TEST(S) FAILED")
-    for f in FAILS: print("  -", f)
-    sys.exit(1)
-print("ALL TESTS PASSED -- every check fires on its own historical incident")
-
 print("\n[51] the committed evidence manifest describes the committed tree (F-027 / C-EVD-003)")
 import json as _js51, hashlib as _hl51, subprocess as _sp51, os as _os51
 _mp51 = ".audit/evidence_manifest.json"
@@ -1610,30 +1610,75 @@ if _os51.path.exists(_mp51):
     _m51 = _js51.load(open(_mp51))
     for _k51 in ("tree_sha256", "file_count", "recompute_command", "evidence_parent_commit"):
         expect(_k51 in _m51, f"manifest declares {_k51}")
-    # Recompute from the COMMITTED objects at HEAD, not the working tree: the auditor runs on a
-    # clean checkout, and F-027 arose precisely because the digest was taken while files outside
+    # Recompute from COMMITTED objects, not the working tree: the auditor runs on a clean
+    # checkout, and F-027 arose precisely because the digest was taken while files outside
     # .audit were still uncommitted, so the committed manifest described a different tree.
+    # WHICH commit (2026-10-05 review): the invariant is that the manifest describes the tree
+    # of the commit that INTRODUCED it, not whatever HEAD happens to be. Comparing against HEAD
+    # was only valid while every commit was an audit request; the Codex audit loop was retired
+    # 2026-08-04 (EXPERIMENT_AUDIT.md "2026-08-04 (final)"), later commits are not audit-bound,
+    # and regenerating the manifest to chase HEAD would fabricate a binding nobody requested.
+    # F-027 is still caught: a manifest committed together with evidence it did not hash
+    # describes a tree different from its OWN commit's tree.
     _h51 = _sp51.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
-    if _h51.returncode == 0:
+    _sh51 = _sp51.run(["git", "rev-parse", "--is-shallow-repository"],
+                      capture_output=True, text=True).stdout.strip()
+    _c51 = _sp51.run(["git", "log", "-1", "--format=%H", "--", _mp51],
+                     capture_output=True, text=True).stdout.strip()
+    if _h51.returncode != 0 or not _c51:
+        # .git-less clone (how the auditor runs): no committed objects to recompute from.
+        print("  info  no resolvable git history here; committed-tree digest not recomputable")
+    elif _sh51 == "true":
+        # a shallow boundary commit appears to ADD every file, so "last commit that touched
+        # the manifest" is not trustworthy there; say so rather than report a false mismatch.
+        print("  info  shallow clone; the manifest's introducing commit is not resolvable")
+    else:
         _head51 = _h51.stdout.strip()
-        _ls51 = _sp51.run(["git", "ls-tree", "-r", "-z", "--name-only", _head51],
-                          capture_output=True).stdout
-        _paths51 = sorted(_p for _p in _ls51.split(b"\0")
-                          if _p and not _p.startswith(b".audit/"))
-        _st51 = b""
-        for _p51 in _paths51:
-            _blob51 = _sp51.run(["git", "show", f"{_head51}:{_p51.decode()}"],
-                                capture_output=True).stdout
+        # the manifest the auditor reads must BE the committed one, not an uncommitted edit
+        _cm51 = _sp51.run(["git", "show", f"{_c51}:{_mp51}"], capture_output=True).stdout
+        expect(_cm51 == open(_mp51, "rb").read(),
+               f"{_mp51} on disk differs from its committed version at {_c51[:12]}",
+               ok_msg=f"{_mp51} on disk is byte-identical to its commit {_c51[:12]}")
+        _ls51 = _sp51.run(["git", "ls-tree", "-r", "-z", _c51], capture_output=True).stdout
+        _ent51 = []                                   # (path, blob sha) outside .audit/
+        for _rec51 in _ls51.split(b"\0"):
+            if not _rec51: continue
+            _meta51, _p51 = _rec51.split(b"\t", 1)
+            _mode51, _typ51, _oid51 = _meta51.split()
+            if _typ51 == b"blob" and not _p51.startswith(b".audit/"):
+                _ent51.append((_p51, _oid51))
+        _ent51.sort()
+        # one cat-file --batch pass instead of one `git show` per file (same bytes)
+        _cat51 = _sp51.run(["git", "cat-file", "--batch"],
+                           input=b"".join(_o + b"\n" for _, _o in _ent51),
+                           capture_output=True).stdout
+        _st51, _off51 = b"", 0
+        for _p51, _oid51 in _ent51:
+            _hdr51 = _cat51.index(b"\n", _off51)
+            _sz51 = int(_cat51[_off51:_hdr51].split()[2])
+            _blob51 = _cat51[_hdr51 + 1:_hdr51 + 1 + _sz51]
+            _off51 = _hdr51 + 1 + _sz51 + 1
             _st51 += _hl51.sha256(_blob51).hexdigest().encode() + b"  " + _p51 + b"\n"
         _calc51 = _hl51.sha256(_st51).hexdigest()
         expect(_calc51 == _m51["tree_sha256"],
-               f"manifest tree_sha256 {_m51['tree_sha256'][:12]} does not describe the committed "
-               f"tree at {_head51[:12]} (recomputed {_calc51[:12]}) -- gate binding invalid",
-               ok_msg=f"manifest tree_sha256 {_calc51[:12]} matches the committed tree at "
-                      f"{_head51[:12]}")
-        expect(len(_paths51) == _m51["file_count"],
-               f"manifest file_count {_m51['file_count']} != {len(_paths51)} committed files",
-               ok_msg=f"manifest file_count {_m51['file_count']} matches the committed tree")
+               f"manifest tree_sha256 {_m51['tree_sha256'][:12]} does not describe the tree "
+               f"of its own commit {_c51[:12]} (recomputed {_calc51[:12]}) -- gate binding invalid",
+               ok_msg=f"manifest tree_sha256 {_calc51[:12]} matches the tree of its own "
+                      f"commit {_c51[:12]}")
+        expect(len(_ent51) == _m51["file_count"],
+               f"manifest file_count {_m51['file_count']} != {len(_ent51)} files committed "
+               f"at {_c51[:12]}",
+               ok_msg=f"manifest file_count {_m51['file_count']} matches its own commit {_c51[:12]}")
+        # Receipt, not a verdict: how far HEAD has moved past the last audit-bound tree,
+        # computed live so it cannot go stale in the way a prose count does.
+        _n51 = _sp51.run(["git", "rev-list", "--count", f"{_c51}..{_head51}"],
+                         capture_output=True, text=True).stdout.strip()
+        _d51 = [_p for _p in _sp51.run(["git", "diff", "--name-only", "-z", _c51, _head51],
+                                       capture_output=True).stdout.split(b"\0")
+                if _p and not _p.startswith(b".audit/")]
+        print(f"  info  HEAD {_head51[:12]} is {_n51} commits / {len(_d51)} evidence files past "
+              f"the last audit-bound commit {_c51[:12]}; post-retirement commits are not "
+              f"audit-bound")
     # the request's binding must hash the manifest's RAW bytes (F-018 convention)
     _rq51 = ".audit/audit_request.json"
     if _os51.path.exists(_rq51):
@@ -1730,3 +1775,50 @@ if _os53.path.exists(_dp53):
            or "2.17" in _d53,
            "design must qualify 20 meV (2.17x rate), not a lifetime threshold",
            ok_msg="design qualifies 20 meV as ~2.17x rate, not a lifetime threshold")
+
+print("\n[54] every group runs BEFORE the suite verdict, numbered 1..N (2026-10-05 review)")
+# 2026-10-05 review: groups [51]-[53] sat after sys.exit and could not fail the suite. They were
+# appended below the summary block, so a FAIL there printed but the exit code had already been
+# decided -- [51] had in fact been failing against HEAD unnoticed. Read this file statically:
+# the verdict block must be the last executable code, and the numbering must be contiguous.
+import re as _re54
+_src54 = open("scripts/20_test_checks.py").read().splitlines()
+_hdr54 = [(_i, int(_m.group(1))) for _i, _l in enumerate(_src54)
+          for _m in [_re54.match(r'print\("\\n\[(\d+)\]', _l)] if _m]
+_sum54 = [_i for _i, _l in enumerate(_src54) if _l.startswith('print("\\n" + "=" * 70)')]
+_end54 = [_i for _i, _l in enumerate(_src54) if _l.startswith('print("ALL TESTS PASSED')]
+expect(len(_sum54) == 1 and len(_end54) == 1 and _sum54[0] < _end54[0],
+       f"expected exactly one summary block, found separators {[_i+1 for _i in _sum54]} "
+       f"and verdicts {[_i+1 for _i in _end54]}",
+       ok_msg=f"exactly one summary block (lines {_sum54[0]+1 if _sum54 else '?'}-"
+              f"{_end54[0]+1 if _end54 else '?'})")
+if _sum54 and _end54:
+    _late54 = [(_i + 1, _n) for _i, _n in _hdr54 if _i > _sum54[0]]
+    expect(not _late54,
+           f"group header(s) after the summary block, unable to fail the suite: {_late54}",
+           ok_msg=f"all {len(_hdr54)} group headers precede the summary block "
+                  f"(last at line {_hdr54[-1][0]+1 if _hdr54 else '?'})")
+    _tail54 = [_i + 1 for _i, _l in enumerate(_src54)
+               if _i > _end54[0] and _l.strip() and not _l.lstrip().startswith("#")]
+    expect(not _tail54,
+           f"executable code after the final verdict line at lines {_tail54[:5]}",
+           ok_msg="the final verdict is the last executable line of the file")
+_nums54 = [_n for _, _n in _hdr54]
+_dup54 = sorted({_n for _n in _nums54 if _nums54.count(_n) > 1})
+expect(not _dup54, f"duplicate group numbers {_dup54}",
+       ok_msg=f"no duplicate group numbers among {len(_nums54)} headers")
+expect(sorted(_nums54) == list(range(1, len(_nums54) + 1)),
+       f"group numbers are not contiguous 1..{len(_nums54)}: missing "
+       f"{sorted(set(range(1, max(_nums54 + [len(_nums54)]) + 1)) - set(_nums54))}",
+       ok_msg=f"group numbers are contiguous 1..{len(_nums54)}")
+expect(_nums54 == sorted(_nums54),
+       f"group headers are out of order: {_nums54}",
+       ok_msg="group headers appear in ascending order")
+
+
+print("\n" + "=" * 70)
+if FAILS:
+    print(f"{len(FAILS)} TEST(S) FAILED")
+    for f in FAILS: print("  -", f)
+    sys.exit(1)
+print("ALL TESTS PASSED -- every check fires on its own historical incident")

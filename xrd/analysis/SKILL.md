@@ -106,7 +106,8 @@ space group.**
 
 **Size.** `size_analysis` returns `D_nm`, `stat_ci68`, and `syst_range`:
 
-> D = 43.7 nm; statistical 68% CI 41.9–46.3 nm; instrument-width
+> D = 43.7 nm; statistical 68% CI 41.9–~~46.3~~46.4 nm *(corrected 2026-10-05 to
+> `xrd/results/summary_metrics.csv`)*; instrument-width
 > sensitivity 38.4–50.3 nm
 
 Use the intensity-weighted integral breadth (`D_nm`), not a mean of per-peak
@@ -126,8 +127,9 @@ protocol only.
 Bonferroni correction over the number tested. Because the added amplitude is
 bounded at A≥0 and the position is searched over a window, the asymptotic
 χ²(3) null does **not** hold — the parametric bootstrap recovers an effective
-dof near 2.0–2.9, so asymptotic p-values are **anti-conservative** for weak
-candidates. Set `calibrate=False` only for a quick look.
+dof near ~~2.0–2.9~~ 1.96–2.96 on the control scan (`xrd/results/peak_table.csv`)
+*(corrected 2026-10-05 per the README audit-fix entry)*, so asymptotic p-values are
+**anti-conservative** for weak candidates. Set `calibrate=False` only for a quick look.
 
 Phrase a single-reflection identification as **"PbI₂-compatible peak
 detected"**, not "PbI₂ quantified".

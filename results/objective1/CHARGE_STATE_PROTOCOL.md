@@ -1,5 +1,15 @@
 # Charge-state protocol scaffold — anchor (b): V$_\mathrm{I}^{+}$ vs V$_\mathrm{I}^{0}$ ordering
 
+> **Status superseded (2026-10-05):** this scaffold is historical. Anchor (b) was carried out
+> by direct PBE+D3(BJ) DFT in Quantum ESPRESSO on the E-HPC Slurm cluster, not by the
+> fine-tuned-MLIP route of §4–5: first a fixed-geometry charge-state comparison (COMPLETE,
+> `results/objective1/DFT_BENCHMARK.md`), then relaxed production CI-NEB legs for both charge
+> states (both converged, `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`).
+> Barriers EXTRACTED 2026-08-05: V_I⁰ 185.6 meV, V_I⁺¹ 181.7 meV, difference −3.9 meV (bare;
+> FNV residual pending). The §5 anchor test is answered: the Tyagi ordering is NOT reproduced.
+> See `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`. The original status line
+> below is kept as written.
+
 **Status: DFT-GATED — SCAFFOLD ONLY. No compute has been run for this anchor.**
 This document is the ready-to-run recipe; it is executed once a DFT allocation
 (CSD3 or equivalent) is secured. It exists so that anchor (b) is *specified*, not
@@ -143,6 +153,9 @@ V$_\mathrm{I}^{+}$ band energies before the `Ea_forward` reduction.
 ## 6. What is needed to start
 
 - [ ] DFT allocation (CSD3 or equivalent) — **the gating item**, not yet secured.
+  *(Superseded 2026-10-05: DFT was run on the E-HPC (`ehpc`) Slurm cluster, including both
+  production CI-NEB legs; see `results/objective1/DFT_BENCHMARK.md` and
+  `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)*
 - [ ] VASP or QE license + PAW/pseudopotential library on that cluster.
 - [ ] `pymatgen.analysis.defects` + `sxdefectalign` for FNV.
 - [ ] γ static dielectric constant ε (DFPT single-point, ~1 node-hour).

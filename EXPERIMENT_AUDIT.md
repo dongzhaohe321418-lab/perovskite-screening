@@ -44,8 +44,8 @@ Recorded in `results/objective1/dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.m
 
 | quantity | value | source |
 |---|---|---|
-| initial endpoint | **−9247.94069589 Ry** | `q1/ q1_initial_relaxed.extxyz (never committed — see F-003)` |
-| final endpoint | **−9247.93981770 Ry** | `q1/ q1_final_relaxed.extxyz (never committed — see F-003)` |
+| initial endpoint | **−9247.94069589 Ry** | `q1/ q1_initial_relaxed.extxyz (never committed — see F-003)` *(Superseded 2026-10-05: committed in `e967e47` (2026-08-03) at `results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz` (geometry only, no energy field), closing F-003. See `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`.)* |
+| final endpoint | **−9247.93981770 Ry** | `q1/ q1_final_relaxed.extxyz (never committed — see F-003)` *(Superseded 2026-10-05: committed in `e967e47` (2026-08-03) at `results/objective1/dft/charge_relaxed/q1/q1_final_relaxed.extxyz` (geometry only, no energy field), closing F-003. See `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`.)* |
 | endpoint asymmetry | **+11.9 meV** | computed |
 | Pb flanking the vacancy | indices 139, 70 at 3.446 / 3.511 Å | computed |
 
@@ -112,6 +112,11 @@ premise here.
 > `results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` (exit 0 recomputes every figure quoted in this section). Independent
 > re-verification by the next audit cycle is required before the demotion is lifted;
 > until then these numbers are provisionally recomputable, not independently verified.
+> *(Superseded 2026-10-05: the demotion is lifted. F-006 was closed in CYCLE-000005 and
+> F-012/F-013 in CYCLE-000006; CYCLE-000010/000011/000016 re-ran `derive_q3.py` in isolated
+> clones and reproduced every quoted value. Q3 is CLOSED / CITABLE, see
+> `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md`. The BOUNDED status of the
+> numbers below is unchanged.)*
 
 Three calculations, `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md`:
 
@@ -190,10 +195,21 @@ input hash) so the convergence block is checkable from the primary record, not t
 
 The q=+1 pair reads +11.9 meV (final above initial): the two charge states prefer opposite ends
 of the path. Recorded as an observation; interpretation awaits the NEBs.
+*(2026-10-05: the NEBs have run. The extracted forward/backward barriers are 185.6/210.2 meV
+(q=0) and 181.7/169.7 meV (q=+1), consistent in sign with these endpoint asymmetries; the
+anchor attributes the forward/backward asymmetry to the asymmetric hop geometry. See
+`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)*
 
-## 1.9 q = 0 NEB entry gate — ALL FIVE CONDITIONS PASS (2026-07-28); launch NOT performed (awaits explicit PI go) — reconciled 2026-07-31
+## 1.9 q = 0 NEB entry gate — ALL FIVE CONDITIONS PASS (2026-07-28); ~~launch NOT performed (awaits explicit PI go) — reconciled 2026-07-31~~ PI go 2026-07-28; both legs converged (36 / 37 iterations); barriers EXTRACTED 2026-08-05 *(corrected 2026-10-05; see `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`, `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`)*
 
-> **CURRENT EVIDENCED STATE (authoritative; supersedes the 2026-07-28 LAUNCH RECORD below).**
+> ~~**CURRENT EVIDENCED STATE (authoritative; supersedes the 2026-07-28 LAUNCH RECORD below).**~~
+> **HISTORICAL (2026-07-31 reconciliation).**
+> *(Superseded 2026-08-02, marked 2026-10-05: both legs were launched after the PI go of
+> 2026-07-28 and converged (q=0 36, q=+1 37 iterations); the raw outputs and the q=+1 endpoints
+> are committed. The job ids in the 2026-07-28 launch record below (`374e51f1`, `98199034`) are
+> the ones `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md` records. See that
+> file and the CURRENT (2026-08-02) block below. Barriers were extracted 2026-08-05, see
+> `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)*
 > Reconciled against committed artifacts only, per audit CYCLE-000001 F-004.
 > - **Gate: all five conditions PASS**, consistent with `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` and `RESULTS_INDEX.md`.
 >   The supporting evidence is committed in-tree: q0_final's QE convergence block is
@@ -239,6 +255,14 @@ snapshots), each with hash lists; the q=+1 endpoint structures are committed und
 (closing F-003's absent-input gap). Authority for the current state:
 `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`. Barriers remain UNEXTRACTED;
 the Tyagi-ordering ban stands.
+*(Superseded 2026-08-05, marked 2026-10-05: barriers EXTRACTED from the committed raw outputs.
+V_I⁰ 185.6 meV (36 iterations), V_I⁺¹ 181.7 meV (37 iterations), difference −3.9 meV (bare
+PBE+D3; FNV residual PENDING). The Tyagi ordering is NOT reproduced. The PI authorized
+extraction directly on 2026-08-05 after the audit loop was retired on 2026-08-04, so the
+extraction commit (`9bcfe9c`, after the last audit request `e454d50`) is not audit-bound; the
+record's `extraction_utc` is 2026-08-06T05:51Z. See
+`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`,
+`results/objective1/dft/charge_relaxed/barrier_extraction_record.json`.)*
 
 **Snapshot-numbering convention (audited on the live q=0 archive, PI query):** archive snapshot
 `iter_00N` holds the band with QE `istep = N` (zero-based; `iter_000` is the initial
@@ -255,7 +279,7 @@ watcher appends only on band-hash change. An earlier progress message that calle
 | 4 | q=0 and q=+1 at identical theory fingerprint | PASS by construction |
 | 5 | NEB input, restart, archive, state-ID tooling ready | **PASS (2026-07-28)** — live HARNESS_TRIAL: real restart proven as re-evaluation; state-ID cosines 0.974–0.979 recomputable from committed per-atom weights; production pair (q0/q1) at conv_thr=1e-8 with machine-verified fingerprint identity. `results/objective1/dft/charge_relaxed/HARNESS_TRIAL_RESULT.md` |
 
-**Condition 1 closed 2026-07-28; condition 5 closed later the same day (HARNESS_TRIAL + four PI closure items). Gate passed ≠ launch approved: the production CI-NEB pair waits for the PI's explicit go.** `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
+**Condition 1 closed 2026-07-28; condition 5 closed later the same day (HARNESS_TRIAL + four PI closure items). Gate passed ≠ launch approved: ~~the production CI-NEB pair waits for the PI's explicit go.~~** `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`. *(Superseded, marked 2026-10-05: PI go granted 2026-07-28 (`Q0_NEB_GATE.md`, HISTORICAL note under Verdict); both legs converged, `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`; barriers extracted 2026-08-05, `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)*
 
 ---
 
@@ -340,7 +364,9 @@ admissible set, zero admissible rows above the 0.02 endpoint target.** Extension
 | χ² requirement | 8 → MET at 11 | 12 → MET at 12 |
 
 **Sr's threshold cleared mostly mechanically** — decomposing the 16→12 drop: 2 points from
-sample size alone, 2 from the variance actually falling (65.2 → 59.6 meV). Per the agreed rule
+sample size alone, 2 from the variance actually falling (65.2 → 59.6 meV) *(Corrected
+2026-10-05: by this decomposition the clearing is half mechanical, not "mostly", as
+`results/objective2/paired_pilot/CORPUS108_RESULT.md` §5 states)*. Per the agreed rule
 the claim rests on the CI, not on n_req. Strict-only sensitivity: GA n=6 mean −2.8 sd 39.8;
 Sr n=7 mean −5.8 **sd 21.3** — both inside the band, and Sr's rescued paths carry its variance,
 so the all-pairs figures are conservative.
@@ -348,7 +374,14 @@ so the all-pairs figures are conservative.
 **Both additives are now equivalent to no effect by the CI test. Still no ranking — they remain
 indistinguishable from zero and from each other, at MACE level only.**
 
-## 2.4 Result — GA is EQUIVALENT to no effect; Sr is not yet decided
+## 2.4 Result — GA is EQUIVALENT to no effect; Sr is not yet decided *(84-path corpus — SUPERSEDED by §2.3b / `CORPUS108_RESULT.md`)*
+
+*(Superseded 2026-10-05: in the 108-path merged corpus Sr is equivalent to no effect by the CI
+test (n=12, −4.3 meV, 95% CI [−42.2, +33.6], TOST p=0.0042) and GA is equivalent at n=11
+(+6.8 meV, CI [−25.0, +38.6], TOST p=0.0021); see
+`results/objective2/paired_pilot/CORPUS108_RESULT.md` §4. The SUGGESTIVE-EQUIVALENT status and
+the Sr prohibition below apply to the 84-path data only. The no-ranking prohibition still
+stands.)*
 
 | | GA | Sr |
 |---|---|---|
@@ -417,6 +450,8 @@ mean different things:
     36 = total members in pool_v3_harmonised (m00-m35)
     28 = members that entered the 84-path corpus (m00-m27); 28 x 3 = 84
      8 = new expansion members (m28-m35), NOT yet in any corpus
+         -- SUPERSEDED (marked 2026-10-05): m28-m35 ran as the 24-path extension and were
+            merged into the 108-path corpus (36 x 3 = 108); see CORPUS108_RESULT.md §1.
     18 = members whose energy was readable from the file's attached calculator
          -- a FILE FORMAT fact, not a pool subset. Quoting it as "existing 18" caused
             the ambiguity this manifest exists to remove.
@@ -448,14 +483,22 @@ basins. `results/objective2/paired_pilot/BASIN_IDENTIFICATION.md` (v2 — the v1
 
 ---
 
-# 3. Current execution state (as of compilation)
+# 3. ~~Current~~ Execution state (as of compilation, 2026-07-28) — HISTORICAL snapshot *(relabelled 2026-10-05)*
 
 | track | state | evidence |
 |---|---|---|
 | HPC `q0_final` (`f9993838`) | **CONVERGED** (2026-07-28): QE block at 10 BFGS steps, gradient 1.6E-03 within criterion 1.945E-03 | §1.8; raw output archived |
 | GPU 24-path extension (`41ac4172`) | **COMPLETE**, exit 0, 24/24 bands, integrity-audited | §3.1 below |
-| GPU return test on extension (`c535502d`) | **running**, 14 candidates | preflighted before submission |
+| GPU return test on extension (`c535502d`) | **running**, 14 candidates *(Superseded 2026-10-05: COMPLETE, 14/14 verified metastable (5 pure hops, 9 hop+FA), merged into `results/objective2/paired_pilot/CORPUS108_RESULT.md`; raw record `corpus108/return_test_24.json`.)* | preflighted before submission |
 | everything else | idle | `squeue` empty apart from the above |
+
+*(2026-10-05: the table above is a 2026-07-28 snapshot and asserts no current execution state.
+Since then the extension return test completed and was merged (`CORPUS108_RESULT.md` §3); both
+production CI-NEB legs ran and converged (q=0 36 / q=+1 37 iterations,
+`results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`, status date 2026-08-02); and
+the barriers were extracted 2026-08-05 (`CHARGE_STATE_ANCHOR.md`). The FNV `pp.x` step has not
+been run: E-HPC is unreachable (`RESULTS_INDEX.md` Q2). For current status use
+`RESULTS_INDEX.md`.)*
 
 ## 3.1 Integrity audit of the 24 new rows — run before any statistics
 
@@ -481,6 +524,10 @@ would take GA toward n ≈ 14 and Sr toward n ≈ 15.
 TOST / variance-bound figures will be reported only after the return test completes and the
 merged corpus is re-audited. The strict-valid rate of 4/24 versus 30/84 in the first corpus is
 itself a difference worth explaining before the two are pooled — pooling is not automatic.
+*(Superseded 2026-10-05: the return test completed (14/14 metastable), the merged corpus was
+integrity-audited and pooled after the yield difference was tested (Fisher exact p = 0.0867),
+and the extension statistics are now in §2.3b: GA n=11, Sr n=12, not the projected 14/15. See
+`results/objective2/paired_pilot/CORPUS108_RESULT.md`.)*
 
 ---
 
@@ -677,25 +724,34 @@ A false positive in the preflight tool itself was also found during validation (
 
 Read this alongside Section 4. Nothing in this list may be presented as a result.
 
-## 5.1 The charge-state ordering — the project's headline question — is OPEN
+## 5.1 The charge-state ordering — the project's headline question — ~~is OPEN~~ ANSWERED at bare PBE+D3 on one path: indistinguishable; precise difference pending FNV *(corrected 2026-10-05; see `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`)*
 
 **No claim of the form "V_I⁺ migrates faster/slower than V_I⁰" is supported.** Requirements
 still unmet:
 
 1. Both endpoints relaxed at identical theory level — **now satisfied** (q0_final converged 2026-07-28; both q=0 endpoints exist at the production fingerprint).
-2. Both CI-NEBs run at identical theory level — **neither has been run**.
+2. Both CI-NEBs run at identical theory level — ~~**neither has been run**~~ **now satisfied** (both legs converged, q=0 36 / q=+1 37 iterations, `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`, status date 2026-08-02) *(corrected 2026-10-05)*.
 3. The q=+1 explore band is unconverged (431 meV still descending) and is not a barrier.
+4. FNV residual Δ(ΔE_corr) for the q=+1 leg — **PENDING** *(added 2026-10-05)*. The densities were preserved off scratch on 2026-08-04 (`results/objective1/dft/charge_relaxed/FNV_DENSITY_PRESERVATION.md`); `pp.x` has not been run. It was first refused by the 2026-08-04 `check_action` DENY (`results/objective1/dft/charge_relaxed/charge_correction_check.md`), and E-HPC is now unreachable (`CHARGE_STATE_ANCHOR.md`, `RESULTS_INDEX.md` Q2).
 
 **The ban on claiming reproduction of the literature (Tyagi) barrier ordering stands, and has
 stood unbroken for the whole campaign.** The old Stage-1 fixed-path pair (141 / 127 meV) is at
 a different theory fingerprint and cannot be used to sustain an ordering.
+*(2026-10-05: the Tyagi ordering is NOT reproduced (forward-barrier difference −3.9 meV, bare
+PBE+D3), so the ban is now empirically grounded. See
+`results/objective1/dft/charge_relaxed/barrier_extraction_record.json`.)*
 
 ## 5.2 Absolute barrier values
 
-No converged DFT migration barrier exists for either charge state. The only converged
-DFT-level quantities are endpoint energies and the electronic-structure results of §1.5-1.7.
+~~No converged DFT migration barrier exists for either charge state. The only converged
+DFT-level quantities are endpoint energies and the electronic-structure results of §1.5-1.7.~~
+*(Superseded 2026-08-05, marked 2026-10-05: bare PBE+D3 forward barriers of 185.6 meV (V_I⁰,
+36 iterations) and 181.7 meV (V_I⁺¹, 37 iterations) have been extracted from the converged
+production legs, see `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)* Not
+established: the FNV-corrected q=+1 barrier (residual pending), and anything beyond one path,
+one 159-atom γ-like cell and PBE+D3 without SOC or hybrid functionals.
 
-## 5.3 A weakly bound polaron (see §1.6 status note — Q3 provenance committed, re-verification pending)
+## 5.3 A weakly bound polaron ~~(see §1.6 status note — Q3 provenance committed, re-verification pending)~~ *(re-verification complete — Q3 CLOSED / CITABLE, `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md`; corrected 2026-10-05)*
 
 Excluded only down to a bound of ~8 meV under the most generous reading of POL's residual
 (§1.6). A few-meV bound state is compatible with the data. Converging POL to 10⁻⁶ Ry would
@@ -711,9 +767,14 @@ candidates but they were not tested.
 
 ## 5.4 Sr's equivalence
 
-`SUGGESTIVE-EQUIVALENT` only. Its TOST passes (p = 0.0104) and its CI is inside ±59.5 meV, but
+~~`SUGGESTIVE-EQUIVALENT` only. Its TOST passes (p = 0.0104) and its CI is inside ±59.5 meV, but
 n = 10 against a required 16, and §2.6 explains why that requirement is a weak gate. **Sr must
-not be described as equivalent, nor ranked against GA.**
+not be described as equivalent, nor ranked against GA.**~~
+*(Superseded 2026-10-05 by the 108-path corpus: Sr is equivalent to no effect by the CI test,
+n=12, −4.3 meV, CI [−42.2, +33.6] (29% margin), TOST p=0.0042. The drop in the χ² requirement
+from 16 to 12 was half mechanical (2 of 4 points; CORPUS108_RESULT.md §5), so the claim rests on the CI, not on n_req. See
+`results/objective2/paired_pilot/CORPUS108_RESULT.md` §4-§5.)* Still not established: any
+GA-vs-Sr ranking, and anything beyond MACE level.
 
 ## 5.5 Transfer of MLIP results to DFT or experiment
 
@@ -727,6 +788,10 @@ Completed and integrity-audited (24/24 rows clean, zero exclusions, zero overlap
 84-path corpus, 4 of 24 strict-valid, 14 return-test candidates identified). **No statistics
 from it appear anywhere in this document** — the rescue pathway is still running, and updated
 n / mean / CI / TOST / variance-bound figures will be reported only when it completes.
+*(Superseded 2026-10-05: the return test completed (14/14 verified metastable; 5 pure hops
+admitted, 9 hop+FA kept separate) and the extension was merged. Its statistics are in §2.3b and
+`results/objective2/paired_pilot/CORPUS108_RESULT.md`. The 24-path extension is no longer an
+open item.)*
 
 ## 5.7 Noise floor
 
@@ -760,6 +825,10 @@ correct one.
 
 **Regression suite.** `scripts/20_test_checks.py`, 36 numbered check groups, every one firing on
 an actual historical incident from this project rather than on a hypothetical. All pass.
+*(Superseded 2026-10-05: 36 was the 2026-07-28 count. As of 2026-10-05 the suite emits 54
+numbered groups, all of them before the verdict line (group [54] checks they are contiguous
+1..54). It exits 0 under the run's Python 3.9.6 venv. See `scripts/20_test_checks.py` and
+`results/objective2/CURRENT_STATUS.md` "automated gates".)*
 
 ---
 
@@ -771,17 +840,27 @@ an actual historical incident from this project rather than on a hypothetical. A
 |---|---|
 | governing plan | `NEXT_STEP_GUIDE.md` |
 | Objective 2 index | `results/objective2/CURRENT_STATUS.md` |
-| paired result (GA/Sr) | `results/objective2/paired_pilot/CORPUS84_RESULT.md` |
+| paired result (GA/Sr) | ~~`results/objective2/paired_pilot/CORPUS84_RESULT.md`~~ `results/objective2/paired_pilot/CORPUS108_RESULT.md` + `corpus108/` raw records *(corrected 2026-10-05; CORPUS84 superseded by the 108-path merge)* |
+| Objective 2 analysis + final result *(added 2026-10-05)* | `results/objective2/analysis/ANALYSIS_objective2.md` + `results/objective2/analysis/FINAL_RESULT_AND_NEXT_STEPS.md` |
 | host pool ledger | `results/fa_host/pool_v3_harmonised/HOST_MANIFEST.md` |
 | barrier definition | `results/objective2/BARRIER_DEFINITION.md` |
 | path rejection classes | `results/objective2/paired_pilot/BASIN_IDENTIFICATION.md` (v2) |
-| endpoint metastability | `results/objective2/paired_pilot/RETURN_TEST_RESULT.md` |
+| endpoint metastability | `results/objective2/paired_pilot/RETURN_TEST_RESULT.md` + `results/objective2/paired_pilot/corpus84/return_test_84.json` (27 candidates) + `results/objective2/paired_pilot/corpus108/return_test_24.json` (14 candidates, 14/14 metastable) *(raw records added 2026-10-05, as in `results/objective2/CURRENT_STATUS.md`)* |
 | q=0 electronic state | `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` + `results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md` |
 | polaron bound | `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` |
 | q=0 relaxation state | `results/objective1/dft/charge_relaxed/Q0_RELAXATION_STATUS.md` |
 | NEB entry gate | `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` |
+| Q2 charge-state barriers (EXTRACTED 2026-08-05) *(added 2026-10-05)* | `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` + `results/objective1/dft/charge_relaxed/barrier_extraction_record.json` |
+| production CI-NEB pair *(added 2026-10-05)* | `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md` |
+| Q3 closure *(added 2026-10-05)* | `results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md` |
+| FNV residual (PENDING) *(added 2026-10-05)* | `results/objective1/dft/charge_relaxed/charge_correction_check.md` + `results/objective1/dft/charge_relaxed/FNV_DENSITY_PRESERVATION.md` |
 | theory fingerprints | `results/objective1/dft/charge_relaxed/THEORY_LEVEL_RECONCILIATION.md` |
 | protocol + stop-loss | `results/objective1/dft/charge_relaxed/LOCKED_PROTOCOL_AND_STOPLOSS.md` |
+
+*(Table updated 2026-10-05: the paired-result pointer moved from `CORPUS84_RESULT.md` to
+`CORPUS108_RESULT.md`; rows added for the Objective 2 analysis, the Q2 extracted barriers, the
+production CI-NEB pair, the Q3 closure and the pending FNV residual; the metastability row now
+lists its raw records. The canonical per-question index is `RESULTS_INDEX.md`.)*
 
 ## 7.2 Superseded — do NOT cite
 
@@ -789,8 +868,11 @@ an actual historical incident from this project rather than on a hypothetical. A
 - `results/objective2/paired_pilot/RERUN_RESULT.md`, `results/objective2/paired_pilot/RETURN_TEST_RESULT.md` **statistics** — 18-host pool; their
   *method* stands, their n = 7 numbers are superseded by the 28-host corpus.
 - `results/objective2/AUDIT_RESPONSE.md`, `results/objective2/noise_floor/NOISE_FLOOR_REPORT.md` — old 8-member pool.
-- `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` — marked PROVISIONAL; the q=0 leg it awaited has
-  since been partly delivered, so read `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` and `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` instead.
+- ~~`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` — marked PROVISIONAL; the q=0 leg it awaited has
+  since been partly delivered, so read `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md` and `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` instead.~~
+  *(Corrected 2026-10-05: `CHARGE_STATE_ANCHOR.md` is now the EXTRACTED Q2 authority
+  (2026-08-05) and states that it supersedes its own earlier PROVISIONAL snapshot. It is no
+  longer superseded; cite it with `barrier_extraction_record.json`. See §7.1.)*
 - `archive/objective1_q0_diagnostics/Q0_SPIN_SCF_UNRESOLVED.md` — the problem it describes was self-inflicted
   (§4.2); kept as the diagnostic record only.
 
@@ -804,21 +886,24 @@ an actual historical incident from this project rather than on a hypothetical. A
 | `results/objective2/paired_pilot/corpus84/corpus84_stats.json` | the published statistics |
 | `results/fa_host/pool_v3_harmonised/HOST_MANIFEST.json` | 36 members: seed, source, hash, fmax, energy + provenance |
 | `results/fa_host/pool_v3_harmonised/expansion_plus8.json` | the +8 expansion record |
-| `q1/ q1_initial_relaxed.extxyz (never committed — see F-003)`, `q1_final_relaxed.extxyz (never committed — see F-003)` | relaxed q=+1 endpoints |
+| `q1/ q1_initial_relaxed.extxyz (never committed — see F-003)`, `q1_final_relaxed.extxyz (never committed — see F-003)` *(Superseded 2026-10-05: committed in `e967e47` (2026-08-03) at `results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz` / `q1_final_relaxed.extxyz` (geometry only), closing F-003; see `PRODUCTION_NEB_STATUS.md`.)* | relaxed q=+1 endpoints |
 | `results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz` | relaxed q=0 initial endpoint |
 | `q1_explore_state.tar.gz` | preserved `neb.path` — the CI-NEB restart point |
+| `results/objective2/paired_pilot/corpus108/` *(added 2026-10-05)* | 108-path merged corpus: `paired_raw_108.json` (108 rows), `paired_raw_24.json`, `return_test_24.json` (14 candidates), `admission_108.json`, `corpus108_stats.json`, `integrity_audit_24.json`, `input_manifest_24.json`, `corpus108_new_bands.tar.gz`, `HASHES.json` |
+| `results/objective1/dft/charge_relaxed/q0_production/`, `results/objective1/dft/charge_relaxed/q1_production/` *(added 2026-10-05)* | production CI-NEB raw outputs: `q0_neb.out.gz` / `q1_neb.out.gz`, final paths, append-only archive tarballs (38 / 39 snapshots), SHA256 custody (`REMOTE_SHA256.txt` / `SHA256.txt`); see `PRODUCTION_NEB_STATUS.md` |
+| `results/objective1/dft/charge_relaxed/barrier_extraction_record.json` *(added 2026-10-05)* | hash-locked Q2 extraction record: custody hashes, forward/backward barriers, charge-state difference, FNV status |
 
 ## 7.4 Analysis code
 
 `05` QE inputs · `06` QE parsing · `11` neb.x input · `12` relax frames · `13` d_max ·
 `16` enumeration · `17` ensemble spread · `18` explore screen · `19` GPU regression ·
-`20` regression suite (53 groups) · `21` pool expansion · `22` paired pilot ·
+`20` regression suite (54 groups) · `21` pool expansion · `22` paired pilot ·
 `23` q=0 state metrics (overlap-based, not band-index) · `24` return test · `25` preflight ·
 `scripts/checks.py` shared gates.
 
 ## 7.5 Figures
 
-`results/objective2/paired_pilot/corpus84.png` (equivalence + power) · `results/objective1/dft/charge_relaxed/q0_polaron_excluded.png` (bound) ·
+`results/objective2/paired_pilot/corpus84.png` (equivalence + power, 84-path — superseded) · `results/objective2/paired_pilot/corpus108.png` (108-path equivalence: both CIs inside ±59.5 meV) *(added 2026-10-05)* · `results/objective1/dft/charge_relaxed/q0_polaron_excluded.png` (bound) ·
 `results/objective1/dft/charge_relaxed/q0_resolved.png` (CBM identification) · `results/objective2/paired_pilot/return_test.png` · `results/objective2/paired_pilot/rerun_paired.png` ·
 `results/objective1/dft/charge_relaxed/q0_projection.png` · `results/objective1/dft/charge_relaxed/q0_seed_comparison.png` · `results/objective1/dft/charge_relaxed/q1_explore_neb.png` ·
 `results/objective2/noise_floor/noise_floor.png` · `results/objective1/dft/fixed_path/fixed_path_profile.png` · `results/objective1/ga_anchor_audit.png` · `results/objective1/dft/charge_relaxed/q0_gap_state.png` ·
@@ -883,6 +968,11 @@ authorization decision is eventually made.
 `NO_FINAL_AUDIT_FOR_COMMIT` and the three approvals. The extractor also refuses while
 `controller/state.json`'s `authorizations` list is empty, which it is. Barriers UNEXTRACTED; the
 Tyagi-ordering ban stands.
+
+*(Forward pointer 2026-10-05: the PI later authorized extraction directly (2026-08-05), outside
+the retired audit gate, and it was performed from the committed raw outputs (commit `9bcfe9c`),
+see `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` and §1.9. F-025/F-026 remain
+never independently closed.)*
 
 ## 2026-08-04 (fourth): CYCLE-000037 — F-025 twice more, and a CRITICAL evidence-binding defect
 

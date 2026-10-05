@@ -2,7 +2,8 @@
 
 **Tier discipline.** Every row carries a `tier` field. `EXPLORE` rows may never be
 presented as a ranking. Promotion to `PRODUCTION` requires all six entry gates
-(`results/objective1/archive/objective2_interim/OBJECTIVE2_READINESS_AUDIT.md (archived)`) to be met.
+(~~`results/objective1/archive/objective2_interim/OBJECTIVE2_READINESS_AUDIT.md`~~
+`archive/objective2_interim/OBJECTIVE2_READINESS_AUDIT.md` (archived) *(path corrected 2026-10-05)*) to be met.
 
 ## Design rule: the configurational ensemble is a column, not a footnote
 
@@ -78,6 +79,12 @@ results/objective2/
   explore/                       <- MACE pre-screen (EXPLORE only)
   production/                    <- DFT, gated
 ```
+
+*(2026-10-05: `noise_floor/band_member_XX.extxyz`, `explore/` and `production/` were never
+committed. Actual layout: `structures/`, `noise_floor/` (`noise_floor.json`/`.png`, old 8-member
+pool, historical per `CURRENT_STATUS.md`), `gpu_regression/`, `paired_pilot/` (`corpus84/`,
+`corpus108/`, `return_test/`), `analysis/`, `endpoint_pilot/`. Current result:
+`paired_pilot/CORPUS108_RESULT.md`; canonical index: `CURRENT_STATUS.md`.)*
 
 ## Known limit of this host cell
 

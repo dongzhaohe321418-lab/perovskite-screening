@@ -27,10 +27,21 @@ Anything not listed here is historical. Restructured 2026-07-28.
   `results/objective2/analysis/ANALYSIS_objective2.md`, with the final result and ranked
   next experiments in `results/objective2/analysis/FINAL_RESULT_AND_NEXT_STEPS.md`
   (P1: expand to n≈50/72 for 20 meV resolution, ~2 GPU-hours at the measured 70 s/path).
+  *(Superseded 2026-10-05: the n≈47/72 and P1 n≈50/72 figures are difference-power plug-ins.
+  On 2026-08-05 `results/objective2/analysis/NEXT_EXPERIMENT_DESIGN.md` v2 E1 replaced P1 with a
+  pre-registered ±20 meV TOST equivalence corpus sized by equivalence-power simulation after A3
+  (a plug-in check suggests GA n≈52, Sr n≈58, but the simulation is authoritative); ±20 meV is
+  ≈2.17× the single-hop rate, a precision scale, not a device-lifetime threshold.)*
 - **Next:** nothing blocking; corpus can grow if a tighter CI is wanted. A 20 meV-resolution
-  question would need the 4–6× larger corpus quantified above. **Pinned next-stage design:
+  question would need the 4–6× larger corpus quantified above *(superseded 2026-10-05: sizing
+  is now by E1's equivalence-power simulation, see the note under Mechanism)*. **Pinned next-stage design:
   `results/objective2/analysis/NEXT_EXPERIMENT_DESIGN.md` (v2 — A1a/A1b/A2a/A2b/A3/E1 with the
   equivalence and pooling gates).**
+  *(Updated 2026-10-05: A1a has run — `results/objective2/endpoint_pilot/A1A_RESULT.md`
+  (job `1a86777c`): A1 gate INSUFFICIENT (0/6 recovered); the constrained-cage protocol is
+  dropped as the E1 endpoint fix, the free-relaxation protocol is retained, and A1b becomes a
+  reproducibility check. The DFT arms A2a/A2b run on E-HPC, whose login node was recorded
+  unreachable on 2026-08-05, so they wait on the rebuild in `ehpc/EHPC_REBUILD_GUIDE.md`.)*
 
 ## Q2. Are V_I⁰ and V_I⁺ migration barriers separable at DFT level? (Objective 1)
 - **Current conclusion: EXTRACTED (2026-08-05) — barriers are INDISTINGUISHABLE at this level.**
@@ -38,19 +49,27 @@ Anything not listed here is historical. Restructured 2026-07-28.
   difference **−3.9 meV**, far below the degauss-0.005 convergence noise (15.8 meV) and the
   residual-force uncertainty. **The Tyagi charge-state ordering is NOT reproduced** — the data do
   not support a charge-state barrier separation at this level (the prior ban is now empirically
-  grounded). Bare PBE+D3 barriers; **FNV residual Δ(ΔE_corr) NOT yet applied** (pp.x needs remote
-  densities, E-HPC unreachable) — the qualitative conclusion is robust to a small FNV residual,
+  grounded). Bare PBE+D3 barriers; **FNV residual Δ(ΔE_corr) NOT yet applied** (~~pp.x needs remote
+  densities, E-HPC unreachable~~ pp.x not yet run, E-HPC unreachable; the input densities were
+  preserved off scratch on 2026-08-04, `results/objective1/dft/charge_relaxed/FNV_DENSITY_PRESERVATION.md`
+  *(wording corrected 2026-10-05)*) — the qualitative conclusion is robust to a small FNV residual,
   a precise difference is not final until FNV closes.
 - **Scope:** PBE+D3(BJ), degauss 0.005, Γ, 159-atom γ-like cell — one vacancy, one path, one
   composition, one theory level. No SOC, no hybrid.
 - **Authoritative:** `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` (EXTRACTED) +
-  `barrier_extraction_record.json` (hash-locked record) +
+  `results/objective1/dft/charge_relaxed/barrier_extraction_record.json` (hash-locked record) +
   `results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`. NEB convergence gate:
   `results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md` (gate: ALL FIVE conditions PASS).
 - **Raw data:** `results/objective1/dft/charge_relaxed/q{0,1}_production/` (committed neb.out.gz,
   neb.path, archives, SHA256 custody records)
-- **Open sub-item:** FNV charged-defect residual for the q=+1 leg — see `charge_correction_check.md`
-  (needs pp.x on the remote densities; unblocks when E-HPC is rebuilt).
+- **Open sub-item:** FNV charged-defect residual for the q=+1 leg — see
+  `results/objective1/dft/charge_relaxed/charge_correction_check.md`
+  (~~needs pp.x on the remote densities~~ pp.x not yet run; input densities preserved off scratch
+  2026-08-04, `results/objective1/dft/charge_relaxed/FNV_DENSITY_PRESERVATION.md`; unblocks when
+  E-HPC is rebuilt).
+  *(Corrected 2026-10-05: the extraction record and the FNV check file above were previously
+  written as bare filenames, which resolve neither from the repo root nor from this file's
+  directory; both now carry their full paths.)*
 - **Next:** compute the FNV residual once E-HPC is back to finalize the difference; otherwise the
   qualitative charge-state conclusion is complete.
 
@@ -100,10 +119,21 @@ Anything not listed here is historical. Restructured 2026-07-28.
 ## Q4. Is the host-pool / noise floor sound for screening? (methodology)
 
 - **Current conclusion:** 36-member pool, ALL force targets measured ≤ 0.02 eV/Å, homogeneity
-  gate −31.5 meV (p=0.64, 0.20σ). Noise floor: host-ensemble σ ≈ 84 meV → paired design and
-  ±59.5 meV band. Two earlier gate versions were retracted (contaminated energy ledger).
+  gate −31.5 meV (p=0.64, 0.20σ). ~~Noise floor: host-ensemble σ ≈ 84 meV → paired design and
+  ±59.5 meV band.~~ *(Superseded 2026-10-05: 84 meV was the undoped sd of the 18-host pool
+  (83.9 meV, n=6, `results/objective2/paired_pilot/RERUN_RESULT.md`, whose statistics are listed
+  as superseded in `results/objective2/CURRENT_STATUS.md` and EXPERIMENT_AUDIT §7.2). On the
+  current 36-host corpus the undoped admissible set is n=17, 166.7 ± 70.8 meV, and the
+  host-configuration SD is 57.3 meV on the balanced 9×3 design
+  (`results/objective2/analysis/ANALYSIS_objective2.md`). Host spread is why the design is
+  paired; the ±59.5 meV band is an independently defined 10× hop-rate threshold, not derived
+  from the noise floor (EXPERIMENT_AUDIT §5.7).)* Two earlier gate versions were retracted
+  (contaminated energy ledger).
 - **Authoritative:** `results/fa_host/pool_v3_harmonised/HOST_MANIFEST.md` +
-  `results/fa_host/POOL_HOMOGENEITY.md` + `results/objective2/noise_floor/NOISE_FLOOR_REPORT.md`
+  `results/fa_host/POOL_HOMOGENEITY.md` + ~~`results/objective2/noise_floor/NOISE_FLOOR_REPORT.md`~~
+  *(Superseded 2026-10-05: old 8-member pool, listed do-not-cite in
+  `results/objective2/CURRENT_STATUS.md` and EXPERIMENT_AUDIT §7.2; the current 36-host spread is
+  in `results/objective2/analysis/ANALYSIS_objective2.md`.)*
 - **Raw data:** `results/fa_host/pool_v3_harmonised/*.extxyz` + HOST_MANIFEST.json
 - **Next:** none; the manifest is the single ledger.
 

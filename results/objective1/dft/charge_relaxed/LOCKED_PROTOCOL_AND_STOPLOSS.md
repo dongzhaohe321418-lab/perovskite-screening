@@ -13,12 +13,17 @@
 >
 > **Current protocol for q=0: `nspin=1`**, justified by P2 and by the polaron test
 > (`Q0_POLARON_EXCLUDED.md`), not adopted as an approximation. It converges roughly 5× faster
-> and is what the running `q0_final` relaxation uses.
+> and is what the running `q0_final` relaxation uses. *(Updated 2026-10-05: `q0_final` has
+> since converged formally on 2026-07-28 — job `f9993838`, QE convergence block, 10 BFGS steps;
+> see `Q0_NEB_GATE.md` Condition 1.)*
 >
 > **What still stands in this document:** the theory fingerprint (PBE+D3(BJ), degauss 0.005,
 > ecut 50/400, Γ), the stop-loss discipline, and — importantly — the **soft octahedral-tilt
 > floor**: BFGS on this cell floors near fmax ≈ 0.04 eV/Å and the accepted geometry is the
 > lowest-gradient accepted step. That behaviour is now being observed again in `q0_final`.
+> *(Superseded 2026-10-05: `q0_final` worked through the soft-mode floor and converged formally
+> on 2026-07-28. The proposed lowest-accepted-step protocol revision was withdrawn as
+> unnecessary and never adopted; see `Q0_NEB_GATE.md` Condition 1.)*
 >
 > See `Q0_RESOLVED.md`, `Q0_POLARON_EXCLUDED.md`, `Q0_NEB_GATE.md`.
 
@@ -113,7 +118,9 @@ If it passes: run q=0 and q=+1 CI-NEB at the identical locked level.
 
 ## Final validation criteria
 
-- Both legs reach the same force threshold (`< 0.10 eV/A`).
+- Both legs reach the same force threshold (~~`< 0.10 eV/A`~~ **0.05 eV/Å, pair-locked by the
+  2026-07-28 amendment above**; 0.10 was the explore-era value). *(Corrected 2026-10-05: both
+  production legs ended with every per-image force ≤ 0.05 eV/Å — `PRODUCTION_NEB_STATUS.md`.)*
 - Each barrier is taken as its own CI-NEB saddle relative to its own initial image.
 - Only when **both** legs are complete may the charge-state ordering be discussed.
 - **Caveat carried into any ordering claim:** comparing E_a alone is a barrier-level

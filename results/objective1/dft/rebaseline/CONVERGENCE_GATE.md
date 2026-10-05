@@ -25,11 +25,26 @@ barrier by **−15.8 meV** (179.1 → 163.3), well past the 10 meV tolerance. Th
 odd-electron V_I⁰ mid-gap state anticipated in review: a 0.01 Ry (0.136 eV) Gaussian
 width over-smears the defect level and perturbs the small barrier difference.
 
+*(Interpretation superseded 2026-10-05: the repo has since found the q=0 state CBM-like, not a
+mid-gap defect level — "There is no in-gap defect level at this geometry" at the q=+1 relaxed
+geometry (`results/objective1/dft/charge_relaxed/Q0_RESOLVED.md`;
+`results/objective1/dft/charge_relaxed/P1_REFERENCE_AUDIT.md`; `RESULTS_INDEX.md` Q3). These q0
+runs also used the later-retracted forced moment (`nspin=2`, `tot_magnetization=1`; the
+`conv_dg005_img{0,3}_q0.out.gz` outputs print `total magnetization = 1.00`). The −15.8 meV
+shift stands as measured for that setup; the "mid-gap defect level" explanation does not.)*
+
 **Decision (user-approved):** lock the production smearing at **degauss = 0.005 Ry** for
 both charge states. The degauss=0.005 single-points computed here **are** the new
 production baseline — no separate re-baseline run was needed.
 
 **New production PBE+D3(BJ) baseline (degauss 0.005):** q0 = **163.3 meV**, q1 = **152.8 meV**.
+
+*(Note 2026-10-05: these are fixed-path single-points on the frozen MACE band, with q0 under the
+retracted forced-moment treatment. They are a settings baseline, not production barriers. The
+production relaxed CI-NEB barriers at these settings are V_I⁰ 185.6 / V_I⁺¹ 181.7 meV (bare,
+FNV residual pending; `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`). Fixed-path
+numbers may not be used in a conclusion alongside Stage-2 results
+(`results/objective1/dft/charge_relaxed/LOCKED_PROTOCOL_AND_STOPLOSS.md`).)*
 
 *Caveat:* convergence is demonstrated 0.01→0.005 (q0 still moving); a further 0.005→0.0025
 check would confirm the 0 K limit but was deprioritised to conserve budget. 0.005 Ry is a
@@ -63,6 +78,14 @@ symmetry         nosym=.true. noinv=.true.
 launch           2 nodes, mpirun -np 64 (32/node)  [memory-required; 64=32 ranks wall]
 forc_conv_thr    7.8d-4 Ry/Bohr (0.020 eV/Å)
 ```
+
+*(Superseded, noted 2026-10-05: the q0 line above is retracted — q0 production uses `nspin=1`
+with no imposed moment. See the "Current protocol for q=0: `nspin=1`" banner of
+`results/objective1/dft/charge_relaxed/LOCKED_PROTOCOL_AND_STOPLOSS.md` and
+`results/objective1/dft/charge_relaxed/Q0_RESOLVED.md`; the production input
+`ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` sets no `nspin`, i.e. the QE default
+`nspin=1`. The q0 single-points in this gate were run with the retracted forced-moment
+treatment.)*
 
 Files: `conv_gate_outputs/conv_dg005_*.out.gz` (degauss=0.005 baseline, 4 SCFs),
 `conv_ecut60_img0_q1_OOM.out.gz` (the 159 GB estimate + OOM evidence).

@@ -164,7 +164,10 @@ that retain size information. The arithmetic mean of per-peak Scherrer sizes
 diverges (to >100 nm) because narrow reflections have their sample broadening
 driven toward zero, sending individual D values toward infinity. **Reported
 Scherrer sizes that average over reflections are unstable in exactly this way**,
-which is why 43.6 nm — not the 55.9 nm per-peak mean — is the adopted value.
+which is why ~~43.6 nm~~ 43.7 nm — not the ~~55.9 nm~~ 53.6 nm per-peak mean
+(1.0× column of the table above) — is the adopted value.
+*(Corrected 2026-10-05 to match the headline table, the size table above and
+`results/summary_metrics.csv` (D = 43.7479 nm); no committed record supports 55.9 nm.)*
 
 Error budget from 8000 Monte-Carlo draws (sampling peak-width errors, profile
 mixing η, instrumental width ±25%, η_inst 0.30–0.80, K 0.89–1.00):
@@ -181,8 +184,9 @@ roughly in half** and is the single highest-value follow-up.
 This is **X-ray crystallite (domain) size, not SEM grain size.** The two differ
 whenever grains are polycrystalline or contain low-angle boundaries; XRD
 domain size is a lower bound on grain size and the two commonly disagree by
-2–10× in perovskite films. Do not compare 43.6 nm against an SEM number
-without saying which quantity each is.
+2–10× in perovskite films. Do not compare ~~43.6 nm~~ 43.7 nm against an SEM number
+without saying which quantity each is. *(Corrected 2026-10-05 to match
+`results/summary_metrics.csv`.)*
 
 Note also that per-reflection sizes span 37–84 nm with an angular trend. With
 strain excluded, this residual scatter is most likely anisotropic domain shape
@@ -269,8 +273,12 @@ fitted-area SNR.**
 
 ## 5. Standardised pipeline (skill)
 
-This analysis is now the standard measurement layer for Objective 2 XRD,
-published as the **`perovskite-xrd-protocol`** skill with three modes:
+This analysis is now the standard measurement layer for ~~Objective 2 XRD~~ this
+sub-project's thin-film XRD screens, published as the **`perovskite-xrd-protocol`**
+skill with three modes:
+*(Corrected 2026-10-05: xrd/ is an independent sub-project with no evidence chain shared
+with Objectives 1–2; see the banner at the top of this file and `../RESULTS_INDEX.md`
+("Independent sub-project").)*
 
 - **`single`** — phase ID, effective cell, size, impurities, texture
 - **`compare control treated`** — paired deltas with split uncertainties

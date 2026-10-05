@@ -1,6 +1,11 @@
 # E-HPC 重建指南 — 复现已跑通生产 CI-NEB 的 QE-on-Slurm 环境
 
-**目标:** 精确复现这套已经完成两条 159/232-atom 生产 CI-NEB 的 Quantum ESPRESSO + Slurm 环境。
+**目标:** 精确复现这套已经完成两条 ~~159/232-atom~~ 159-atom(γ-like CsPbI₃)生产 CI-NEB 的 Quantum ESPRESSO + Slurm 环境。
+*(Corrected 2026-10-05: 两条生产 leg 都是 159-atom(`nat = 159`,见
+`ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` 与
+`results/objective1/dft/charge_relaxed/q1_production/q1_cineb.neb.in`;
+`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`)。尚未运行任何 232-atom DFT;FA cell 上的
+A2a/E4b 仍是 `results/objective2/analysis/NEXT_EXPERIMENT_DESIGN.md` 中的计划。)*
 本指南编码了 2026-07 整个 DFT campaign 中逐条验证出的全部配置与陷阱修复——不是泛泛的教程,
 而是"照做就能得到与旧环境 bit-for-bit 一致能量"的复现说明。
 
@@ -134,6 +139,8 @@ Aliyun E-HPC 的 Slurm 控制器通常跑在一个**独立的管理节点**上,�
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=32
 # 159/232-atom V_I cell 需要 ~132 GB > 单节点 62 GB,必须跨 2 节点
+# (Corrected 2026-10-05: ~132 GB 是 QE 对 159-atom cell 在 50/400 Ry 下给出的 dynamical RAM 估算
+#  (results/objective1/dft/rebaseline/CONVERGENCE_GATE.md §2);232-atom cell 的内存需求未测量。)
 
 set -uo pipefail
 set +e                        # ★ 陷阱1:runner 强制 errexit,必须显式关掉,否则一个空 grep 杀全局
@@ -156,12 +163,22 @@ NMAG=$(grep -c "absolute magnetization" out.pwo 2>/dev/null || echo 0)
 
 ### C2. 内存/rank 放置(硬约束)
 - 159/232-atom cell:`--nodes=2 --ntasks-per-node=32` + `mpirun -np 64`(32 ranks/node)。
+  *(Corrected 2026-10-05: 这一放置只在 159-atom cell 上验证过(两条生产 leg);下文 132 GB 是 QE 对
+  159-atom cell 给出的估算(`results/objective1/dft/rebaseline/CONVERGENCE_GATE.md` §2)。232-atom cell
+  的内存需求未测量,首次提交前需重新估算。)*
 - **不要**用 `--ntasks-per-node=16`——每 rank 内存过大,高 cutoff 会在第一步 Davidson 被 OOM(exit 137)。
 - QE 的 "Estimated total dynamical RAM" 是**上界**;132 GB 估算实际能装进 2×62=124 GB,但 >124 GB 有风险,continue-on-error 并盯着。
 - 该 cell 一个作业吃满整个集群,**同一时刻只能跑一个**——把多 image 的 SCF 串在一个作业的循环里,别并发提交。
 
 ### C3. nspin=2(奇电子 V_I⁰ / CBM-like)
 - FA host 的 undoped V_I⁰:1063 电子(奇)→ `nspin=2, tot_magnetization=1`,Pb 上 `starting_magnetization=0.3`,其余 0。
+  *(Note 2026-10-05: 这一条不属于"验证出来的"配置。生产 q=0 leg(159-atom γ-like CsPbI₃)用的是
+  nspin=1(`ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in` 未设 nspin;
+  `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md`;`results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`
+  条件 2)。对 CBM-like V_I⁰ 强加 `tot_magnetization` 已被撤回,它正是 spin-SCF 平台的成因
+  (EXPERIMENT_AUDIT §4.2;§6 执行失败记录第 2 条,约 7 h 集群时间)。FA host 的 nspin=2/tot_magnetization=1 设置
+  没有任何已提交的运行支持,使用前必须在 A2 DFT 指纹中确定
+  (`results/objective2/analysis/NEXT_EXPERIMENT_DESIGN.md`)。)*
 - nspin=2 比 nspin=1 估算更耗内存(两个自旋通道);必要时把 `nbnd` 压到略高于较大自旋通道(`nelup`+few)。`nbnd`/`disk_io` 不改哈密顿量,可安全调。
 - **链式后处理必须 `disk_io='medium'`**(`low` 会抑制 projwfc/pp/dos 需要的 `.save`),且后处理步显式非致命(`... || echo FAILED`)。
 - **绝不**用不同几何的 nspin=1 密度 restart nspin=2(会发散到 ~10⁶ Ry / ~7000 μB 的数值垃圾);同几何 restart 反而 6 步收敛。无磁物种却出现几 μB 以上磁化就立刻停查。

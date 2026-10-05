@@ -7,10 +7,17 @@ Reads **no** Q2 production CI-NEB output; no barrier extracted or quoted.
 
 1. **`FINAL_RESULT_AND_NEXT_STEPS.md`** — the result, the mechanism, and ranked next experiments
    (P1–P5, priced from the measured 70 s/path). Start here.
+   *(2026-10-05: its §1–§3 result stands; its §4 P1–P4 plans are superseded by
+   `NEXT_EXPERIMENT_DESIGN.md` v2, and P5's blocking condition was met when the Q2 barriers
+   were extracted on 2026-08-05. Each superseded passage carries its own dated note.)*
 1b. **`NEXT_EXPERIMENT_DESIGN.md`** — **PINNED stage authority (v2)**. Executable E0–E4
    protocols after two review rounds: point-estimate framing, A1b new-vs-old protocol bridge
    (gates whether the old corpus may be pooled), E1 as ±20 meV TOST equivalence, A2a/A2b
    fixed-path DFT diagnostic at m15/m30-undoped, A3 blind-host yield/variance.
+1c. **`../endpoint_pilot/A1A_RESULT.md`** — A1a outcome (job `1a86777c`; A1 gate INSUFFICIENT,
+   0/6 recovered; the constrained-cage protocol is dropped as the E1 endpoint fix and free
+   relaxation retained, so A1b becomes a reproducibility check of the free protocol).
+   *(Added 2026-10-05.)*
 2. **`ANALYSIS_objective2.md`** — full method: reproduction check against the audited record,
    power analysis, the balanced 9×3 variance decomposition.
 
