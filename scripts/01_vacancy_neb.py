@@ -9,6 +9,10 @@ octahedron-edge hop) to move into the vacancy.
 NOTE: zero-shot MACE is charge-agnostic, so this is the quasi-neutral PES.
 The number is a pipeline-validation milestone, not a production V_I+ barrier;
 per-charge-state fine-tuning supplies those (see proposal Section 4.5).
+*(Superseded 2026-10-05: the production V_I+1 barrier came from charged-supercell DFT
+CI-NEB, not from fine-tuning: 181.7 meV (q=+1, 37 iterations), bare PBE+D3, FNV residual
+pending, extracted 2026-08-05. See results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md
+(RESULTS_INDEX.md Q2).)*
 
 Output:
   results/neb.json, results/barrier.png, structures/neb_path.extxyz

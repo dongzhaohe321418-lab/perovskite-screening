@@ -3,15 +3,21 @@
 **Purpose: push Sr from n = 10 toward its variance-bound sample requirement. GA is already
 adequate (n = 9 vs required 7).**
 
+*(Outcome, noted 2026-10-05: the 24-path extension on m28–m35 brought GA to n = 11 and Sr to
+n = 12, not the n ≈ 12 / n ≈ 13 projected below. Both meet their variance-bound requirements
+and both 95% CIs lie inside ±59.5 meV (GA TOST p = 0.0021, Sr TOST p = 0.0042). Half of Sr's
+threshold clearing was mechanical, as anticipated below, so the CI carries the claim. See
+`../objective2/paired_pilot/CORPUS108_RESULT.md` §4–§5.)*
+
 ## The homogeneity gate, run BEFORE pooling
 
 This is the check that caught the earlier failed expansion, where new members sat 643 meV
 below the existing pool at 2.24σ (p < 1e-4) because the two batches had been relaxed to
 different force targets.
 
-| | existing `pool_v3_harmonised` (18 with recorded energies) | new 8 |
+| | ~~existing `pool_v3_harmonised` (18 with recorded energies)~~ all 28 existing (m00–m27) | new 8 |
 |---|---|---|
-| mean E (eV) | −1065.9719 ± 0.1338 | −1066.0085 ± 0.1707 |
+| mean E (eV) | ~~−1065.9719 ± 0.1338~~ −1065.9769 ± 0.1392 | −1066.0085 ± ~~0.1707~~ 0.1706 |
 | offset | — | **−31.5 meV** |
 | Welch t / p | — | **t = 0.48, p = 0.6422** |
 | separation | — | **0.20σ** |
@@ -22,6 +28,12 @@ different force targets.
 > energies misassigned by an index assumption, at the superseded fmax≈0.03 depth. The figures
 > above are the corrected full-pool gate with every energy and fmax measured. See
 > `pool_v3_harmonised/HOST_MANIFEST.md`.
+
+*(Superseded 2026-10-05: the existing-pool column of the table above still held the partial
+18-member figures, whose offset against the new 8 is −36.6 meV; the full-pool values that give
+the −31.5 meV printed in the table are all 28 existing −1065.9769 ± 0.1392 eV vs all 8 new
+−1066.0085 ± 0.1706 eV, from `pool_v3_harmonised/HOST_MANIFEST.md` ("Homogeneity gate —
+corrected").)*
 
 **Same population, poolable without harmonisation.** The reason this worked: identical
 sampler (carbon-pivot rotation with minimum-image vectors) *and* identical `fmax = 0.02`.

@@ -99,9 +99,14 @@ obvious follow-up if the question ever becomes load-bearing.
 
 **V_I⁰ is a shallow donor**: the extra electron occupies the delocalised conduction band
 minimum (established separately by the pristine-cell comparison, per-atom weight overlap
-cosine 0.976), and no lattice distortion binds it. The label is now *earned* rather than
+cosine 0.976), ~~and no lattice distortion binds it. The label is now *earned* rather than
 conditional — the caveat that had been attached to it (an untested lattice-relaxed polaron)
-has been tested and excluded.
+has been tested and excluded.~~ *(Corrected 2026-10-05: no thermally significant lattice
+distortion binds it. The tested seed gives a bound (well depth ≲ 8 meV, under room-temperature
+kT), not an exclusion, and a weakly bound few-meV state is not excluded — see the abstract and
+the amplitude section above, and the claim of record in `Q3_CLOSURE_RECORD.md`. The struck
+"earned … excluded" wording overstated the result; `Q0_RELAXATION_STATUS.md` records the same
+correction.)*
 
 Consequences:
 
@@ -125,6 +130,11 @@ Consequences:
   > met. The **current** gate state is **ALL FIVE CONDITIONS PASS** per `Q0_NEB_GATE.md`;
   > production launch still requires the PI's explicit go and has NOT been performed. This
   > superseding note reconciles the doc with audit CYCLE-000001 F-004.
+  >
+  > *(Superseded 2026-10-05: the PI gave the explicit go on 2026-07-28 (`Q0_NEB_GATE.md`,
+  > Verdict). Both production legs converged (q=0 36, q=+1 37 iterations,
+  > `PRODUCTION_NEB_STATUS.md`), and the barriers were EXTRACTED 2026-08-05
+  > (`CHARGE_STATE_ANCHOR.md`).)*
 
 ## Limits, stated
 
@@ -148,4 +158,7 @@ Consequences:
   and `RESULTS_INDEX.md`.
 
 **This does not license a charge-state ordering.** Both legs must still be relaxed and run at
-identical theory level; the ban on claiming the literature ordering stands.
+identical theory level; the ban on claiming the literature ordering stands. *(Superseded
+2026-10-05: both legs were relaxed and run at the identical PBE+D3(BJ) level and converged.
+Barriers EXTRACTED 2026-08-05: −3.9 meV difference, bare, FNV residual pending. The Tyagi
+ordering is NOT reproduced, so the ban now rests on the data. See `CHARGE_STATE_ANCHOR.md`.)*

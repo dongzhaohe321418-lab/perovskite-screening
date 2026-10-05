@@ -8,6 +8,11 @@ FIXED-GEOMETRY ELECTRONIC COMPARISON:        COMPLETE
 RELAXED-CHARGE-STATE MIGRATION BARRIER:      PENDING
 ```
 
+*(Superseded 2026-10-05: the relaxed-charge-state barriers were EXTRACTED 2026-08-05 from the
+converged production CI-NEB legs: V_I⁰ 185.6 meV, V_I⁺¹ 181.7 meV, difference −3.9 meV, bare
+PBE+D3(BJ), FNV residual pending; the Tyagi ordering is NOT reproduced. See
+`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)*
+
 The first *ab initio* check of the zero-shot MACE-MP-0 barriers used throughout
 Objective 1. It answers the two methodological questions the peer review raised:
 are the MACE numbers quantitatively trustworthy, and does the charge state matter?
@@ -53,6 +58,13 @@ both charge states.
 > geometries (same cell, same charge) and cancels in the difference. No Freysoldt
 > (FNV) correction is needed for barrier *heights* — only for absolute formation
 > energies, which we do not report.
+>
+> *(Corrected 2026-10-05: the leading monopole/background term does cancel in the
+> barrier, but the distribution-dependent FNV residual Δ(ΔE_corr) = ΔE_corr(saddle) −
+> ΔE_corr(initial) does not cancel identically. It is a systematic on charged-cell
+> barriers, still PENDING (not computed); see
+> `results/objective1/dft/charge_relaxed/charge_correction_check.md` and
+> `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` §3.)*
 
 ## Result — anchor (a), undoped V_I barrier
 
@@ -133,6 +145,14 @@ path — a charged-cell geometry optimisation at each image, or a full charged N
 > The relaxed-path comparison that would settle the paragraph above therefore **exists
 > as raw evidence but not as a number**, and the fixed-geometry ratio below must not be
 > read as this project's answer on charge-state separation.
+>
+> *(Forward pointer 2026-10-05: the "NOT extracted" statement in this box is superseded.
+> The audit loop was retired on PI instruction 2026-08-04, and the PI authorized extraction
+> directly. Barriers EXTRACTED 2026-08-05: V_I⁰ 185.6 meV, V_I⁺¹ 181.7 meV, difference
+> −3.9 meV, bare PBE+D3(BJ), FNV residual pending. The relaxed path does NOT reproduce the
+> Tyagi separation. See `results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md` and
+> `results/objective1/dft/charge_relaxed/barrier_extraction_record.json`. The fixed-geometry
+> 0.90 ratio is still not this project's answer.)*
 
 This distinction matters for the project's central claim (dopants raise E_a to
 suppress migration): the ranking must ultimately be done per charge state on

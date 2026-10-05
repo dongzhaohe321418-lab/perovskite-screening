@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 """Objective C: undoped / GA / Sr PAIRED pilot.
 
-The paired design is the whole point. The undoped barrier varies by sigma = 73.3 meV across
-FA orientations -- larger than the 59.5 meV effect we want to detect -- so an unpaired
+The paired design is the whole point. The undoped barrier varies by ~~sigma = 73.3 meV~~
+sigma ~ 84 meV across FA orientations *(Corrected 2026-10-05: 73.3 meV is the old 8-member
+pool's sigma (results/objective2/noise_floor/NOISE_FLOOR_REPORT.md, 6 valid of 8); the
+18-member pool this pilot runs on has its own value, sd 83.9 meV
+(results/objective2/AUDIT_RESPONSE.md; results/objective2/paired_pilot/PAIRED_PILOT.md;
+results/objective2/paired_pilot/RERUN_RESULT.md, n=6). That is the historical 18-member value:
+RESULTS_INDEX.md Q4 marks it superseded (2026-10-05), and the current 36-host
+host-configuration SD is 57.3 meV, results/objective2/analysis/ANALYSIS_objective2.md.)*
+-- larger than the 59.5 meV effect we want to detect -- so an unpaired
 comparison of mean(doped) vs mean(undoped) is hopeless at any affordable n. Pairing removes
 the host-configuration term:
 

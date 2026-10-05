@@ -3,6 +3,12 @@
 **Updated 2026-07-28. This file names the authoritative result for each question;
 anything it does not name is historical.**
 
+*(Index extended 2026-10-05: the table below gained rows for the Objective-2 analysis and the
+pinned next-stage design, which `RESULTS_INDEX.md` Q1 cites as current, and for the A1a
+endpoint-pilot result (commit `5338924`, 2026-08-05); without them this file's own rule would
+have made them historical. The "Updated 2026-07-28" date above is the original header and is
+kept as written.)*
+
 ## Headline — 108-path merged corpus
 
 **Both additives are equivalent to no effect at the 10x rate scale by the confidence-interval
@@ -39,7 +45,10 @@ ones. Full admission-route accounting in `paired_pilot/CORPUS108_RESULT.md` §6.
 | endpoint metastability | `paired_pilot/RETURN_TEST_RESULT.md` (method) + `results/objective2/paired_pilot/corpus84/return_test_84.json` (27 candidates) + **`results/objective2/paired_pilot/corpus108/return_test_24.json`** (14 candidates, 14/14 metastable) |
 | barrier definition + tiers | `BARRIER_DEFINITION.md` |
 | GPU validity | `gpu_regression/GATE1_GPU_REGRESSION.md` |
-| automated gates | `../../scripts/checks.py` + `scripts/20_test_checks.py` (53 check groups, all passing) |
+| mechanism / host-vs-dopant decomposition | `analysis/ANALYSIS_objective2.md` (2026-08-04); summary in `analysis/FINAL_RESULT_AND_NEXT_STEPS.md` (its §1–§3 result stands; its §4 P1–P5 plans are superseded, see that file) *(row added 2026-10-05)* |
+| next-stage design | `analysis/NEXT_EXPERIMENT_DESIGN.md` (v2, pinned 2026-08-05, commit `a5555f4`) *(row added 2026-10-05)* |
+| A1a endpoint-protocol pilot | `endpoint_pilot/A1A_RESULT.md` (job `1a86777c`; A1 gate INSUFFICIENT, 0/6 recovered) *(row added 2026-10-05)* |
+| automated gates | `../../scripts/checks.py` + `scripts/20_test_checks.py` (54 check groups, all passing) *(Qualified 2026-10-05: "all passing" = exit 0 on 2026-10-05 under the run's Python 3.9.6 venv, after the `scripts/25_preflight.py` usage-parser fix. The row's earlier wording, "53 check groups, all passing", did not hold: [51] was failing below the verdict line, where it could not set the exit code (see the [54] comment in `scripts/20_test_checks.py`), and [25]d failed on Python < 3.10.)* |
 
 **Superseded / historical (do not cite):** `paired_pilot/PAIRED_PILOT.md` (retracted first
 run), `paired_pilot/RERUN_RESULT.md` and `results/objective2/paired_pilot/RETURN_TEST_RESULT.md` statistics (18-host pool —
@@ -63,6 +72,11 @@ and nothing was computing. The claim was false when made. Corrections:
 success and output exists. Job submission is not evidence of execution.
 
 **q=0 NEB gate: ALL FIVE conditions PASS (2026-07-28)** — condition 5 closed via the live HARNESS_TRIAL plus the PI's four closure items (state-ID recomputable from committed weights; production pair at conv_thr=1e-8 with fingerprint identity; docs synced; clean-clone green). Production inputs for both legs are ready; **launch requires the PI's explicit go**. See `../objective1/dft/charge_relaxed/Q0_NEB_GATE.md`.
+*(Superseded 2026-10-05: the PI gave the go on 2026-07-28; both legs converged (q=0 36
+iterations, q=+1 37, `../objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`) and the
+barriers were extracted 2026-08-05: V_I⁰ 185.6 / V_I⁺¹ 181.7 meV, difference −3.9 meV, bare
+PBE+D3, FNV residual pending, Tyagi ordering NOT reproduced. See
+`../objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)*
 
 **Sr methodology note.** The χ² sample-size threshold falls as n rises even at constant
 variance (n_req 16 at n=10 → 13 at n=13 → 10 at n=20, holding sd at 65.2 meV). The final Sr

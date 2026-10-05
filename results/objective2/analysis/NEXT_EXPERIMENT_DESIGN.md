@@ -28,6 +28,11 @@ or an MLIP artifact?).
 
 ## E0 / A1a — Endpoint-protocol pilot on the 6 one-away hosts (RTX 5090, ~10–30 GPU-min)
 
+*(2026-10-05 note: A1a ran (job `1a86777c`): A1 gate INSUFFICIENT, 0/6 recovered. The
+constrained-cage protocol is dropped as the E1 endpoint fix and free relaxation is retained,
+so A1b now tests reproducibility of the free protocol. See `../endpoint_pilot/A1A_RESULT.md`.
+The frozen v2 text below is unchanged.)*
+
 **Purpose: protocol feasibility only. These 6 do NOT enter the main-effect statistics.** They are
 a convenience sample (selected *because* 2 of 3 slots already passed), so using them to update any
 GA/Sr mean or SD would bias the variance low. They test whether the new endpoint protocol works,
@@ -70,6 +75,11 @@ result.
 ---
 
 ## A1b — New-vs-old protocol bridge (RTX 5090) — GATES whether E1 can pool the old corpus
+
+*(2026-10-05 note: A1a ran (job `1a86777c`): A1 gate INSUFFICIENT, 0/6 recovered. The
+constrained-cage protocol is dropped as the E1 endpoint fix and free relaxation is retained,
+so A1b now tests reproducibility of the free protocol. See `../endpoint_pilot/A1A_RESULT.md`.
+The frozen v2 text below is unchanged.)*
 
 **The single most important addition.** E1 will use the new endpoint protocol; the old 108-corpus
 used free relaxation. Even with constraints released, the construction step can steer a structure
@@ -231,9 +241,13 @@ two points, not the full distribution.
 even the right object before spending DFT. **The biggest risk is not compute — it is merging
 new-protocol data with the old 108-corpus without the A1b bridge, and over-reading two fixed-path
 DFT profiles as a full DFT host distribution.**
+*(2026-10-05: A1a has run; see the note under E0 / A1a and `../endpoint_pilot/A1A_RESULT.md`.)*
 
 ## What none of these do
 
 None extract or depend on the gated Q2 charge-state barriers. E4's DFT points are the neutral
 undoped host (V_I⁰, a q=0 state carrying no q=0-vs-q=+1 comparison). The Tyagi ordering ban is
 untouched.
+*(2026-10-05: the Q2 barriers are no longer gated; they were extracted 2026-08-05 on direct PI
+authorization (`../../objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`). None of these
+designs depends on them.)*

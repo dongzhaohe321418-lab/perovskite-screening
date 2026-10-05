@@ -62,6 +62,12 @@ Three separable effects, which must not be conflated:
 - **No charge-state conclusion may be drawn until V_I0 and V_I+ are both computed at the
   identical theory level** (PBE+D3(BJ), degauss=0.005, DFT-relaxed endpoints). The q=0 leg
   is not yet done, so the charge-state anchor remains **PROVISIONAL**.
+  *(Superseded 2026-10-05: both legs were computed at the identical locked level and
+  converged (q=0 36, q=+1 37 iterations; `PRODUCTION_NEB_STATUS.md`). The anchor is EXTRACTED,
+  superseding the PROVISIONAL snapshot: V_I⁰ 185.6 / V_I⁺¹ 181.7 meV, −3.9 meV bare, FNV
+  residual pending. See `CHARGE_STATE_ANCHOR.md`. The iteration-6 value of 431 meV in the
+  table above is an interim unconverged snapshot; the converged q=+1 forward barrier is
+  181.7 meV.)*
 - `d_max` measured here (0.462 A) compares a MACE geometry against a **PBE+D3-relaxed**
   geometry. It therefore folds a theory-level change into what is nominally a
   relaxation-magnitude metric, and must be labelled that way rather than as a pure

@@ -35,6 +35,8 @@ cosmetically different — hundreds of meV and atomic motions up to 0.84 Å sepa
 0.02) before building each band, and all 54 rerun rows record an achieved endpoint
 `fmax = 0.0200`. Barriers therefore never inherit the host member's own relaxation depth.
 **The published GA/Sr numbers stand.**
+*(Forward pointer, 2026-10-05: these n = 7 numbers are no longer the current result; see the
+note under "Decision" below and `../objective2/paired_pilot/CORPUS108_RESULT.md`.)*
 
 ## What it does affect
 
@@ -56,6 +58,13 @@ max 0.840 Å; all 18 converged. **Harmonisation resolves the split completely** 
 sets are one population, and relaxation depth was the entire cause.
 
 ## Decision: one homogeneous 28-member pool, all paths re-run
+
+*(Later state, noted 2026-10-05: the harmonised pool was extended to 36 members (m28–m35,
+generated at the same fmax = 0.02) after passing the homogeneity gate at −31.5 meV, Welch
+p = 0.6422, 0.20σ; see `pool_v3_harmonised/HOST_MANIFEST.md` and `POOL_EXPANSION_PLUS8.md`.
+The current corpus is 36 hosts × 3 systems = 108 paths with GA n = 11 and Sr n = 12, which
+supersede both the n = 7 numbers in this note and the 84-path corpus; see
+`../objective2/paired_pilot/CORPUS108_RESULT.md` §1 and §4.)*
 
 A first draft of this note recommended the cheaper route — keep the 18-member 0.03 pool and
 generate the 8 new members at 0.03 to match — on the assumption that harmonising would be

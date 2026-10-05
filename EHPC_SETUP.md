@@ -2,6 +2,13 @@
 
 更新日期：2026-07-23。本文记录已经创建的真实环境，不再是创建前的预案。
 
+> *(Superseded 2026-10-05: 本文记录的是 2026-07-23 的初始部署,不是当前状态。按 2026-08-05 的故障记录,
+> 登录节点已失联(`ssh 139.224.62.26:22` 超时)。实际跑完生产 CI-NEB 的环境(`$HOME/miniconda3` 下的 conda env
+> `qe`,pslibrary 1.0.0 赝势位于 `/home/ericdft/pseudo`)与重建步骤见 `ehpc/EHPC_REBUILD_GUIDE.md`;
+> 环境依据:`ehpc/EHPC_REBUILD_GUIDE.md` 的「目标环境规格」表、§A2(Miniconda)与 §A5(pslibrary 1.0.0),以及
+> `results/objective1/dft/charge_relaxed/q0_production/q0_cmd.sh`。下文 §5 的 micromamba 路径与 §8 的
+> SSSP 赝势均不是生产所用设置。)*
+
 ## 1. 已部署架构
 
 ```text
@@ -194,6 +201,14 @@ I.pbe-n-kjpaw_psl.0.2.UPF
 输入文件中的 `pseudo_dir` 必须指向上述绝对路径，并按候选掺杂元素补齐
 `ATOMIC_SPECIES`。归档包保留在 `/home/ericdft/pseudos/`，官方 MD5 为
 `a58f1b3373f330179fd0832c48bb9a52`。
+
+*(Superseded 2026-10-05: 生产输入(q0/q1 CI-NEB)没有使用上面的 SSSP 集,而是 pslibrary 1.0.0 US
+赝势 `Cs.pbe-spn-rrkjus_psl.1.0.0.UPF`(Cs 是 **spn**)、`Pb.pbe-dn-rrkjus_psl.1.0.0.UPF`、
+`I.pbe-n-rrkjus_psl.1.0.0.UPF`,`pseudo_dir` 在作业启动时由 `$HOME/pseudo` 改写为
+`/home/ericdft/pseudo`。依据:`results/objective1/dft/charge_relaxed/q1_production/q1_cineb.neb.in`、
+`ehpc/inputs_stage2/neb_q0_production/q0_cineb.neb.in`、
+`results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`(pseudo_dir 替换)。按上面 SSSP 集计算
+会得到不同的理论指纹,不可与生产势垒比较。以 `ehpc/EHPC_REBUILD_GUIDE.md` §A5 与已提交的生产输入为准。)*
 
 首批任务：
 

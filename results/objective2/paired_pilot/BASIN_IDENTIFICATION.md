@@ -68,5 +68,8 @@ class.
 2. The screening statistic can potentially recover many of the 27 asymmetric-well paths by
    reporting **forward barriers with endpoint-asymmetry recorded**, rather than discarding
    them — a protocol question for the user, since it changes what "E_a" means in the table.
+   *(2026-10-05 note: resolved 2026-07-27, when the forward-barrier definition with return-test
+   admission was ADOPTED, see `../BARRIER_DEFINITION.md`; in the final corpus 15 of the 49
+   admissible paths are return-test-recovered pure hops, see `CORPUS108_RESULT.md` §3.)*
 3. The basin-bottom re-identification fix proposed in v1 addresses at most 1 path (m09) and
    is dropped as a priority.

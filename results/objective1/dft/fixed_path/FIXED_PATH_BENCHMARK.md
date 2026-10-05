@@ -6,7 +6,11 @@ MACE-relaxed CI-NEB band (`results/objective1/regression_saddle_path.extxyz`,
 barrier: the geometry is the MLIP path, and DFT provides single-point energies on
 it. All numbers below are single-points; no ionic or cell relaxation was done at
 the DFT level. Per EXECUTION_GUIDE Part 1, the relaxed-charge-state migration
-barrier remains **PENDING**.
+barrier remains **PENDING**. *(Superseded 2026-10-05: the relaxed charge-state barriers were
+EXTRACTED 2026-08-05 from converged PBE+D3(BJ) CI-NEB: V_I⁰ 185.6 / V_I⁺¹ 181.7 meV,
+difference −3.9 meV, bare, FNV residual pending. See
+`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`. The EXECUTION_GUIDE cited here
+is now archived as `archive/EXECUTION_GUIDE_stage2.md`.)*
 
 **Method.** QE 7.5, PBE, ultrasoft pslibrary-1.0.0 scalar-relativistic
 (Cs.pbe-spn z=9, Pb.pbe-dn z=14, I.pbe-n z=7), ecutwfc 50 / ecutrho 400 Ry, Γ-only,
@@ -78,6 +82,16 @@ spin-symmetric solution.
 magnetization to ~0; spin polarization has nothing to act on and the +1 barrier is
 unchanged (126.6 meV). So spin only matters for the neutral vacancy.
 
+*(Note 2026-10-05: the q=0 spin cases B/C in this section fixed the total moment at
+1.00 μB — every `spin_scan_outputs/img{0,3}_q0_{B,C}.out.gz` prints separate spin up/dw Fermi
+energies and `total magnetization = 1.00`. The "odd electron count → open-shell V_I⁰"
+rationale above was later retracted (`results/objective1/dft/charge_relaxed/LOCKED_PROTOCOL_AND_STOPLOSS.md`
+banner; `results/objective1/dft/charge_relaxed/Q0_RESOLVED.md`, "A retraction I owe"):
+unconstrained spin (P2) converges to m = 0.00, the forced-moment plateau sits above that
+non-magnetic solution (measured at the q=+1 relaxed geometry), and q=0 production uses
+`nspin=1`. Read the +12.3 meV "spin" shift here as a forced-moment shift, not a ground-state
+spin effect; the same applies to the "+spin" term in §6.)*
+
 ## 4. D3 dispersion (Stage 1.2)
 
 D3(BJ) correction for PBE, computed from geometry alone (`simple-dftd3`,
@@ -107,7 +121,11 @@ self-consistent spin+D3 calculation:
 > ~166 meV (PBE+D3, non-spin) → ~178 meV (PBE+D3+spin, additive estimate).**
 
 All are *fixed-geometry on the MACE path*. None is the converged physical barrier
-(path relaxation at the DFT level and SOC are still open). The MACE barrier on the
+(path relaxation at the DFT level and SOC are still open). *(Updated 2026-10-05: DFT-level
+path relaxation has since been done — both production PBE+D3(BJ) CI-NEB legs converged
+(`results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`) and the barriers were
+extracted 2026-08-05 (`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`). SOC
+remains open: the anchor's scope is "no SOC".)* The MACE barrier on the
 same path is 259 meV — 118 meV above the selected scalar-relativistic PBE reference.
 This is a MODEL-LEVEL difference (MACE-MP-0 PBE+U-like/no-D3/no-SOC vs QE scalar-rel
 PBE), not a MACE error against a ground truth, and not MACE-vs-experiment.
@@ -115,6 +133,10 @@ PBE), not a MACE error against a ground truth, and not MACE-vs-experiment.
 ## Standing claim bans still in force
 
 - No "reproduced Tyagi's charge-state mobility ordering" (needs relaxed charged NEB).
+  *(Updated 2026-10-05: the relaxed charged NEB has run. The ordering is NOT reproduced:
+  −3.9 meV, bare PBE+D3, FNV residual pending
+  (`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`). The ban now rests on the
+  data, not on missing data.)*
 - No "DFT benchmarked the true migration barrier" (PBE ≠ truth; fixed path).
 - "DFT found the saddle" is now allowable **only** in the fixed-path sense: image 3
   is the highest of the 7 evaluated images on the MACE path. It is not the

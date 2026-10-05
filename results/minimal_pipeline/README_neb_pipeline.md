@@ -44,6 +44,10 @@ migration (~0.1–0.6 eV), so the zero-shot MACE-MP-0 baseline is sane.
    neutral run is the methodological warm-up, not the production number.
 3. **Finite size.** 40 atoms is the minimum; a 3×3×3 (135-atom) convergence
    check is needed to remove vacancy-image interaction (0.05–0.1 eV effect).
+   *(Superseded 2026-10-05: the 3×3×3 check was run in
+   `../dopant_screen/REPORT_dopant_screen.md` §4. The 135-atom well-to-well barrier is
+   0.119 eV against 0.461 eV here, so the 40-atom cell overestimates by +0.34 eV, well beyond
+   0.05–0.1 eV; see `../dopant_screen/finite_size_summary.json`.)*
 
 ## Relation to the full dopant screen
 

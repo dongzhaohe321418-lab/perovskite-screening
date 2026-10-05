@@ -1,3 +1,9 @@
+> **SUPERSEDED (statistics) — retained for method and provenance.** *(Banner added
+> 2026-10-05.)* The n = 4 statistics, the 45-hosts-per-dopant estimate and the "target n ≈ 10"
+> plan here are superseded, first by the return-test recovery (`RETURN_TEST_RESULT.md`) and then
+> by the 108-path corpus (GA n=11, Sr n=12, both equivalent to no effect by the CI/TOST test),
+> see `CORPUS108_RESULT.md`. The driver fixes and integrity checks still stand.
+
 # Paired pilot RERUN — clean data supersedes the retracted run
 
 **54 paths rerun with the fixed driver (tag-tracked migrating ion, convergence-required

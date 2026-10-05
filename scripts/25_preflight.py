@@ -33,8 +33,13 @@ def accepted_flags(help_text):
 
 
 def required_args(help_text):
-    """argparse prints required options in the usage line WITHOUT brackets."""
-    usage = help_text.split("options:")[0]
+    """argparse prints required options in the usage line WITHOUT brackets.
+
+    The usage block is everything before the first blank line. (Splitting on "options:" broke
+    on Python < 3.10, whose argparse heads that section "optional arguments:", so the whole
+    help text was scanned and "--help" came out as a required argument.)
+    """
+    usage = re.split(r"\n[ \t]*\n", help_text, maxsplit=1)[0]
     bare = set(re.findall(r"(?<!\[)(--[\w-]+)", usage))
     bracketed = set(re.findall(r"\[(--[\w-]+)", usage))
     return bare - bracketed

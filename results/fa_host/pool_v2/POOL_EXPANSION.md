@@ -55,6 +55,11 @@ same population" or "a distinct population" is not settled by these data, and th
 does not depend on which: **merging them would confound "host member" with "which sampler
 produced it"** — a nuisance variable inside the very design meant to eliminate nuisance
 variables. The paired pilot therefore runs on the 18 new members as one homogeneous set.
+*(Superseded 2026-10-05: pool_v2's 18 members were later re-relaxed from fmax 0.03 to 0.02 and
+merged into `pool_v3_harmonised` (see `../POOL_HOMOGENEITY.md`). The current paired corpus
+runs on all 36 `pool_v3_harmonised` hosts, 36 hosts × 3 systems = 108 paths (see
+`../pool_v3_harmonised/HOST_MANIFEST.md` and
+`../../objective2/paired_pilot/CORPUS108_RESULT.md` §1).)*
 
 ## Route and its limitation
 

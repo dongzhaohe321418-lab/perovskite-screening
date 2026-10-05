@@ -145,7 +145,7 @@ therefore prohibits converting any intensity ratio to a weight fraction.
 | Lattice parameter Δa | **NOT COMPARABLE** | shifts track ITO 1:1 |
 | Crystallite size ΔD | **NOT COMPARABLE** | width tracks ITO (r = +0.87) |
 | Absolute DOC | **bounded range only** | halo/background degeneracy |
-| Microstrain | **suppressed** | WH slope insignificant in all samples |
+| Microstrain | **suppressed** | ~~WH slope insignificant in all samples~~ WH slope negative (unphysical) in 5 of 6, positive but insignificant (+1.2σ) in P5 *(corrected 2026-10-05; see `results/master_figure_data.csv` wh_sigma)* |
 
 ## 5. What to do next
 

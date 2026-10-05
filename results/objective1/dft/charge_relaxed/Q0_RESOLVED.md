@@ -45,7 +45,10 @@ to find a magnetic solution that does not exist at this geometry.**
 Job `dd88d5d3`. Claim scope, stated first: **at the q=+1 relaxed geometry, under spin-free
 and unconstrained-spin PBE+D3**, the extra electron occupies the delocalised conduction
 band minimum, not a vacancy-localised polaron. Lattice relaxation around a localised charge
-remains untested — see the caveat at the end.
+remains untested — see the caveat at the end. *(Superseded 2026-10-05: tested since. A seeded
+0.20 Å distortion gives no thermally significant polaron — a bound, not an exclusion
+(`Q0_POLARON_EXCLUDED.md`) — and both q=0 endpoints were relaxed and converged on 2026-07-28
+(`Q0_NEB_GATE.md`).)*
 
 ## P1 — pristine cell: the state is CBM-like (heading corrected; see the scope note below)
 
@@ -122,12 +125,20 @@ there. The spin-free q0A result is a *converged, correct* description, not a fal
 
 **Not settled.** Everything above is at the **q=+1 relaxed geometry**. A small polaron
 forms by lattice distortion around a localised charge; that distortion has never been
-computed here because q=0 forces were never trusted. But the reason they were not trusted
-was the convergence failure — which is now explained and removed. **q=0 forces from the
+computed here because q=0 forces were never trusted. *(Superseded 2026-10-05: since computed —
+the seeded 0.20 Å ELAS/POL test (`Q0_POLARON_EXCLUDED.md`) and the converged q=0 endpoint
+relaxations (`Q0_NEB_GATE.md`); see the note at the end of this section.)* But the reason they
+were not trusted was the convergence failure — which is now explained and removed. **q=0 forces from the
 converged non-magnetic solution are usable**, so a q=0 geometry relaxation is now possible
 and is the natural next step: relax q=0 from the q=+1 geometry and re-project. If the state
 stays delocalised, "shallow donor" is earned; if it localises, a polaron exists and the
 barrier problem changes shape.
+
+*(Superseded 2026-10-05: done. Both q=0 endpoints converged on 2026-07-28 (`Q0_NEB_GATE.md`),
+and the polaron test returned the bounded result "no thermally significant polaron; a weakly
+bound few-meV state not excluded" (`Q0_POLARON_EXCLUDED.md`, `Q3_CLOSURE_RECORD.md`), not an
+unconditional "earned" label — `Q0_RELAXATION_STATUS.md` records that the "earned" prediction
+was too strong.)*
 
 ## Consequences for the barrier programme
 
@@ -135,4 +146,7 @@ The q=0/q=+1 comparison is no longer blocked by an unresolved electronic-structu
 It is blocked only by not having run the q=0 relaxation and NEB — which is now a matter of
 compute, not of method. **This does not license reporting a charge-state ordering**: both
 legs must still be relaxed and run at the identical theory level, and the Tyagi-ordering ban
-stands until they are.
+stands until they are. *(Superseded 2026-10-05: the q=0 relaxation (both endpoints converged
+2026-07-28, `Q0_NEB_GATE.md`) and both production NEB legs have run (`PRODUCTION_NEB_STATUS.md`).
+Barriers EXTRACTED 2026-08-05: −3.9 meV difference, bare, FNV residual pending; the Tyagi
+ordering is NOT reproduced. See `CHARGE_STATE_ANCHOR.md`.)*

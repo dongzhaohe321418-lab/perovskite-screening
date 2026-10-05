@@ -6,6 +6,20 @@ This script performs the barrier extraction that audit policy places behind
 find a DURABLE controller-written ALLOW record in the action ledger that is bound to
 THIS commit, to `publish_claim`, and to this repository's committed evidence manifest.
 
+*(Superseded 2026-10-05: the paragraph above describes the F-025 gate design, not the
+current project state. The independent audit loop was retired on PI instruction 2026-08-04
+(EXPERIMENT_AUDIT.md, "2026-08-04 (final)"); F-025 v3 was never independently closed. The
+PI then authorized extraction directly on 2026-08-05, and the barriers were extracted with
+this script's custody-verify -> parse-final-iteration logic WITHOUT a controller ALLOW
+(record "authorization": "PI verbal authorization 2026-08-05 ..."; "extraction_utc"
+2026-08-06T05:51Z): V_I0 185.6 meV, V_I+1 181.7 meV, difference -3.9 meV, bare PBE+D3,
+FNV residual pending, Tyagi ordering NOT reproduced. Authority:
+results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md (EXTRACTED) and
+results/objective1/dft/charge_relaxed/barrier_extraction_record.json. The gate below is
+kept as the F-025 design record. The .audit binding it checks (.audit/audit_request.json,
+last changed in e454d50) describes the e454d50-era tree; later commits are not
+audit-bound.)*
+
 Audit F-025 rejected two designs before this one, and both rejections were correct.
 
   v1 (`--gate-token <consultation_id>`) validated only token SYNTAX plus five literal
@@ -38,7 +52,8 @@ Design rules (audit-driven):
   * Emits a single JSON record with every value traceable to a file + hash + line.
   * Prints nothing barrier-shaped on the refusal path.
 
-Usage (only after a corroborated ALLOW exists):
+Usage (only after a corroborated ALLOW exists) *(historical gate usage, see the
+2026-10-05 note above)*:
     python3 scripts/27_extract_barriers.py --allow-timestamp <ISO8601 of the ALLOW row> \
         --out <path.json>
 

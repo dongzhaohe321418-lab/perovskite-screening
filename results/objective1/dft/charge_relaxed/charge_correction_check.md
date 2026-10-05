@@ -61,10 +61,17 @@ failure propositions, i.e. a truthfulness defect in the evidence layer. Until an
 confirms that fix on a descendant commit, nothing new should be derived from this evidence base
 — including a correction that would later be applied to the barriers.
 
+*(Updated 2026-10-05: this condition was met — F-024 was independently verified closed and
+`ACTIVE_BLOCKER_F-024` cleared (`EXPERIMENT_AUDIT.md`, "2026-08-04 (later)"; listed under
+"Independently verified closed" in "2026-08-04 (final)"). The audit loop was then retired on PI
+instruction 2026-08-04, so the audit-cycle route described here no longer exists. The DENY
+above is kept as the historical record of what stopped the step on 2026-08-04.)*
+
 ## What unblocks it
 
 1. Audit confirmation of F-024 closure (fix `7a4f3b0e`; first queued snapshot containing it is
-   `735e7f00`).
+   `735e7f00`). *(Met 2026-08-04: F-024 independently verified closed, `EXPERIMENT_AUDIT.md`
+   "2026-08-04 (final)". The audit loop was then retired on PI instruction. Noted 2026-10-05.)*
 2. PI authorization covering the `pp.x` step.
 
 Then: `pp.x` on images 1 and 3 of both legs → planar-averaged potential → FNV alignment against
@@ -74,3 +81,9 @@ The remote densities were the perishable input — they lived only in scratch. *
 all 10 densities pulled off scratch, hash-verified end-to-end, ~1 GB tarball outside git.
 The perishability risk is therefore closed; the `pp.x` step and PI authorization remain
 the only things between here and a computed correction.
+
+*(Updated 2026-10-05: the operative blocker is now that E-HPC is unreachable. `pp.x` has not
+been run; its input densities are preserved off scratch (`FNV_DENSITY_PRESERVATION.md`), and the
+step waits on a QE environment, i.e. the E-HPC rebuild (`CHARGE_STATE_ANCHOR.md` §3,
+`RESULTS_INDEX.md` Q2). The bare barriers were extracted 2026-08-05 without FNV, and
+Δ(ΔE_corr) remains PENDING.)*

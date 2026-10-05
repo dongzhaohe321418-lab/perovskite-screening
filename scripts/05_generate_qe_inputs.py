@@ -76,8 +76,16 @@ def load_image(i):
 
 def under_coordinated_pb(atoms, cutoff=3.8):
     """Pb atoms with <6 iodine neighbours = the atoms flanking the V_I site.
-    These carry the neutral-vacancy odd electron (Pb-Pb dimer polaron), so they
-    are where Case C seeds the initial spin density."""
+    ~~These carry the neutral-vacancy odd electron (Pb-Pb dimer polaron), so they
+    are where Case C seeds the initial spin density.~~ These are the atoms on which
+    Case C places its localised (Pb-Pb dimer polaron) spin GUESS, so they are where
+    Case C seeds the initial spin density.
+    *(Corrected 2026-10-05: Q3 is CLOSED / CITABLE -- "no thermally significant
+    polaron" at PBE+D3(BJ); the V_I0 state is CBM-like (per-atom cosine 0.9757 vs
+    pristine CBM); a weakly bound few-meV state is not excluded. A strong seed with a
+    spin moment on these two flanking Pb sits ~110 meV ABOVE the delocalised solution.
+    See RESULTS_INDEX.md Q3, results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md
+    and results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md.)*"""
     sym = np.array(atoms.get_chemical_symbols())
     pb_idx = np.flatnonzero(sym == "Pb")
     i_idx = np.flatnonzero(sym == "I")

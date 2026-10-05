@@ -19,6 +19,11 @@ exploratory; MACE here is zero-shot and charge-agnostic, so it only seeds
 structures — no barrier/dynamics claims. The FA orientation ensemble (W2-2, MD)
 and the zero-shot FA NEB baseline distribution (W2-3) need the GPU and are
 deferred while the 5090 is unavailable.
+*(Superseded 2026-10-05: both have since run on the RTX 5090. W2-2 COMPLETE 2026-07-24
+(scripts/08_fa_md_ensemble.py, job 725791a1) and W2-3 COMPLETE (scripts/09_fa_neb_distribution.py,
+job 119b34e5, 9/9 converged); see results/fa_host/REPORT_fa_baseline.md. That early FA
+baseline is itself listed as historical in RESULTS_INDEX.md: the current host pool is
+results/fa_host/pool_v3_harmonised/HOST_MANIFEST.md (RESULTS_INDEX.md Q4).)*
 
 Usage:
   python scripts/07_fa_host_cell.py --outdir results/fa_host --device cpu

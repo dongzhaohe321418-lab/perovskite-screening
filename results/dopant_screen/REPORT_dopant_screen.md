@@ -1,5 +1,13 @@
 # Zero-shot MACE-MP-0 screen of iodine-vacancy pinning in CsPbI₃
 
+> **[HISTORICAL — superseded, banner added 2026-10-05.]** Early zero-shot cubic-CsPbI₃
+> 40-atom screen. `../../RESULTS_INDEX.md` lists `results/dopant_screen/` under "Historical
+> (retained, superseded, do not cite as current)": its method was superseded by relaxed NEB +
+> paired design on the 36-host FA₁₉Cs₁ pool. The current Objective 2 result is
+> `../objective2/paired_pilot/CORPUS108_RESULT.md`: GA and Sr are both equivalent to no effect
+> within ±59.5 meV (Sr −4.3 meV, CI [−42.2, +33.6], TOST p = 0.0042). Do not cite the ΔEₐ
+> ranking, the "de-pins" calls or the open follow-ups below as current.
+
 **Scope.** This report executes the "future calculations" of the dopant-screening
 roadmap: a candidate ΔEₐ screen, a distance-resolved pinning-radius curve, a
 saddle-geometry mechanism analysis, and a finite-size + MD cross-check of the
@@ -148,4 +156,8 @@ vacancies — out of reach on this CPU. Reported as a qualitative trend only.
 - `mechanism_fingerprints.csv` — saddle geometry descriptors
 - `results/*.json` — raw numbers for every stage
 - `results/*_saddle.cif` — saddle structures for each config
-- `neb_pipeline.py (superseded early script, not committed)` — the underlying reproducible NEB driver
+- ~~`neb_pipeline.py (superseded early script, not committed)` — the underlying reproducible NEB driver~~
+  Baseline cubic V_I CI-NEB driver: `scripts/03_dopant_screen_pipeline.py`
+  (= `results/minimal_pipeline/neb_pipeline.py`; see `../minimal_pipeline/README_neb_pipeline.md`).
+  The dopant-placement, pinning-radius and MD extensions used for this report were not
+  committed. *(Corrected 2026-10-05.)*

@@ -43,3 +43,7 @@ alongside.
 Preserving the input does not compute the correction. FNV `ΔE_corr` remains **PENDING** — the
 `pp.x` potential step and PI authorization are still required, per `charge_correction_check.md`.
 The barriers remain unextracted; this only removes the perishability risk on the input.
+*(Superseded 2026-10-05: the barriers were EXTRACTED 2026-08-05 (bare PBE+D3(BJ)), on direct
+PI authorization after the machine-enforced audit gate was retired; see `CHARGE_STATE_ANCHOR.md`.
+FNV ΔE_corr is still PENDING. The `pp.x` step has not run; the blocker now named by
+`CHARGE_STATE_ANCHOR.md` §3 and `RESULTS_INDEX.md` Q2 is that E-HPC is unreachable.)*

@@ -31,6 +31,14 @@ performed** (no committed job outputs; q=+1 input structure absent — see F-003
 LAUNCH RECORD asserting submitted CI-NEBs is retained as explicitly historical/unverified. The
 stale "two of five open" wording in `results/objective1/dft/charge_relaxed/Q0_POLARON_EXCLUDED.md` predates q0_final convergence.
 
+*(Superseded 2026-10-05: the "Current evidenced state" above is the CYCLE-000001 state, not the
+current one. The launch WAS performed after the PI go of 2026-07-28. Both production legs
+converged (q=0 job `374e51f1`, 36 iterations; q=+1 job `98199034`, 37 iterations), and the raw
+outputs and the q=+1 endpoint structures are committed (endpoints at e967e47); see
+`results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`. The job ids are the ones the
+2026-07-28 launch record names. Barriers were extracted 2026-08-05; see
+`results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md`.)*
+
 ## F-002 — production staging manifest hashes/sizes
 
 `scripts/26_neb_harness.py` entries in both production staging manifests
@@ -50,6 +58,15 @@ fixed-path parsed-output sources (6 in `results/objective1/dft/fixed_path/all_im
 `results/objective1/dft/fixed_path/spin_scan_parsed.json`). The raw sources are not committed and cannot be regenerated
 without the original HPC outputs. They are **not** backfilled with fabricated data. Two distinct,
 honest repairs are applied:
+
+*(Superseded 2026-10-05: the q=1 structure is now committed at
+`results/objective1/dft/charge_relaxed/q1/q1_initial_relaxed.extxyz` (commit e967e47; see
+`results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md` and
+`ehpc/inputs_stage2/neb_q1_production/staging_manifest.json`), so only the 14 fixed-path
+parsed-output sources in (a) remain absent. The text "(never committed — see F-003)" that
+appears inside the backticked q=1 path in this section (above, in (b), and in fact 1 below) was
+inserted in ddaca3f (the CYCLE-000002 F-005 path-reference fix) so that the path would not
+resolve as a committed file. It is no longer true.)*
 
 **(a) The 14 parsed-output sources — resolved.** The path-shaped keys that a reference resolver
 reads were renamed so they no longer masquerade as committed in-tree paths, and the values
@@ -79,10 +96,25 @@ Two facts about this q=1 record were independently verified and are recorded in 
    `results/objective1/dft/charge_relaxed/q0/q0_initial_relaxed.extxyz` (the only committed file
    matching that digest), not of any q=1 structure.
 
+*(Superseded 2026-10-05: both inferences over-concluded. The identical sha256 is physics, not
+error: q0_initial converged in zero BFGS steps from the q=+1-relaxed geometry
+(`results/objective1/dft/charge_relaxed/Q0_NEB_GATE.md`, condition 1), so the two files are
+byte-identical. The structure existed in the workspace and on the remote (hash-verified at
+submission) but had not been committed; it was committed at e967e47, so fact 1 ("never appeared
+in any commit") no longer holds either. See the current `note` on this entry in
+`ehpc/inputs_stage2/neb_q1_production/staging_manifest.json`.)*
+
 Because the key is renamed (`local_source_absent_not_committed`) and the record is marked
 `BLOCKED_DO_NOT_SUBMIT`, the reference is no longer presented as a committed path. Closing this
 honestly still requires producing, committing, and independently hash-verifying a genuine q=1
 relaxed structure; no `submit_production_job` may run from this staging record until then.
+
+*(Superseded 2026-10-05: F-003(b) is closed. The q=+1 endpoint structures were committed at
+e967e47. The manifest now reads `local_source` with `submission_status:
+SUBMITTED_AND_COMPLETED`, and the BLOCKED record is kept under `historical_v1` (CYCLE-000020
+F-022). Job `98199034` converged in 37 iterations. See
+`ehpc/inputs_stage2/neb_q1_production/staging_manifest.json` and
+`results/objective1/dft/charge_relaxed/PRODUCTION_NEB_STATUS.md`.)*
 
 ## F-006 — Q3 conclusion lacks committed raw provenance
 
@@ -92,6 +124,12 @@ UNVERIFIED / NOT CITABLE** and removed as gate evidence: its declared raw source
 energies, residual, moment trace, and derived bound are not independently recomputable at this
 commit. Restoring citability requires committing the immutable raw outputs plus input
 manifests/hashes and a derivation script; otherwise Q3 stays demoted.
+
+*(Superseded 2026-10-05: the restoring condition was met. The raw outputs, input manifest and
+`results/objective1/dft/charge_relaxed/q3_raw/derive_q3.py` were committed 2026-07-31; F-006 was
+verified closed in CYCLE-000005 and re-verified in CYCLE-000010/000011/000016. Q3 is CLOSED /
+CITABLE and admissible as Q0-gate condition-3 evidence; see
+`results/objective1/dft/charge_relaxed/Q3_CLOSURE_RECORD.md` and `RESULTS_INDEX.md` Q3.)*
 
 ## F-007 — regression-suite group count
 
