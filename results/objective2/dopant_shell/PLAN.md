@@ -67,7 +67,11 @@ upper-bound-type diagnostic, not the DFT saddle. No transfer to experiment.
 This study is stage S1 of `../SCREENING_ROADMAP.md` (adopted 2026-10-25): a validated multi-dopant
 screen. Its verdict decides whether later stages use zero-shot or fine-tuned MACE.
 
-## Amendment 2026-10-26 (after WP2a; no WP1/WP2b result read)
+## Amendment 2026-10-25a (after WP2a; no WP1/WP2b result read)
+
+*Date correction (2026-10-25): amendments a–c were first labelled 2026-10-26 by a clerical
+error; all were written and committed on 2026-10-25 (git timestamps are authoritative). Content
+unchanged.*
 
 - Production k-sampling fixed to the single R point (½,½,½); see `WP2A_KPOINTS.md`.
 - WP2b images reduced from 7 to {0, 2, 3, 4, 6} per band (the MACE saddle is image 3 on every
@@ -75,14 +79,14 @@ screen. Its verdict decides whether later stages use zero-shot or fine-tuned MAC
 - Criterion 5 fails on the first frame tested (m30 undoped img0: RMS 0.152, max 0.354 eV/Å);
   WP2e is therefore triggered regardless of the remaining frames.
 
-## Amendment 2026-10-26b
+## Amendment 2026-10-25b
 
 - WP2e relaxes the m30 image-0 endpoint of all three systems (undoped, GA, Sr), not two, so the
   single-point bias can be compared within the pair for both dopants. Fixed cell, BFGS,
   forc_conv_thr 7.8e-4 Ry/bohr (0.02 eV/Å, the corpus target), R-point.
 - Isolated-atom E0s computed (`e0_atoms/E0_isolated_atoms.json`), all converged at the Hund moment.
 
-## Amendment 2026-10-26c — after the design review; written before any v2 result was read
+## Amendment 2026-10-25c — after the design review; written before any v2 result was read
 
 The adversarial design review (34 agents; 15 of 16 issues confirmed by independent skeptics)
 changes WP1 and adds decision rules. No v2 E_b value existed when this was written. The

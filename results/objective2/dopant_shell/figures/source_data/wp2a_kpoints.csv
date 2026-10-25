@@ -1,0 +1,4 @@
+sampling,label,nk,E3_minus_E0_meV,dE_vs_mp222_meV,force_rms_dev_vs_mp222_img0_meV_per_A,force_rms_dev_vs_mp222_img3_meV_per_A,wall_min_img0,wall_min_img3,mTS_img0_meV,mTS_img3_meV
+gamma,Γ only,1,214.08,0.68,6.4,4.74,3.09,3.18,-68.7,-78.8
+R,"R point (½,½,½)",1,211.21,-2.19,3.32,3.37,6.43,6.43,-65.0,-71.2
+mp222,2×2×2 (reference),8,213.4,0.0,0.0,0.0,36.86,37.05,-23.5,-27.0

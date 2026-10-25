@@ -11,7 +11,7 @@ For host member m, with the vacancy V fixed at the corpus site and the dopant D 
 
     E_b(j) = E[D_j + V] - E[D_j] - E[V] + E[host]          (E_b < 0: attraction / trapping)
 
-PROTOCOL v2 (2026-10-26, after the design review; v1 = commit 5d9a3ca, exploratory only):
+PROTOCOL v2 (2026-10-25, after the design review; v1 = commit 5d9a3ca, exploratory only):
 
 * Warm start (review EB-BASIN). host and V are relaxed first; D_j is built on the RELAXED host
   and D_j+V on the RELAXED V. Far from the defects the doped cell then starts in its partner's

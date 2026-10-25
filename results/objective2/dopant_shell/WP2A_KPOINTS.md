@@ -1,4 +1,4 @@
-# WP2a — DFT electronic settings for the FA host: k-sampling (2026-10-26)
+# WP2a — DFT electronic settings for the FA host: k-sampling (2026-10-25)
 
 **Result: production k-sampling = one k-point at supercell (½,½,½), i.e. the folded primitive R point.**
 
@@ -40,3 +40,19 @@ not the QE-PBE one), with a smaller framework component. Consequences: single-po
 MACE geometries carry a relaxation bias that largely, but not provably, cancels between images
 of the same molecules; WP2e (DFT relaxation of endpoints) is triggered; WP3 fine-tuning is
 motivated directly by this decomposition. To be confirmed across all WP2b frames.
+(Per element, RMS |F_DFT| equals the RMS |F_MACE − F_DFT| above to 0.001 eV/Å for every element
+except the single Cs atom, 0.088 vs 0.076 eV/Å; MACE forces at this frame are ≤ 0.017 eV/Å.)
+
+## Figure
+
+`figures/fig_wp2a_kpoints.{pdf,svg,png,tiff}` (183 mm; script `figures/fig_wp2a_kpoints.py`,
+source data `figures/source_data/`). **a**, F(img 3) − F(img 0) for each sampling, as the deviation
+from Γ-centred 2×2×2 (absolute values labelled). **b**, per-atom-component RMS force deviation from
+2×2×2 for images 0 and 3 against wall time of one single point (pw.x WALL, 64 MPI ranks);
+dashed line, 2×2×2 wall time. **c**, norm of the R-point DFT force on every atom of the
+MACE-relaxed endpoint (m30 undoped image 0, 232 atoms), by element (count in brackets); bar,
+per-element RMS; dashed lines, criterion-5 gate (all-atom RMS < 0.05, max < 0.2 eV/Å); points
+jittered horizontally only. Each value is one deterministic calculation (SCF conv_thr 1e-8 Ry),
+so no replicate error bars exist; one frame pair from one host, so panel c is a single-frame
+diagnostic, not a corpus statistic.
+
