@@ -17,8 +17,8 @@ to I, N, Sr and Pb (C, H, Cs offsets fixed to 0). Within this compositional fami
 assignment is exact; outside it the offsets are meaningless and the model must not be used.
 E0_new = E0_foundation + offset; the network then only learns interaction-energy residuals.
 
-    python scripts/33_finetune_dataset.py --dft <dir> --frames <bands dir> --out <dir> \
-        --test-hosts m30 m32 --valid-hosts m21
+    python scripts/33_finetune_dataset.py --dft <dir> --frames <bands> <v2 dir> <wp3 frames> \
+        --out <dir> --test-hosts m30 m32 --valid-hosts m21
 """
 import argparse, glob, json, os, re
 import numpy as np
@@ -31,8 +31,14 @@ a32 = importlib.util.module_from_spec(_s); _s.loader.exec_module(a32)
 Z = {"H": 1, "C": 6, "N": 7, "Sr": 38, "I": 53, "Cs": 55, "Pb": 82}
 
 
-def collect(dft_dir, frames_dir):
-    """(label -> atoms with REF data) for band frames m??_{sys}_img?."""
+def find(frames_dirs, name):
+    hits = [os.path.join(d, name) for d in frames_dirs if os.path.exists(os.path.join(d, name))]
+    assert len(hits) <= 1, f"{name} found in several frame dirs: {hits}"
+    return hits[0] if hits else None
+
+
+def collect(dft_dir, frames_dirs):
+    """Atoms with REF data for band frames, WP2c binding frames and WP3 off-equilibrium frames."""
     out = []
     for f in sorted(glob.glob(os.path.join(dft_dir, "**", "*.out"), recursive=True)):
         lab = os.path.basename(f)[:-4]
@@ -42,7 +48,7 @@ def collect(dft_dir, frames_dir):
         q = a32.parse_qe(f)
         if q is None or not q["converged"] or q["forces"] is None:
             continue
-        at = read(os.path.join(frames_dir, f"band_{m.group(2)}_{m.group(1)}.extxyz"), index=int(m.group(3)))
+        at = read(find(frames_dirs, f"band_{m.group(2)}_{m.group(1)}.extxyz"), index=int(m.group(3)))
         at = at.copy(); at.calc = None; at.set_tags([0] * len(at))
         assert len(at) == len(q["forces"]), lab
         at.info.update({"REF_energy": q["F_eV"], "host": m.group(1), "system": m.group(2),
@@ -59,13 +65,30 @@ def collect(dft_dir, frames_dir):
         q = a32.parse_qe(f)
         if q is None or not q["converged"] or q["forces"] is None:
             continue
-        fx = os.path.join(frames_dir, f"{m.group(1)}_{m.group(2)}_relaxed.extxyz")
-        if not os.path.exists(fx):
+        fx = find(frames_dirs, f"{m.group(1)}_{m.group(2)}_relaxed.extxyz")
+        if fx is None:
             continue
         at = read(fx); at = at.copy(); at.calc = None; at.set_tags([0] * len(at))
         assert len(at) == len(q["forces"]), lab
         at.info.update({"REF_energy": q["F_eV"], "host": m.group(1), "system": m.group(2), "image": -1,
                         "label": lab, "config_type": "binding", "mTS_eV": q["mTS_eV"]})
+        at.arrays["REF_forces"] = q["forces"]
+        out.append(at)
+    # WP3 off-equilibrium frames (scripts/35): QE label = frame label = <host>_<system>_<kind>
+    for f in sorted(glob.glob(os.path.join(dft_dir, "**", "*.out"), recursive=True)):
+        lab = os.path.basename(f)[:-4]
+        m = re.match(r"(m\d\d)_(undoped|GA|Sr|pristine)_(rat05f|rat10f|md300|md450)$", lab)
+        if not m:
+            continue
+        q = a32.parse_qe(f)
+        fx = find(frames_dirs, f"{lab}.extxyz")
+        if q is None or not q["converged"] or q["forces"] is None or fx is None:
+            continue
+        at = read(fx); at = at.copy(); at.calc = None; at.set_tags([0] * len(at))
+        assert len(at) == len(q["forces"]), lab
+        ctype = at.info.get("config_type", "md" if m.group(3).startswith("md") else "rattle")
+        at.info = {"REF_energy": q["F_eV"], "host": m.group(1), "system": m.group(2), "image": -1,
+                   "label": lab, "config_type": ctype, "mTS_eV": q["mTS_eV"]}
         at.arrays["REF_forces"] = q["forces"]
         out.append(at)
     return out
@@ -81,7 +104,7 @@ def comp_coords(at):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dft", required=True)
-    ap.add_argument("--frames", required=True)
+    ap.add_argument("--frames", nargs="+", required=True, help="dirs with band, WP2c and WP3 frames")
     ap.add_argument("--out", required=True)
     ap.add_argument("--test-hosts", nargs="+", required=True)
     ap.add_argument("--valid-hosts", nargs="+", required=True)

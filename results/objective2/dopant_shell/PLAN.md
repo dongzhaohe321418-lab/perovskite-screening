@@ -143,3 +143,19 @@ Implemented in `scripts/34_dopant_shell_analysis.py`.
 5. Invalid rows (convergence, vacancy refilled, dopant displaced, basin check) are excluded and
    listed with reasons; they are never replaced by re-runs with different settings unless that
    is recorded as a further amendment before the re-run results are read.
+
+## Amendment 2026-10-25e — WP3 split and off-equilibrium frames; written before any fine-tuning
+
+1. **Host split (fixed now).** test = {m30, m32}, valid = {m21}, train = {m05, m06, m08, m12,
+   m15, m20}. m30 is held out because it carries the most DFT-only data (WP2c E_b, WP2d charge
+   state, WP2e relaxations), so criterion 6 is tested on E_b and ΔE_a of an unseen host. m21's
+   WP2c frames are validation only; m05's WP2c frames enter training.
+2. **Off-equilibrium frames** (`scripts/35_finetune_frames.py`, training hosts only): per host,
+   {band image 0 of undoped, GA, Sr; pristine host} × {framework-only rattle σ = 0.05 and
+   0.10 Å on Pb/I/Cs/Sr; last frame of 1.5 ps 300 K and 450 K Langevin MACE-MD} = 96 frames.
+   This replaces the "0.05–0.1 Å rattles" of amendment c item 7: in a smoke test (m05,
+   2026-10-25) a uniform all-atom rattle displaced H far beyond thermal amplitudes (MACE forces
+   up to 84 eV/Å; 7 of 12 frames failed the pre-set 15 eV/Å sanity bound), whereas the new set
+   gave 16/16 frames within bounds (framework rattles 0.3–1.4 eV/Å, MD 2.9–4.6 eV/Å max force
+   after 3 MD steps). The pristine-host frames also make the offset fit of `scripts/33` full rank
+   without relying on WP2c.
