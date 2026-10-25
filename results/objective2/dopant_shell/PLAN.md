@@ -81,3 +81,38 @@ screen. Its verdict decides whether later stages use zero-shot or fine-tuned MAC
   single-point bias can be compared within the pair for both dopants. Fixed cell, BFGS,
   forc_conv_thr 7.8e-4 Ry/bohr (0.02 eV/Å, the corpus target), R-point.
 - Isolated-atom E0s computed (`e0_atoms/E0_isolated_atoms.json`), all converged at the Hund moment.
+
+## Amendment 2026-10-26c — after the design review; written before any v2 result was read
+
+The adversarial design review (34 agents; 15 of 16 issues confirmed by independent skeptics)
+changes WP1 and adds decision rules. No v2 E_b value existed when this was written. The
+exploratory v1 run (cold start, fmax 0.02; script 29 at commit 5d9a3ca) was in progress and
+its log showed near-shell Sr values; the rules below are fixed from geometry and from the
+review, not from those values, and v1 numbers are not reported as binding energies.
+
+1. **WP1 protocol v2** (`scripts/29_dopant_shell_scan.py`): D_j relaxed from the relaxed host,
+   D_j+V from the relaxed V (warm start); every relaxation run through fmax 0.02 → 0.01 → 0.005
+   eV/Å with the energy recorded per stage; basin check on atoms > 6 Å from both defects
+   (max displacement < 0.25 Å and max FA-axis rotation < 20° for both partner pairs).
+2. **Depth gate.** Pilot: m30, m21, m05 × {Sr, GA} × (2 nearest + 3 farthest sites). Adopt the
+   loosest fmax at which every pilot E_b is within 5 meV of its fmax-0.005 value.
+3. **Far reference** (from the shell gaps of the true minimum-image distances): Pb sites with
+   d > 8.5 Å and C sites with d > 9.0 Å (8–10 sites per member). These lie beyond the 7.28 Å
+   minimum-image radius of this cell, so E_b(far) is a sum over periodic vacancy images, not an
+   asymptotic zero; E_b is reported as E_b − median(far) with the far-set SD. No trapping range
+   beyond ~7 Å is resolvable in this 233-atom cell.
+4. **Charge-state rule (WP2d).** If |E_b(q=+1) − E_b(q=0)| > 25 meV at any tested site, or the
+   near-minus-far sign differs between q = 0 and q = +1, the WP1 map is labelled V_I⁰-specific
+   and not carried over to V_I⁺ transport. WP2d scope: Sr near-hinge and one far Sr site; GA
+   nearest and one far GA site; one Sr band (img0, img3) at q = +1 for ΔE_a. Only the vacancy
+   cells carry charge, so the compensating-background term cancels within each E_b and ΔE_a.
+5. **WP2e error bar.** The single-point bias on ΔE_a is ΔE_relax(dopant) − ΔE_relax(undoped)
+   within a host pair (it need not cancel: GA replaces an FA, where the residual force sits).
+   One E_b quartet (m30, Sr near-hinge: host, V, D, D+V) is also DFT-relaxed. Criterion 5 is
+   applied to every WP2b frame, not only to img0.
+6. **Smearing/spin rows (WP2a).** At the R point: degauss 0.0025 Ry on m30 img0/img3, nspin = 2
+   on img0. ΔE_a must move by < 3 meV, else degauss 0.0025 is adopted or the σ→0 estimate
+   E₀ = F + TS/2 is reported beside F.
+7. **Fine-tuning data (WP3).** Offset fit must be full rank (vacancy-free frames required);
+   60–120 off-equilibrium frames (300 K MACE-MD snapshots, 0.05–0.1 Å rattles) added with
+   config_type "rattle"; held-out hosts never contribute any frame.

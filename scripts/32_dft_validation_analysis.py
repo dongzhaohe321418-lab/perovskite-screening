@@ -36,7 +36,9 @@ def parse_qe(path):
         rows = re.findall(r"atom\s+\d+\s+type\s+\d+\s+force =\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", m.group(1))
         forces = np.array(rows, float) * RY / BOHR  # eV/A
     kp = re.search(r"number of k points=\s+(\d+)", txt)
-    return {"F_eV": F[-1] * RY if F else None, "mTS_eV": TS[-1] * RY if TS else None,
+    # sigma -> 0 estimate for Gaussian smearing: E0 = F + TS/2 = F - (-TS)/2 (review m1)
+    E0 = (F[-1] - TS[-1] / 2.0) * RY if (F and TS) else None
+    return {"F_eV": F[-1] * RY if F else None, "mTS_eV": TS[-1] * RY if TS else None, "E0_eV": E0,
             "converged": conv, "forces": forces, "nk": int(kp.group(1)) if kp else None}
 
 

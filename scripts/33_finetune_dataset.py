@@ -50,6 +50,24 @@ def collect(dft_dir, frames_dir):
                         "mTS_eV": q["mTS_eV"]})
         at.arrays["REF_forces"] = q["forces"]
         out.append(at)
+    # WP2c binding-energy frames: QE label = <host>_<kind>, frame = 29's relaxed extxyz (review M4)
+    for f in sorted(glob.glob(os.path.join(dft_dir, "**", "*.out"), recursive=True)):
+        lab = os.path.basename(f)[:-4]
+        m = re.match(r"(m\d\d)_(host|vac|(?:Sr|GA)\d+_(?:novac|vac))$", lab)
+        if not m:
+            continue
+        q = a32.parse_qe(f)
+        if q is None or not q["converged"] or q["forces"] is None:
+            continue
+        fx = os.path.join(frames_dir, f"{m.group(1)}_{m.group(2)}_relaxed.extxyz")
+        if not os.path.exists(fx):
+            continue
+        at = read(fx); at = at.copy(); at.calc = None; at.set_tags([0] * len(at))
+        assert len(at) == len(q["forces"]), lab
+        at.info.update({"REF_energy": q["F_eV"], "host": m.group(1), "system": m.group(2), "image": -1,
+                        "label": lab, "config_type": "binding", "mTS_eV": q["mTS_eV"]})
+        at.arrays["REF_forces"] = q["forces"]
+        out.append(at)
     return out
 
 
@@ -84,6 +102,9 @@ def main():
         X.append(comp_coords(at)); y.append(at.info["REF_energy"] - b.get_potential_energy())
     X, y = np.array(X), np.array(y)
     coef, res, rank, _ = np.linalg.lstsq(X, y, rcond=None)
+    # All band frames have dI = -1, so const and dI are collinear until vacancy-free frames
+    # (host, D_j from WP2c) are in the training set; refuse an arbitrary split (review M3).
+    assert rank == X.shape[1], f"offset fit rank {rank} < {X.shape[1]}: add dI=0 frames (host/D_j) to train"
     # Per-element offsets o_e apply to EVERY atom of element e. With o_C = o_H = o_Cs = 0 and
     # n_I = 60+dI, n_N = 38+dN (GA also adds one H, whose offset is 0), n_Pb = 20-nSr, n_Sr = nSr:
     #   sum_e n_e o_e = (60+dI) o_I + (38+dN) o_N + (20-nSr) o_Pb + nSr o_Sr
