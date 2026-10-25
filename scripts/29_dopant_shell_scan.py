@@ -94,6 +94,10 @@ def main():
     ap.add_argument("--pool", default="results/fa_host/pool_v3_harmonised")
     ap.add_argument("--vac-ref", default="results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz")
     ap.add_argument("--sites", type=int, default=0, help="limit sites per dopant (0 = all; pilot use)")
+    ap.add_argument("--site-list", type=int, nargs="+", default=None,
+                    help="only these host site indices (WP2c re-relaxation of selected sites)")
+    ap.add_argument("--save-structures", action="store_true",
+                    help="write every relaxed structure (host, vacancy, D_j, D_j+V) as extxyz")
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--threads", type=int, default=6)
     ap.add_argument("--out", default="results/objective2/dopant_shell")
@@ -133,8 +137,11 @@ def main():
 
     log(f"m{args.member:02d}: references")
     if "E_host" not in res:
-        _, rh = relax(host, calc, "host", log)
+        ah0, rh = relax(host, calc, "host", log)
         av0, rv = relax(vac_struct, calc, "vacancy", log)
+        if args.save_structures:
+            write(os.path.join(args.out, f"m{args.member:02d}_host_relaxed.extxyz"), ah0)
+            write(os.path.join(args.out, f"m{args.member:02d}_vac_relaxed.extxyz"), av0)
         # the shared references enter EVERY E_b, so an unconverged or rearranged reference
         # would bias the whole map: refuse to continue (review: ungated references)
         if not (rh["converged"] and rv["converged"]):
@@ -160,6 +167,7 @@ def main():
             raise ValueError(dop)
         sites.sort(key=lambda j: D(host.positions[j]))
         if args.sites: sites = sites[: args.sites]
+        if args.site_list is not None: sites = [j for j in sites if int(j) in set(args.site_list)]
         for j in sites:
             j = int(j)
             if (dop, j) in done: continue
@@ -174,6 +182,9 @@ def main():
                 dv, trackv = ga_at_carbon(vac_struct, to_vac_index(j))
             a0, r0 = relax(d0, calc, f"{dop}@{j} no-vac", log)
             av, rv = relax(dv, calc, f"{dop}@{j} +vac", log)
+            if args.save_structures:
+                write(os.path.join(args.out, f"m{args.member:02d}_{dop}{j}_novac_relaxed.extxyz"), a0)
+                write(os.path.join(args.out, f"m{args.member:02d}_{dop}{j}_vac_relaxed.extxyz"), av)
             disp0 = float(find_mic(np.atleast_2d(a0.positions[track0] - d0.positions[track0]), cell, pbc=True)[1][0])
             dispv = float(find_mic(np.atleast_2d(av.positions[trackv] - dv.positions[trackv]), cell, pbc=True)[1][0])
             gap = vacancy_still_empty(av)

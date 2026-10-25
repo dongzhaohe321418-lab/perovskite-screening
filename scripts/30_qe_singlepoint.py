@@ -37,14 +37,15 @@ KMODES = {"gamma": dict(kpts=None),                         # Gamma trick; misse
           "mp222": dict(kpts=(2, 2, 2), koffset=(0, 0, 0))} # Gamma-centred 2x2x2, contains Gamma and R
 
 
-def write_input(atoms, label, outdir, kmode="gamma", calc="scf"):
+def write_input(atoms, label, outdir, kmode="gamma", calc="scf", charge=0):
     os.makedirs(outdir, exist_ok=True)
     input_data = {
         "control": {"calculation": calc, "prefix": label, "pseudo_dir": "/data/pseudo",
                     "outdir": "./tmp", "tprnfor": True, "tstress": False, "disk_io": "none",
                     "verbosity": "low"},
         "system": {"ecutwfc": 50.0, "ecutrho": 400.0, "occupations": "smearing",
-                   "smearing": "gaussian", "degauss": 0.005, "nspin": 1, "nosym": True},
+                   "smearing": "gaussian", "degauss": 0.005, "nspin": 1, "nosym": True,
+                   "tot_charge": float(charge)},
         "electrons": {"conv_thr": 1e-8, "mixing_beta": 0.3, "electron_maxstep": 200},
     }
     if calc == "relax":   # WP2e: fixed-cell DFT relaxation, same force target as the MACE corpus
@@ -63,6 +64,8 @@ def main():
     ap.add_argument("frame", help="extxyz file, optionally file@index")
     ap.add_argument("--label", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--charge", type=int, default=0,
+                    help="tot_charge (+1 = V_I+ cells, PLAN WP2d); compensating background is implicit")
     ap.add_argument("--calc", choices=["scf", "relax"], default="scf",
                     help="relax = fixed-cell BFGS to 0.02 eV/A (7.8e-4 Ry/bohr), PLAN WP2e")
     ap.add_argument("--kmode", choices=sorted(KMODES), default="gamma",
@@ -72,9 +75,9 @@ def main():
     fn, _, idx = a.frame.partition("@")
     atoms = read(fn, index=int(idx) if idx else -1)
     atoms.set_tags([0] * len(atoms))
-    path = write_input(atoms, a.label, a.out, a.kmode, a.calc)
+    path = write_input(atoms, a.label, a.out, a.kmode, a.calc, a.charge)
     meta = {"label": a.label, "source": a.frame, "natoms": len(atoms),
-            "formula": atoms.get_chemical_formula(), "fingerprint": {**FINGERPRINT, "kpts": a.kmode, "calculation": a.calc},
+            "formula": atoms.get_chemical_formula(), "fingerprint": {**FINGERPRINT, "kpts": a.kmode, "calculation": a.calc, "tot_charge": a.charge},
             "input_sha256": hashlib.sha256(open(path, "rb").read()).hexdigest()}
     json.dump(meta, open(os.path.join(a.out, f"{a.label}.meta.json"), "w"), indent=1)
     print(path, meta["formula"], meta["input_sha256"][:12])
