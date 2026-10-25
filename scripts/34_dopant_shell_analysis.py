@@ -90,9 +90,13 @@ def load(inp, fm=None):
                          "d_A": r["d_dopant_vacancy_A"], "shell": shell(r["dopant"], r["d_dopant_vacancy_A"]),
                          "Eb_meV": Eb, "Eb_by_stage_meV": r["Eb_by_stage_meV"],
                          "valid": not why, "invalid_reasons": why})
+    # the FIRE step cap does not change a converged relaxation and every used row must be converged,
+    # so hosts may differ in steps_per_stage only (PLAN amendment i); it is reported per host
+    strip = lambda p: {k: v for k, v in p.items() if k != "steps_per_stage"}
     p0 = next(iter(protos.values()), None)
     for h, p in protos.items():
-        assert p == p0, f"protocol of {h} differs from the other hosts: {p} vs {p0}"
+        assert strip(p) == strip(p0), f"protocol of {h} differs from the other hosts: {p} vs {p0}"
+        meta[h]["steps_per_stage"] = p.get("steps_per_stage")
     if fm is not None:   # amendment h item 3: map at the run's own last stage, so structures (36) match
         last = min(p0["fmax_stages"])
         assert abs(fm - last) < 1e-12, f"--fmax {fm} is not the last doped stage {last} of this run; " \

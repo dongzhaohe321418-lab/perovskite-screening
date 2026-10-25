@@ -270,3 +270,18 @@ A second adversarial review (26 agents) checked commit 603693e and amendment g.
    reference. GA near is the nearest valid FA whatever its shell, as amendment f states (a pick
    outside the near shell is noted). The WP3 frame generator also refuses to resume when any source
    frame changed (sha256).
+
+## Amendment 2026-10-25i — m21 pilot references hit the FIRE step cap; m21 re-run with a larger cap
+
+The m21 host reference reached the 3000-step cap in the fmax-0.005 stage (0.02 → 0.01: −416 meV
+in 1316 steps; 0.01 → 0.005: a further −110 meV in 3000 steps, not converged). Script 29 would stop
+with "reference relaxation not converged" after the vacancy reference. m21 was therefore stopped
+during its vacancy reference (no m21 E_b existed) and restarted from scratch with
+`--steps 10000`, everything else unchanged; the failed log is kept as `shell_m21_steps3000.log`.
+
+The step cap does not change any converged relaxation (FIRE's trajectory does not depend on it),
+and every row used must be converged at the evaluated stage, so hosts that differ only in
+`steps_per_stage` are treated as one protocol by `scripts/34`; the cap per host is reported. Rows
+of m30 and m05 that fail only by reaching the 3000-step cap remain invalid (they are not re-run
+with a larger cap unless a further amendment says so before their re-run is read). The pilot
+hosts are unchanged (m30, m21, m05).
