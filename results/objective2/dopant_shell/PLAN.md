@@ -74,3 +74,10 @@ screen. Its verdict decides whether later stages use zero-shot or fine-tuned MAC
   admissible path; 2 and 4 bracket it): 135 single points.
 - Criterion 5 fails on the first frame tested (m30 undoped img0: RMS 0.152, max 0.354 eV/Å);
   WP2e is therefore triggered regardless of the remaining frames.
+
+## Amendment 2026-10-26b
+
+- WP2e relaxes the m30 image-0 endpoint of all three systems (undoped, GA, Sr), not two, so the
+  single-point bias can be compared within the pair for both dopants. Fixed cell, BFGS,
+  forc_conv_thr 7.8e-4 Ry/bohr (0.02 eV/Å, the corpus target), R-point.
+- Isolated-atom E0s computed (`e0_atoms/E0_isolated_atoms.json`), all converged at the Hund moment.

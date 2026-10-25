@@ -37,16 +37,19 @@ KMODES = {"gamma": dict(kpts=None),                         # Gamma trick; misse
           "mp222": dict(kpts=(2, 2, 2), koffset=(0, 0, 0))} # Gamma-centred 2x2x2, contains Gamma and R
 
 
-def write_input(atoms, label, outdir, kmode="gamma"):
+def write_input(atoms, label, outdir, kmode="gamma", calc="scf"):
     os.makedirs(outdir, exist_ok=True)
     input_data = {
-        "control": {"calculation": "scf", "prefix": label, "pseudo_dir": "/data/pseudo",
+        "control": {"calculation": calc, "prefix": label, "pseudo_dir": "/data/pseudo",
                     "outdir": "./tmp", "tprnfor": True, "tstress": False, "disk_io": "none",
                     "verbosity": "low"},
         "system": {"ecutwfc": 50.0, "ecutrho": 400.0, "occupations": "smearing",
                    "smearing": "gaussian", "degauss": 0.005, "nspin": 1, "nosym": True},
         "electrons": {"conv_thr": 1e-8, "mixing_beta": 0.3, "electron_maxstep": 200},
     }
+    if calc == "relax":   # WP2e: fixed-cell DFT relaxation, same force target as the MACE corpus
+        input_data["control"].update({"forc_conv_thr": 7.8e-4, "etot_conv_thr": 1e-5, "nstep": 300})
+        input_data["ions"] = {"ion_dynamics": "bfgs"}
     species = sorted(set(atoms.get_chemical_symbols()))
     pp = {s: PSEUDO[s] for s in species}
     path = os.path.join(outdir, f"{label}.in")
@@ -60,6 +63,8 @@ def main():
     ap.add_argument("frame", help="extxyz file, optionally file@index")
     ap.add_argument("--label", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--calc", choices=["scf", "relax"], default="scf",
+                    help="relax = fixed-cell BFGS to 0.02 eV/A (7.8e-4 Ry/bohr), PLAN WP2e")
     ap.add_argument("--kmode", choices=sorted(KMODES), default="gamma",
                     help="k-sampling; in the det-20 FA cell the primitive R point folds to (1/2,1/2,1/2), "
                          "not Gamma, so 'gamma' misses the band edges (2026-10-25 review DFT-1)")
@@ -67,9 +72,9 @@ def main():
     fn, _, idx = a.frame.partition("@")
     atoms = read(fn, index=int(idx) if idx else -1)
     atoms.set_tags([0] * len(atoms))
-    path = write_input(atoms, a.label, a.out, a.kmode)
+    path = write_input(atoms, a.label, a.out, a.kmode, a.calc)
     meta = {"label": a.label, "source": a.frame, "natoms": len(atoms),
-            "formula": atoms.get_chemical_formula(), "fingerprint": {**FINGERPRINT, "kpts": a.kmode},
+            "formula": atoms.get_chemical_formula(), "fingerprint": {**FINGERPRINT, "kpts": a.kmode, "calculation": a.calc},
             "input_sha256": hashlib.sha256(open(path, "rb").read()).hexdigest()}
     json.dump(meta, open(os.path.join(a.out, f"{a.label}.meta.json"), "w"), indent=1)
     print(path, meta["formula"], meta["input_sha256"][:12])

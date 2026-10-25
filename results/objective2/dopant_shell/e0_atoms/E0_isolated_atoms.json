@@ -1,0 +1,54 @@
+{
+ "note": "Isolated-atom free energies F at the scripts/30 fingerprint (pslibrary 1.0.0 US, 50/400 Ry, Gamma, 16 A box, spin-polarised with fixed Hund moment, Gaussian 0.002 Ry). Used as MACE fine-tuning E0s (PLAN WP3). Open p-shell atoms (C, I, Pb) carry -TS ~ -21 meV from fractional occupation of degenerate p orbitals; this is a per-element constant and cancels in composition-balanced differences.",
+ "E0": {
+  "C": {
+   "F_Ry": -11.84615394,
+   "F_eV": -161.17513519538628,
+   "mTS_meV": -20.988414325393006,
+   "total_magnetization": 2.0,
+   "converged": true
+  },
+  "Cs": {
+   "F_Ry": -54.03249501,
+   "F_eV": -735.1495457757645,
+   "mTS_meV": -0.0,
+   "total_magnetization": 1.0,
+   "converged": true
+  },
+  "H": {
+   "F_Ry": -1.00353008,
+   "F_eV": -13.653722308173618,
+   "mTS_meV": -0.0,
+   "total_magnetization": 1.0,
+   "converged": true
+  },
+  "I": {
+   "F_Ry": -33.25459706,
+   "F_eV": -452.4518425271785,
+   "mTS_meV": -20.988414325393006,
+   "total_magnetization": 1.0,
+   "converged": true
+  },
+  "N": {
+   "F_Ry": -20.08989399,
+   "F_eV": -273.3369325014215,
+   "mTS_meV": -0.0,
+   "total_magnetization": 3.0,
+   "converged": true
+  },
+  "Pb": {
+   "F_Ry": -135.21494068,
+   "F_eV": -1839.6929885359177,
+   "mTS_meV": -20.988414325393006,
+   "total_magnetization": 2.0,
+   "converged": true
+  },
+  "Sr": {
+   "F_Ry": -70.07894688,
+   "F_eV": -953.4726456318779,
+   "mTS_meV": -0.0,
+   "total_magnetization": 0.0,
+   "converged": true
+  }
+ }
+}
