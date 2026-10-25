@@ -24,9 +24,12 @@ PROTOCOL v2 (2026-10-25, after the design review; v1 = commit 5d9a3ca, explorato
   is not energy-converged.
 * Basin check. For D_j vs host and for D_j+V vs V: atoms more than --basin-rcut (6 A) from both
   the dopant and the vacancy site are matched between partners; the largest displacement and
-  the largest FA-axis rotation (C -> midpoint of the two N) are recorded. A row is valid only if
-  both pairs stay below 0.25 A and 20 deg, both final stages converged, the vacancy site stays
-  empty (no I within 1.2 A) and the dopant stays on its site (< 1.0 A).
+  the largest FA-axis rotation (C -> midpoint of the two N) are recorded. A row is valid at a
+  stage only if, at that stage, both pairs stay below 0.25 A and 20 deg, both cells converged,
+  the vacancy site stays empty (no I within 1.2 A) and the dopant stays on its site (< 1.0 A).
+  v2.1 (PLAN amendment j): these checks are made and stored for EVERY stage (row["by_stage"]),
+  and the structures of every stage are saved; in v2 they were made on the final stage only,
+  so a far-field basin hop in the deepest stage discarded the whole row.
 * Distances are true minimum image (ase.geometry.find_mic); pp.mic is not minimum image beyond
   half the smallest perpendicular height (7.28 A) of this skewed cell (review MIC-1).
 
@@ -49,7 +52,7 @@ sys.path.insert(0, HERE)
 _spec = importlib.util.spec_from_file_location("pp", os.path.join(HERE, "22_paired_pilot.py"))
 pp = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(pp)
 
-PROTOCOL_VERSION = "v2-warmstart-staged"
+PROTOCOL_VERSION = "v2.1-stage-validity"   # v2 + every check per fmax stage (PLAN amendment j)
 
 
 def dump_atomic(obj, path):
@@ -99,8 +102,11 @@ def ga_at_carbon(at, c):
 
 
 def relax_staged(at, calc, label, log, stages, steps):
+    """FIRE through the fmax stages; returns (final atoms, record, per-stage snapshots)."""
+    from ase.calculators.singlepoint import SinglePointCalculator
     at = at.copy(); at.calc = calc
     rec = {"label": label, "stages": []}
+    snaps = []
     t = time.time()
     for fm in stages:
         opt = FIRE(at, logfile=None)            # fresh FIRE per stage; velocities reset
@@ -108,16 +114,18 @@ def relax_staged(at, calc, label, log, stages, steps):
         f = float(np.linalg.norm(at.get_forces(), axis=1).max())
         rec["stages"].append({"fmax_target": fm, "E_eV": float(at.get_potential_energy()), "fmax": f,
                               "steps": int(opt.get_number_of_steps()), "converged": bool(f <= fm + 1e-9)})
+        snap = at.copy()                        # frozen results: the shared calculator moves on
+        snap.calc = SinglePointCalculator(snap, energy=float(at.get_potential_energy()), forces=at.get_forces().copy())
+        snaps.append(snap)
     # The MACE calculator is shared between structures: freeze THIS structure's results so a later
     # write() cannot attach another cell's forces (found in the v2 smoke test).
-    from ase.calculators.singlepoint import SinglePointCalculator
     e_fin, f_fin = float(at.get_potential_energy()), at.get_forces().copy()
     at.calc = SinglePointCalculator(at, energy=e_fin, forces=f_fin)
     rec.update({"E_eV": rec["stages"][-1]["E_eV"], "fmax": rec["stages"][-1]["fmax"],
                 "converged": rec["stages"][-1]["converged"], "wall_s": round(time.time() - t, 1)})
     log(f"    {label:<22} " + "  ".join(f"[{s['fmax_target']}] E={s['E_eV']:.5f} n={s['steps']}" for s in rec["stages"])
         + f"  {rec['wall_s']:.0f}s")
-    return at, rec
+    return at, rec, snaps
 
 
 def basin_dev(partner, doped, keep, centres, cell, rcut):
@@ -233,8 +241,8 @@ def main():
         dump_atomic(res, outp)
     if "E_host" not in res:
         log(f"{tag}: references ({PROTOCOL_VERSION}, stages {ref_stages})")
-        ah, rh = relax_staged(host, calc, "host", log, ref_stages, args.steps)
-        av, rv = relax_staged(vac_struct, calc, "vacancy", log, ref_stages, args.steps)
+        ah, rh, _ = relax_staged(host, calc, "host", log, ref_stages, args.steps)
+        av, rv, _ = relax_staged(vac_struct, calc, "vacancy", log, ref_stages, args.steps)
         if not (rh["converged"] and rv["converged"]):
             raise SystemExit(f"reference relaxation not converged: host {rh['fmax']:.4f}, vac {rv['fmax']:.4f}")
         gap0 = float(find_mic(av.positions[np.array(av.get_chemical_symbols()) == "I"] - vpos, cell, pbc=True)[1].min())
@@ -273,31 +281,44 @@ def main():
                 dv, tv, ichv = ga_at_carbon(vac_r, jv)
                 keep0 = [k for k in range(len(host_r)) if k != ich0]
                 keepv = [k for k in range(len(vac_r)) if k != ichv]
-            a0, r0 = relax_staged(d0, calc, f"{dop}@{j} no-vac", log, stages, args.steps)
-            av, rv = relax_staged(dv, calc, f"{dop}@{j} +vac", log, stages, args.steps)
+            a0, r0, s0n = relax_staged(d0, calc, f"{dop}@{j} no-vac", log, stages, args.steps)
+            av, rv, svn = relax_staged(dv, calc, f"{dop}@{j} +vac", log, stages, args.steps)
             if args.save_structures:
                 write(os.path.join(args.out, f"{tag}_{dop}{j}_novac_relaxed.extxyz"), a0)
                 write(os.path.join(args.out, f"{tag}_{dop}{j}_vac_relaxed.extxyz"), av)
+                for fm, x0, xv in list(zip(stages, s0n, svn))[:-1]:     # earlier stages (amendment j)
+                    write(os.path.join(args.out, f"{tag}_{dop}{j}_novac_fmax{fm}.extxyz"), x0)
+                    write(os.path.join(args.out, f"{tag}_{dop}{j}_vac_fmax{fm}.extxyz"), xv)
             dpos = host_r.positions[j]
-            b0 = basin_dev(host_r, a0, keep0, [dpos, vpos], cell, args.basin_rcut)
-            bv = basin_dev(vac_r, av, keepv, [dpos, vpos], cell, args.basin_rcut)
-            disp0 = float(find_mic(np.atleast_2d(a0.positions[t0] - d0.positions[t0]), cell, pbc=True)[1][0])
-            dispv = float(find_mic(np.atleast_2d(av.positions[tv] - dv.positions[tv]), cell, pbc=True)[1][0])
-            gap = gap_of(av)
             Eh, Ev = res["E_host"]["E_eV"], res["E_vac"]["E_eV"]
-            Eb_st = [round((sv["E_eV"] - s0["E_eV"] - Ev + Eh) * 1000, 2)
-                     for s0, sv in zip(r0["stages"], rv["stages"])]
-            basin_ok = all(b["max_dr_A"] < 0.25 and b["max_fa_rot_deg"] < 20.0 for b in (b0, bv))
-            ok = r0["converged"] and rv["converged"] and gap > 1.2 and disp0 < 1.0 and dispv < 1.0 and basin_ok
+            by_stage = {}
+            for k, fm in enumerate(stages):     # every validity check at every stage (amendment j)
+                x0, xv = s0n[k], svn[k]
+                b0 = basin_dev(host_r, x0, keep0, [dpos, vpos], cell, args.basin_rcut)
+                bv = basin_dev(vac_r, xv, keepv, [dpos, vpos], cell, args.basin_rcut)
+                disp0 = float(find_mic(np.atleast_2d(x0.positions[t0] - d0.positions[t0]), cell, pbc=True)[1][0])
+                dispv = float(find_mic(np.atleast_2d(xv.positions[tv] - dv.positions[tv]), cell, pbc=True)[1][0])
+                gap = gap_of(xv)
+                conv = r0["stages"][k]["converged"] and rv["stages"][k]["converged"]
+                bok = all(b["max_dr_A"] < 0.25 and b["max_fa_rot_deg"] < 20.0 for b in (b0, bv))
+                okk = conv and gap > 1.2 and disp0 < 1.0 and dispv < 1.0 and bok
+                by_stage[str(fm)] = {"Eb_meV": round((rv["stages"][k]["E_eV"] - r0["stages"][k]["E_eV"] - Ev + Eh) * 1000, 2),
+                                     "valid": bool(okk), "converged": bool(conv), "basin_ok": bool(bok),
+                                     "basin_novac_vs_host": b0, "basin_vac_vs_V": bv,
+                                     "nearest_I_to_vacancy_site_A": round(gap, 3),
+                                     "dopant_displacement_A": [round(disp0, 3), round(dispv, 3)]}
+            fin = by_stage[str(stages[-1])]
             res["rows"].append({"dopant": dop, "site_host_index": j, "d_dopant_vacancy_A": round(dist, 3),
-                                "Eb_meV": Eb_st[-1], "Eb_by_stage_meV": dict(zip(map(str, stages), Eb_st)),
-                                "valid": bool(ok), "basin_ok": bool(basin_ok),
-                                "basin_novac_vs_host": b0, "basin_vac_vs_V": bv,
-                                "nearest_I_to_vacancy_site_A": round(gap, 3),
-                                "dopant_displacement_A": [round(disp0, 3), round(dispv, 3)],
-                                "no_vac": r0, "with_vac": rv})
-            log(f"    -> E_b by stage {Eb_st} meV  basin dr={b0['max_dr_A']:.2f}/{bv['max_dr_A']:.2f} A "
-                f"rot={b0['max_fa_rot_deg']:.0f}/{bv['max_fa_rot_deg']:.0f} deg  {'ok' if ok else 'INVALID'}")
+                                "Eb_meV": fin["Eb_meV"], "Eb_by_stage_meV": {k: v["Eb_meV"] for k, v in by_stage.items()},
+                                "valid": fin["valid"], "basin_ok": fin["basin_ok"],
+                                "basin_novac_vs_host": fin["basin_novac_vs_host"], "basin_vac_vs_V": fin["basin_vac_vs_V"],
+                                "nearest_I_to_vacancy_site_A": fin["nearest_I_to_vacancy_site_A"],
+                                "dopant_displacement_A": fin["dopant_displacement_A"],
+                                "by_stage": by_stage, "no_vac": r0, "with_vac": rv})
+            log("    -> " + "  ".join(f"[{k}] E_b={v['Eb_meV']:+.1f} dr={v['basin_novac_vs_host']['max_dr_A']:.2f}/"
+                                      f"{v['basin_vac_vs_V']['max_dr_A']:.2f} rot={v['basin_novac_vs_host']['max_fa_rot_deg']:.0f}/"
+                                      f"{v['basin_vac_vs_V']['max_fa_rot_deg']:.0f} {'ok' if v['valid'] else 'INVALID'}"
+                                      for k, v in by_stage.items()))
             dump_atomic(res, outp)
     log(f"{tag}: done, {len(res['rows'])} rows -> {outp}")
 

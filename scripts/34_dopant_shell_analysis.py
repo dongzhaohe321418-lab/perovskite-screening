@@ -50,17 +50,24 @@ def stage_rec(cell, fm):
 
 
 def reasons(r, fm=None):
+    """Why a row is invalid at stage fm (None = final stage). Protocol v2.1 stores every check per
+    stage (row['by_stage'], PLAN amendment j); for v2 rows only the convergence is per stage."""
+    if fm is not None and "by_stage" in r:
+        x = r["by_stage"][str(fm)]
+        conv = [x["converged"]]
+    else:
+        x = r
+        conv = [r["no_vac"]["converged"], r["with_vac"]["converged"]] if fm is None else \
+            [stage_rec(r["no_vac"], fm)["converged"], stage_rec(r["with_vac"], fm)["converged"]]
     out = []
-    conv = [r["no_vac"]["converged"], r["with_vac"]["converged"]] if fm is None else \
-        [stage_rec(r["no_vac"], fm)["converged"], stage_rec(r["with_vac"], fm)["converged"]]
     if not all(conv):
         out.append("not converged")
-    if r["nearest_I_to_vacancy_site_A"] <= 1.2:
+    if x["nearest_I_to_vacancy_site_A"] <= 1.2:
         out.append("vacancy refilled")
-    if max(r["dopant_displacement_A"]) >= 1.0:
+    if max(x["dopant_displacement_A"]) >= 1.0:
         out.append("dopant left site")
-    if not r["basin_ok"]:
-        b0, bv = r["basin_novac_vs_host"], r["basin_vac_vs_V"]
+    if not x["basin_ok"]:
+        b0, bv = x["basin_novac_vs_host"], x["basin_vac_vs_V"]
         out.append(f"basin (dr {b0['max_dr_A']:.2f}/{bv['max_dr_A']:.2f} A, rot "
                    f"{b0['max_fa_rot_deg']:.0f}/{bv['max_fa_rot_deg']:.0f} deg)")
     return out
@@ -86,9 +93,10 @@ def load(inp, fm=None):
         for r in res["rows"]:
             why = reasons(r, fm)
             Eb = r["Eb_by_stage_meV"][str(fm)] if fm is not None else r["Eb_meV"]
+            vstage = {k: not reasons(r, float(k)) for k in r["Eb_by_stage_meV"]} if "by_stage" in r else None
             rows.append({"host": h, "dopant": r["dopant"], "site": r["site_host_index"],
                          "d_A": r["d_dopant_vacancy_A"], "shell": shell(r["dopant"], r["d_dopant_vacancy_A"]),
-                         "Eb_meV": Eb, "Eb_by_stage_meV": r["Eb_by_stage_meV"],
+                         "Eb_meV": Eb, "Eb_by_stage_meV": r["Eb_by_stage_meV"], "valid_by_stage": vstage,
                          "valid": not why, "invalid_reasons": why})
     # the FIRE step cap does not change a converged relaxation and every used row must be converged,
     # so hosts may differ in steps_per_stage only (PLAN amendment i); it is reported per host
@@ -133,21 +141,28 @@ def pilot_rows(rows):
 
 
 def depth(rows):
+    """Depth gate, PLAN amendment c item 2 as revised by amendment j: per-stage validity; reference
+    stage 0.005 if at least half of the pilot rows are valid there, otherwise 0.01 (and only 0.02
+    is tested against it); a candidate stage passes if every row valid at both it and the
+    reference agrees within 5 meV."""
     missing = pilot_complete(rows)
     rows = pilot_rows(rows)
-    val = [r for r in rows if r["valid"]]
-    stages = sorted({float(s) for r in val for s in r["Eb_by_stage_meV"]}, reverse=True)
-    tight = min(stages) if stages else None
-    assert tight is None or abs(tight - REF_FMAX) < 1e-12, f"depth gate needs the {REF_FMAX} stage; tightest is {tight}"
+    assert all(r["valid_by_stage"] is not None for r in rows), "depth gate needs protocol v2.1 rows (per-stage validity)"
+    stages = sorted({float(s) for r in rows for s in r["Eb_by_stage_meV"]}, reverse=True)
+    assert stages and abs(min(stages) - REF_FMAX) < 1e-12, f"depth gate needs the {REF_FMAX} stage"
+    n_valid = {str(s): sum(1 for r in rows if r["valid_by_stage"][str(s)]) for s in stages}
+    half = (len(PILOT["hosts"]) * len(PILOT["dopants"]) * (PILOT["near"] + PILOT["far"])) / 2
+    ref = REF_FMAX if n_valid[str(REF_FMAX)] >= half else 0.01
     per = {}
-    for s in stages:
-        dev = [abs(r["Eb_by_stage_meV"][str(s)] - r["Eb_by_stage_meV"][str(tight)]) for r in val]
-        per[str(s)] = {"max_abs_dev_meV": round(max(dev), 2) if dev else None, "n": len(dev),
+    for s in [x for x in stages if x > ref]:
+        both = [r for r in rows if r["valid_by_stage"][str(s)] and r["valid_by_stage"][str(ref)]]
+        dev = [abs(r["Eb_by_stage_meV"][str(s)] - r["Eb_by_stage_meV"][str(ref)]) for r in both]
+        per[str(s)] = {"vs": ref, "n_compared": len(dev), "max_abs_dev_meV": round(max(dev), 2) if dev else None,
                        "pass": bool(dev) and max(dev) <= DEPTH_TOL}
-    adopted = max([s for s in stages if per[str(s)]["pass"]], default=None)
-    return {"tolerance_meV": DEPTH_TOL, "stages": per, "complete": not missing, "missing": missing,
-            "adopted_fmax": adopted if not missing else None,
-            "adopted_fmax_if_complete": adopted, "n_valid": len(val), "n_invalid": len(rows) - len(val)}
+    adopted = max([float(s) for s, v in per.items() if v["pass"]], default=ref)
+    return {"tolerance_meV": DEPTH_TOL, "reference_stage": ref, "n_valid_by_stage": n_valid,
+            "n_pilot_rows": len(rows), "stages": per, "complete": not missing, "missing": missing,
+            "adopted_fmax": adopted if not missing else None, "adopted_fmax_if_complete": adopted}
 
 
 def map_(rows):

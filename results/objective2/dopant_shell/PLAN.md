@@ -285,3 +285,32 @@ and every row used must be converged at the evaluated stage, so hosts that diffe
 of m30 and m05 that fail only by reaching the 3000-step cap remain invalid (they are not re-run
 with a larger cap unless a further amendment says so before their re-run is read). The pilot
 hosts are unchanged (m30, m21, m05).
+
+## Amendment 2026-10-25j — validity at every fmax stage (protocol v2.1); pilot restarted in a new directory
+
+**What was seen (the first pilot row, m30 Sr@136, the only E_b read so far).** E_b = 135.3 / 132.5
+meV at fmax 0.02 / 0.01, but in the 0.005 stage the Sr no-vacancy cell ran 1740 FIRE steps and hopped
+to another far-field basin (max displacement 0.86 Å, FA rotation 20°, −89 meV), so E_b(0.005) =
+209.8 meV and v2 marked the whole row invalid, because v2 checked validity on the final stage only.
+Separately, the m05 vacancy reference reached the 3000-step cap in the 0.005 stage (fmax 0.0085) and
+m05 stopped; m21 had done the same (amendment i). Deep relaxation on this glassy FA landscape thus
+both costs most of the time (Sr@136: 20 + 33 steps to 0.01, 1740 steps to 0.005) and invites the
+far-field hops the basin check exists to catch. Applying the v2 gate to final-stage validity would
+discard rows whose shallower stages are sound, and would make the gate's reference (0.005)
+unavailable exactly where depth matters.
+
+**Change (decided from this one row's validity pattern, before any other E_b).**
+1. Protocol v2.1 (`scripts/29`): every check (convergence, basin, vacancy, dopant displacement) is
+   made and stored for each stage (row `by_stage`), and the structures of every stage are saved.
+   The relaxation itself is unchanged.
+2. Depth gate (replaces amendment c item 2 as refined by d, g, h): per-stage validity. The
+   reference stage is 0.005 if at least half of the 30 pilot rows are valid at 0.005, otherwise
+   0.01 (then only 0.02 is tested). A candidate stage passes if every row valid at both it and the
+   reference agrees within 5 meV; the loosest passing stage is adopted, else the reference stage.
+   The fraction of rows invalid at each stage (basin hops) is reported as a result.
+3. The pilot is restarted in `/data/work/v2pilot2` with protocol v2.1 and `--steps 10000` for all
+   three hosts. m30 reuses its converged v2 references (`--ref-from`); m21 reuses the references of
+   its amendment-i run once they finish; m05 starts from scratch. The v2 m30 Sr@136 row stays in
+   `/data/work/v2pilot` as the record that motivated this amendment and is not used.
+4. Recommendation for S2 onwards (not applied here): constrain atoms beyond the basin radius to the
+   partner's positions in D_j and D_j+V, which removes far-field hops by construction.
