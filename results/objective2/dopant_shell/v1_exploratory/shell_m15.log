@@ -1,0 +1,157 @@
+m15: references
+    host                   E=-1065.95164  fmax=0.0198  steps=  0     3.8s
+    vacancy                E=-1063.70181  fmax=0.0184  steps= 78   172.8s
+m15 Sr site 124 (d = 3.21 A)
+    Sr@124 no-vac          E=-1067.27097  fmax=0.0199  steps= 36    87.5s
+    Sr@124 +vac            E=-1064.86105  fmax=0.0182  steps= 85   180.6s
+    -> E_b =   +160.1 meV   ok
+m15 Sr site 136 (d = 3.29 A)
+    Sr@136 no-vac          E=-1067.30516  fmax=0.0190  steps= 23    50.3s
+    Sr@136 +vac            E=-1064.90565  fmax=0.0199  steps=106   253.1s
+    -> E_b =   +149.7 meV   ok
+m15 Sr site 0 (d = 7.12 A)
+    Sr@0 no-vac            E=-1067.27193  fmax=0.0189  steps= 32    74.3s
+    Sr@0 +vac              E=-1064.99276  fmax=0.0194  steps= 73   166.5s
+    -> E_b =    +29.3 meV   ok
+m15 Sr site 48 (d = 7.13 A)
+    Sr@48 no-vac           E=-1067.28284  fmax=0.0183  steps= 36    83.2s
+    Sr@48 +vac             E=-1065.03097  fmax=0.0165  steps= 85   192.2s
+    -> E_b =     +2.1 meV   ok
+m15 Sr site 160 (d = 7.16 A)
+    Sr@160 no-vac          E=-1067.28570  fmax=0.0185  steps= 28    75.7s
+    Sr@160 +vac            E=-1065.02524  fmax=0.0186  steps= 85   176.3s
+    -> E_b =    +10.6 meV   ok
+m15 Sr site 208 (d = 7.27 A)
+    Sr@208 no-vac          E=-1067.30195  fmax=0.0194  steps= 51   105.3s
+    Sr@208 +vac            E=-1065.00748  fmax=0.0188  steps= 78   134.5s
+    -> E_b =    +44.6 meV   ok
+m15 Sr site 196 (d = 7.32 A)
+    Sr@196 no-vac          E=-1067.27573  fmax=0.0199  steps= 36    62.7s
+    Sr@196 +vac            E=-1065.00033  fmax=0.0185  steps= 78   130.3s
+    -> E_b =    +25.6 meV   ok
+m15 Sr site 52 (d = 7.34 A)
+    Sr@52 no-vac           E=-1067.25875  fmax=0.0189  steps= 22    37.7s
+    Sr@52 +vac             E=-1065.00901  fmax=0.0154  steps= 94   152.4s
+    -> E_b =     -0.1 meV   ok
+m15 Sr site 100 (d = 7.39 A)
+    Sr@100 no-vac          E=-1067.27840  fmax=0.0185  steps= 25    40.0s
+    Sr@100 +vac            E=-1065.00462  fmax=0.0182  steps= 78   127.6s
+    -> E_b =    +24.0 meV   ok
+m15 Sr site 88 (d = 7.44 A)
+    Sr@88 no-vac           E=-1067.27718  fmax=0.0186  steps= 56    89.2s
+    Sr@88 +vac             E=-1064.99793  fmax=0.0178  steps= 94   150.8s
+    -> E_b =    +29.4 meV   ok
+m15 Sr site 12 (d = 9.53 A)
+    Sr@12 no-vac           E=-1067.26990  fmax=0.0194  steps= 39    63.3s
+    Sr@12 +vac             E=-1064.99043  fmax=0.0178  steps= 78   125.0s
+    -> E_b =    +29.6 meV   ok
+m15 Sr site 184 (d = 9.60 A)
+    Sr@184 no-vac          E=-1067.27321  fmax=0.0182  steps= 26    43.5s
+    Sr@184 +vac            E=-1064.99333  fmax=0.0193  steps= 78   124.5s
+    -> E_b =    +30.0 meV   ok
+m15 Sr site 112 (d = 9.72 A)
+    Sr@112 no-vac          E=-1067.25718  fmax=0.0181  steps= 37    58.6s
+    Sr@112 +vac            E=-1064.96148  fmax=0.0185  steps= 73   116.7s
+    -> E_b =    +45.9 meV   ok
+m15 Sr site 64 (d = 9.76 A)
+    Sr@64 no-vac           E=-1067.28006  fmax=0.0198  steps= 30    48.8s
+    Sr@64 +vac             E=-1065.00249  fmax=0.0184  steps= 78   109.9s
+    -> E_b =    +27.8 meV   ok
+m15 Sr site 36 (d = 9.77 A)
+    Sr@36 no-vac           E=-1067.26486  fmax=0.0181  steps= 27    32.8s
+    Sr@36 +vac             E=-1064.98332  fmax=0.0198  steps= 70    84.8s
+    -> E_b =    +31.7 meV   ok
+m15 Sr site 148 (d = 9.80 A)
+    Sr@148 no-vac          E=-1067.29920  fmax=0.0199  steps=  9    12.2s
+    Sr@148 +vac            E=-1065.01726  fmax=0.0186  steps= 78    94.6s
+    -> E_b =    +32.1 meV   ok
+m15 Sr site 24 (d = 9.91 A)
+    Sr@24 no-vac           E=-1067.28052  fmax=0.0195  steps= 30    36.8s
+    Sr@24 +vac             E=-1065.00424  fmax=0.0180  steps= 78    92.8s
+    -> E_b =    +26.5 meV   ok
+m15 Sr site 220 (d = 10.03 A)
+    Sr@220 no-vac          E=-1067.29510  fmax=0.0199  steps= 64    78.4s
+    Sr@220 +vac            E=-1064.99252  fmax=0.0194  steps= 79    95.8s
+    -> E_b =    +52.8 meV   ok
+m15 Sr site 76 (d = 11.78 A)
+    Sr@76 no-vac           E=-1067.28677  fmax=0.0190  steps= 28    35.7s
+    Sr@76 +vac             E=-1065.00806  fmax=0.0182  steps= 78    95.8s
+    -> E_b =    +28.9 meV   ok
+m15 Sr site 172 (d = 11.84 A)
+    Sr@172 no-vac          E=-1067.29787  fmax=0.0193  steps= 23    29.3s
+    Sr@172 +vac            E=-1065.02275  fmax=0.0187  steps= 78    92.3s
+    -> E_b =    +25.3 meV   ok
+m15 GA site 128 (d = 4.59 A)
+    GA@128 no-vac          E=-1078.90281  fmax=0.0176  steps=127   124.5s
+    GA@128 +vac            E=-1076.61495  fmax=0.0192  steps=166   156.1s
+    -> E_b =    +38.0 meV   ok
+m15 GA site 92 (d = 4.64 A)
+    GA@92 no-vac           E=-1079.03709  fmax=0.0198  steps= 98    96.3s
+    GA@92 +vac             E=-1076.74781  fmax=0.0199  steps=117   114.4s
+    -> E_b =    +39.5 meV   ok
+m15 GA site 28 (d = 4.83 A)
+    GA@28 no-vac           E=-1079.06082  fmax=0.0198  steps=122   122.7s
+    GA@28 +vac             E=-1076.75332  fmax=0.0199  steps=111   108.3s
+    -> E_b =    +57.7 meV   ok
+m15 GA site 56 (d = 7.70 A)
+    GA@56 no-vac           E=-1078.94603  fmax=0.0191  steps=113   109.4s
+    GA@56 +vac             E=-1076.69191  fmax=0.0174  steps=122   117.4s
+    -> E_b =     +4.3 meV   ok
+m15 GA site 80 (d = 7.76 A)
+    GA@80 no-vac           E=-1079.00051  fmax=0.0175  steps= 98    95.8s
+    GA@80 +vac             E=-1076.67774  fmax=0.0200  steps= 78    75.0s
+    -> E_b =    +72.9 meV   ok
+m15 GA site 104 (d = 7.94 A)
+    GA@104 no-vac          E=-1079.08859  fmax=0.0200  steps=291   282.1s
+    GA@104 +vac            E=-1076.83840  fmax=0.0200  steps=354   746.6s
+    -> E_b =     +0.4 meV   ok
+m15 GA site 116 (d = 7.98 A)
+    GA@116 no-vac          E=-1079.01565  fmax=0.0180  steps=122   766.2s
+    GA@116 +vac            E=-1076.71397  fmax=0.0198  steps=111   673.9s
+    -> E_b =    +51.9 meV   ok
+m15 GA site 40 (d = 7.99 A)
+    GA@40 no-vac           E=-1079.03780  fmax=0.0183  steps= 98   672.5s
+    GA@40 +vac             E=-1076.74462  fmax=0.0194  steps= 99   619.3s
+    -> E_b =    +43.3 meV   ok
+m15 GA site 224 (d = 8.16 A)
+    GA@224 no-vac          E=-1079.03269  fmax=0.0199  steps=278  1024.1s
+    GA@224 +vac            E=-1076.74741  fmax=0.0199  steps=249   387.9s
+    -> E_b =    +35.5 meV   ok
+m15 GA site 212 (d = 8.17 A)
+    GA@212 no-vac          E=-1078.97754  fmax=0.0182  steps= 92   146.5s
+    GA@212 +vac            E=-1076.68523  fmax=0.0195  steps=105   167.2s
+    -> E_b =    +42.5 meV   ok
+m15 GA site 140 (d = 8.34 A)
+    GA@140 no-vac          E=-1079.04460  fmax=0.0190  steps=102   162.3s
+    GA@140 +vac            E=-1076.75482  fmax=0.0191  steps=105   166.0s
+    -> E_b =    +40.0 meV   ok
+m15 GA site 16 (d = 9.60 A)
+    GA@16 no-vac           E=-1078.90025  fmax=0.0193  steps= 86   136.3s
+    GA@16 +vac             E=-1076.59005  fmax=0.0198  steps= 75   118.3s
+    -> E_b =    +60.4 meV   ok
+m15 GA site 164 (d = 10.13 A)
+    GA@164 no-vac          E=-1079.00109  fmax=0.0181  steps=150   235.2s
+    GA@164 +vac            E=-1076.80130  fmax=0.0200  steps=284   304.0s
+    -> E_b =    -50.0 meV   ok
+m15 GA site 176 (d = 10.29 A)
+    GA@176 no-vac          E=-1079.07701  fmax=0.0195  steps=143   135.6s
+    GA@176 +vac            E=-1076.83148  fmax=0.0200  steps=221   208.5s
+    -> E_b =     -4.3 meV   ok
+m15 GA site 188 (d = 10.41 A)
+    GA@188 no-vac          E=-1079.03211  fmax=0.0196  steps=165   157.7s
+    GA@188 +vac            E=-1076.74829  fmax=0.0193  steps=163   151.3s
+    -> E_b =    +34.0 meV   ok
+m15 GA site 68 (d = 10.46 A)
+    GA@68 no-vac           E=-1078.99664  fmax=0.0188  steps= 92    76.5s
+    GA@68 +vac             E=-1076.69620  fmax=0.0187  steps= 77    63.2s
+    -> E_b =    +50.6 meV   ok
+m15 GA site 152 (d = 10.53 A)
+    GA@152 no-vac          E=-1078.98615  fmax=0.0186  steps=130   108.1s
+    GA@152 +vac            E=-1076.66661  fmax=0.0200  steps=105    87.5s
+    -> E_b =    +69.7 meV   ok
+m15 GA site 4 (d = 10.57 A)
+    GA@4 no-vac            E=-1078.94413  fmax=0.0198  steps=150   127.0s
+    GA@4 +vac              E=-1076.64272  fmax=0.0199  steps=142   117.9s
+    -> E_b =    +51.6 meV   ok
+m15 GA site 200 (d = 10.62 A)
+    GA@200 no-vac          E=-1079.18567  fmax=0.0193  steps=426   296.0s
