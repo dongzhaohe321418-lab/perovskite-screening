@@ -120,3 +120,26 @@ review, not from those values, and v1 numbers are not reported as binding energi
 7. **Fine-tuning data (WP3).** Offset fit must be full rank (vacancy-free frames required);
    60–120 off-equilibrium frames (300 K MACE-MD snapshots, 0.05–0.1 Å rattles) added with
    config_type "rattle"; held-out hosts never contribute any frame.
+
+## Amendment 2026-10-25d — WP1 analysis definitions; written before any v2 E_b value existed
+
+At writing, the v2 depth pilot had produced no E_b row (all three hosts still relaxing their
+references). The definitions are taken from the unrelaxed host geometry of the pilot hosts
+(m30, m21, m05), whose minimum-image dopant–vacancy distances show wide natural gaps
+(Pb: 3.17–3.28 | 6.90–7.69 | 9.13–11.96 Å; C: 4.15–5.11 | 7.38–8.49 | 9.67–11.25 Å).
+Implemented in `scripts/34_dopant_shell_analysis.py`.
+
+1. **Shells.** Sr (Pb sites): near d < 5.0 Å (2 sites), far d > 8.5 Å (10 sites). GA (FA sites):
+   near d < 6.0 Å (3 sites; the fourth nearest A-site is the Cs), far d > 9.0 Å (8 sites).
+   Everything between is "mid". d is the unrelaxed minimum-image distance to the vacancy site.
+2. **Criterion 1** is evaluated exactly as written (valid rows with d > 8 Å, pooled over hosts,
+   SD with ddof = 1). Because far E_b is a periodic-image sum (amendment c, item 3), a failure of
+   the |mean| < 15 meV part with the SD part passing is reported as such, not reinterpreted.
+3. **Criterion 2.** Pooled near mean minus pooled far mean (far as in item 1); a verdict
+   ("binds"/"repels") requires |difference| > 2 × pooled far SD AND the same sign of the per-host
+   near − far difference in ≥ 2 of 3 hosts. Thermal relevance flagged at |difference| > 25.7 meV.
+4. **Production hosts** for WP1: m30, m21, m05 (the pilot hosts; also the WP2c hosts), all 20 Pb
+   and 19 FA sites each, at the depth adopted by the gate (references always at fmax 0.005).
+5. Invalid rows (convergence, vacancy refilled, dopant displaced, basin check) are excluded and
+   listed with reasons; they are never replaced by re-runs with different settings unless that
+   is recorded as a further amendment before the re-run results are read.
