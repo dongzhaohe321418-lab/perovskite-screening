@@ -1,0 +1,63 @@
+# Dopant–vacancy interaction and DFT validation of the MACE results — pre-registered plan
+
+**Status: PLAN, written 2026-10-25 before any production result was read.** Criteria below are
+fixed now so the analysis cannot be tuned after the fact. Changes after this date are appended
+as dated amendments, never edited in place.
+
+## Why
+
+The 108-path corpus (`../paired_pilot/CORPUS108_RESULT.md`) put each additive on the single site
+nearest the vacancy (`scripts/22_paired_pilot.py`). That answers "does one near-dopant hop change
+its barrier", not "does the dopant change iodide transport". In a solid, a dopant changes vacancy
+transport mainly by binding (trapping) or repelling the vacancy. Re-analysis on 2026-10-18 also
+showed the nearest-site rule mixes two physically different Sr sites (the Pb that holds the
+hopping iodide in 16/36 hosts, the far-side Pb in 20/36) and three different GA A-sites. All
+corpus numbers are MACE-MP-0 (zero-shot), never validated against DFT for the doped FA host.
+
+## Work packages
+
+| WP | what | method | output |
+|---|---|---|---|
+| 1 | dopant–vacancy binding map E_b(r) | MACE, `scripts/29_dopant_shell_scan.py`: every Pb site (Sr) and every FA site (GA), vacancy fixed; E_b(j) = E[D_j+V] − E[D_j] − E[V] + E[host], all relaxed (FIRE, fmax 0.02, fixed cell) | `shell_mNN.json` per host |
+| 2a | DFT electronic settings | PBE (no D3) single points on m30 undoped img0/img3: k-sampling Γ / R-point / 2×2×2; degauss 0.005 vs 0.0025; nspin 1 vs 2 | chosen production fingerprint |
+| 2b | barrier transfer | DFT single points on the MACE bands (images 0, 2, 3, 4, 6) for the 9 balanced hosts × {undoped, GA, Sr} | DFT ΔE_a on MACE paths vs MACE ΔE_a |
+| 2c | binding-energy transfer | DFT single points on WP1 MACE-relaxed structures, 3 hosts × {Sr near-hinge, Sr other flank, Sr mid, Sr far, GA near, GA mid, GA far} + host + V | DFT E_b vs MACE E_b |
+| 2d | charge state | m30: vacancy cells of 2c at tot_charge = +1 (V_I⁺; even electron count) | E_b(q=+1) vs E_b(q=0) |
+| 2e | geometry transfer | residual DFT force at every MACE minimum; DFT relaxation of 2 endpoints if the gate fails | single-point bias estimate |
+| 3 | fine-tuned MACE | fine-tune MACE-MP-0 on WP2 frames (energies + forces) with isolated-atom E0s (`scripts/31_qe_atom_e0.py`); split by host | re-run WP2 quantities and the WP1 map on held-out hosts |
+
+DFT fingerprint (WP2/3): pslibrary 1.0.0 US, ecutwfc 50 / ecutrho 400 Ry, Gaussian smearing,
+nspin = 1 for the neutral odd-electron cells, plain PBE because MACE-MP-0 was trained on MP
+PBE(+U) without dispersion. This is NOT the Objective-1 fingerprint (PBE+D3(BJ)); the two sets of
+numbers are never compared (standing rule 1). The free energy F ("! total energy") is used
+throughout; −TS is logged per frame.
+
+**k-sampling note (design review DFT-1).** In the det-20 FA supercell the primitive R point,
+where both band edges sit, folds to supercell (½,½,½), not Γ (supercell matrix M has det 20;
+R → (−½, −½, ½) mod 1). Γ-only therefore misses the band edges and puts the vacancy's extra
+electron in a folded conduction state. WP2a decides between the single R-point and 2×2×2.
+
+## Pre-registered acceptance criteria
+
+1. **WP1 noise floor.** E_b at sites with d > 8 Å must scatter about 0 with |mean| < 15 meV and
+   SD < 25 meV per dopant (pooled over hosts). If not, relaxation noise (FA basin hopping)
+   dominates and WP1 is reported as inconclusive below that floor.
+2. **WP1 verdict.** A dopant "binds" or "repels" the vacancy only if the nearest-shell mean E_b
+   differs from the far-site mean by more than 2× the far-site SD and the sign holds in ≥ 2 of 3
+   hosts. Thermal relevance threshold: |E_b| > k_BT = 25.7 meV at 298 K.
+3. **WP2b MACE validity for ΔE_a.** MACE is accepted for paired barrier differences if, over
+   the 18 paired (host, dopant) comparisons, RMS(ΔE_a^MACE − ΔE_a^DFT) < 20 meV and no pair
+   flips across the ±59.5 meV equivalence band. If RMS ≥ 20 meV the corpus equivalence result is
+   re-stated at DFT level from WP2b and the MACE numbers are downgraded.
+4. **WP2c MACE validity for E_b.** Accepted if |E_b^MACE − E_b^DFT| < 25 meV for every site
+   tested and the near-vs-far sign agrees.
+5. **WP2e geometry gate.** Residual DFT force at MACE minima: RMS < 0.05 eV/Å and max < 0.2 eV/Å;
+   otherwise single-point energies are reported with the WP2e relaxation bias as an error bar.
+6. **WP3 fine-tuning.** Reported as an improvement only if, on held-out hosts, force RMSE and
+   ΔE_a / E_b errors versus DFT all decrease relative to zero-shot MACE.
+
+## What will not be claimed
+
+No absolute MACE-vs-QE energies (different pseudopotential references). No DFT barrier from the
+fixed-path single points is a relaxed DFT barrier: the DFT maximum along a MACE path is an
+upper-bound-type diagnostic, not the DFT saddle. No transfer to experiment.
