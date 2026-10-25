@@ -66,3 +66,11 @@ upper-bound-type diagnostic, not the DFT saddle. No transfer to experiment.
 
 This study is stage S1 of `../SCREENING_ROADMAP.md` (adopted 2026-10-25): a validated multi-dopant
 screen. Its verdict decides whether later stages use zero-shot or fine-tuned MACE.
+
+## Amendment 2026-10-26 (after WP2a; no WP1/WP2b result read)
+
+- Production k-sampling fixed to the single R point (½,½,½); see `WP2A_KPOINTS.md`.
+- WP2b images reduced from 7 to {0, 2, 3, 4, 6} per band (the MACE saddle is image 3 on every
+  admissible path; 2 and 4 bracket it): 135 single points.
+- Criterion 5 fails on the first frame tested (m30 undoped img0: RMS 0.152, max 0.354 eV/Å);
+  WP2e is therefore triggered regardless of the remaining frames.

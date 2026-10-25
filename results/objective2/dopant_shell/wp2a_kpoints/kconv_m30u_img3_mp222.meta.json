@@ -1,0 +1,18 @@
+{
+ "label": "kconv_m30u_img3_mp222",
+ "source": "bands/band_undoped_m30.extxyz@3",
+ "natoms": 232,
+ "formula": "C19H95CsI59N38Pb20",
+ "fingerprint": {
+  "functional": "PBE (no D3)",
+  "ecutwfc": 50.0,
+  "ecutrho": 400.0,
+  "kpts": "mp222",
+  "smearing": "gaussian",
+  "degauss": 0.005,
+  "nspin": 1,
+  "conv_thr": 1e-08,
+  "pseudos": "pslibrary 1.0.0 US (Cs spn, Pb dn, Sr spn)"
+ },
+ "input_sha256": "54d7124153cdf099f7eb6f2f5c0ba5e769a16ff472dd4b01c5bb8bd85df1db1d"
+}
