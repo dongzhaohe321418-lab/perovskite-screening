@@ -15,10 +15,14 @@ plain PBE, pslibrary 1.0.0 US, 50/400 Ry, Gaussian 0.005 Ry, nspin = 1
 - In this det-20 supercell the primitive R point (both band edges) folds to supercell (½,½,½),
   not Γ (supercell matrix determinant 20). The R-point sampling is the physically correct
   single point and reproduces the 2×2×2 path energy difference within 2.2 meV and forces within
-  3.3 meV/Å at 1/6 of the cost. Absolute F per atom differs from 2×2×2 by 0.88 meV/atom (R) and
+  3.3 / 3.4 meV/Å (images 0 / 3) at 1/6 of the cost. Absolute F per atom differs from 2×2×2 by 0.88 meV/atom (R) and
   1.38 meV/atom (Γ); absolute energies are not used.
-- −TS depends strongly on sampling (the odd conduction electron is fractionally occupied) but
-  cancels in differences at fixed sampling. F is used throughout; never mix samplings.
+- −TS depends strongly on sampling (the odd conduction electron is fractionally occupied) and
+  cancels only largely, not exactly, in differences at fixed sampling: the −TS term contributes
+  −10.0 / −6.2 / −3.5 meV to F(img3) − F(img0) for Γ / R / 2×2×2 (corrected 2026-10-25, PLAN
+  amendment g item 7; the σ→0 estimate ΔE₀ = ΔF − Δ(−TS)/2 is 214.3 meV at R). F is used
+  throughout and samplings are never mixed; the degauss 0.0025 row (amendment c item 6) is the
+  pre-registered test of the smearing sensitivity.
 
 ## Residual DFT force at the MACE minimum (PLAN criterion 5) — FAILS on this frame
 

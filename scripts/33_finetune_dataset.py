@@ -16,6 +16,7 @@ by least squares of (E_QE - E_MACE0) against those four composition coordinates,
 to I, N, Sr and Pb (C, H, Cs offsets fixed to 0). Within this compositional family the
 assignment is exact; outside it the offsets are meaningless and the model must not be used.
 E0_new = E0_foundation + offset; the network then only learns interaction-energy residuals.
+These are the WP3 E0s (PLAN amendment g item 6); the isolated-atom E0s of scripts/31 are diagnostic.
 
     python scripts/33_finetune_dataset.py --dft <dir> --frames <bands> <v2 dir> <wp3 frames> \
         --out <dir> --test-hosts m30 m32 --valid-hosts m21
@@ -38,8 +39,9 @@ def find(frames_dirs, name):
 
 
 def collect(dft_dir, frames_dirs):
-    """Atoms with REF data for band frames, WP2c binding frames and WP3 off-equilibrium frames."""
-    out = []
+    """Atoms with REF data for band frames, WP2c binding frames and WP3 off-equilibrium frames.
+    Returns (frames, unmatched): unmatched = converged outputs whose frame file was not found."""
+    out, unmatched = [], []
     for f in sorted(glob.glob(os.path.join(dft_dir, "**", "*.out"), recursive=True)):
         lab = os.path.basename(f)[:-4]
         m = re.match(r"(m\d\d)_(undoped|GA|Sr)_img(\d)$", lab)
@@ -67,7 +69,7 @@ def collect(dft_dir, frames_dirs):
             continue
         fx = find(frames_dirs, f"{m.group(1)}_{m.group(2)}_relaxed.extxyz")
         if fx is None:
-            continue
+            unmatched.append(lab); continue
         at = read(fx); at = at.copy(); at.calc = None; at.set_tags([0] * len(at))
         assert len(at) == len(q["forces"]), lab
         at.info.update({"REF_energy": q["F_eV"], "host": m.group(1), "system": m.group(2), "image": -1,
@@ -82,8 +84,10 @@ def collect(dft_dir, frames_dirs):
             continue
         q = a32.parse_qe(f)
         fx = find(frames_dirs, f"{lab}.extxyz")
-        if q is None or not q["converged"] or q["forces"] is None or fx is None:
+        if q is None or not q["converged"] or q["forces"] is None:
             continue
+        if fx is None:
+            unmatched.append(lab); continue
         at = read(fx); at = at.copy(); at.calc = None; at.set_tags([0] * len(at))
         assert len(at) == len(q["forces"]), lab
         ctype = at.info.get("config_type", "md" if m.group(3).startswith("md") else "rattle")
@@ -91,7 +95,7 @@ def collect(dft_dir, frames_dirs):
                    "label": lab, "config_type": ctype, "mTS_eV": q["mTS_eV"]}
         at.arrays["REF_forces"] = q["forces"]
         out.append(at)
-    return out
+    return out, unmatched
 
 
 def comp_coords(at):
@@ -108,10 +112,21 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--test-hosts", nargs="+", required=True)
     ap.add_argument("--valid-hosts", nargs="+", required=True)
+    ap.add_argument("--allow-missing", action="store_true",
+                    help="continue when converged outputs have no frame file (listed in dataset_meta.json)")
     a = ap.parse_args()
-    frames = collect(a.dft, a.frames)
-    split = lambda at: "test" if at.info["host"] in a.test_hosts else ("valid" if at.info["host"] in a.valid_hosts else "train")
+    norm = lambda x: f"m{int(str(x).lstrip('m')):02d}"          # '30' and 'm30' both -> 'm30'
+    test, valid = {norm(x) for x in a.test_hosts}, {norm(x) for x in a.valid_hosts}
+    assert not test & valid, f"hosts in both test and valid: {sorted(test & valid)}"
+    frames, unmatched = collect(a.dft, a.frames)
+    if unmatched and not a.allow_missing:
+        raise SystemExit(f"{len(unmatched)} converged outputs have no frame file in --frames "
+                         f"(e.g. {unmatched[:5]}); add the directory or pass --allow-missing")
+    found = {f.info["host"] for f in frames}
+    assert (test | valid) <= found, f"held-out hosts with no frames: {sorted((test | valid) - found)}"
+    split = lambda at: "test" if at.info["host"] in test else ("valid" if at.info["host"] in valid else "train")
     sets = {k: [f for f in frames if split(f) == k] for k in ("train", "valid", "test")}
+    assert not ({f.info["host"] for f in sets["train"]} & (test | valid))
 
     import torch, warnings; warnings.filterwarnings("ignore"); torch.set_num_threads(6)
     from mace.calculators import mace_mp
@@ -144,8 +159,12 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     for k, v in sets.items():
         write(os.path.join(a.out, f"{k}.xyz"), v, format="extxyz")
+    from collections import Counter
     meta = {"n": {k: len(v) for k, v in sets.items()},
             "hosts": {k: sorted({f.info['host'] for f in v}) for k, v in sets.items()},
+            "n_by_config_type": {k: dict(Counter(f.info["config_type"] for f in v)) for k, v in sets.items()},
+            "n_by_host": {k: dict(Counter(f.info["host"] for f in v)) for k, v in sets.items()},
+            "unmatched_outputs": unmatched,
             "E0s": {str(k): v for k, v in e0.items()},
             "offset_fit": {"coords": ["const(FA19Cs1Pb20I60)", "dI", "dN(GA)", "nSr"],
                            "coef_eV": coef.tolist(), "rank": int(rank),

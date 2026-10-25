@@ -171,3 +171,60 @@ Pb–I(mig) distances within 0.5 Å is flagged as ambiguous (m30, unrelaxed: 3.2
 WP2d additionally includes band images 0 and 3 of **undoped** m30 at q = +1 (ΔE_a needs both
 members of the pair; amendment c item 4 named only the Sr band). Charged (_q1) and relaxed
 (_relax) frames are excluded from fine-tuning by label.
+
+## Amendment 2026-10-25g — after the code review; written before any WP2c/2d frame existed and before the WP1 pilot produced an E_b
+
+A second adversarial review (84 agents: 39 candidate defects, each reproduced or refuted by two
+skeptics with different lenses, plus a completeness critic) examined scripts 29–36 and
+amendments a–f. No WP2c or WP2d input had been generated and no v2 E_b existed when this was
+written. WP2b was 30/138 complete; its interim numbers motivate nothing below except item 2,
+which is a completeness rule, not a change of threshold.
+
+1. **Finite-cell band term in DFT E_b(q = 0) (critic, confirmed).** The extra electron of the
+   neutral V_I sits in a delocalised CBM-like state (RESULTS_INDEX Q3). A substituent shifts
+   that band in the whole 20-f.u. cell: at m05 image 0 the Fermi level moves by +57.8 meV with
+   Sr on the near Pb and +16.5 meV with GA (image 3: +50.5 / +13.9 meV; semicore-aligned values
+   agree within ~10 meV). To first order this term does not depend on the dopant–vacancy
+   distance, vanishes in the dilute limit, is absent at q = +1, and cannot be represented by
+   MACE. A site-independent offset of the same order also arises between the charged V⁺ and
+   D+V⁺ cells (average-potential/background term; the sentence in amendment c item 4 that it
+   "cancels within each E_b" holds only for ΔE_a, where composition is fixed). Therefore:
+   - **Criterion 4 is evaluated on far-referenced values**, E_b(site) − E_b(far site of the same
+     dopant, host, level and charge), for every WP2c site; the raw-E_b comparison is reported
+     beside it, together with the far-site DFT E_b(q = 0) and E_b(q = +1) as the measured
+     finite-cell term.
+   - **The WP2d 25 meV rule** (amendment c item 4) is likewise applied to far-referenced
+     E_b(q = +1) − E_b(q = 0); the near-minus-far sign test is unchanged.
+   - For WP2b, the paired DFT ΔE_a of a neutral cell contains the change of this level between
+     images 0 and 3 (m05 Sr: −7.3 meV relative to undoped); this is reported as a known
+     neutral-cell contribution, and the q = +1 m30 bands of WP2d measure ΔE_a without it.
+2. **WP2b completeness (criterion 3).** A band is used only if all five pre-registered images
+   {0, 2, 3, 4, 6} converged; a pair only if both bands are complete. Criterion 3 is reported as
+   "incomplete" unless all 18 pairs exist; a "flip" is any change of class among
+   {< −59.5, inside, > +59.5 meV} between DFT and MACE (sign reversals across the band included).
+   Criterion 5 is reported for every minimum frame (images 0 and 6) of every band, with the
+   saddle frames (image 3) reported separately.
+3. **WP1 analysis (script 34).** Only files named exactly `shell_mNN.json` are read; all hosts must
+   share one protocol and their references must reach fmax ≤ 0.005; (host, dopant, site) must be
+   unique. Map mode takes E_b at an explicit `--fmax` (the depth adopted by the gate), with
+   validity judged at that stage. The depth gate is reported only when the pre-registered pilot
+   set (m30, m21, m05 × Sr, GA × 2 nearest + 3 farthest) is complete. Far medians are computed for
+   every host with ≥ 1 valid far row; criterion 2 pools near and far values only over hosts with
+   valid rows in both shells (excluded hosts are listed). Criterion 1 reports the mean and SD
+   parts separately; if it fails, the criterion-2 output carries "inconclusive below the noise
+   floor" as PLAN criterion 1 requires.
+4. **Production references.** Script 29 gains `--ref-fmax-stages` (references, default 0.02 0.01
+   0.005) separate from `--fmax-stages` (doped cells) and `--ref-from` (reuse the pilot's relaxed
+   references for the same host). This is how amendment d item 4 ("references always at fmax
+   0.005") is executed if the gate adopts a looser depth.
+5. **WP2c/2d selection (script 36).** "Closest to the median" is evaluated on distances rounded
+   to 10⁻⁶ Å so that exact ties (every shell has an even number of sites) fall through to the
+   lower index as amendment f states; floating-point noise had decided 2 of 12 selections.
+6. **WP3 E0s.** The fine-tuning E0s are the foundation E0s plus the per-element offsets fitted by
+   `scripts/33` (`dataset_meta.json`), so that the fine-tune starts from the zero-shot model that
+   criterion 6 compares against. The isolated-atom E0s of `e0_atoms/` (and the WP3 row of the work
+   package table) are diagnostic only; the note in `E0_isolated_atoms.json` is superseded.
+7. **Corrections to earlier text.** Amendment d: the Cs is one of the four A-sites of the vacancy
+   cage (nearest in m21 and m05, second nearest in m30), not "the fourth nearest". WP2A_KPOINTS:
+   −TS does not cancel exactly in F(img3) − F(img0) (Δ(−TS) = −10.0 / −6.2 / −3.5 meV for
+   Γ / R / 2×2×2); the R-point force deviation is 3.3 / 3.4 meV/Å for images 0 / 3.

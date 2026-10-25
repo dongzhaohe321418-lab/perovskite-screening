@@ -32,11 +32,13 @@ PROTOCOL v2 (2026-10-25, after the design review; v1 = commit 5d9a3ca, explorato
 
 The 'far' reference set and the near-minus-far analysis are defined in the analysis step, not
 here (PLAN amendment: Pb d > 8.5 A, C d > 9.0 A, from the geometric shell gaps).
+References may use their own stage list (--ref-fmax-stages) or be reused from the pilot
+(--ref-from); E_b(stage) always uses the fully relaxed references (PLAN amendment g item 4).
 
     python scripts/29_dopant_shell_scan.py --member 30 --dopants Sr GA --near 2 --far 3 \
         --out results/objective2/dopant_shell/v2
 """
-import argparse, hashlib, json, os, sys, time, importlib.util
+import argparse, hashlib, json, os, shutil, sys, time, importlib.util
 import numpy as np
 from ase.io import read, write
 from ase.optimize import FIRE
@@ -48,6 +50,14 @@ _spec = importlib.util.spec_from_file_location("pp", os.path.join(HERE, "22_pair
 pp = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(pp)
 
 PROTOCOL_VERSION = "v2-warmstart-staged"
+
+
+def dump_atomic(obj, path):
+    """Write JSON via a temp file + rename, so a kill (spot node) never truncates the record."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, indent=1); fh.flush(); os.fsync(fh.fileno())
+    os.replace(tmp, path)
 
 
 def ref_vacancy_position(pool_dir, vac_ref_path):
@@ -147,7 +157,13 @@ def main():
     ap.add_argument("--near", type=int, default=0, help="only the N nearest sites (with --far)")
     ap.add_argument("--far", type=int, default=0, help="only the M farthest sites (with --near)")
     ap.add_argument("--site-list", type=int, nargs="+", default=None, help="only these host site indices")
-    ap.add_argument("--fmax-stages", type=float, nargs="+", default=[0.02, 0.01, 0.005])
+    ap.add_argument("--fmax-stages", type=float, nargs="+", default=[0.02, 0.01, 0.005],
+                    help="stages for the doped cells D_j and D_j+V")
+    ap.add_argument("--ref-fmax-stages", type=float, nargs="+", default=None,
+                    help="stages for the host and V references (default: same as --fmax-stages); "
+                         "PLAN amendment g item 4: references always reach 0.005")
+    ap.add_argument("--ref-from", default=None,
+                    help="reuse relaxed references (shell_mNN.json + *_relaxed.extxyz) from this output dir")
     ap.add_argument("--steps", type=int, default=3000, help="max FIRE steps per stage")
     ap.add_argument("--basin-rcut", type=float, default=6.0)
     ap.add_argument("--save-structures", action=argparse.BooleanOptionalAction, default=True)
@@ -176,11 +192,15 @@ def main():
     D = lambda p: float(find_mic(np.atleast_2d(p - vpos), cell, pbc=True)[1][0])
 
     stages = sorted(args.fmax_stages, reverse=True)
+    ref_stages = sorted(args.ref_fmax_stages or args.fmax_stages, reverse=True)
+    protocol = {"version": PROTOCOL_VERSION, "model": "MACE-MP-0 medium", "dtype": "float64",
+                "optimizer": "FIRE (restarted per stage)", "fmax_stages": stages,
+                "steps_per_stage": args.steps, "cell": "fixed", "basin_rcut_A": args.basin_rcut,
+                "warm_start": "D_j from relaxed host, D_j+V from relaxed V"}
+    if ref_stages != stages:                    # key only when different: older outputs stay resumable
+        protocol["ref_fmax_stages"] = ref_stages
     res = {"member": args.member,
-           "protocol": {"version": PROTOCOL_VERSION, "model": "MACE-MP-0 medium", "dtype": "float64",
-                        "optimizer": "FIRE (restarted per stage)", "fmax_stages": stages,
-                        "steps_per_stage": args.steps, "cell": "fixed", "basin_rcut_A": args.basin_rcut,
-                        "warm_start": "D_j from relaxed host, D_j+V from relaxed V"},
+           "protocol": protocol,
            "inputs": {"pool": os.path.abspath(args.pool), "vac_ref": os.path.abspath(args.vac_ref),
                       "host_sha256": hashlib.sha256(host.positions.tobytes() + host.numbers.tobytes()).hexdigest(),
                       "vpos": np.round(vpos, 4).tolist()},
@@ -195,10 +215,25 @@ def main():
     hpath, vpath = (os.path.join(args.out, f"{tag}_host_relaxed.extxyz"),
                     os.path.join(args.out, f"{tag}_vac_relaxed.extxyz"))
 
+    if "E_host" not in res and args.ref_from:
+        src = json.load(open(os.path.join(args.ref_from, f"shell_{tag}.json")))
+        for k in ("inputs", "member", "vacancy_host_index"):
+            if src.get(k) != res[k]:
+                raise SystemExit(f"--ref-from: '{k}' differs from this run")
+        for k in ("E_host", "E_vac"):
+            got = [st["fmax_target"] for st in src[k]["stages"]]
+            if got != ref_stages or not src[k]["converged"]:
+                raise SystemExit(f"--ref-from: {k} stages {got} (converged {src[k]['converged']}) != {ref_stages}")
+        for fn in (f"{tag}_host_relaxed.extxyz", f"{tag}_vac_relaxed.extxyz"):
+            shutil.copy2(os.path.join(args.ref_from, fn), os.path.join(args.out, fn))
+        res["E_host"], res["E_vac"] = src["E_host"], src["E_vac"]
+        res["references_from"] = os.path.abspath(args.ref_from)
+        log(f"{tag}: references reused from {args.ref_from} (stages {ref_stages})")
+        dump_atomic(res, outp)
     if "E_host" not in res:
-        log(f"{tag}: references ({PROTOCOL_VERSION}, stages {stages})")
-        ah, rh = relax_staged(host, calc, "host", log, stages, args.steps)
-        av, rv = relax_staged(vac_struct, calc, "vacancy", log, stages, args.steps)
+        log(f"{tag}: references ({PROTOCOL_VERSION}, stages {ref_stages})")
+        ah, rh = relax_staged(host, calc, "host", log, ref_stages, args.steps)
+        av, rv = relax_staged(vac_struct, calc, "vacancy", log, ref_stages, args.steps)
         if not (rh["converged"] and rv["converged"]):
             raise SystemExit(f"reference relaxation not converged: host {rh['fmax']:.4f}, vac {rv['fmax']:.4f}")
         gap0 = float(find_mic(av.positions[np.array(av.get_chemical_symbols()) == "I"] - vpos, cell, pbc=True)[1].min())
@@ -207,7 +242,7 @@ def main():
         rv["nearest_I_to_vacancy_site_A"] = round(gap0, 3)
         write(hpath, ah); write(vpath, av)
         res["E_host"], res["E_vac"] = rh, rv
-        json.dump(res, open(outp, "w"), indent=1)
+        dump_atomic(res, outp)
     host_r, vac_r = read(hpath), read(vpath)          # warm-start partners (also on resume)
 
     def gap_of(at):
@@ -262,7 +297,7 @@ def main():
                                 "no_vac": r0, "with_vac": rv})
             log(f"    -> E_b by stage {Eb_st} meV  basin dr={b0['max_dr_A']:.2f}/{bv['max_dr_A']:.2f} A "
                 f"rot={b0['max_fa_rot_deg']:.0f}/{bv['max_fa_rot_deg']:.0f} deg  {'ok' if ok else 'INVALID'}")
-            json.dump(res, open(outp, "w"), indent=1)
+            dump_atomic(res, outp)
     log(f"{tag}: done, {len(res['rows'])} rows -> {outp}")
 
 

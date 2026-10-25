@@ -54,7 +54,8 @@ def build():
                      "force_rms_dev_vs_mp222_img3_meV_per_A": round(frms[1], 2),
                      "wall_min_img0": round(R[(0, k)][3], 2), "wall_min_img3": round(R[(3, k)][3], 2),
                      "mTS_img0_meV": round(R[(0, k)][1] * 1000, 1), "mTS_img3_meV": round(R[(3, k)][1] * 1000, 1)})
-    # panel c: per-atom |F_MACE - F_DFT| at the MACE-relaxed endpoint (img0), R-point DFT
+    # panel c: per-atom |F_DFT| (R point) at the MACE-relaxed endpoint (img0); |F_MACE| and
+    # |F_MACE - F_DFT| are kept in the source data (MACE forces there are <= 0.017 eV/A)
     tf = tarfile.open(os.path.join(REPO, "results/objective2/paired_pilot/corpus108/corpus108_new_bands.tar.gz"))
     name = [m for m in tf.getnames() if m.endswith("band_undoped_m30.extxyz")][0]
     at = read(io.StringIO(tf.extractfile(name).read().decode()), index=0, format="extxyz")
@@ -78,7 +79,11 @@ def plot():
     import matplotlib as mpl
     import matplotlib.pyplot as plt
     sys.path.insert(0, os.path.expanduser("~/.claude/skills/nature-figure/scripts"))
-    from audit_panel_alignment import require_matplotlib_panel_alignment
+    try:      # layout QA from the nature-figure toolkit; optional, it does not touch the data
+        from audit_panel_alignment import require_matplotlib_panel_alignment
+    except ImportError:
+        require_matplotlib_panel_alignment = None
+        print("note: panel-alignment audit unavailable; figure rendered without it")
     mpl.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
                          "svg.fonttype": "none", "pdf.fonttype": 42, "font.size": 7,
                          "axes.spines.right": False, "axes.spines.top": False, "axes.linewidth": 0.8,
@@ -102,7 +107,7 @@ def plot():
     a.axhline(0, color="#4d4d4d", lw=0.6)
     a.set_xlim(-0.6, 2.6); a.set_ylim(-4, 2)
     a.set_xticks(range(len(K)), ["Γ", "R", "2×2×2"])
-    a.set_ylabel("Δ[E(img 3) − E(img 0)] vs 2×2×2 (meV)")
+    a.set_ylabel("Δ[F(img 3) − F(img 0)] vs 2×2×2 (meV)")
     a.set_title("Path energy difference", fontsize=7, pad=4)
 
     # (b) force deviation from 2x2x2 versus wall time
@@ -159,8 +164,9 @@ def plot():
         axx.text(-0.30, 1.13, lab, transform=axx.transAxes, fontsize=8, fontweight="bold", va="top")
     out = os.path.join(HERE, "fig_wp2a_kpoints")
     fig.canvas.draw()
-    require_matplotlib_panel_alignment(fig, json_out=out + ".alignment.json", overlay_svg=out + ".alignment.svg",
-                                       tolerance_pt=1.5, gutter_tolerance_pt=1.5, strict=True)
+    if require_matplotlib_panel_alignment is not None:
+        require_matplotlib_panel_alignment(fig, json_out=out + ".alignment.json", overlay_svg=out + ".alignment.svg",
+                                           tolerance_pt=1.5, gutter_tolerance_pt=1.5, strict=True)
     fig.savefig(out + ".pdf"); fig.savefig(out + ".svg"); fig.savefig(out + ".png", dpi=600)
     fig.savefig(out + ".tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
     print("written", out + ".{pdf,svg,png,tiff}")

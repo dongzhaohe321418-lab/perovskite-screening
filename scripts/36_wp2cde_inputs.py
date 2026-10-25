@@ -48,8 +48,11 @@ def emit(atoms, label, jobs, campaign, source, calc="scf", charge=0):
 
 
 def closest_to_median(cands, all_d):
+    # distances are stored to 1e-3 A and every shell has an even number of sites, so the two
+    # central sites tie exactly; rounding lets the tie fall through to the lower index
+    # (amendment f) instead of floating-point noise (amendment g item 5)
     med = float(np.median(all_d))
-    return min(cands, key=lambda r: (abs(r["d_dopant_vacancy_A"] - med), r["site_host_index"]))
+    return min(cands, key=lambda r: (round(abs(r["d_dopant_vacancy_A"] - med), 6), r["site_host_index"]))
 
 
 def select(res, host, vpos, cell):
@@ -80,9 +83,16 @@ def select(res, host, vpos, cell):
                 else:
                     notes.append(f"{name} site {r['site_host_index']} invalid: not computed")
         else:
-            nv = sorted([r for r in V if sh[r["site_host_index"]] == "near"], key=lambda r: r["d_dopant_vacancy_A"])
+            nv = sorted([r for r in V if sh[r["site_host_index"]] == "near"],
+                        key=lambda r: (r["d_dopant_vacancy_A"], r["site_host_index"]))
+            nall = sorted([r for r in R if sh[r["site_host_index"]] == "near"],
+                          key=lambda r: (r["d_dopant_vacancy_A"], r["site_host_index"]))
             if nv:
                 sel["GA_near"] = nv[0]
+                if nall and nall[0]["site_host_index"] != nv[0]["site_host_index"]:
+                    notes.append(f"GA_near: nearest FA {nall[0]['site_host_index']} invalid, using {nv[0]['site_host_index']}")
+            else:
+                notes.append("GA_near: no valid near-shell FA site")
         for s in ("mid", "far"):
             alld = [r["d_dopant_vacancy_A"] for r in R if sh[r["site_host_index"]] == s]
             cands = [r for r in V if sh[r["site_host_index"]] == s]
