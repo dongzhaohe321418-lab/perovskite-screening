@@ -237,21 +237,35 @@ def main():
             shutil.copy2(os.path.join(args.ref_from, fn), os.path.join(args.out, fn))
         res["E_host"], res["E_vac"] = src["E_host"], src["E_vac"]
         res["references_from"] = os.path.abspath(args.ref_from)
+        res["references_protocol"] = src["protocol"]          # e.g. the FIRE cap the references ran with
         log(f"{tag}: references reused from {args.ref_from} (stages {ref_stages})")
         dump_atomic(res, outp)
+
+    def ref_relax(start, key, label, path):
+        """Relax one reference and checkpoint it on its own (a spot kill or a later failure no
+        longer discards a finished reference); an unconverged result is kept for diagnosis."""
+        log(f"{tag}: {label} reference ({PROTOCOL_VERSION}, stages {ref_stages})")
+        at, rec, snaps = relax_staged(start, calc, label, log, ref_stages, args.steps)
+        if not rec["converged"]:
+            write(path.replace("_relaxed.extxyz", "_unconverged.extxyz"), at)
+            res[f"{key}_failed"] = rec; dump_atomic(res, outp)
+            raise SystemExit(f"{label} reference not converged: fmax {rec['fmax']:.4f} after {args.steps} steps/stage")
+        write(path, at)
+        for fm, x in list(zip(ref_stages, snaps))[:-1]:
+            write(path.replace("_relaxed.extxyz", f"_fmax{fm}.extxyz"), x)
+        return at, rec
+
     if "E_host" not in res:
-        log(f"{tag}: references ({PROTOCOL_VERSION}, stages {ref_stages})")
-        ah, rh, _ = relax_staged(host, calc, "host", log, ref_stages, args.steps)
-        av, rv, _ = relax_staged(vac_struct, calc, "vacancy", log, ref_stages, args.steps)
-        if not (rh["converged"] and rv["converged"]):
-            raise SystemExit(f"reference relaxation not converged: host {rh['fmax']:.4f}, vac {rv['fmax']:.4f}")
+        ah, rh = ref_relax(host, "E_host", "host", hpath)
+        res["E_host"] = rh; dump_atomic(res, outp)
+    if "E_vac" not in res:
+        av, rv = ref_relax(vac_struct, "E_vac", "vacancy", vpath)
         gap0 = float(find_mic(av.positions[np.array(av.get_chemical_symbols()) == "I"] - vpos, cell, pbc=True)[1].min())
-        if gap0 <= 1.2:
-            raise SystemExit(f"vacancy reference relaxed shut (nearest I {gap0:.2f} A from the site)")
         rv["nearest_I_to_vacancy_site_A"] = round(gap0, 3)
-        write(hpath, ah); write(vpath, av)
-        res["E_host"], res["E_vac"] = rh, rv
-        dump_atomic(res, outp)
+        if gap0 <= 1.2:
+            res["E_vac_failed"] = rv; dump_atomic(res, outp)
+            raise SystemExit(f"vacancy reference relaxed shut (nearest I {gap0:.2f} A from the site)")
+        res["E_vac"] = rv; dump_atomic(res, outp)
     host_r, vac_r = read(hpath), read(vpath)          # warm-start partners (also on resume)
 
     def gap_of(at):

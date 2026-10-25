@@ -18,7 +18,8 @@ Modes
                  only if |difference| > 2 x pooled far SD AND the per-host (near - far) sign
                  agrees in >= 2 of 3 hosts. Thermal relevance flagged at |difference| > 25.7 meV.
           Also reported (amendment c, item 3): E_b - median(far) per host, with the far SD.
-Invalid rows are never used and are listed with their reasons. Amendment g item 3: only files
+Invalid rows are never used and are listed with their reasons (v2.1: per stage; the depth gate
+uses each row at the stages where it is valid, PLAN amendment j). Amendment g item 3: only files
 named shell_mNN.json are read; hosts must share one protocol, references must reach fmax <= 0.005,
 (host, dopant, site) must be unique; map mode takes E_b and validity at an explicit --fmax; the
 depth gate is reported only for the complete pre-registered pilot set.
@@ -77,7 +78,7 @@ def load(inp, fm=None):
     """Rows of every shell_mNN.json under inp. fm: evaluate E_b and convergence at that stage
     (None = the last stage, as 29 reports it). Geometric validity checks (basin, vacancy, dopant)
     are those 29 recorded on the final structures."""
-    rows, meta, protos = [], {}, {}
+    rows, meta, protos, refproto = [], {}, {}, {}
     files = sorted(f for f in glob.glob(os.path.join(inp, "shell_m*.json"))
                    if re.fullmatch(r"shell_m\d\d\.json", os.path.basename(f)))
     for f in files:
@@ -85,18 +86,28 @@ def load(inp, fm=None):
         h = f"m{res['member']:02d}"
         assert os.path.basename(f) == f"shell_{h}.json", f"{f}: member {h} does not match the file name"
         protos[h] = res["protocol"]
+        refproto[h] = res.get("references_protocol", res["protocol"])     # --ref-from provenance
         meta[h] = {"protocol": res["protocol"], "E_host_fmax": res.get("E_host", {}).get("fmax"),
                    "E_vac_fmax": res.get("E_vac", {}).get("fmax")}
         for k in ("E_host_fmax", "E_vac_fmax"):
             assert meta[h][k] is not None and meta[h][k] <= REF_FMAX + 1e-9, \
                 f"{h}: reference {k} = {meta[h][k]} > {REF_FMAX} (amendment d item 4)"
         for r in res["rows"]:
-            why = reasons(r, fm)
+            if fm is not None and str(fm) not in r["Eb_by_stage_meV"]:
+                raise SystemExit(f"{h}: --fmax {fm} is not a stage of this run {sorted(r['Eb_by_stage_meV'])}")
+            if "by_stage" in r:   # v2.1: 29's own flag decides (unrounded values); reasons only label it
+                x = r["by_stage"][str(fm)] if fm is not None else r
+                why = [] if x["valid"] else (reasons(r, fm) or ["invalid (29 flag)"])
+            else:
+                why = reasons(r, fm)
             Eb = r["Eb_by_stage_meV"][str(fm)] if fm is not None else r["Eb_meV"]
-            vstage = {k: not reasons(r, float(k)) for k in r["Eb_by_stage_meV"]} if "by_stage" in r else None
+            vstage = {k: bool(r["by_stage"][k]["valid"]) for k in r["Eb_by_stage_meV"]} if "by_stage" in r else None
+            rstage = {k: ([] if r["by_stage"][k]["valid"] else (reasons(r, float(k)) or ["invalid (29 flag)"]))
+                      for k in r["Eb_by_stage_meV"]} if "by_stage" in r else None
             rows.append({"host": h, "dopant": r["dopant"], "site": r["site_host_index"],
                          "d_A": r["d_dopant_vacancy_A"], "shell": shell(r["dopant"], r["d_dopant_vacancy_A"]),
                          "Eb_meV": Eb, "Eb_by_stage_meV": r["Eb_by_stage_meV"], "valid_by_stage": vstage,
+                         "reasons_by_stage": rstage,
                          "valid": not why, "invalid_reasons": why})
     # the FIRE step cap does not change a converged relaxation and every used row must be converged,
     # so hosts may differ in steps_per_stage only (PLAN amendment i); it is reported per host
@@ -105,6 +116,7 @@ def load(inp, fm=None):
     for h, p in protos.items():
         assert strip(p) == strip(p0), f"protocol of {h} differs from the other hosts: {p} vs {p0}"
         meta[h]["steps_per_stage"] = p.get("steps_per_stage")
+        meta[h]["references_steps_per_stage"] = refproto[h].get("steps_per_stage")
     if fm is not None:   # amendment h item 3: map at the run's own last stage, so structures (36) match
         last = min(p0["fmax_stages"])
         assert abs(fm - last) < 1e-12, f"--fmax {fm} is not the last doped stage {last} of this run; " \
@@ -151,8 +163,17 @@ def depth(rows):
     stages = sorted({float(s) for r in rows for s in r["Eb_by_stage_meV"]}, reverse=True)
     assert stages and abs(min(stages) - REF_FMAX) < 1e-12, f"depth gate needs the {REF_FMAX} stage"
     n_valid = {str(s): sum(1 for r in rows if r["valid_by_stage"][str(s)]) for s in stages}
-    half = (len(PILOT["hosts"]) * len(PILOT["dopants"]) * (PILOT["near"] + PILOT["far"])) / 2
-    ref = REF_FMAX if n_valid[str(REF_FMAX)] >= half else 0.01
+    n_total = len(PILOT["hosts"]) * len(PILOT["dopants"]) * (PILOT["near"] + PILOT["far"])
+    # complete pilot: 0.005 is the reference if >= 15 of 30 rows are valid there; while incomplete the
+    # same rule is applied to the fraction of the rows present, and the result is provisional
+    frac = n_valid[str(REF_FMAX)] / (n_total if not missing else max(len(rows), 1))
+    ref = REF_FMAX if frac >= 0.5 else 0.01
+    invalid_by_stage = {str(s): {"n_invalid": sum(1 for r in rows if not r["valid_by_stage"][str(s)]),
+                                 "n_basin_hop": sum(1 for r in rows if any(x.startswith("basin") for x in r["reasons_by_stage"][str(s)])),
+                                 "n_not_converged": sum(1 for r in rows if "not converged" in r["reasons_by_stage"][str(s)]),
+                                 "n_vacancy_refilled": sum(1 for r in rows if "vacancy refilled" in r["reasons_by_stage"][str(s)]),
+                                 "n_dopant_left": sum(1 for r in rows if "dopant left site" in r["reasons_by_stage"][str(s)])}
+                        for s in stages}
     per = {}
     for s in [x for x in stages if x > ref]:
         both = [r for r in rows if r["valid_by_stage"][str(s)] and r["valid_by_stage"][str(ref)]]
@@ -161,8 +182,10 @@ def depth(rows):
                        "pass": bool(dev) and max(dev) <= DEPTH_TOL}
     adopted = max([float(s) for s, v in per.items() if v["pass"]], default=ref)
     return {"tolerance_meV": DEPTH_TOL, "reference_stage": ref, "n_valid_by_stage": n_valid,
-            "n_pilot_rows": len(rows), "stages": per, "complete": not missing, "missing": missing,
-            "adopted_fmax": adopted if not missing else None, "adopted_fmax_if_complete": adopted}
+            "invalid_by_stage": invalid_by_stage, "n_pilot_rows": len(rows), "n_pilot_rows_expected": n_total,
+            "stages": per, "complete": not missing, "missing": missing,
+            "adopted_fmax": adopted if not missing else None,
+            "provisional_adopted_fmax": adopted if missing else None}
 
 
 def map_(rows):
@@ -228,21 +251,25 @@ def main():
     rows, meta = load(a.inp, a.fmax if a.mode == "map" else None)
     assert rows, f"no rows under {a.inp}"
     res = {"mode": a.mode, "fmax": a.fmax, "definitions": {"near_lt_A": NEAR, "far_gt_A": FAR, "crit1_d_gt_A": CRIT1_D},
-           "hosts": meta, "invalid": [{k: r[k] for k in ("host", "dopant", "site", "d_A", "invalid_reasons")}
-                                      for r in rows if not r["valid"]]}
+           "hosts": meta, "invalid_at_evaluated_stage": [{k: r[k] for k in ("host", "dopant", "site", "d_A", "invalid_reasons")}
+                                                         for r in rows if not r["valid"]]}
     res["result"] = depth(rows) if a.mode == "depth" else map_(rows)
     os.makedirs(a.out, exist_ok=True)
     json.dump(res, open(os.path.join(a.out, f"wp1_{a.mode}.json"), "w"), indent=1)
     keys = ["host", "dopant", "site", "d_A", "shell", "Eb_meV", "Eb_rel_far_median_meV", "valid", "invalid_reasons"]
     stages = sorted({s for r in rows for s in r["Eb_by_stage_meV"]}, key=float, reverse=True)
     with open(os.path.join(a.out, f"wp1_{a.mode}_rows.csv"), "w", newline="") as fh:
-        w = csv.writer(fh); w.writerow(keys + [f"Eb_fmax{s}" for s in stages])
+        w = csv.writer(fh)
+        w.writerow(keys + [f"Eb_fmax{s}" for s in stages] + [f"valid_fmax{s}" for s in stages] + [f"reasons_fmax{s}" for s in stages])
         for r in sorted(rows, key=lambda r: (r["dopant"], r["host"], r["d_A"])):
+            vs, rs = r.get("valid_by_stage") or {}, r.get("reasons_by_stage") or {}
             w.writerow([r.get(k) if k != "invalid_reasons" else "; ".join(r[k]) for k in keys]
-                       + [r["Eb_by_stage_meV"].get(s) for s in stages])
+                       + [r["Eb_by_stage_meV"].get(s) for s in stages] + [vs.get(s) for s in stages]
+                       + ["; ".join(rs.get(s, [])) for s in stages])
     print(json.dumps(res["result"], indent=1))
-    if res["invalid"]:
-        print(f"{len(res['invalid'])} invalid rows:", *[f"  {i}" for i in res["invalid"]], sep="\n")
+    if res["invalid_at_evaluated_stage"]:
+        print(f"{len(res['invalid_at_evaluated_stage'])} rows invalid at the evaluated stage:",
+              *[f"  {i}" for i in res["invalid_at_evaluated_stage"]], sep="\n")
 
 
 if __name__ == "__main__":
