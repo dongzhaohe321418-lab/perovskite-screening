@@ -61,3 +61,8 @@ electron in a folded conduction state. WP2a decides between the single R-point a
 No absolute MACE-vs-QE energies (different pseudopotential references). No DFT barrier from the
 fixed-path single points is a relaxed DFT barrier: the DFT maximum along a MACE path is an
 upper-bound-type diagnostic, not the DFT saddle. No transfer to experiment.
+
+## Long-term goal
+
+This study is stage S1 of `../SCREENING_ROADMAP.md` (adopted 2026-10-25): a validated multi-dopant
+screen. Its verdict decides whether later stages use zero-shot or fine-tuned MACE.
