@@ -81,18 +81,18 @@ def select(res, host, vpos, cell):
                 if r["valid"]:
                     sel[name] = r
                 else:
-                    notes.append(f"{name} site {r['site_host_index']} invalid: not computed")
+                    notes.append(f"{name} site {r['site_host_index']} invalid in WP1 ({'; '.join(a34.reasons(r)) or 'flag'}): no WP2c frame")
         else:
-            nv = sorted([r for r in V if sh[r["site_host_index"]] == "near"],
-                        key=lambda r: (r["d_dopant_vacancy_A"], r["site_host_index"]))
-            nall = sorted([r for r in R if sh[r["site_host_index"]] == "near"],
-                          key=lambda r: (r["d_dopant_vacancy_A"], r["site_host_index"]))
+            # amendment f as written: the nearest VALID FA, whatever its shell (amendment h item 5)
+            nv = sorted(V, key=lambda r: (r["d_dopant_vacancy_A"], r["site_host_index"]))
+            nall = sorted(R, key=lambda r: (r["d_dopant_vacancy_A"], r["site_host_index"]))
             if nv:
                 sel["GA_near"] = nv[0]
-                if nall and nall[0]["site_host_index"] != nv[0]["site_host_index"]:
-                    notes.append(f"GA_near: nearest FA {nall[0]['site_host_index']} invalid, using {nv[0]['site_host_index']}")
+                if nall[0]["site_host_index"] != nv[0]["site_host_index"]:
+                    notes.append(f"GA_near: nearest FA {nall[0]['site_host_index']} invalid, using {nv[0]['site_host_index']}"
+                                 + ("" if sh[nv[0]["site_host_index"]] == "near" else " (outside the near shell)"))
             else:
-                notes.append("GA_near: no valid near-shell FA site")
+                notes.append("GA_near: no valid FA site")
         for s in ("mid", "far"):
             alld = [r["d_dopant_vacancy_A"] for r in R if sh[r["site_host_index"]] == s]
             cands = [r for r in V if sh[r["site_host_index"]] == s]
@@ -127,6 +127,7 @@ def main():
         for lab, src in jobs.items():
             emit(read(src), lab, a.jobs, "wp2c", os.path.basename(src))
         rec = {"migrating_iodide_host_index": mig, "notes": notes,
+               "doped_fmax_final": min(res["protocol"]["fmax_stages"]),
                "sites": {k: {"site": r["site_host_index"], "d_A": r["d_dopant_vacancy_A"]} for k, r in sel.items()},
                "wp2c_labels": sorted(jobs)}
         if h == f"m{int(a.charged_host):02d}":

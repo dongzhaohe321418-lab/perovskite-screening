@@ -93,6 +93,10 @@ def load(inp, fm=None):
     p0 = next(iter(protos.values()), None)
     for h, p in protos.items():
         assert p == p0, f"protocol of {h} differs from the other hosts: {p} vs {p0}"
+    if fm is not None:   # amendment h item 3: map at the run's own last stage, so structures (36) match
+        last = min(p0["fmax_stages"])
+        assert abs(fm - last) < 1e-12, f"--fmax {fm} is not the last doped stage {last} of this run; " \
+            "run production at the adopted depth (fresh dir with --ref-from) or continue the pilot dir if 0.005"
     keys = [(r["host"], r["dopant"], r["site"]) for r in rows]
     assert len(keys) == len(set(keys)), "duplicate (host, dopant, site) rows"
     return rows, meta
@@ -113,11 +117,24 @@ def pilot_complete(rows):
     return missing
 
 
+def pilot_rows(rows):
+    """The pre-registered pilot set: per (host, dopant) the 2 nearest and 3 farthest computed sites
+    (= those of all sites once the pilot ran; amendment c item 2)."""
+    out = []
+    for h in PILOT["hosts"]:
+        for dop in PILOT["dopants"]:
+            R = sorted([r for r in rows if r["host"] == h and r["dopant"] == dop], key=lambda r: (r["d_A"], r["site"]))
+            out += R[:PILOT["near"]] + R[len(R) - PILOT["far"]:] if len(R) >= PILOT["near"] + PILOT["far"] else R
+    return out
+
+
 def depth(rows):
     missing = pilot_complete(rows)
+    rows = pilot_rows(rows)
     val = [r for r in rows if r["valid"]]
     stages = sorted({float(s) for r in val for s in r["Eb_by_stage_meV"]}, reverse=True)
     tight = min(stages) if stages else None
+    assert tight is None or abs(tight - REF_FMAX) < 1e-12, f"depth gate needs the {REF_FMAX} stage; tightest is {tight}"
     per = {}
     for s in stages:
         dev = [abs(r["Eb_by_stage_meV"][str(s)] - r["Eb_by_stage_meV"][str(tight)]) for r in val]

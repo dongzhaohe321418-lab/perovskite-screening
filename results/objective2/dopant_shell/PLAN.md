@@ -228,3 +228,45 @@ which is a completeness rule, not a change of threshold.
    cage (nearest in m21 and m05, second nearest in m30), not "the fourth nearest". WP2A_KPOINTS:
    −TS does not cancel exactly in F(img3) − F(img0) (Δ(−TS) = −10.0 / −6.2 / −3.5 meV for
    Γ / R / 2×2×2); the R-point force deviation is 3.3 / 3.4 meV/Å for images 0 / 3.
+
+## Amendment 2026-10-25h — disclosure correction to g, and follow-up of a second review; written before any WP2c/2d frame, any v2 E_b, or any fine-tuning existed
+
+A second adversarial review (26 agents) checked commit 603693e and amendment g.
+
+1. **Correction of amendment g's header (information state).** The header says the interim WP2b
+   numbers "motivate nothing below except item 2". That is wrong for item 1: every band-term value
+   it quotes was computed from the interim WP2b outputs (m05 Fermi levels), and when it was written
+   the interim analysis already listed m05 Sr as a criterion-3 band crossing (DFT ΔE_a −61.02,
+   MACE −30.15 meV; RMS 21.9 meV over 2 pairs), i.e. the quoted −7.3 meV neutral-cell
+   contribution exceeds that pair's 1.5 meV margin. To remove any doubt: **criterion 3 is decided
+   on the raw neutral-cell ΔE_a exactly as pre-registered; the band-term estimate is reported
+   beside it and is never used to reclassify a pair or change the verdict.**
+2. **The band term is not exactly site-independent.** Along the WP2b bands the Sr-induced Fermi
+   shift changes by 7–10 meV as the vacancy moves (m05: +57.8 → +50.7 meV from image 0 to 6;
+   m06: +55.2 → +45.6 meV; GA ≤ 3 meV). Far-referencing (amendment g item 1) removes the
+   site-independent part only; criterion 4 keeps its far-referenced 25 meV rule, and for every
+   WP2c site the residual is reported as [E_F(D+V) − E_F(V)] − [same at the far site] (q = 0
+   outputs), together with the far-referenced q = +1 comparison at m30 (no extra electron). The
+   single far site per dopant and host carries its own MACE-vs-DFT error into every far-referenced
+   value of that host; this is stated with the result, not corrected.
+3. **WP3 targets and criterion 6.** A local potential cannot represent this cell-wide term, so the
+   offset fit of `scripts/33` gains two class coordinates, n_Sr·[vacancy] and n_GA·[vacancy]; their
+   fitted values are subtracted from REF_energy of the frames that carry them (raw value kept as
+   REF_energy_raw). The subtraction is a constant per frame class: forces and every energy
+   difference within one band are unchanged. It requires vacancy-free doped frames of a training
+   host (the m05 WP2c D_j cells) in the training set; otherwise the fit is rank-deficient and the
+   script stops. Criterion 6 compares E_b errors far-referenced (as criterion 4) and ΔE_a errors
+   raw (as criterion 3).
+4. **Production path for WP1.** If the gate adopts 0.005, production continues in the pilot
+   directory (same protocol; all 20 Pb and 19 FA sites). If it adopts a looser depth, production
+   runs in a fresh directory with `--fmax-stages` = the adopted list and `--ref-from` the pilot
+   (references stay at 0.005), so that the structures handed to WP2c (`scripts/36`) and the E_b of
+   the map are from the same stage; `scripts/34` map mode refuses an `--fmax` that is not the run's
+   last doped stage. `scripts/29` now defaults `--ref-fmax-stages` to 0.02 0.01 0.005 and refuses
+   references looser than 0.005 (amendment g item 4 described this default; the first
+   implementation used the doped list; corrected before any production use).
+5. **Gate and selection details.** The depth gate uses exactly the pre-registered pilot rows
+   (per host and dopant the 2 nearest and 3 farthest sites) and requires the 0.005 stage as its
+   reference. GA near is the nearest valid FA whatever its shell, as amendment f states (a pick
+   outside the near shell is noted). The WP3 frame generator also refuses to resume when any source
+   frame changed (sha256).

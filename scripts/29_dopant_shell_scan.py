@@ -159,9 +159,8 @@ def main():
     ap.add_argument("--site-list", type=int, nargs="+", default=None, help="only these host site indices")
     ap.add_argument("--fmax-stages", type=float, nargs="+", default=[0.02, 0.01, 0.005],
                     help="stages for the doped cells D_j and D_j+V")
-    ap.add_argument("--ref-fmax-stages", type=float, nargs="+", default=None,
-                    help="stages for the host and V references (default: same as --fmax-stages); "
-                         "PLAN amendment g item 4: references always reach 0.005")
+    ap.add_argument("--ref-fmax-stages", type=float, nargs="+", default=[0.02, 0.01, 0.005],
+                    help="stages for the host and V references (PLAN amendments d4/g4/h: always to 0.005)")
     ap.add_argument("--ref-from", default=None,
                     help="reuse relaxed references (shell_mNN.json + *_relaxed.extxyz) from this output dir")
     ap.add_argument("--steps", type=int, default=3000, help="max FIRE steps per stage")
@@ -192,7 +191,9 @@ def main():
     D = lambda p: float(find_mic(np.atleast_2d(p - vpos), cell, pbc=True)[1][0])
 
     stages = sorted(args.fmax_stages, reverse=True)
-    ref_stages = sorted(args.ref_fmax_stages or args.fmax_stages, reverse=True)
+    ref_stages = sorted(args.ref_fmax_stages, reverse=True)
+    if min(ref_stages) > 0.005 + 1e-12:
+        raise SystemExit(f"references must reach fmax 0.005 (PLAN amendment d item 4); got {ref_stages}")
     protocol = {"version": PROTOCOL_VERSION, "model": "MACE-MP-0 medium", "dtype": "float64",
                 "optimizer": "FIRE (restarted per stage)", "fmax_stages": stages,
                 "steps_per_stage": args.steps, "cell": "fixed", "basin_rcut_A": args.basin_rcut,

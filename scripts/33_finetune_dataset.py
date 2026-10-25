@@ -101,8 +101,11 @@ def collect(dft_dir, frames_dirs):
 def comp_coords(at):
     s = at.get_chemical_symbols()
     n = {e: s.count(e) for e in Z}
-    # baseline FA19Cs1Pb20I60: I deficit (vacancy), GA count (extra N), Sr count
-    return np.array([1.0, n["I"] - 60, n["N"] - 38, n["Sr"]])
+    # baseline FA19Cs1Pb20I60: I deficit (vacancy), GA count (extra N), Sr count; then the two
+    # dopant x vacancy class terms (PLAN amendment h item 2): the cell-wide shift of the neutral
+    # vacancy's delocalised electron by a dopant, which a local potential cannot represent
+    v = 1.0 if n["I"] < 60 else 0.0
+    return np.array([1.0, n["I"] - 60, n["N"] - 38, n["Sr"], n["Sr"] * v, (n["N"] - 38) * v])
 
 
 def main():
@@ -142,7 +145,10 @@ def main():
     coef, res, rank, _ = np.linalg.lstsq(X, y, rcond=None)
     # All band frames have dI = -1, so const and dI are collinear until vacancy-free frames
     # (host, D_j from WP2c) are in the training set; refuse an arbitrary split (review M3).
-    assert rank == X.shape[1], f"offset fit rank {rank} < {X.shape[1]}: add dI=0 frames (host/D_j) to train"
+    assert rank == X.shape[1], f"offset fit rank {rank} < {X.shape[1]}: train needs vacancy-free frames with and without each dopant (WP2c D_j of a training host, WP3 pristine)"
+    # Columns 4-5 (dopant x vacancy band term) are not per-element: their fitted value is removed
+    # from REF_energy of the frames that carry it (constant per frame class, so forces and every
+    # energy difference within one band are unchanged); the raw value is kept as REF_energy_raw.
     # Per-element offsets o_e apply to EVERY atom of element e. With o_C = o_H = o_Cs = 0 and
     # n_I = 60+dI, n_N = 38+dN (GA also adds one H, whose offset is 0), n_Pb = 20-nSr, n_Sr = nSr:
     #   sum_e n_e o_e = (60+dI) o_I + (38+dN) o_N + (20-nSr) o_Pb + nSr o_Sr
@@ -151,9 +157,14 @@ def main():
     o_Pb = (coef[0] - 60 * o_I - 38 * o_N) / 20.0
     o_Sr = coef[3] + o_Pb
     off = {"I": o_I, "N": o_N, "Pb": o_Pb, "Sr": o_Sr, "C": 0.0, "H": 0.0, "Cs": 0.0}
-    for at in frames:   # exactness check of the assignment on every frame
+    for at in frames:   # exactness check of the per-element assignment on every frame
         s_ = at.get_chemical_symbols()
-        assert abs(sum(off[e] for e in s_) - comp_coords(at) @ coef) < 1e-6
+        assert abs(sum(off[e] for e in s_) - comp_coords(at)[:4] @ coef[:4]) < 1e-6
+    for at in frames:   # remove the fitted band term from the targets (amendment h item 2)
+        corr = float(comp_coords(at)[4:] @ coef[4:])
+        at.info["REF_energy_raw"] = at.info["REF_energy"]
+        at.info["band_term_eV"] = corr
+        at.info["REF_energy"] = at.info["REF_energy"] - corr
     e0 = {Z[e]: e0f[Z[e]] + off[e] for e in Z}
     resid = y - X @ coef
     os.makedirs(a.out, exist_ok=True)
@@ -166,7 +177,8 @@ def main():
             "n_by_host": {k: dict(Counter(f.info["host"] for f in v)) for k, v in sets.items()},
             "unmatched_outputs": unmatched,
             "E0s": {str(k): v for k, v in e0.items()},
-            "offset_fit": {"coords": ["const(FA19Cs1Pb20I60)", "dI", "dN(GA)", "nSr"],
+            "offset_fit": {"coords": ["const(FA19Cs1Pb20I60)", "dI", "dN(GA)", "nSr", "nSr*vac", "nGA*vac"],
+                           "band_term_removed_meV": {"Sr+vac": float(coef[4] * 1000), "GA+vac": float(coef[5] * 1000)},
                            "coef_eV": coef.tolist(), "rank": int(rank),
                            "train_residual_rms_meV": float(np.sqrt(np.mean(resid ** 2)) * 1000)},
             "note": "E0s valid only within the FA19Cs1Pb20I60(-I)(+GA)(+Sr) family."}

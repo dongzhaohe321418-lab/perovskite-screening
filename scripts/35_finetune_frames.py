@@ -89,17 +89,25 @@ def main():
     from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
     calc = mace_mp(model="medium", device="cpu", default_dtype="float64")
     os.makedirs(a.frames, exist_ok=True)
+    hosts = [f"m{int(x):02d}" for x in a.hosts]
+    srcs = {f"{h}_{s}": os.path.join(a.bands, f"band_{s}_{h}.extxyz") for h in hosts for s in ("undoped", "GA", "Sr")}
+    srcs.update({f"{h}_pristine": os.path.join(a.pool, f"{h}.extxyz") for h in hosts})
     params = {"md_steps": a.md_steps, "fmax_bound": a.fmax_bound, "kinds": KINDS, "framework": list(FRAMEWORK),
               "md": "Langevin 1 fs, friction 0.01/fs, fixed cell, MACE-MP-0 medium float64"}
+    sha = {k: hashlib.sha256(open(v, "rb").read()).hexdigest() for k, v in srcs.items()}
     rpath = os.path.join(a.frames, "frames_report.json")
     report = {"params": json.loads(json.dumps(params)), "records": []}
     if os.path.exists(rpath):                 # resume only into a directory made with the same settings
         old = json.load(open(rpath))
         if not isinstance(old, dict) or old.get("params") != report["params"]:
             raise SystemExit(f"{rpath}: made with different settings; use a new --frames directory")
+        clash = [k for k, v in sha.items() if k in old.get("source_sha256", {}) and old["source_sha256"][k] != v]
+        if clash:
+            raise SystemExit(f"{rpath}: source frames changed since the earlier run: {clash}")
         report = old
+    report.setdefault("source_sha256", {}).update(sha)
     seen = {r["label"] for r in report["records"]}
-    for h in [f"m{int(x):02d}" for x in a.hosts]:
+    for h in hosts:
         src = {s: (os.path.join(a.bands, f"band_{s}_{h}.extxyz"), 0) for s in ("undoped", "GA", "Sr")}
         src["pristine"] = (os.path.join(a.pool, f"{h}.extxyz"), -1)
         for sysn, (fn, idx) in src.items():
