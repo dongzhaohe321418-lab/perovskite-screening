@@ -159,3 +159,15 @@ Implemented in `scripts/34_dopant_shell_analysis.py`.
    gave 16/16 frames within bounds (framework rattles 0.3–1.4 eV/Å, MD 2.9–4.6 eV/Å max force
    after 3 MD steps). The pristine-host frames also make the offset fit of `scripts/33` full rank
    without relying on WP2c.
+
+## Amendment 2026-10-25f — WP2c/2d/2e site selection; geometric, before any v2 E_b
+
+Implemented in `scripts/36_wp2cde_inputs.py`; only valid WP1 rows are used and every choice is
+written to `wp2cde_selection.json`. Sr hinge = the near-shell Pb closer to the migrating iodide
+(the iodide nearest the vacancy site, as in `scripts/22`); Sr flank = the other near-shell Pb;
+mid and far = the valid site of that shell whose distance is closest to the shell's median
+distance (ties: lower index); GA near = the nearest valid FA. A hinge/flank assignment with
+Pb–I(mig) distances within 0.5 Å is flagged as ambiguous (m30, unrelaxed: 3.20 vs 7.12 Å).
+WP2d additionally includes band images 0 and 3 of **undoped** m30 at q = +1 (ΔE_a needs both
+members of the pair; amendment c item 4 named only the Sr band). Charged (_q1) and relaxed
+(_relax) frames are excluded from fine-tuning by label.
