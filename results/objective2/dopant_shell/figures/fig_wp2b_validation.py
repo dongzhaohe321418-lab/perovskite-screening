@@ -144,7 +144,7 @@ def plot(outdir):
     d.axhline(0, color="#4d4d4d", lw=0.6)
     d.set_xticks([0, 1], ["GA", "Sr"]); d.set_xlim(-0.6, 1.7)
     d.set_ylabel("E$_F$(doped) − E$_F$(undoped), image 0 (meV)")
-    d.set_title("Band shift of the neutral-vacancy electron", fontsize=7.5, pad=4)
+    d.set_title("Dopant-induced E$_F$ shift (not aligned)", fontsize=7.5, pad=4)
 
     for lab, ax in zip("abcd", axs.ravel()):
         ax.text(-0.30, 1.12, lab, transform=ax.transAxes, fontsize=8, fontweight="bold", va="top")

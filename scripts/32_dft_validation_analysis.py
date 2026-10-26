@@ -5,6 +5,8 @@ For every (host, system) band with DFT single points (scripts/30_qe_singlepoint.
 recomputes MACE on exactly the same frames and reports, at both levels:
 
   * E_a(path) = max over images {2,3,4} of E_i - E_0, only for complete bands {0,2,3,4,6}
+    (pre-registered: script 32 as first committed, e1556a9; can be negative when image 0 is not a
+    DFT minimum). Sensitivity: the corpus definition max over all sampled images - E_0 (>= 0).
     (forward barrier ALONG THE MACE PATH;
     at DFT level this is a fixed-path diagnostic, not a relaxed DFT barrier)
   * paired dE_a(dopant) = E_a(dopant) - E_a(undoped) in the same host
@@ -85,37 +87,57 @@ def main():
         bands[(host, sysn, "rows")] = bands.get((host, sysn, "rows"), []) + [rec]
 
     per_band, frames_out, incomplete = [], [], []
+    raw = {}                                  # unrounded E_a per band: differences never use rounded values
     for key, rows in [(k[:2], v) for k, v in bands.items() if len(k) == 3]:
         frames_out += rows
         imgs = {r["image"]: r for r in rows}
         missing = [i for i in REQUIRED_IMAGES if i not in imgs]
         if missing:                       # never compute E_a over a partial image set
             incomplete.append({"host": key[0], "system": key[1], "missing_images": missing}); continue
-        e0d, e0m = imgs[0]["E_dft"], imgs[0]["E_mace"]
-        inner = [2, 3, 4]
+        inner = [2, 3, 4]                 # pre-registered definition (script 32 as first committed, e1556a9)
+        rel = lambda k, i: imgs[i][k] - imgs[0][k]
+        v = {"Ea_dft": max(rel("E_dft", i) for i in inner) * 1000,
+             "Ea_mace": max(rel("E_mace", i) for i in inner) * 1000,
+             "Ea_dft_E0": max(rel("E0_dft", i) for i in inner) * 1000,
+             # sensitivity: the corpus definition (scripts/22: E.max() - E[0] over every image, so >= 0),
+             # applied to the sampled images {0, 2, 3, 4, 6}
+             "Ea_dft_corpusdef": max(rel("E_dft", i) for i in REQUIRED_IMAGES) * 1000,
+             "Ea_mace_corpusdef": max(rel("E_mace", i) for i in REQUIRED_IMAGES) * 1000}
+        raw[key] = v
+        am = max(inner, key=lambda i: imgs[i]["E_dft"])
+        # a DFT maximum at image 2 (4) that still rises from image 3 points to the unsampled image 1 (5):
+        # the fixed-path DFT maximum is then not bracketed and E_a is a lower bound
+        edge = am in (2, 4) and imgs[am]["E_dft"] > imgs[3]["E_dft"]
         per_band.append({"host": key[0], "system": key[1], "images": sorted(imgs),
-                         "Ea_dft_meV": round(max(imgs[i]["E_dft"] - e0d for i in inner) * 1000, 2),
-                         "Ea_mace_meV": round(max(imgs[i]["E_mace"] - e0m for i in inner) * 1000, 2),
+                         "Ea_dft_meV": round(v["Ea_dft"], 3), "Ea_mace_meV": round(v["Ea_mace"], 3),
                          # sigma->0 estimate beside F (amendment c item 6 failed: dg 0.0025 moved E3-E0 by 4.9 meV)
-                         "Ea_dft_E0_meV": round(max(imgs[i]["E0_dft"] - imgs[0]["E0_dft"] for i in inner) * 1000, 2),
-                         "argmax_dft": max(inner, key=lambda i: imgs[i]["E_dft"]),
-                         "argmax_mace": max(inner, key=lambda i: imgs[i]["E_mace"]),
+                         "Ea_dft_E0_meV": round(v["Ea_dft_E0"], 3),
+                         "Ea_dft_corpusdef_meV": round(v["Ea_dft_corpusdef"], 3),
+                         "Ea_mace_corpusdef_meV": round(v["Ea_mace_corpusdef"], 3),
+                         "argmax_dft": am, "argmax_mace": max(inner, key=lambda i: imgs[i]["E_mace"]),
+                         "dft_max_unbracketed": bool(edge),
                          "minima_dft_fmax_eVA": [round(imgs[i]["dft_fmax_eVA"], 4) for i in (0, 6)],
                          "minima_dft_frms_eVA": [round(imgs[i]["dft_frms_eVA"], 4) for i in (0, 6)]})
     pairs, pb = [], {(b["host"], b["system"]): b for b in per_band}
     for (host, sysn), b in sorted(pb.items()):
         if sysn == "undoped" or (host, "undoped") not in pb:
             continue
-        u = pb[(host, "undoped")]
-        dd, dm = b["Ea_dft_meV"] - u["Ea_dft_meV"], b["Ea_mace_meV"] - u["Ea_mace_meV"]
-        pairs.append({"host": host, "dopant": sysn, "dEa_dft_meV": round(dd, 2), "dEa_mace_meV": round(dm, 2),
-                      "dEa_dft_E0_meV": round(b["Ea_dft_E0_meV"] - u["Ea_dft_E0_meV"], 2),
-                      "error_meV": round(dm - dd, 2), "class_dft": band_class(dd), "class_mace": band_class(dm)})
+        r, u = raw[(host, sysn)], raw[(host, "undoped")]
+        dd, dm = r["Ea_dft"] - u["Ea_dft"], r["Ea_mace"] - u["Ea_mace"]
+        dc, dmc = r["Ea_dft_corpusdef"] - u["Ea_dft_corpusdef"], r["Ea_mace_corpusdef"] - u["Ea_mace_corpusdef"]
+        pairs.append({"host": host, "dopant": sysn, "dEa_dft_meV": round(dd, 3), "dEa_mace_meV": round(dm, 3),
+                      "dEa_dft_E0_meV": round(r["Ea_dft_E0"] - u["Ea_dft_E0"], 3),
+                      "error_meV": round(dm - dd, 3), "class_dft": band_class(dd), "class_mace": band_class(dm),
+                      "dEa_dft_corpusdef_meV": round(dc, 3), "dEa_mace_corpusdef_meV": round(dmc, 3),
+                      "error_corpusdef_meV": round(dmc - dc, 3),
+                      "class_dft_corpusdef": band_class(dc), "class_mace_corpusdef": band_class(dmc),
+                      "unbracketed": bool(b["dft_max_unbracketed"] or pb[(host, "undoped")]["dft_max_unbracketed"]),
+                      "_dd": dd, "_dm": dm, "_dc": dc, "_dmc": dmc, "_d0": r["Ea_dft_E0"] - u["Ea_dft_E0"]})
     expected = [(h, d) for h in a.hosts for d in ("GA", "Sr")]
     have = {(p["host"], p["dopant"]) for p in pairs}
-    err = np.array([p["error_meV"] for p in pairs])
+    err = np.array([p["_dm"] - p["_dd"] for p in pairs])
     rms = float(np.sqrt(np.mean(err ** 2))) if err.size else None
-    flips = [p for p in pairs if p["class_dft"] != p["class_mace"]]
+    flips = [{k: v for k, v in p.items() if not k.startswith("_")} for p in pairs if p["class_dft"] != p["class_mace"]]
     complete = all(e in have for e in expected)
     crit3 = {"n_pairs": len(pairs), "expected": len(expected),
              "missing_pairs": [f"{h}_{d}" for h, d in expected if (h, d) not in have],
@@ -140,16 +162,25 @@ def main():
         p_tost = max(float(stats.t.sf((m + BAND) / se, n - 1)), float(stats.t.cdf((m - BAND) / se, n - 1)))
         return {"n": n, "mean_meV": round(m, 2), "sd_meV": round(s_, 2), "ci95_meV": [round(m - h, 2), round(m + h, 2)],
                 "ci_inside_band": bool(m - h > -BAND and m + h < BAND), "tost_p": round(p_tost, 4)}
-    restate = {d: {"dft": eqv([p["dEa_dft_meV"] for p in pairs if p["dopant"] == d]),
-                   "dft_E0_sigma0": eqv([p["dEa_dft_E0_meV"] for p in pairs if p["dopant"] == d]),
-                   "mace": eqv([p["dEa_mace_meV"] for p in pairs if p["dopant"] == d]),
-                   "error_rms_meV": round(float(np.sqrt(np.mean([p["error_meV"] ** 2 for p in pairs if p["dopant"] == d]))), 2)}
+    sel = lambda d, k: [p[k] for p in pairs if p["dopant"] == d]
+    restate = {d: {"dft": eqv(sel(d, "_dd")), "dft_E0_sigma0": eqv(sel(d, "_d0")), "mace": eqv(sel(d, "_dm")),
+                   "dft_corpusdef": eqv(sel(d, "_dc")), "mace_corpusdef": eqv(sel(d, "_dmc")),
+                   "error_rms_meV": round(float(np.sqrt(np.mean((np.array(sel(d, "_dm")) - np.array(sel(d, "_dd"))) ** 2))), 2)}
                for d in ("GA", "Sr") if sum(p["dopant"] == d for p in pairs) > 2}
+    ec = np.array([p["_dmc"] - p["_dc"] for p in pairs])
+    crit3_corpusdef = {"note": "sensitivity only: E_a = max over all sampled images {0,2,3,4,6} - E_0 (scripts/22 definition)",
+                       "rms_error_meV": float(np.sqrt(np.mean(ec ** 2))) if ec.size else None,
+                       "mean_error_meV": float(ec.mean()) if ec.size else None,
+                       "flips": [f"{p['host']}_{p['dopant']}" for p in pairs if p["class_dft_corpusdef"] != p["class_mace_corpusdef"]]}
+    max_F_E0 = max((abs(p["_d0"] - p["_dd"]) for p in pairs), default=None)
     summary = {"n_frames": len(frames_out), "n_skipped_outputs": len(skipped), "n_complete_bands": len(per_band),
-               "dft_level_restatement": restate,
+               "dft_level_restatement": restate, "criterion3_corpus_definition": crit3_corpusdef,
+               "max_abs_dEa_E0_minus_F_meV": max_F_E0,
+               "unbracketed_bands": [f"{b['host']}_{b['system']}" for b in per_band if b["dft_max_unbracketed"]],
                "incomplete_bands": incomplete, "criterion3": crit3, "criterion5": crit5,
                "force_rmse_median_eVA": float(np.median([r["force_rmse_eVA"] for r in frames_out])) if frames_out else None}
     os.makedirs(a.out, exist_ok=True)
+    pairs = [{k: v for k, v in p.items() if not k.startswith("_")} for p in pairs]
     json.dump({"summary": summary, "skipped_outputs": skipped, "pairs": pairs, "bands": per_band, "frames": frames_out},
               open(os.path.join(a.out, "wp2b_validation.json"), "w"), indent=1)
     with open(os.path.join(a.out, "wp2b_frames.csv"), "w", newline="") as fh:

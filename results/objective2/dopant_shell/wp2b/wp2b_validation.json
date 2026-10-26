@@ -10,7 +10,7 @@
      "mean_meV": 11.9,
      "sd_meV": 51.67,
      "ci95_meV": [
-      -27.81,
+      -27.82,
       51.61
      ],
      "ci_inside_band": true,
@@ -38,13 +38,35 @@
      "ci_inside_band": true,
      "tost_p": 0.0038
     },
+    "dft_corpusdef": {
+     "n": 9,
+     "mean_meV": 7.64,
+     "sd_meV": 46.93,
+     "ci95_meV": [
+      -28.43,
+      43.72
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0053
+    },
+    "mace_corpusdef": {
+     "n": 9,
+     "mean_meV": 4.28,
+     "sd_meV": 46.69,
+     "ci95_meV": [
+      -31.61,
+      40.17
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0038
+    },
     "error_rms_meV": 15.88
    },
    "Sr": {
     "dft": {
      "n": 9,
      "mean_meV": 7.85,
-     "sd_meV": 67.64,
+     "sd_meV": 67.63,
      "ci95_meV": [
       -44.14,
       59.84
@@ -74,47 +96,103 @@
      "ci_inside_band": true,
      "tost_p": 0.0073
     },
+    "dft_corpusdef": {
+     "n": 9,
+     "mean_meV": 3.99,
+     "sd_meV": 59.53,
+     "ci95_meV": [
+      -41.77,
+      49.75
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0116
+    },
+    "mace_corpusdef": {
+     "n": 9,
+     "mean_meV": 9.29,
+     "sd_meV": 48.48,
+     "ci95_meV": [
+      -27.98,
+      46.56
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0073
+    },
     "error_rms_meV": 41.11
    }
   },
+  "criterion3_corpus_definition": {
+   "note": "sensitivity only: E_a = max over all sampled images {0,2,3,4,6} - E_0 (scripts/22 definition)",
+   "rms_error_meV": 26.992027638850672,
+   "mean_error_meV": 0.9680736546392331,
+   "flips": [
+    "m05_Sr",
+    "m15_GA",
+    "m15_Sr",
+    "m32_GA"
+   ]
+  },
+  "max_abs_dEa_E0_minus_F_meV": 2.6535863580647856,
+  "unbracketed_bands": [
+   "m21_GA",
+   "m21_Sr"
+  ],
   "incomplete_bands": [],
   "criterion3": {
    "n_pairs": 18,
    "expected": 18,
    "missing_pairs": [],
-   "rms_error_meV": 31.159046572918967,
-   "mean_error_meV": -3.088333333333332,
+   "rms_error_meV": 31.158993016663732,
+   "mean_error_meV": -3.0879119643966786,
    "rms_pass": false,
    "flips": [
     {
      "host": "m05",
      "dopant": "Sr",
-     "dEa_dft_meV": -61.02,
-     "dEa_mace_meV": -30.15,
-     "dEa_dft_E0_meV": -62.08,
-     "error_meV": 30.87,
+     "dEa_dft_meV": -61.019,
+     "dEa_mace_meV": -30.153,
+     "dEa_dft_E0_meV": -62.084,
+     "error_meV": 30.866,
      "class_dft": -1,
-     "class_mace": 0
+     "class_mace": 0,
+     "dEa_dft_corpusdef_meV": -61.019,
+     "dEa_mace_corpusdef_meV": -30.153,
+     "error_corpusdef_meV": 30.866,
+     "class_dft_corpusdef": -1,
+     "class_mace_corpusdef": 0,
+     "unbracketed": false
     },
     {
      "host": "m15",
      "dopant": "Sr",
-     "dEa_dft_meV": 110.34,
-     "dEa_mace_meV": 7.85,
-     "dEa_dft_E0_meV": 109.93,
-     "error_meV": -102.49,
+     "dEa_dft_meV": 110.344,
+     "dEa_mace_meV": 7.854,
+     "dEa_dft_E0_meV": 109.928,
+     "error_meV": -102.489,
      "class_dft": 1,
-     "class_mace": 0
+     "class_mace": 0,
+     "dEa_dft_corpusdef_meV": 87.84,
+     "dEa_mace_corpusdef_meV": 7.854,
+     "error_corpusdef_meV": -79.985,
+     "class_dft_corpusdef": 1,
+     "class_mace_corpusdef": 0,
+     "unbracketed": false
     },
     {
      "host": "m32",
      "dopant": "GA",
-     "dEa_dft_meV": -46.78,
-     "dEa_mace_meV": -63.17,
-     "dEa_dft_E0_meV": -46.72,
-     "error_meV": -16.39,
+     "dEa_dft_meV": -46.781,
+     "dEa_mace_meV": -63.175,
+     "dEa_dft_E0_meV": -46.714,
+     "error_meV": -16.394,
      "class_dft": 0,
-     "class_mace": -1
+     "class_mace": -1,
+     "dEa_dft_corpusdef_meV": -46.781,
+     "dEa_mace_corpusdef_meV": -63.175,
+     "error_corpusdef_meV": -16.394,
+     "class_dft_corpusdef": 0,
+     "class_mace_corpusdef": -1,
+     "unbracketed": false
     }
    ],
    "verdict": "fail"
@@ -153,82 +231,130 @@
   {
    "host": "m05",
    "dopant": "GA",
-   "dEa_dft_meV": -13.72,
-   "dEa_mace_meV": -11.43,
-   "dEa_dft_E0_meV": -14.15,
-   "error_meV": 2.29,
+   "dEa_dft_meV": -13.715,
+   "dEa_mace_meV": -11.428,
+   "dEa_dft_E0_meV": -14.156,
+   "error_meV": 2.287,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -13.715,
+   "dEa_mace_corpusdef_meV": -11.428,
+   "error_corpusdef_meV": 2.287,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m05",
    "dopant": "Sr",
-   "dEa_dft_meV": -61.02,
-   "dEa_mace_meV": -30.15,
-   "dEa_dft_E0_meV": -62.08,
-   "error_meV": 30.87,
+   "dEa_dft_meV": -61.019,
+   "dEa_mace_meV": -30.153,
+   "dEa_dft_E0_meV": -62.084,
+   "error_meV": 30.866,
    "class_dft": -1,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -61.019,
+   "dEa_mace_corpusdef_meV": -30.153,
+   "error_corpusdef_meV": 30.866,
+   "class_dft_corpusdef": -1,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m06",
    "dopant": "GA",
    "dEa_dft_meV": -40.23,
-   "dEa_mace_meV": -16.97,
-   "dEa_dft_E0_meV": -39.56,
-   "error_meV": 23.26,
+   "dEa_mace_meV": -16.965,
+   "dEa_dft_E0_meV": -39.561,
+   "error_meV": 23.265,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -40.23,
+   "dEa_mace_corpusdef_meV": -16.965,
+   "error_corpusdef_meV": 23.265,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m06",
    "dopant": "Sr",
-   "dEa_dft_meV": 0.83,
-   "dEa_mace_meV": 19.2,
-   "dEa_dft_E0_meV": -0.39,
-   "error_meV": 18.37,
+   "dEa_dft_meV": 0.834,
+   "dEa_mace_meV": 19.202,
+   "dEa_dft_E0_meV": -0.387,
+   "error_meV": 18.368,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": 0.834,
+   "dEa_mace_corpusdef_meV": 19.202,
+   "error_corpusdef_meV": 18.368,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m08",
    "dopant": "GA",
-   "dEa_dft_meV": 11.06,
-   "dEa_mace_meV": 4.54,
-   "dEa_dft_E0_meV": 11.02,
-   "error_meV": -6.52,
+   "dEa_dft_meV": 11.052,
+   "dEa_mace_meV": 4.541,
+   "dEa_dft_E0_meV": 11.013,
+   "error_meV": -6.511,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": 11.052,
+   "dEa_mace_corpusdef_meV": 4.541,
+   "error_corpusdef_meV": -6.511,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m08",
    "dopant": "Sr",
-   "dEa_dft_meV": -38.39,
-   "dEa_mace_meV": -14.66,
-   "dEa_dft_E0_meV": -39.05,
+   "dEa_dft_meV": -38.396,
+   "dEa_mace_meV": -14.666,
+   "dEa_dft_E0_meV": -39.053,
    "error_meV": 23.73,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -38.396,
+   "dEa_mace_corpusdef_meV": -14.666,
+   "error_corpusdef_meV": 23.73,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m12",
    "dopant": "GA",
-   "dEa_dft_meV": -15.88,
+   "dEa_dft_meV": -15.879,
    "dEa_mace_meV": -37.96,
-   "dEa_dft_E0_meV": -15.86,
-   "error_meV": -22.08,
+   "dEa_dft_E0_meV": -15.854,
+   "error_meV": -22.081,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -15.879,
+   "dEa_mace_corpusdef_meV": -37.96,
+   "error_corpusdef_meV": -22.081,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m12",
    "dopant": "Sr",
-   "dEa_dft_meV": -8.19,
-   "dEa_mace_meV": 13.82,
+   "dEa_dft_meV": -8.185,
+   "dEa_mace_meV": 13.818,
    "dEa_dft_E0_meV": -9.05,
-   "error_meV": 22.01,
+   "error_meV": 22.003,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -8.185,
+   "dEa_mace_corpusdef_meV": 13.818,
+   "error_corpusdef_meV": 22.003,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m15",
@@ -238,97 +364,157 @@
    "dEa_dft_E0_meV": 78.69,
    "error_meV": -7.51,
    "class_dft": 1,
-   "class_mace": 1
+   "class_mace": 1,
+   "dEa_dft_corpusdef_meV": 56.666,
+   "dEa_mace_corpusdef_meV": 71.66,
+   "error_corpusdef_meV": 14.994,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 1,
+   "unbracketed": false
   },
   {
    "host": "m15",
    "dopant": "Sr",
-   "dEa_dft_meV": 110.34,
-   "dEa_mace_meV": 7.85,
-   "dEa_dft_E0_meV": 109.93,
-   "error_meV": -102.49,
+   "dEa_dft_meV": 110.344,
+   "dEa_mace_meV": 7.854,
+   "dEa_dft_E0_meV": 109.928,
+   "error_meV": -102.489,
    "class_dft": 1,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": 87.84,
+   "dEa_mace_corpusdef_meV": 7.854,
+   "error_corpusdef_meV": -79.985,
+   "class_dft_corpusdef": 1,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m20",
    "dopant": "GA",
-   "dEa_dft_meV": 53.0,
-   "dEa_mace_meV": 33.69,
-   "dEa_dft_E0_meV": 52.73,
+   "dEa_dft_meV": 52.997,
+   "dEa_mace_meV": 33.687,
+   "dEa_dft_E0_meV": 52.728,
    "error_meV": -19.31,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": 37.212,
+   "dEa_mace_corpusdef_meV": 33.687,
+   "error_corpusdef_meV": -3.524,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m20",
    "dopant": "Sr",
-   "dEa_dft_meV": 132.86,
+   "dEa_dft_meV": 132.852,
    "dEa_mace_meV": 129.26,
-   "dEa_dft_E0_meV": 133.0,
-   "error_meV": -3.6,
+   "dEa_dft_E0_meV": 132.997,
+   "error_meV": -3.592,
    "class_dft": 1,
-   "class_mace": 1
+   "class_mace": 1,
+   "dEa_dft_corpusdef_meV": 117.066,
+   "dEa_mace_corpusdef_meV": 129.26,
+   "error_corpusdef_meV": 12.194,
+   "class_dft_corpusdef": 1,
+   "class_mace_corpusdef": 1,
+   "unbracketed": false
   },
   {
    "host": "m21",
    "dopant": "GA",
-   "dEa_dft_meV": -14.28,
-   "dEa_mace_meV": -14.34,
-   "dEa_dft_E0_meV": -14.72,
-   "error_meV": -0.06,
+   "dEa_dft_meV": -14.284,
+   "dEa_mace_meV": -14.342,
+   "dEa_dft_E0_meV": -14.721,
+   "error_meV": -0.057,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -14.284,
+   "dEa_mace_corpusdef_meV": -14.342,
+   "error_corpusdef_meV": -0.057,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": true
   },
   {
    "host": "m21",
    "dopant": "Sr",
-   "dEa_dft_meV": -37.41,
-   "dEa_mace_meV": -7.77,
-   "dEa_dft_E0_meV": -38.39,
-   "error_meV": 29.64,
+   "dEa_dft_meV": -37.416,
+   "dEa_mace_meV": -7.766,
+   "dEa_dft_E0_meV": -38.389,
+   "error_meV": 29.651,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -33.845,
+   "dEa_mace_corpusdef_meV": -7.766,
+   "error_corpusdef_meV": 26.079,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": true
   },
   {
    "host": "m30",
    "dopant": "GA",
-   "dEa_dft_meV": 94.76,
-   "dEa_mace_meV": 72.52,
-   "dEa_dft_E0_meV": 93.67,
-   "error_meV": -22.24,
+   "dEa_dft_meV": 94.763,
+   "dEa_mace_meV": 72.522,
+   "dEa_dft_E0_meV": 93.668,
+   "error_meV": -22.241,
    "class_dft": 1,
-   "class_mace": 1
+   "class_mace": 1,
+   "dEa_dft_corpusdef_meV": 94.763,
+   "dEa_mace_corpusdef_meV": 72.522,
+   "error_corpusdef_meV": -22.241,
+   "class_dft_corpusdef": 1,
+   "class_mace_corpusdef": 1,
+   "unbracketed": false
   },
   {
    "host": "m30",
    "dopant": "Sr",
-   "dEa_dft_meV": -2.87,
-   "dEa_mace_meV": -32.65,
-   "dEa_dft_E0_meV": -5.51,
-   "error_meV": -29.78,
+   "dEa_dft_meV": -2.865,
+   "dEa_mace_meV": -32.648,
+   "dEa_dft_E0_meV": -5.519,
+   "error_meV": -29.782,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -2.865,
+   "dEa_mace_corpusdef_meV": -32.648,
+   "error_corpusdef_meV": -29.782,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   },
   {
    "host": "m32",
    "dopant": "GA",
-   "dEa_dft_meV": -46.78,
-   "dEa_mace_meV": -63.17,
-   "dEa_dft_E0_meV": -46.72,
-   "error_meV": -16.39,
+   "dEa_dft_meV": -46.781,
+   "dEa_mace_meV": -63.175,
+   "dEa_dft_E0_meV": -46.714,
+   "error_meV": -16.394,
    "class_dft": 0,
-   "class_mace": -1
+   "class_mace": -1,
+   "dEa_dft_corpusdef_meV": -46.781,
+   "dEa_mace_corpusdef_meV": -63.175,
+   "error_corpusdef_meV": -16.394,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": -1,
+   "unbracketed": false
   },
   {
    "host": "m32",
    "dopant": "Sr",
    "dEa_dft_meV": -25.52,
-   "dEa_mace_meV": -1.3,
-   "dEa_dft_E0_meV": -27.07,
-   "error_meV": 24.22,
+   "dEa_mace_meV": -1.305,
+   "dEa_dft_E0_meV": -27.067,
+   "error_meV": 24.215,
    "class_dft": 0,
-   "class_mace": 0
+   "class_mace": 0,
+   "dEa_dft_corpusdef_meV": -25.52,
+   "dEa_mace_corpusdef_meV": -1.305,
+   "error_corpusdef_meV": 24.215,
+   "class_dft_corpusdef": 0,
+   "class_mace_corpusdef": 0,
+   "unbracketed": false
   }
  ],
  "bands": [
@@ -342,11 +528,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 69.78,
-   "Ea_mace_meV": 158.7,
-   "Ea_dft_E0_meV": 70.52,
+   "Ea_dft_meV": 69.784,
+   "Ea_mace_meV": 158.704,
+   "Ea_dft_E0_meV": 70.518,
+   "Ea_dft_corpusdef_meV": 69.784,
+   "Ea_mace_corpusdef_meV": 158.704,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3591,
     0.3421
@@ -367,10 +556,13 @@
     6
    ],
    "Ea_dft_meV": 22.48,
-   "Ea_mace_meV": 139.98,
-   "Ea_dft_E0_meV": 22.59,
+   "Ea_mace_meV": 139.978,
+   "Ea_dft_E0_meV": 22.591,
+   "Ea_dft_corpusdef_meV": 22.48,
+   "Ea_mace_corpusdef_meV": 139.978,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3638,
     0.3587
@@ -390,11 +582,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 83.5,
-   "Ea_mace_meV": 170.13,
-   "Ea_dft_E0_meV": 84.67,
+   "Ea_dft_meV": 83.499,
+   "Ea_mace_meV": 170.132,
+   "Ea_dft_E0_meV": 84.674,
+   "Ea_dft_corpusdef_meV": 83.499,
+   "Ea_mace_corpusdef_meV": 170.132,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.355,
     0.3525
@@ -414,11 +609,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 92.9,
-   "Ea_mace_meV": 175.1,
-   "Ea_dft_E0_meV": 93.32,
+   "Ea_dft_meV": 92.897,
+   "Ea_mace_meV": 175.102,
+   "Ea_dft_E0_meV": 93.319,
+   "Ea_dft_corpusdef_meV": 92.897,
+   "Ea_mace_corpusdef_meV": 175.102,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4104,
     0.3918
@@ -438,11 +636,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 133.96,
-   "Ea_mace_meV": 211.27,
-   "Ea_dft_E0_meV": 132.49,
+   "Ea_dft_meV": 133.961,
+   "Ea_mace_meV": 211.269,
+   "Ea_dft_E0_meV": 132.493,
+   "Ea_dft_corpusdef_meV": 133.961,
+   "Ea_mace_corpusdef_meV": 211.269,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4147,
     0.4171
@@ -462,11 +663,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 133.13,
-   "Ea_mace_meV": 192.07,
+   "Ea_dft_meV": 133.127,
+   "Ea_mace_meV": 192.067,
    "Ea_dft_E0_meV": 132.88,
+   "Ea_dft_corpusdef_meV": 133.127,
+   "Ea_mace_corpusdef_meV": 192.067,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4021,
     0.4078
@@ -486,11 +690,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 210.29,
-   "Ea_mace_meV": 213.83,
-   "Ea_dft_E0_meV": 210.34,
+   "Ea_dft_meV": 210.286,
+   "Ea_mace_meV": 213.833,
+   "Ea_dft_E0_meV": 210.337,
+   "Ea_dft_corpusdef_meV": 210.286,
+   "Ea_mace_corpusdef_meV": 213.833,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3631,
     0.4
@@ -510,11 +717,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 160.84,
-   "Ea_mace_meV": 194.63,
-   "Ea_dft_E0_meV": 160.27,
+   "Ea_dft_meV": 160.837,
+   "Ea_mace_meV": 194.625,
+   "Ea_dft_E0_meV": 160.271,
+   "Ea_dft_corpusdef_meV": 160.837,
+   "Ea_mace_corpusdef_meV": 194.625,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3688,
     0.3824
@@ -534,11 +744,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 199.23,
-   "Ea_mace_meV": 209.29,
-   "Ea_dft_E0_meV": 199.32,
+   "Ea_dft_meV": 199.234,
+   "Ea_mace_meV": 209.292,
+   "Ea_dft_E0_meV": 199.324,
+   "Ea_dft_corpusdef_meV": 199.234,
+   "Ea_mace_corpusdef_meV": 209.292,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3744,
     0.3908
@@ -560,9 +773,12 @@
    ],
    "Ea_dft_meV": 232.66,
    "Ea_mace_meV": 200.31,
-   "Ea_dft_E0_meV": 233.35,
+   "Ea_dft_E0_meV": 233.352,
+   "Ea_dft_corpusdef_meV": 232.66,
+   "Ea_mace_corpusdef_meV": 200.31,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3399,
     0.3318
@@ -582,11 +798,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 240.35,
-   "Ea_mace_meV": 252.09,
-   "Ea_dft_E0_meV": 240.16,
+   "Ea_dft_meV": 240.354,
+   "Ea_mace_meV": 252.089,
+   "Ea_dft_E0_meV": 240.156,
+   "Ea_dft_corpusdef_meV": 240.354,
+   "Ea_mace_corpusdef_meV": 252.089,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3998,
     0.3568
@@ -606,11 +825,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 248.54,
+   "Ea_dft_meV": 248.539,
    "Ea_mace_meV": 238.27,
-   "Ea_dft_E0_meV": 249.21,
+   "Ea_dft_E0_meV": 249.206,
+   "Ea_dft_corpusdef_meV": 248.539,
+   "Ea_mace_corpusdef_meV": 238.27,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3474,
     0.3542
@@ -630,11 +852,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 56.67,
-   "Ea_mace_meV": 126.77,
-   "Ea_dft_E0_meV": 55.79,
+   "Ea_dft_meV": 56.666,
+   "Ea_mace_meV": 126.767,
+   "Ea_dft_E0_meV": 55.792,
+   "Ea_dft_corpusdef_meV": 56.666,
+   "Ea_mace_corpusdef_meV": 126.767,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4162,
     0.417
@@ -655,10 +880,13 @@
     6
    ],
    "Ea_dft_meV": 87.84,
-   "Ea_mace_meV": 62.96,
+   "Ea_mace_meV": 62.961,
    "Ea_dft_E0_meV": 87.03,
+   "Ea_dft_corpusdef_meV": 87.84,
+   "Ea_mace_corpusdef_meV": 62.961,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4276,
     0.4354
@@ -678,11 +906,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": -22.5,
-   "Ea_mace_meV": 55.11,
-   "Ea_dft_E0_meV": -22.9,
+   "Ea_dft_meV": -22.504,
+   "Ea_mace_meV": 55.106,
+   "Ea_dft_E0_meV": -22.898,
+   "Ea_dft_corpusdef_meV": 0.0,
+   "Ea_mace_corpusdef_meV": 55.106,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4153,
     0.4142
@@ -702,11 +933,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 37.21,
-   "Ea_mace_meV": 104.96,
-   "Ea_dft_E0_meV": 37.63,
+   "Ea_dft_meV": 37.212,
+   "Ea_mace_meV": 104.962,
+   "Ea_dft_E0_meV": 37.628,
+   "Ea_dft_corpusdef_meV": 37.212,
+   "Ea_mace_corpusdef_meV": 104.962,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4471,
     0.3897
@@ -726,11 +960,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 117.07,
-   "Ea_mace_meV": 200.53,
-   "Ea_dft_E0_meV": 117.9,
+   "Ea_dft_meV": 117.066,
+   "Ea_mace_meV": 200.534,
+   "Ea_dft_E0_meV": 117.896,
+   "Ea_dft_corpusdef_meV": 117.066,
+   "Ea_mace_corpusdef_meV": 200.534,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4284,
     0.3911
@@ -750,11 +987,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": -15.79,
-   "Ea_mace_meV": 71.27,
-   "Ea_dft_E0_meV": -15.1,
+   "Ea_dft_meV": -15.786,
+   "Ea_mace_meV": 71.275,
+   "Ea_dft_E0_meV": -15.101,
+   "Ea_dft_corpusdef_meV": 0.0,
+   "Ea_mace_corpusdef_meV": 71.275,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.4478,
     0.3891
@@ -774,11 +1014,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 19.56,
-   "Ea_mace_meV": 79.24,
-   "Ea_dft_E0_meV": 19.84,
+   "Ea_dft_meV": 19.561,
+   "Ea_mace_meV": 79.237,
+   "Ea_dft_E0_meV": 19.841,
+   "Ea_dft_corpusdef_meV": 19.561,
+   "Ea_mace_corpusdef_meV": 79.237,
    "argmax_dft": 2,
    "argmax_mace": 3,
+   "dft_max_unbracketed": true,
    "minima_dft_fmax_eVA": [
     0.371,
     0.3349
@@ -798,11 +1041,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": -3.57,
-   "Ea_mace_meV": 85.81,
-   "Ea_dft_E0_meV": -3.83,
+   "Ea_dft_meV": -3.571,
+   "Ea_mace_meV": 85.813,
+   "Ea_dft_E0_meV": -3.828,
+   "Ea_dft_corpusdef_meV": 0.0,
+   "Ea_mace_corpusdef_meV": 85.813,
    "argmax_dft": 2,
    "argmax_mace": 3,
+   "dft_max_unbracketed": true,
    "minima_dft_fmax_eVA": [
     0.3891,
     0.3641
@@ -822,11 +1068,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 33.84,
-   "Ea_mace_meV": 93.58,
-   "Ea_dft_E0_meV": 34.56,
+   "Ea_dft_meV": 33.845,
+   "Ea_mace_meV": 93.579,
+   "Ea_dft_E0_meV": 34.561,
+   "Ea_dft_corpusdef_meV": 33.845,
+   "Ea_mace_corpusdef_meV": 93.579,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3605,
     0.3386
@@ -846,11 +1095,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 305.97,
-   "Ea_mace_meV": 292.58,
-   "Ea_dft_E0_meV": 307.95,
+   "Ea_dft_meV": 305.971,
+   "Ea_mace_meV": 292.584,
+   "Ea_dft_E0_meV": 307.952,
+   "Ea_dft_corpusdef_meV": 305.971,
+   "Ea_mace_corpusdef_meV": 292.584,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3694,
     0.3642
@@ -870,11 +1122,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 208.34,
-   "Ea_mace_meV": 187.41,
-   "Ea_dft_E0_meV": 208.77,
+   "Ea_dft_meV": 208.343,
+   "Ea_mace_meV": 187.414,
+   "Ea_dft_E0_meV": 208.765,
+   "Ea_dft_corpusdef_meV": 208.343,
+   "Ea_mace_corpusdef_meV": 187.414,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3544,
     0.3505
@@ -894,11 +1149,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 211.21,
-   "Ea_mace_meV": 220.06,
-   "Ea_dft_E0_meV": 214.28,
+   "Ea_dft_meV": 211.208,
+   "Ea_mace_meV": 220.062,
+   "Ea_dft_E0_meV": 214.284,
+   "Ea_dft_corpusdef_meV": 211.208,
+   "Ea_mace_corpusdef_meV": 220.062,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3543,
     0.3476
@@ -918,11 +1176,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 130.39,
-   "Ea_mace_meV": 112.05,
-   "Ea_dft_E0_meV": 132.02,
+   "Ea_dft_meV": 130.392,
+   "Ea_mace_meV": 112.046,
+   "Ea_dft_E0_meV": 132.023,
+   "Ea_dft_corpusdef_meV": 130.392,
+   "Ea_mace_corpusdef_meV": 112.046,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3801,
     0.4023
@@ -942,11 +1203,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 151.65,
-   "Ea_mace_meV": 173.92,
-   "Ea_dft_E0_meV": 151.67,
+   "Ea_dft_meV": 151.653,
+   "Ea_mace_meV": 173.916,
+   "Ea_dft_E0_meV": 151.671,
+   "Ea_dft_corpusdef_meV": 151.653,
+   "Ea_mace_corpusdef_meV": 173.916,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3828,
     0.4117
@@ -966,11 +1230,14 @@
     4,
     6
    ],
-   "Ea_dft_meV": 177.17,
-   "Ea_mace_meV": 175.22,
-   "Ea_dft_E0_meV": 178.74,
+   "Ea_dft_meV": 177.173,
+   "Ea_mace_meV": 175.221,
+   "Ea_dft_E0_meV": 178.738,
+   "Ea_dft_corpusdef_meV": 177.173,
+   "Ea_mace_corpusdef_meV": 175.221,
    "argmax_dft": 3,
    "argmax_mace": 3,
+   "dft_max_unbracketed": false,
    "minima_dft_fmax_eVA": [
     0.3846,
     0.41

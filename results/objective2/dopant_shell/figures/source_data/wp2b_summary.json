@@ -10,7 +10,7 @@
      "mean_meV": 11.9,
      "sd_meV": 51.67,
      "ci95_meV": [
-      -27.81,
+      -27.82,
       51.61
      ],
      "ci_inside_band": true,
@@ -38,13 +38,35 @@
      "ci_inside_band": true,
      "tost_p": 0.0038
     },
+    "dft_corpusdef": {
+     "n": 9,
+     "mean_meV": 7.64,
+     "sd_meV": 46.93,
+     "ci95_meV": [
+      -28.43,
+      43.72
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0053
+    },
+    "mace_corpusdef": {
+     "n": 9,
+     "mean_meV": 4.28,
+     "sd_meV": 46.69,
+     "ci95_meV": [
+      -31.61,
+      40.17
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0038
+    },
     "error_rms_meV": 15.88
    },
    "Sr": {
     "dft": {
      "n": 9,
      "mean_meV": 7.85,
-     "sd_meV": 67.64,
+     "sd_meV": 67.63,
      "ci95_meV": [
       -44.14,
       59.84
@@ -74,47 +96,103 @@
      "ci_inside_band": true,
      "tost_p": 0.0073
     },
+    "dft_corpusdef": {
+     "n": 9,
+     "mean_meV": 3.99,
+     "sd_meV": 59.53,
+     "ci95_meV": [
+      -41.77,
+      49.75
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0116
+    },
+    "mace_corpusdef": {
+     "n": 9,
+     "mean_meV": 9.29,
+     "sd_meV": 48.48,
+     "ci95_meV": [
+      -27.98,
+      46.56
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0073
+    },
     "error_rms_meV": 41.11
    }
   },
+  "criterion3_corpus_definition": {
+   "note": "sensitivity only: E_a = max over all sampled images {0,2,3,4,6} - E_0 (scripts/22 definition)",
+   "rms_error_meV": 26.992027638850672,
+   "mean_error_meV": 0.9680736546392331,
+   "flips": [
+    "m05_Sr",
+    "m15_GA",
+    "m15_Sr",
+    "m32_GA"
+   ]
+  },
+  "max_abs_dEa_E0_minus_F_meV": 2.6535863580647856,
+  "unbracketed_bands": [
+   "m21_GA",
+   "m21_Sr"
+  ],
   "incomplete_bands": [],
   "criterion3": {
    "n_pairs": 18,
    "expected": 18,
    "missing_pairs": [],
-   "rms_error_meV": 31.159046572918967,
-   "mean_error_meV": -3.088333333333332,
+   "rms_error_meV": 31.158993016663732,
+   "mean_error_meV": -3.0879119643966786,
    "rms_pass": false,
    "flips": [
     {
      "host": "m05",
      "dopant": "Sr",
-     "dEa_dft_meV": -61.02,
-     "dEa_mace_meV": -30.15,
-     "dEa_dft_E0_meV": -62.08,
-     "error_meV": 30.87,
+     "dEa_dft_meV": -61.019,
+     "dEa_mace_meV": -30.153,
+     "dEa_dft_E0_meV": -62.084,
+     "error_meV": 30.866,
      "class_dft": -1,
-     "class_mace": 0
+     "class_mace": 0,
+     "dEa_dft_corpusdef_meV": -61.019,
+     "dEa_mace_corpusdef_meV": -30.153,
+     "error_corpusdef_meV": 30.866,
+     "class_dft_corpusdef": -1,
+     "class_mace_corpusdef": 0,
+     "unbracketed": false
     },
     {
      "host": "m15",
      "dopant": "Sr",
-     "dEa_dft_meV": 110.34,
-     "dEa_mace_meV": 7.85,
-     "dEa_dft_E0_meV": 109.93,
-     "error_meV": -102.49,
+     "dEa_dft_meV": 110.344,
+     "dEa_mace_meV": 7.854,
+     "dEa_dft_E0_meV": 109.928,
+     "error_meV": -102.489,
      "class_dft": 1,
-     "class_mace": 0
+     "class_mace": 0,
+     "dEa_dft_corpusdef_meV": 87.84,
+     "dEa_mace_corpusdef_meV": 7.854,
+     "error_corpusdef_meV": -79.985,
+     "class_dft_corpusdef": 1,
+     "class_mace_corpusdef": 0,
+     "unbracketed": false
     },
     {
      "host": "m32",
      "dopant": "GA",
-     "dEa_dft_meV": -46.78,
-     "dEa_mace_meV": -63.17,
-     "dEa_dft_E0_meV": -46.72,
-     "error_meV": -16.39,
+     "dEa_dft_meV": -46.781,
+     "dEa_mace_meV": -63.175,
+     "dEa_dft_E0_meV": -46.714,
+     "error_meV": -16.394,
      "class_dft": 0,
-     "class_mace": -1
+     "class_mace": -1,
+     "dEa_dft_corpusdef_meV": -46.781,
+     "dEa_mace_corpusdef_meV": -63.175,
+     "error_corpusdef_meV": -16.394,
+     "class_dft_corpusdef": 0,
+     "class_mace_corpusdef": -1,
+     "unbracketed": false
     }
    ],
    "verdict": "fail"
