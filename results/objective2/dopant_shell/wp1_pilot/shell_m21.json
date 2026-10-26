@@ -1,0 +1,1638 @@
+{
+ "member": 21,
+ "protocol": {
+  "version": "v2.1-stage-validity",
+  "model": "MACE-MP-0 medium",
+  "dtype": "float64",
+  "optimizer": "FIRE (restarted per stage)",
+  "fmax_stages": [
+   0.02,
+   0.01,
+   0.005
+  ],
+  "steps_per_stage": 10000,
+  "cell": "fixed",
+  "basin_rcut_A": 6.0,
+  "warm_start": "D_j from relaxed host, D_j+V from relaxed V"
+ },
+ "inputs": {
+  "pool": "/data/work/ps/results/fa_host/pool_v3_harmonised",
+  "vac_ref": "/data/work/ps/results/fa_host/pool_v2/fa19cspb20i59_232_vI.extxyz",
+  "host_sha256": "e91710de1490c170c71d3e55900c95f2f0c5302ac1bd224dee300da0fe458d52",
+  "vpos": [
+   6.3597,
+   13.3425,
+   9.7519
+  ]
+ },
+ "vacancy_host_index": 127,
+ "rows": [
+  {
+   "dopant": "Sr",
+   "site_host_index": 124,
+   "d_dopant_vacancy_A": 3.226,
+   "Eb_meV": 157.96,
+   "Eb_by_stage_meV": {
+    "0.02": 163.11,
+    "0.01": 162.18,
+    "0.005": 157.96
+   },
+   "valid": true,
+   "basin_ok": true,
+   "basin_novac_vs_host": {
+    "n_far": 176,
+    "max_dr_A": 0.03512649049869254,
+    "max_fa_rot_deg": 1.0016822690172507
+   },
+   "basin_vac_vs_V": {
+    "n_far": 175,
+    "max_dr_A": 0.07060969218521108,
+    "max_fa_rot_deg": 1.6576330742193712
+   },
+   "nearest_I_to_vacancy_site_A": 4.077,
+   "dopant_displacement_A": [
+    0.024,
+    0.092
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 163.11,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 176,
+      "max_dr_A": 0.038183809021631696,
+      "max_fa_rot_deg": 0.2430831816451273
+     },
+     "basin_vac_vs_V": {
+      "n_far": 175,
+      "max_dr_A": 0.048393752839722005,
+      "max_fa_rot_deg": 0.3966113797785601
+     },
+     "nearest_I_to_vacancy_site_A": 4.107,
+     "dopant_displacement_A": [
+      0.025,
+      0.06
+     ]
+    },
+    "0.01": {
+     "Eb_meV": 162.18,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 176,
+      "max_dr_A": 0.03369096311200425,
+      "max_fa_rot_deg": 0.4877239197352075
+     },
+     "basin_vac_vs_V": {
+      "n_far": 175,
+      "max_dr_A": 0.05174288293716387,
+      "max_fa_rot_deg": 0.6154044432613517
+     },
+     "nearest_I_to_vacancy_site_A": 4.108,
+     "dopant_displacement_A": [
+      0.022,
+      0.069
+     ]
+    },
+    "0.005": {
+     "Eb_meV": 157.96,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 176,
+      "max_dr_A": 0.03512649049869254,
+      "max_fa_rot_deg": 1.0016822690172507
+     },
+     "basin_vac_vs_V": {
+      "n_far": 175,
+      "max_dr_A": 0.07060969218521108,
+      "max_fa_rot_deg": 1.6576330742193712
+     },
+     "nearest_I_to_vacancy_site_A": 4.077,
+     "dopant_displacement_A": [
+      0.024,
+      0.092
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "Sr@124 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1068.0206345011522,
+      "fmax": 0.015811992269601772,
+      "steps": 26,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1068.0223181746803,
+      "fmax": 0.009869973650660837,
+      "steps": 37,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1068.0239852359418,
+      "fmax": 0.004305862531099109,
+      "steps": 37,
+      "converged": true
+     }
+    ],
+    "E_eV": -1068.0239852359418,
+    "fmax": 0.004305862531099109,
+    "converged": true,
+    "wall_s": 241.1
+   },
+   "with_vac": {
+    "label": "Sr@124 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1065.5510483958312,
+      "fmax": 0.019702330612568444,
+      "steps": 28,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1065.5536581020492,
+      "fmax": 0.009870193968959877,
+      "steps": 32,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1065.5595445525144,
+      "fmax": 0.004942808302948536,
+      "steps": 99,
+      "converged": true
+     }
+    ],
+    "E_eV": -1065.5595445525144,
+    "fmax": 0.004942808302948536,
+    "converged": true,
+    "wall_s": 380.9
+   }
+  },
+  {
+   "dopant": "Sr",
+   "site_host_index": 136,
+   "d_dopant_vacancy_A": 3.281,
+   "Eb_meV": 161.68,
+   "Eb_by_stage_meV": {
+    "0.02": 165.9,
+    "0.01": 165.09,
+    "0.005": 161.68
+   },
+   "valid": true,
+   "basin_ok": true,
+   "basin_novac_vs_host": {
+    "n_far": 178,
+    "max_dr_A": 0.04292307151223864,
+    "max_fa_rot_deg": 0.8470263750393948
+   },
+   "basin_vac_vs_V": {
+    "n_far": 180,
+    "max_dr_A": 0.08503514656050755,
+    "max_fa_rot_deg": 1.3582550450231046
+   },
+   "nearest_I_to_vacancy_site_A": 3.982,
+   "dopant_displacement_A": [
+    0.024,
+    0.086
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 165.9,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 178,
+      "max_dr_A": 0.03486945697533424,
+      "max_fa_rot_deg": 0.178465260520575
+     },
+     "basin_vac_vs_V": {
+      "n_far": 180,
+      "max_dr_A": 0.06141871601010007,
+      "max_fa_rot_deg": 0.4400498535359918
+     },
+     "nearest_I_to_vacancy_site_A": 4.027,
+     "dopant_displacement_A": [
+      0.03,
+      0.077
+     ]
+    },
+    "0.01": {
+     "Eb_meV": 165.09,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 178,
+      "max_dr_A": 0.04238437686019793,
+      "max_fa_rot_deg": 0.4654702972977475
+     },
+     "basin_vac_vs_V": {
+      "n_far": 180,
+      "max_dr_A": 0.07304157687020557,
+      "max_fa_rot_deg": 0.6131288819879472
+     },
+     "nearest_I_to_vacancy_site_A": 4.013,
+     "dopant_displacement_A": [
+      0.026,
+      0.079
+     ]
+    },
+    "0.005": {
+     "Eb_meV": 161.68,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 178,
+      "max_dr_A": 0.04292307151223864,
+      "max_fa_rot_deg": 0.8470263750393948
+     },
+     "basin_vac_vs_V": {
+      "n_far": 180,
+      "max_dr_A": 0.08503514656050755,
+      "max_fa_rot_deg": 1.3582550450231046
+     },
+     "nearest_I_to_vacancy_site_A": 3.982,
+     "dopant_displacement_A": [
+      0.024,
+      0.086
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "Sr@136 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1068.011227495823,
+      "fmax": 0.018974569213360958,
+      "steps": 20,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1068.012639791942,
+      "fmax": 0.009895570229104702,
+      "steps": 38,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1068.0135489317468,
+      "fmax": 0.004971013832457043,
+      "steps": 31,
+      "converged": true
+     }
+    ],
+    "E_eV": -1068.0135489317468,
+    "fmax": 0.004971013832457043,
+    "converged": true,
+    "wall_s": 218.9
+   },
+   "with_vac": {
+    "label": "Sr@136 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1065.5388476597245,
+      "fmax": 0.017452600377842215,
+      "steps": 49,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1065.5410725280983,
+      "fmax": 0.009790287371829999,
+      "steps": 18,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1065.5453927524657,
+      "fmax": 0.004988239145156648,
+      "steps": 80,
+      "converged": true
+     }
+    ],
+    "E_eV": -1065.5453927524657,
+    "fmax": 0.004988239145156648,
+    "converged": true,
+    "wall_s": 354.6
+   }
+  },
+  {
+   "dopant": "Sr",
+   "site_host_index": 64,
+   "d_dopant_vacancy_A": 10.198,
+   "Eb_meV": -0.92,
+   "Eb_by_stage_meV": {
+    "0.02": 9.47,
+    "0.01": 7.62,
+    "0.005": -0.92
+   },
+   "valid": true,
+   "basin_ok": true,
+   "basin_novac_vs_host": {
+    "n_far": 157,
+    "max_dr_A": 0.06721201892812978,
+    "max_fa_rot_deg": 1.957945346343813
+   },
+   "basin_vac_vs_V": {
+    "n_far": 158,
+    "max_dr_A": 0.18776667979744663,
+    "max_fa_rot_deg": 7.197893304955213
+   },
+   "nearest_I_to_vacancy_site_A": 4.11,
+   "dopant_displacement_A": [
+    0.019,
+    0.035
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 9.47,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 157,
+      "max_dr_A": 0.0273459859117053,
+      "max_fa_rot_deg": 0.23173685666644137
+     },
+     "basin_vac_vs_V": {
+      "n_far": 158,
+      "max_dr_A": 0.035739122391826715,
+      "max_fa_rot_deg": 0.14450475302866692
+     },
+     "nearest_I_to_vacancy_site_A": 4.103,
+     "dopant_displacement_A": [
+      0.016,
+      0.021
+     ]
+    },
+    "0.01": {
+     "Eb_meV": 7.62,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 157,
+      "max_dr_A": 0.027640411575521967,
+      "max_fa_rot_deg": 0.2397442803551099
+     },
+     "basin_vac_vs_V": {
+      "n_far": 158,
+      "max_dr_A": 0.03646047452775062,
+      "max_fa_rot_deg": 0.34105228536084264
+     },
+     "nearest_I_to_vacancy_site_A": 4.104,
+     "dopant_displacement_A": [
+      0.014,
+      0.018
+     ]
+    },
+    "0.005": {
+     "Eb_meV": -0.92,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 157,
+      "max_dr_A": 0.06721201892812978,
+      "max_fa_rot_deg": 1.957945346343813
+     },
+     "basin_vac_vs_V": {
+      "n_far": 158,
+      "max_dr_A": 0.18776667979744663,
+      "max_fa_rot_deg": 7.197893304955213
+     },
+     "nearest_I_to_vacancy_site_A": 4.11,
+     "dopant_displacement_A": [
+      0.019,
+      0.035
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "Sr@64 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1068.0061512304817,
+      "fmax": 0.01834181214195218,
+      "steps": 10,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1068.0066491174416,
+      "fmax": 0.009866028173324555,
+      "steps": 5,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1068.0130918130649,
+      "fmax": 0.00499265017145559,
+      "steps": 309,
+      "converged": true
+     }
+    ],
+    "E_eV": -1068.0130918130649,
+    "fmax": 0.00499265017145559,
+    "converged": true,
+    "wall_s": 795.4
+   },
+   "with_vac": {
+    "label": "Sr@64 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1065.6901997778257,
+      "fmax": 0.018464759981110218,
+      "steps": 22,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1065.6925522036242,
+      "fmax": 0.009870326049790261,
+      "steps": 32,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1065.7075311849237,
+      "fmax": 0.004995315310959841,
+      "steps": 625,
+      "converged": true
+     }
+    ],
+    "E_eV": -1065.7075311849237,
+    "fmax": 0.004995315310959841,
+    "converged": true,
+    "wall_s": 1632.1
+   }
+  },
+  {
+   "dopant": "Sr",
+   "site_host_index": 172,
+   "d_dopant_vacancy_A": 11.609,
+   "Eb_meV": 5.61,
+   "Eb_by_stage_meV": {
+    "0.02": 5.26,
+    "0.01": 7.4,
+    "0.005": 5.61
+   },
+   "valid": true,
+   "basin_ok": true,
+   "basin_novac_vs_host": {
+    "n_far": 156,
+    "max_dr_A": 0.03551309622523652,
+    "max_fa_rot_deg": 0.550369198852533
+   },
+   "basin_vac_vs_V": {
+    "n_far": 160,
+    "max_dr_A": 0.04784255591721333,
+    "max_fa_rot_deg": 0.858983877080282
+   },
+   "nearest_I_to_vacancy_site_A": 4.104,
+   "dopant_displacement_A": [
+    0.017,
+    0.014
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 5.26,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 156,
+      "max_dr_A": 0.020856742579890668,
+      "max_fa_rot_deg": 0.18999980383965767
+     },
+     "basin_vac_vs_V": {
+      "n_far": 160,
+      "max_dr_A": 0.041939618869394145,
+      "max_fa_rot_deg": 0.21122367133155373
+     },
+     "nearest_I_to_vacancy_site_A": 4.103,
+     "dopant_displacement_A": [
+      0.02,
+      0.019
+     ]
+    },
+    "0.01": {
+     "Eb_meV": 7.4,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 156,
+      "max_dr_A": 0.03671000594784447,
+      "max_fa_rot_deg": 0.3417617458240184
+     },
+     "basin_vac_vs_V": {
+      "n_far": 160,
+      "max_dr_A": 0.04257316946117413,
+      "max_fa_rot_deg": 0.2462522141739628
+     },
+     "nearest_I_to_vacancy_site_A": 4.102,
+     "dopant_displacement_A": [
+      0.014,
+      0.016
+     ]
+    },
+    "0.005": {
+     "Eb_meV": 5.61,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 156,
+      "max_dr_A": 0.03551309622523652,
+      "max_fa_rot_deg": 0.550369198852533
+     },
+     "basin_vac_vs_V": {
+      "n_far": 160,
+      "max_dr_A": 0.04784255591721333,
+      "max_fa_rot_deg": 0.858983877080282
+     },
+     "nearest_I_to_vacancy_site_A": 4.104,
+     "dopant_displacement_A": [
+      0.017,
+      0.014
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "Sr@172 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1068.0216935822207,
+      "fmax": 0.019489618031509046,
+      "steps": 9,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1068.0242880744715,
+      "fmax": 0.008955261848707301,
+      "steps": 14,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1068.025210257154,
+      "fmax": 0.004399968813833002,
+      "steps": 22,
+      "converged": true
+     }
+    ],
+    "E_eV": -1068.025210257154,
+    "fmax": 0.004399968813833002,
+    "converged": true,
+    "wall_s": 111.5
+   },
+   "with_vac": {
+    "label": "Sr@172 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1065.7099583839363,
+      "fmax": 0.01921220743595915,
+      "steps": 33,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1065.710411760413,
+      "fmax": 0.008989084908988278,
+      "steps": 6,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1065.7131208845171,
+      "fmax": 0.00489223486143529,
+      "steps": 45,
+      "converged": true
+     }
+    ],
+    "E_eV": -1065.7131208845171,
+    "fmax": 0.00489223486143529,
+    "converged": true,
+    "wall_s": 204.6
+   }
+  },
+  {
+   "dopant": "Sr",
+   "site_host_index": 76,
+   "d_dopant_vacancy_A": 11.839,
+   "Eb_meV": -2.43,
+   "Eb_by_stage_meV": {
+    "0.02": 3.34,
+    "0.01": 2.92,
+    "0.005": -2.43
+   },
+   "valid": true,
+   "basin_ok": true,
+   "basin_novac_vs_host": {
+    "n_far": 154,
+    "max_dr_A": 0.0383175868435515,
+    "max_fa_rot_deg": 0.07873040760667874
+   },
+   "basin_vac_vs_V": {
+    "n_far": 159,
+    "max_dr_A": 0.10782007193822421,
+    "max_fa_rot_deg": 0.342243279722565
+   },
+   "nearest_I_to_vacancy_site_A": 4.107,
+   "dopant_displacement_A": [
+    0.027,
+    0.037
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 3.34,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 154,
+      "max_dr_A": 0.02886894596010843,
+      "max_fa_rot_deg": 0.020815543598713415
+     },
+     "basin_vac_vs_V": {
+      "n_far": 159,
+      "max_dr_A": 0.030534514523386295,
+      "max_fa_rot_deg": 0.013780931464928283
+     },
+     "nearest_I_to_vacancy_site_A": 4.102,
+     "dopant_displacement_A": [
+      0.03,
+      0.031
+     ]
+    },
+    "0.01": {
+     "Eb_meV": 2.92,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 154,
+      "max_dr_A": 0.02962493531711553,
+      "max_fa_rot_deg": 0.029267770809854616
+     },
+     "basin_vac_vs_V": {
+      "n_far": 159,
+      "max_dr_A": 0.0376913325609549,
+      "max_fa_rot_deg": 0.025054084281892885
+     },
+     "nearest_I_to_vacancy_site_A": 4.102,
+     "dopant_displacement_A": [
+      0.026,
+      0.027
+     ]
+    },
+    "0.005": {
+     "Eb_meV": -2.43,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 154,
+      "max_dr_A": 0.0383175868435515,
+      "max_fa_rot_deg": 0.07873040760667874
+     },
+     "basin_vac_vs_V": {
+      "n_far": 159,
+      "max_dr_A": 0.10782007193822421,
+      "max_fa_rot_deg": 0.342243279722565
+     },
+     "nearest_I_to_vacancy_site_A": 4.107,
+     "dopant_displacement_A": [
+      0.027,
+      0.037
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "Sr@76 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1068.0116633882146,
+      "fmax": 0.018831522443811567,
+      "steps": 17,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1068.0121749828104,
+      "fmax": 0.009641058337781888,
+      "steps": 7,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1068.0132517577852,
+      "fmax": 0.004226782739115524,
+      "steps": 17,
+      "converged": true
+     }
+    ],
+    "E_eV": -1068.0132517577852,
+    "fmax": 0.004226782739115524,
+    "converged": true,
+    "wall_s": 108.4
+   },
+   "with_vac": {
+    "label": "Sr@76 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1065.7018451174122,
+      "fmax": 0.01809029092827509,
+      "steps": 18,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1065.7027771341307,
+      "fmax": 0.009152871773280419,
+      "steps": 10,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1065.709200717786,
+      "fmax": 0.0049656813160234665,
+      "steps": 229,
+      "converged": true
+     }
+    ],
+    "E_eV": -1065.709200717786,
+    "fmax": 0.0049656813160234665,
+    "converged": true,
+    "wall_s": 616.4
+   }
+  },
+  {
+   "dopant": "GA",
+   "site_host_index": 128,
+   "d_dopant_vacancy_A": 4.444,
+   "Eb_meV": -4.64,
+   "Eb_by_stage_meV": {
+    "0.02": 0.38,
+    "0.01": -3.28,
+    "0.005": -4.64
+   },
+   "valid": true,
+   "basin_ok": true,
+   "basin_novac_vs_host": {
+    "n_far": 178,
+    "max_dr_A": 0.13042529920461998,
+    "max_fa_rot_deg": 3.8727299935089743
+   },
+   "basin_vac_vs_V": {
+    "n_far": 179,
+    "max_dr_A": 0.16751587261228815,
+    "max_fa_rot_deg": 5.2661482522102006
+   },
+   "nearest_I_to_vacancy_site_A": 4.19,
+   "dopant_displacement_A": [
+    0.283,
+    0.279
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 0.38,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 178,
+      "max_dr_A": 0.07184356679394498,
+      "max_fa_rot_deg": 0.5328356223800612
+     },
+     "basin_vac_vs_V": {
+      "n_far": 179,
+      "max_dr_A": 0.08889920688964038,
+      "max_fa_rot_deg": 0.6464622899792098
+     },
+     "nearest_I_to_vacancy_site_A": 4.183,
+     "dopant_displacement_A": [
+      0.097,
+      0.11
+     ]
+    },
+    "0.01": {
+     "Eb_meV": -3.28,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 178,
+      "max_dr_A": 0.10890998318027345,
+      "max_fa_rot_deg": 1.9333784583114455
+     },
+     "basin_vac_vs_V": {
+      "n_far": 179,
+      "max_dr_A": 0.14923854245411933,
+      "max_fa_rot_deg": 2.602501220529787
+     },
+     "nearest_I_to_vacancy_site_A": 4.188,
+     "dopant_displacement_A": [
+      0.202,
+      0.214
+     ]
+    },
+    "0.005": {
+     "Eb_meV": -4.64,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 178,
+      "max_dr_A": 0.13042529920461998,
+      "max_fa_rot_deg": 3.8727299935089743
+     },
+     "basin_vac_vs_V": {
+      "n_far": 179,
+      "max_dr_A": 0.16751587261228815,
+      "max_fa_rot_deg": 5.2661482522102006
+     },
+     "nearest_I_to_vacancy_site_A": 4.19,
+     "dopant_displacement_A": [
+      0.283,
+      0.279
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "GA@128 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1079.636422037077,
+      "fmax": 0.019249576013926337,
+      "steps": 66,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1079.6584911059613,
+      "fmax": 0.009582770176140554,
+      "steps": 160,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1079.668117533754,
+      "fmax": 0.0049763623125667,
+      "steps": 258,
+      "converged": true
+     }
+    ],
+    "E_eV": -1079.668117533754,
+    "fmax": 0.0049763623125667,
+    "converged": true,
+    "wall_s": 1191.9
+   },
+   "with_vac": {
+    "label": "GA@128 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1077.3295636300575,
+      "fmax": 0.019494650982310856,
+      "steps": 86,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1077.3552931262466,
+      "fmax": 0.009862319762689302,
+      "steps": 166,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1077.3662748329502,
+      "fmax": 0.004998882304450626,
+      "steps": 300,
+      "converged": true
+     }
+    ],
+    "E_eV": -1077.3662748329502,
+    "fmax": 0.004998882304450626,
+    "converged": true,
+    "wall_s": 1333.3
+   }
+  },
+  {
+   "dopant": "GA",
+   "site_host_index": 28,
+   "d_dopant_vacancy_A": 4.668,
+   "Eb_meV": -56.71,
+   "Eb_by_stage_meV": {
+    "0.02": -32.44,
+    "0.01": -25.81,
+    "0.005": -56.71
+   },
+   "valid": false,
+   "basin_ok": false,
+   "basin_novac_vs_host": {
+    "n_far": 179,
+    "max_dr_A": 0.13657407958405868,
+    "max_fa_rot_deg": 4.9896019579498905
+   },
+   "basin_vac_vs_V": {
+    "n_far": 181,
+    "max_dr_A": 1.2314787396072984,
+    "max_fa_rot_deg": 29.22884819067986
+   },
+   "nearest_I_to_vacancy_site_A": 4.184,
+   "dopant_displacement_A": [
+    0.301,
+    0.137
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": -32.44,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 179,
+      "max_dr_A": 0.0666958398309696,
+      "max_fa_rot_deg": 1.2677292583991495
+     },
+     "basin_vac_vs_V": {
+      "n_far": 181,
+      "max_dr_A": 0.03069991617627273,
+      "max_fa_rot_deg": 1.4333632202201243
+     },
+     "nearest_I_to_vacancy_site_A": 4.137,
+     "dopant_displacement_A": [
+      0.16,
+      0.042
+     ]
+    },
+    "0.01": {
+     "Eb_meV": -25.81,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 179,
+      "max_dr_A": 0.09561841352403319,
+      "max_fa_rot_deg": 2.468444852082932
+     },
+     "basin_vac_vs_V": {
+      "n_far": 181,
+      "max_dr_A": 0.04974028304620607,
+      "max_fa_rot_deg": 2.1613999324347093
+     },
+     "nearest_I_to_vacancy_site_A": 4.157,
+     "dopant_displacement_A": [
+      0.226,
+      0.06
+     ]
+    },
+    "0.005": {
+     "Eb_meV": -56.71,
+     "valid": false,
+     "converged": true,
+     "basin_ok": false,
+     "basin_novac_vs_host": {
+      "n_far": 179,
+      "max_dr_A": 0.13657407958405868,
+      "max_fa_rot_deg": 4.9896019579498905
+     },
+     "basin_vac_vs_V": {
+      "n_far": 181,
+      "max_dr_A": 1.2314787396072984,
+      "max_fa_rot_deg": 29.22884819067986
+     },
+     "nearest_I_to_vacancy_site_A": 4.184,
+     "dopant_displacement_A": [
+      0.301,
+      0.137
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "GA@28 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1079.6305494716473,
+      "fmax": 0.019333434844072607,
+      "steps": 122,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1079.6424035216207,
+      "fmax": 0.009380741079287921,
+      "steps": 78,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1079.6511934473847,
+      "fmax": 0.004973479404725273,
+      "steps": 214,
+      "converged": true
+     }
+    ],
+    "E_eV": -1079.6511934473847,
+    "fmax": 0.004973479404725273,
+    "converged": true,
+    "wall_s": 1021.0
+   },
+   "with_vac": {
+    "label": "GA@28 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1077.3565103927115,
+      "fmax": 0.01931246306022714,
+      "steps": 67,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1077.3617293376774,
+      "fmax": 0.009265375546601909,
+      "steps": 56,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1077.4014204467146,
+      "fmax": 0.0049987432372465964,
+      "steps": 2085,
+      "converged": true
+     }
+    ],
+    "E_eV": -1077.4014204467146,
+    "fmax": 0.0049987432372465964,
+    "converged": true,
+    "wall_s": 5388.2
+   }
+  },
+  {
+   "dopant": "GA",
+   "site_host_index": 200,
+   "d_dopant_vacancy_A": 10.314,
+   "Eb_meV": -55.33,
+   "Eb_by_stage_meV": {
+    "0.02": 5.68,
+    "0.01": -1.78,
+    "0.005": -55.33
+   },
+   "valid": false,
+   "basin_ok": false,
+   "basin_novac_vs_host": {
+    "n_far": 161,
+    "max_dr_A": 0.1259734812692832,
+    "max_fa_rot_deg": 5.2055078772947985
+   },
+   "basin_vac_vs_V": {
+    "n_far": 163,
+    "max_dr_A": 1.2660820356781202,
+    "max_fa_rot_deg": 29.64758413453624
+   },
+   "nearest_I_to_vacancy_site_A": 4.163,
+   "dopant_displacement_A": [
+    0.329,
+    0.44
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 5.68,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 161,
+      "max_dr_A": 0.08319568415992327,
+      "max_fa_rot_deg": 1.3391895172113182
+     },
+     "basin_vac_vs_V": {
+      "n_far": 163,
+      "max_dr_A": 0.0833113815611871,
+      "max_fa_rot_deg": 1.1072941502235107
+     },
+     "nearest_I_to_vacancy_site_A": 4.113,
+     "dopant_displacement_A": [
+      0.183,
+      0.176
+     ]
+    },
+    "0.01": {
+     "Eb_meV": -1.78,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 161,
+      "max_dr_A": 0.105761154216368,
+      "max_fa_rot_deg": 3.218150113545393
+     },
+     "basin_vac_vs_V": {
+      "n_far": 163,
+      "max_dr_A": 0.11076701825958092,
+      "max_fa_rot_deg": 3.388209811865173
+     },
+     "nearest_I_to_vacancy_site_A": 4.136,
+     "dopant_displacement_A": [
+      0.279,
+      0.306
+     ]
+    },
+    "0.005": {
+     "Eb_meV": -55.33,
+     "valid": false,
+     "converged": true,
+     "basin_ok": false,
+     "basin_novac_vs_host": {
+      "n_far": 161,
+      "max_dr_A": 0.1259734812692832,
+      "max_fa_rot_deg": 5.2055078772947985
+     },
+     "basin_vac_vs_V": {
+      "n_far": 163,
+      "max_dr_A": 1.2660820356781202,
+      "max_fa_rot_deg": 29.64758413453624
+     },
+     "nearest_I_to_vacancy_site_A": 4.163,
+     "dopant_displacement_A": [
+      0.329,
+      0.44
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "GA@200 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1079.6151331198955,
+      "fmax": 0.018485631757798698,
+      "steps": 142,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1079.6339067553033,
+      "fmax": 0.009990586023070108,
+      "steps": 214,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1079.6412312075236,
+      "fmax": 0.004991121818071791,
+      "steps": 300,
+      "converged": true
+     }
+    ],
+    "E_eV": -1079.6412312075236,
+    "fmax": 0.004991121818071791,
+    "converged": true,
+    "wall_s": 1604.2
+   },
+   "with_vac": {
+    "label": "GA@200 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1077.3029702690662,
+      "fmax": 0.019445029056099846,
+      "steps": 127,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1077.329206364829,
+      "fmax": 0.009870704033615361,
+      "steps": 251,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1077.390080308685,
+      "fmax": 0.004964196844049326,
+      "steps": 1992,
+      "converged": true
+     }
+    ],
+    "E_eV": -1077.390080308685,
+    "fmax": 0.004964196844049326,
+    "converged": true,
+    "wall_s": 5743.8
+   }
+  },
+  {
+   "dopant": "GA",
+   "site_host_index": 68,
+   "d_dopant_vacancy_A": 10.499,
+   "Eb_meV": -114.96,
+   "Eb_by_stage_meV": {
+    "0.02": -21.62,
+    "0.01": -22.23,
+    "0.005": -114.96
+   },
+   "valid": false,
+   "basin_ok": false,
+   "basin_novac_vs_host": {
+    "n_far": 163,
+    "max_dr_A": 0.10657078247554647,
+    "max_fa_rot_deg": 2.6721249750611653
+   },
+   "basin_vac_vs_V": {
+    "n_far": 164,
+    "max_dr_A": 1.2067359936036064,
+    "max_fa_rot_deg": 23.79489489186449
+   },
+   "nearest_I_to_vacancy_site_A": 4.126,
+   "dopant_displacement_A": [
+    0.128,
+    0.438
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": -21.62,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 163,
+      "max_dr_A": 0.04159066005721862,
+      "max_fa_rot_deg": 1.27634278230658
+     },
+     "basin_vac_vs_V": {
+      "n_far": 164,
+      "max_dr_A": 0.0544269902504413,
+      "max_fa_rot_deg": 1.1922420959076114
+     },
+     "nearest_I_to_vacancy_site_A": 4.102,
+     "dopant_displacement_A": [
+      0.056,
+      0.062
+     ]
+    },
+    "0.01": {
+     "Eb_meV": -22.23,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 163,
+      "max_dr_A": 0.07025140342880878,
+      "max_fa_rot_deg": 2.1380286495835357
+     },
+     "basin_vac_vs_V": {
+      "n_far": 164,
+      "max_dr_A": 0.07742897460794654,
+      "max_fa_rot_deg": 1.890061892367773
+     },
+     "nearest_I_to_vacancy_site_A": 4.108,
+     "dopant_displacement_A": [
+      0.093,
+      0.105
+     ]
+    },
+    "0.005": {
+     "Eb_meV": -114.96,
+     "valid": false,
+     "converged": true,
+     "basin_ok": false,
+     "basin_novac_vs_host": {
+      "n_far": 163,
+      "max_dr_A": 0.10657078247554647,
+      "max_fa_rot_deg": 2.6721249750611653
+     },
+     "basin_vac_vs_V": {
+      "n_far": 164,
+      "max_dr_A": 1.2067359936036064,
+      "max_fa_rot_deg": 23.79489489186449
+     },
+     "nearest_I_to_vacancy_site_A": 4.126,
+     "dopant_displacement_A": [
+      0.128,
+      0.438
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "GA@68 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1079.5949826180806,
+      "fmax": 0.01705216455683498,
+      "steps": 73,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1079.605906563191,
+      "fmax": 0.009314064484180562,
+      "steps": 68,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1079.612302744652,
+      "fmax": 0.004591355078674845,
+      "steps": 136,
+      "converged": true
+     }
+    ],
+    "E_eV": -1079.612302744652,
+    "fmax": 0.004591355078674845,
+    "converged": true,
+    "wall_s": 688.9
+   },
+   "with_vac": {
+    "label": "GA@68 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1077.3101203202564,
+      "fmax": 0.019216772494520726,
+      "steps": 73,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1077.3216573810932,
+      "fmax": 0.009914102245329981,
+      "steps": 69,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1077.420786342075,
+      "fmax": 0.004873520926968038,
+      "steps": 2721,
+      "converged": true
+     }
+    ],
+    "E_eV": -1077.420786342075,
+    "fmax": 0.004873520926968038,
+    "converged": true,
+    "wall_s": 6865.7
+   }
+  },
+  {
+   "dopant": "GA",
+   "site_host_index": 164,
+   "d_dopant_vacancy_A": 10.651,
+   "Eb_meV": -27.28,
+   "Eb_by_stage_meV": {
+    "0.02": 12.45,
+    "0.01": 10.24,
+    "0.005": -27.28
+   },
+   "valid": false,
+   "basin_ok": false,
+   "basin_novac_vs_host": {
+    "n_far": 164,
+    "max_dr_A": 0.111691837056504,
+    "max_fa_rot_deg": 1.4619246699070227
+   },
+   "basin_vac_vs_V": {
+    "n_far": 166,
+    "max_dr_A": 1.1612181877524002,
+    "max_fa_rot_deg": 9.268919945960738
+   },
+   "nearest_I_to_vacancy_site_A": 4.119,
+   "dopant_displacement_A": [
+    0.15,
+    0.164
+   ],
+   "by_stage": {
+    "0.02": {
+     "Eb_meV": 12.45,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 164,
+      "max_dr_A": 0.03430922660468298,
+      "max_fa_rot_deg": 0.33803388370035375
+     },
+     "basin_vac_vs_V": {
+      "n_far": 166,
+      "max_dr_A": 0.038994451041666024,
+      "max_fa_rot_deg": 0.4417131219183784
+     },
+     "nearest_I_to_vacancy_site_A": 4.104,
+     "dopant_displacement_A": [
+      0.068,
+      0.082
+     ]
+    },
+    "0.01": {
+     "Eb_meV": 10.24,
+     "valid": true,
+     "converged": true,
+     "basin_ok": true,
+     "basin_novac_vs_host": {
+      "n_far": 164,
+      "max_dr_A": 0.06169768236765099,
+      "max_fa_rot_deg": 0.6380405087949949
+     },
+     "basin_vac_vs_V": {
+      "n_far": 166,
+      "max_dr_A": 0.07586153757480125,
+      "max_fa_rot_deg": 1.2880451572193001
+     },
+     "nearest_I_to_vacancy_site_A": 4.107,
+     "dopant_displacement_A": [
+      0.107,
+      0.121
+     ]
+    },
+    "0.005": {
+     "Eb_meV": -27.28,
+     "valid": false,
+     "converged": true,
+     "basin_ok": false,
+     "basin_novac_vs_host": {
+      "n_far": 164,
+      "max_dr_A": 0.111691837056504,
+      "max_fa_rot_deg": 1.4619246699070227
+     },
+     "basin_vac_vs_V": {
+      "n_far": 166,
+      "max_dr_A": 1.1612181877524002,
+      "max_fa_rot_deg": 9.268919945960738
+     },
+     "nearest_I_to_vacancy_site_A": 4.119,
+     "dopant_displacement_A": [
+      0.15,
+      0.164
+     ]
+    }
+   },
+   "no_vac": {
+    "label": "GA@164 no-vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1079.6688911657252,
+      "fmax": 0.019045601003519645,
+      "steps": 100,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1079.6782632560332,
+      "fmax": 0.009652683343853366,
+      "steps": 93,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1079.6846859457037,
+      "fmax": 0.004999667575460691,
+      "steps": 245,
+      "converged": true
+     }
+    ],
+    "E_eV": -1079.6846859457037,
+    "fmax": 0.004999667575460691,
+    "converged": true,
+    "wall_s": 1070.9
+   },
+   "with_vac": {
+    "label": "GA@164 +vac",
+    "stages": [
+     {
+      "fmax_target": 0.02,
+      "E_eV": -1077.3499660455714,
+      "fmax": 0.018276388545506696,
+      "steps": 103,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.01,
+      "E_eV": -1077.3615403843053,
+      "fmax": 0.009457243275725412,
+      "steps": 86,
+      "converged": true
+     },
+     {
+      "fmax_target": 0.005,
+      "E_eV": -1077.4054889283989,
+      "fmax": 0.004999744011787805,
+      "steps": 1829,
+      "converged": true
+     }
+    ],
+    "E_eV": -1077.4054889283989,
+    "fmax": 0.004999744011787805,
+    "converged": true,
+    "wall_s": 4822.8
+   }
+  }
+ ],
+ "E_host": {
+  "label": "host",
+  "stages": [
+   {
+    "fmax_target": 0.02,
+    "E_eV": -1066.1581972798795,
+    "fmax": 0.019935130124898302,
+    "steps": 0,
+    "converged": true
+   },
+   {
+    "fmax_target": 0.01,
+    "E_eV": -1066.574471189148,
+    "fmax": 0.009996607102915799,
+    "steps": 1316,
+    "converged": true
+   },
+   {
+    "fmax_target": 0.005,
+    "E_eV": -1066.698502854364,
+    "fmax": 0.0049328925148039516,
+    "steps": 3612,
+    "converged": true
+   }
+  ],
+  "E_eV": -1066.698502854364,
+  "fmax": 0.0049328925148039516,
+  "converged": true,
+  "wall_s": 11997.9
+ },
+ "E_vac": {
+  "label": "vacancy",
+  "stages": [
+   {
+    "fmax_target": 0.02,
+    "E_eV": -1063.9805045828405,
+    "fmax": 0.019805008422874224,
+    "steps": 329,
+    "converged": true
+   },
+   {
+    "fmax_target": 0.01,
+    "E_eV": -1064.3814344562616,
+    "fmax": 0.009965967059355301,
+    "steps": 1899,
+    "converged": true
+   },
+   {
+    "fmax_target": 0.005,
+    "E_eV": -1064.3920232779178,
+    "fmax": 0.00496644855915679,
+    "steps": 373,
+    "converged": true
+   }
+  ],
+  "E_eV": -1064.3920232779178,
+  "fmax": 0.00496644855915679,
+  "converged": true,
+  "wall_s": 6278.0,
+  "nearest_I_to_vacancy_site_A": 4.101
+ },
+ "references_from": "/data/work/v2pilot",
+ "references_protocol": {
+  "version": "v2-warmstart-staged",
+  "model": "MACE-MP-0 medium",
+  "dtype": "float64",
+  "optimizer": "FIRE (restarted per stage)",
+  "fmax_stages": [
+   0.02,
+   0.01,
+   0.005
+  ],
+  "steps_per_stage": 10000,
+  "cell": "fixed",
+  "basin_rcut_A": 6.0,
+  "warm_start": "D_j from relaxed host, D_j+V from relaxed V"
+ }
+}
