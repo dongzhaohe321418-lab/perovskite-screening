@@ -78,7 +78,7 @@ def main():
         at = frames[img].copy(); at.calc = calc
         Em = float(at.get_potential_energy()); Fm = at.get_forces()
         nrm = np.linalg.norm(q["forces"], axis=1)
-        rec = {"host": host, "system": sysn, "image": img, "E_dft": q["F_eV"], "E_mace": Em,
+        rec = {"host": host, "system": sysn, "image": img, "E_dft": q["F_eV"], "E0_dft": q["E0_eV"], "E_mace": Em,
                "mTS_meV": q["mTS_eV"] * 1000 if q["mTS_eV"] is not None else None, "nk": q["nk"],
                "force_rmse_eVA": float(np.sqrt(np.mean((Fm - q["forces"]) ** 2))),
                "dft_fmax_eVA": float(nrm.max()), "dft_frms_eVA": float(np.sqrt(np.mean(nrm ** 2)))}
@@ -96,6 +96,8 @@ def main():
         per_band.append({"host": key[0], "system": key[1], "images": sorted(imgs),
                          "Ea_dft_meV": round(max(imgs[i]["E_dft"] - e0d for i in inner) * 1000, 2),
                          "Ea_mace_meV": round(max(imgs[i]["E_mace"] - e0m for i in inner) * 1000, 2),
+                         # sigma->0 estimate beside F (amendment c item 6 failed: dg 0.0025 moved E3-E0 by 4.9 meV)
+                         "Ea_dft_E0_meV": round(max(imgs[i]["E0_dft"] - imgs[0]["E0_dft"] for i in inner) * 1000, 2),
                          "argmax_dft": max(inner, key=lambda i: imgs[i]["E_dft"]),
                          "argmax_mace": max(inner, key=lambda i: imgs[i]["E_mace"]),
                          "minima_dft_fmax_eVA": [round(imgs[i]["dft_fmax_eVA"], 4) for i in (0, 6)],
@@ -107,6 +109,7 @@ def main():
         u = pb[(host, "undoped")]
         dd, dm = b["Ea_dft_meV"] - u["Ea_dft_meV"], b["Ea_mace_meV"] - u["Ea_mace_meV"]
         pairs.append({"host": host, "dopant": sysn, "dEa_dft_meV": round(dd, 2), "dEa_mace_meV": round(dm, 2),
+                      "dEa_dft_E0_meV": round(b["Ea_dft_E0_meV"] - u["Ea_dft_E0_meV"], 2),
                       "error_meV": round(dm - dd, 2), "class_dft": band_class(dd), "class_mace": band_class(dm)})
     expected = [(h, d) for h in a.hosts for d in ("GA", "Sr")]
     have = {(p["host"], p["dopant"]) for p in pairs}
@@ -127,7 +130,23 @@ def main():
     crit5 = {"gate": "RMS < 0.05 and max < 0.2 eV/A (PLAN criterion 5)",
              "minima_img0_img6": gate([r for r in frames_out if r["image"] in (0, 6)]),
              "saddle_img3": gate([r for r in frames_out if r["image"] == 3])}
+    # criterion 3 consequence (PLAN): if RMS >= 20 meV the corpus equivalence result is re-stated at
+    # DFT level from WP2b. Same test as the corpus (CORPUS108_RESULT.md): Student-t 95% CI of the
+    # paired dE_a inside +/-59.5 meV, and TOST p; MACE on the same pairs alongside.
+    from scipy import stats
+    def eqv(x):
+        x = np.asarray(x, float); n = x.size; m = float(x.mean()); s_ = float(x.std(ddof=1)); se = s_ / np.sqrt(n)
+        h = float(stats.t.ppf(0.975, n - 1)) * se
+        p_tost = max(float(stats.t.sf((m + BAND) / se, n - 1)), float(stats.t.cdf((m - BAND) / se, n - 1)))
+        return {"n": n, "mean_meV": round(m, 2), "sd_meV": round(s_, 2), "ci95_meV": [round(m - h, 2), round(m + h, 2)],
+                "ci_inside_band": bool(m - h > -BAND and m + h < BAND), "tost_p": round(p_tost, 4)}
+    restate = {d: {"dft": eqv([p["dEa_dft_meV"] for p in pairs if p["dopant"] == d]),
+                   "dft_E0_sigma0": eqv([p["dEa_dft_E0_meV"] for p in pairs if p["dopant"] == d]),
+                   "mace": eqv([p["dEa_mace_meV"] for p in pairs if p["dopant"] == d]),
+                   "error_rms_meV": round(float(np.sqrt(np.mean([p["error_meV"] ** 2 for p in pairs if p["dopant"] == d]))), 2)}
+               for d in ("GA", "Sr") if sum(p["dopant"] == d for p in pairs) > 2}
     summary = {"n_frames": len(frames_out), "n_skipped_outputs": len(skipped), "n_complete_bands": len(per_band),
+               "dft_level_restatement": restate,
                "incomplete_bands": incomplete, "criterion3": crit3, "criterion5": crit5,
                "force_rmse_median_eVA": float(np.median([r["force_rmse_eVA"] for r in frames_out])) if frames_out else None}
     os.makedirs(a.out, exist_ok=True)

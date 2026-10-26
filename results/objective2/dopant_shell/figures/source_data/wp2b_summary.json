@@ -1,0 +1,152 @@
+{
+ "summary": {
+  "n_frames": 135,
+  "n_skipped_outputs": 0,
+  "n_complete_bands": 27,
+  "dft_level_restatement": {
+   "GA": {
+    "dft": {
+     "n": 9,
+     "mean_meV": 11.9,
+     "sd_meV": 51.67,
+     "ci95_meV": [
+      -27.81,
+      51.61
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0123
+    },
+    "dft_E0_sigma0": {
+     "n": 9,
+     "mean_meV": 11.68,
+     "sd_meV": 51.3,
+     "ci95_meV": [
+      -27.76,
+      51.11
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0117
+    },
+    "mace": {
+     "n": 9,
+     "mean_meV": 4.28,
+     "sd_meV": 46.69,
+     "ci95_meV": [
+      -31.61,
+      40.17
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0038
+    },
+    "error_rms_meV": 15.88
+   },
+   "Sr": {
+    "dft": {
+     "n": 9,
+     "mean_meV": 7.85,
+     "sd_meV": 67.64,
+     "ci95_meV": [
+      -44.14,
+      59.84
+     ],
+     "ci_inside_band": false,
+     "tost_p": 0.0256
+    },
+    "dft_E0_sigma0": {
+     "n": 9,
+     "mean_meV": 6.82,
+     "sd_meV": 68.06,
+     "ci95_meV": [
+      -45.49,
+      59.13
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0244
+    },
+    "mace": {
+     "n": 9,
+     "mean_meV": 9.29,
+     "sd_meV": 48.48,
+     "ci95_meV": [
+      -27.98,
+      46.56
+     ],
+     "ci_inside_band": true,
+     "tost_p": 0.0073
+    },
+    "error_rms_meV": 41.11
+   }
+  },
+  "incomplete_bands": [],
+  "criterion3": {
+   "n_pairs": 18,
+   "expected": 18,
+   "missing_pairs": [],
+   "rms_error_meV": 31.159046572918967,
+   "mean_error_meV": -3.088333333333332,
+   "rms_pass": false,
+   "flips": [
+    {
+     "host": "m05",
+     "dopant": "Sr",
+     "dEa_dft_meV": -61.02,
+     "dEa_mace_meV": -30.15,
+     "dEa_dft_E0_meV": -62.08,
+     "error_meV": 30.87,
+     "class_dft": -1,
+     "class_mace": 0
+    },
+    {
+     "host": "m15",
+     "dopant": "Sr",
+     "dEa_dft_meV": 110.34,
+     "dEa_mace_meV": 7.85,
+     "dEa_dft_E0_meV": 109.93,
+     "error_meV": -102.49,
+     "class_dft": 1,
+     "class_mace": 0
+    },
+    {
+     "host": "m32",
+     "dopant": "GA",
+     "dEa_dft_meV": -46.78,
+     "dEa_mace_meV": -63.17,
+     "dEa_dft_E0_meV": -46.72,
+     "error_meV": -16.39,
+     "class_dft": 0,
+     "class_mace": -1
+    }
+   ],
+   "verdict": "fail"
+  },
+  "criterion5": {
+   "gate": "RMS < 0.05 and max < 0.2 eV/A (PLAN criterion 5)",
+   "minima_img0_img6": {
+    "n": 54,
+    "n_pass": 0,
+    "frms_range_eVA": [
+     0.1427,
+     0.1746
+    ],
+    "fmax_range_eVA": [
+     0.3318,
+     0.4478
+    ]
+   },
+   "saddle_img3": {
+    "n": 27,
+    "n_pass": 0,
+    "frms_range_eVA": [
+     0.145,
+     0.1745
+    ],
+    "fmax_range_eVA": [
+     0.3373,
+     0.4479
+    ]
+   }
+  },
+  "force_rmse_median_eVA": 0.09142797886716422
+ },
+ "source": "/Users/ericdong/Library/Application Support/Claude/scratch-workspaces/74ef214a-bb0b-45f3-a0dd-dab068ffcbe9/c2cff56f-cccf-49f5-bf0f-c2a959dccdde/scratch-2026-10-05-889115/dopwork/ps/results/objective2/dopant_shell/wp2b/wp2b_validation.json"
+}
