@@ -1,0 +1,168 @@
+{
+  "pdf": "fig_wp1_binding_map.pdf",
+  "auditable": true,
+  "verdict": "REVIEW REQUIRED",
+  "page_count": 1,
+  "visible_text_box_count": 54,
+  "text_trace_count": 74,
+  "stroke_path_count": 166,
+  "filled_region_count": 153,
+  "image_region_count": 0,
+  "summary": {
+    "fail": 0,
+    "warn": 6,
+    "contained_fill_overlays": 21,
+    "contained_image_overlays": 0
+  },
+  "thresholds": {
+    "text_inset_pt": 0.6,
+    "min_overlap_ratio": 0.05,
+    "clipping_tolerance_pt": 0.5
+  },
+  "findings": [
+    {
+      "severity": "WARN",
+      "kind": "text-fill-edge",
+      "page": 1,
+      "message": "Text partially overlaps the edge of 1 filled region(s)",
+      "text": "near − far +141.7 meV",
+      "text_bbox": [
+        70.95600128173828,
+        28.071292877197266,
+        131.07859802246094,
+        34.071292877197266
+      ],
+      "other_text": null,
+      "other_bbox": [
+        108.21600341796875,
+        24.242401123046875,
+        157.89599609375,
+        151.04879760742188
+      ],
+      "object_count": 1,
+      "object_indexes": [
+        3000
+      ]
+    },
+    {
+      "severity": "WARN",
+      "kind": "text-fill-edge",
+      "page": 1,
+      "message": "Text partially overlaps the edge of 1 filled region(s)",
+      "text": "hosts agreeing 3/3",
+      "text_bbox": [
+        70.95600128173828,
+        34.608402252197266,
+        120.39704132080078,
+        40.608402252197266
+      ],
+      "other_text": null,
+      "other_bbox": [
+        108.21600341796875,
+        24.242401123046875,
+        157.89599609375,
+        151.04879760742188
+      ],
+      "object_count": 1,
+      "object_indexes": [
+        3000
+      ]
+    },
+    {
+      "severity": "WARN",
+      "kind": "text-fill-edge",
+      "page": 1,
+      "message": "Text partially overlaps the edge of 1 filled region(s)",
+      "text": "criterion 1: pass",
+      "text_bbox": [
+        70.95600128173828,
+        41.141605377197266,
+        113.35868835449219,
+        47.141605377197266
+      ],
+      "other_text": null,
+      "other_bbox": [
+        108.21600341796875,
+        24.242401123046875,
+        157.89599609375,
+        151.04879760742188
+      ],
+      "object_count": 1,
+      "object_indexes": [
+        3000
+      ]
+    },
+    {
+      "severity": "WARN",
+      "kind": "text-fill-edge",
+      "page": 1,
+      "message": "Text partially overlaps the edge of 1 filled region(s)",
+      "text": "criterion 1: fail (SD 28.4 > 25)",
+      "text_bbox": [
+        252.23712158203125,
+        41.148441314697266,
+        330.5279235839844,
+        47.148441314697266
+      ],
+      "other_text": null,
+      "other_bbox": [
+        290.7900085449219,
+        24.242401123046875,
+        334.260009765625,
+        151.04879760742188
+      ],
+      "object_count": 1,
+      "object_indexes": [
+        81000
+      ]
+    },
+    {
+      "severity": "WARN",
+      "kind": "text-fill-edge",
+      "page": 1,
+      "message": "Text partially overlaps the edge of 1 filled region(s)",
+      "text": "near − far −18.6 meV",
+      "text_bbox": [
+        273.75274658203125,
+        28.071292877197266,
+        330.53033447265625,
+        34.071292877197266
+      ],
+      "other_text": null,
+      "other_bbox": [
+        290.7900085449219,
+        24.242401123046875,
+        334.260009765625,
+        151.04879760742188
+      ],
+      "object_count": 1,
+      "object_indexes": [
+        81000
+      ]
+    },
+    {
+      "severity": "WARN",
+      "kind": "text-fill-edge",
+      "page": 1,
+      "message": "Text partially overlaps the edge of 1 filled region(s)",
+      "text": "hosts agreeing 2/3",
+      "text_bbox": [
+        281.08087158203125,
+        34.608402252197266,
+        330.52191162109375,
+        40.608402252197266
+      ],
+      "other_text": null,
+      "other_bbox": [
+        290.7900085449219,
+        24.242401123046875,
+        334.260009765625,
+        151.04879760742188
+      ],
+      "object_count": 1,
+      "object_indexes": [
+        81000
+      ]
+    }
+  ]
+}

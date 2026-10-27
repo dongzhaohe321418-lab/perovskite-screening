@@ -1,0 +1,307 @@
+{
+ "mode": "map",
+ "fmax": 0.01,
+ "definitions": {
+  "near_lt_A": {
+   "Sr": 5.0,
+   "GA": 6.0
+  },
+  "far_gt_A": {
+   "Sr": 8.5,
+   "GA": 9.0
+  },
+  "crit1_d_gt_A": 8.0
+ },
+ "hosts": {
+  "m05": {
+   "protocol": {
+    "version": "v2.1-stage-validity",
+    "model": "MACE-MP-0 medium",
+    "dtype": "float64",
+    "optimizer": "FIRE (restarted per stage)",
+    "fmax_stages": [
+     0.02,
+     0.01
+    ],
+    "steps_per_stage": 10000,
+    "cell": "fixed",
+    "basin_rcut_A": 6.0,
+    "warm_start": "D_j from relaxed host, D_j+V from relaxed V",
+    "ref_fmax_stages": [
+     0.02,
+     0.01,
+     0.005
+    ]
+   },
+   "E_host_fmax": 0.004999756694591446,
+   "E_vac_fmax": 0.004965541226135138,
+   "steps_per_stage": 10000,
+   "references_steps_per_stage": 10000
+  },
+  "m21": {
+   "protocol": {
+    "version": "v2.1-stage-validity",
+    "model": "MACE-MP-0 medium",
+    "dtype": "float64",
+    "optimizer": "FIRE (restarted per stage)",
+    "fmax_stages": [
+     0.02,
+     0.01
+    ],
+    "steps_per_stage": 10000,
+    "cell": "fixed",
+    "basin_rcut_A": 6.0,
+    "warm_start": "D_j from relaxed host, D_j+V from relaxed V",
+    "ref_fmax_stages": [
+     0.02,
+     0.01,
+     0.005
+    ]
+   },
+   "E_host_fmax": 0.0049328925148039516,
+   "E_vac_fmax": 0.00496644855915679,
+   "steps_per_stage": 10000,
+   "references_steps_per_stage": 10000
+  },
+  "m30": {
+   "protocol": {
+    "version": "v2.1-stage-validity",
+    "model": "MACE-MP-0 medium",
+    "dtype": "float64",
+    "optimizer": "FIRE (restarted per stage)",
+    "fmax_stages": [
+     0.02,
+     0.01
+    ],
+    "steps_per_stage": 10000,
+    "cell": "fixed",
+    "basin_rcut_A": 6.0,
+    "warm_start": "D_j from relaxed host, D_j+V from relaxed V",
+    "ref_fmax_stages": [
+     0.02,
+     0.01,
+     0.005
+    ]
+   },
+   "E_host_fmax": 0.004989387318085169,
+   "E_vac_fmax": 0.004992658442243276,
+   "steps_per_stage": 10000,
+   "references_steps_per_stage": 10000
+  }
+ },
+ "invalid_at_evaluated_stage": [
+  {
+   "host": "m05",
+   "dopant": "GA",
+   "site": 28,
+   "d_A": 5.034,
+   "invalid_reasons": [
+    "basin (dr 0.30/0.18 A, rot 8/3 deg)"
+   ]
+  },
+  {
+   "host": "m05",
+   "dopant": "GA",
+   "site": 212,
+   "d_A": 8.009,
+   "invalid_reasons": [
+    "basin (dr 0.33/0.28 A, rot 7/4 deg)"
+   ]
+  },
+  {
+   "host": "m05",
+   "dopant": "GA",
+   "site": 224,
+   "d_A": 8.083,
+   "invalid_reasons": [
+    "basin (dr 0.10/0.27 A, rot 4/2 deg)"
+   ]
+  },
+  {
+   "host": "m05",
+   "dopant": "GA",
+   "site": 68,
+   "d_A": 10.312,
+   "invalid_reasons": [
+    "basin (dr 0.13/0.31 A, rot 3/6 deg)"
+   ]
+  },
+  {
+   "host": "m21",
+   "dopant": "GA",
+   "site": 212,
+   "d_A": 8.19,
+   "invalid_reasons": [
+    "basin (dr 0.25/0.31 A, rot 4/6 deg)"
+   ]
+  },
+  {
+   "host": "m30",
+   "dopant": "GA",
+   "site": 80,
+   "d_A": 7.937,
+   "invalid_reasons": [
+    "basin (dr 0.64/0.12 A, rot 14/3 deg)"
+   ]
+  },
+  {
+   "host": "m30",
+   "dopant": "GA",
+   "site": 116,
+   "d_A": 8.025,
+   "invalid_reasons": [
+    "basin (dr 0.26/0.28 A, rot 3/3 deg)"
+   ]
+  },
+  {
+   "host": "m30",
+   "dopant": "GA",
+   "site": 104,
+   "d_A": 8.068,
+   "invalid_reasons": [
+    "basin (dr 0.54/0.55 A, rot 10/10 deg)"
+   ]
+  },
+  {
+   "host": "m30",
+   "dopant": "GA",
+   "site": 16,
+   "d_A": 9.667,
+   "invalid_reasons": [
+    "basin (dr 0.29/0.30 A, rot 4/4 deg)"
+   ]
+  },
+  {
+   "host": "m30",
+   "dopant": "GA",
+   "site": 68,
+   "d_A": 10.028,
+   "invalid_reasons": [
+    "basin (dr 0.71/0.13 A, rot 16/2 deg)"
+   ]
+  },
+  {
+   "host": "m30",
+   "dopant": "GA",
+   "site": 188,
+   "d_A": 11.25,
+   "invalid_reasons": [
+    "basin (dr 0.45/0.11 A, rot 9/3 deg)"
+   ]
+  }
+ ],
+ "result": {
+  "GA": {
+   "criterion1": {
+    "n": 28,
+    "mean_meV": 9.67,
+    "sd_meV": 28.35,
+    "mean_pass": true,
+    "sd_pass": false,
+    "pass": false
+   },
+   "criterion2": {
+    "near_mean_meV": -8.81,
+    "n_near": 8,
+    "far_mean_meV": 9.83,
+    "n_far": 20,
+    "far_sd_meV": 28.21,
+    "near_minus_far_meV": -18.64,
+    "hosts_pooled": [
+     "m05",
+     "m21",
+     "m30"
+    ],
+    "hosts_excluded": [],
+    "hosts_sign_agree": "2/3",
+    "verdict": "no resolved interaction (inconclusive below the noise floor: criterion 1 failed)",
+    "thermally_relevant": false
+   },
+   "per_host": {
+    "m05": {
+     "n_near": 2,
+     "n_far": 7,
+     "far_median": 44.14,
+     "far_mean": 36.92,
+     "far_sd": 18.51,
+     "near_mean": -2.3,
+     "near_minus_far": -39.22
+    },
+    "m21": {
+     "n_near": 3,
+     "n_far": 8,
+     "far_median": -3.89,
+     "far_mean": -8.89,
+     "far_sd": 25.0,
+     "near_mean": -26.33,
+     "near_minus_far": -17.44
+    },
+    "m30": {
+     "n_near": 3,
+     "n_far": 5,
+     "far_median": 2.17,
+     "far_mean": 1.86,
+     "far_sd": 10.37,
+     "near_mean": 4.38,
+     "near_minus_far": 2.51
+    }
+   }
+  },
+  "Sr": {
+   "criterion1": {
+    "n": 30,
+    "mean_meV": 11.02,
+    "sd_meV": 11.12,
+    "mean_pass": true,
+    "sd_pass": true,
+    "pass": true
+   },
+   "criterion2": {
+    "near_mean_meV": 152.69,
+    "n_near": 6,
+    "far_mean_meV": 11.02,
+    "n_far": 30,
+    "far_sd_meV": 11.12,
+    "near_minus_far_meV": 141.67,
+    "hosts_pooled": [
+     "m05",
+     "m21",
+     "m30"
+    ],
+    "hosts_excluded": [],
+    "hosts_sign_agree": "3/3",
+    "verdict": "repels",
+    "thermally_relevant": true
+   },
+   "per_host": {
+    "m05": {
+     "n_near": 2,
+     "n_far": 10,
+     "far_median": 8.08,
+     "far_mean": 9.59,
+     "far_sd": 13.73,
+     "near_mean": 168.56,
+     "near_minus_far": 158.97
+    },
+    "m21": {
+     "n_near": 2,
+     "n_far": 10,
+     "far_median": 7.51,
+     "far_mean": 11.03,
+     "far_sd": 8.74,
+     "near_mean": 163.63,
+     "near_minus_far": 152.6
+    },
+    "m30": {
+     "n_near": 2,
+     "n_far": 10,
+     "far_median": 8.72,
+     "far_mean": 12.44,
+     "far_sd": 11.37,
+     "near_mean": 125.85,
+     "near_minus_far": 113.42
+    }
+   }
+  }
+ }
+}
