@@ -101,10 +101,14 @@ def ga_at_carbon(at, c):
     return at, c_new, int(i_ch)
 
 
-def relax_staged(at, calc, label, log, stages, steps):
-    """FIRE through the fmax stages; returns (final atoms, record, per-stage snapshots)."""
+def relax_staged(at, calc, label, log, stages, steps, fixed=None):
+    """FIRE through the fmax stages; returns (final atoms, record, per-stage snapshots).
+    fixed: indices held at their starting positions (frozen far field, --freeze-beyond)."""
     from ase.calculators.singlepoint import SinglePointCalculator
+    from ase.constraints import FixAtoms
     at = at.copy(); at.calc = calc
+    if fixed is not None and len(fixed):
+        at.set_constraint(FixAtoms(indices=list(fixed)))
     rec = {"label": label, "stages": []}
     snaps = []
     t = time.time()
@@ -173,6 +177,9 @@ def main():
                     help="reuse relaxed references (shell_mNN.json + *_relaxed.extxyz) from this output dir")
     ap.add_argument("--steps", type=int, default=3000, help="max FIRE steps per stage")
     ap.add_argument("--basin-rcut", type=float, default=6.0)
+    ap.add_argument("--freeze-beyond", type=float, default=None,
+                    help="S2 design (not S1): hold atoms farther than this (A) from both the dopant site and "
+                         "the vacancy site at the partner's positions in D_j and D_j+V (frozen far field)")
     ap.add_argument("--save-structures", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--threads", type=int, default=6)
@@ -208,6 +215,8 @@ def main():
                 "warm_start": "D_j from relaxed host, D_j+V from relaxed V"}
     if ref_stages != stages:                    # key only when different: older outputs stay resumable
         protocol["ref_fmax_stages"] = ref_stages
+    if args.freeze_beyond is not None:          # likewise: absent for every S1 run
+        protocol["freeze_beyond_A"] = args.freeze_beyond
     res = {"member": args.member,
            "protocol": protocol,
            "inputs": {"pool": os.path.abspath(args.pool), "vac_ref": os.path.abspath(args.vac_ref),
@@ -295,8 +304,14 @@ def main():
                 dv, tv, ichv = ga_at_carbon(vac_r, jv)
                 keep0 = [k for k in range(len(host_r)) if k != ich0]
                 keepv = [k for k in range(len(vac_r)) if k != ichv]
-            a0, r0, s0n = relax_staged(d0, calc, f"{dop}@{j} no-vac", log, stages, args.steps)
-            av, rv, svn = relax_staged(dv, calc, f"{dop}@{j} +vac", log, stages, args.steps)
+            fx0 = fxv = None
+            if args.freeze_beyond is not None:     # far field = beyond R from both centres, partner geometry
+                cen = [host_r.positions[j], vpos]
+                far = lambda at_: np.flatnonzero(np.min([find_mic(at_.positions - c, cell, pbc=True)[1] for c in cen], axis=0)
+                                                 > args.freeze_beyond)
+                fx0, fxv = far(d0), far(dv)
+            a0, r0, s0n = relax_staged(d0, calc, f"{dop}@{j} no-vac", log, stages, args.steps, fx0)
+            av, rv, svn = relax_staged(dv, calc, f"{dop}@{j} +vac", log, stages, args.steps, fxv)
             if args.save_structures:
                 write(os.path.join(args.out, f"{tag}_{dop}{j}_novac_relaxed.extxyz"), a0)
                 write(os.path.join(args.out, f"{tag}_{dop}{j}_vac_relaxed.extxyz"), av)
