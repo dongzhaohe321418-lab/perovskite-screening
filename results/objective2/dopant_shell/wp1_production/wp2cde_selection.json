@@ -1,0 +1,184 @@
+{
+ "m30": {
+  "migrating_iodide_host_index": 138,
+  "notes": [
+   "Sr near Pb [124, 136]: Pb-I(mig 138) = [7.119, 3.196] A"
+  ],
+  "doped_fmax_final": 0.01,
+  "sites": {
+   "Sr_hinge": {
+    "site": 136,
+    "d_A": 3.167
+   },
+   "Sr_flank": {
+    "site": 124,
+    "d_A": 3.202
+   },
+   "Sr_mid": {
+    "site": 52,
+    "d_A": 7.315
+   },
+   "Sr_far": {
+    "site": 64,
+    "d_A": 9.648
+   },
+   "GA_near": {
+    "site": 128,
+    "d_A": 4.148
+   },
+   "GA_mid": {
+    "site": 212,
+    "d_A": 7.933
+   },
+   "GA_far": {
+    "site": 152,
+    "d_A": 10.183
+   }
+  },
+  "wp2c_labels": [
+   "m30_GA128_novac",
+   "m30_GA128_vac",
+   "m30_GA152_novac",
+   "m30_GA152_vac",
+   "m30_GA212_novac",
+   "m30_GA212_vac",
+   "m30_Sr124_novac",
+   "m30_Sr124_vac",
+   "m30_Sr136_novac",
+   "m30_Sr136_vac",
+   "m30_Sr52_novac",
+   "m30_Sr52_vac",
+   "m30_Sr64_novac",
+   "m30_Sr64_vac",
+   "m30_host",
+   "m30_vac"
+  ],
+  "wp2d_labels": [
+   "m30_GA128_vac_q1",
+   "m30_GA152_vac_q1",
+   "m30_Sr136_vac_q1",
+   "m30_Sr64_vac_q1",
+   "m30_Sr_img0_q1",
+   "m30_Sr_img3_q1",
+   "m30_undoped_img0_q1",
+   "m30_undoped_img3_q1",
+   "m30_vac_q1"
+  ],
+  "wp2e_quartet_labels": [
+   "m30_Sr136_novac_relax",
+   "m30_Sr136_vac_relax",
+   "m30_host_relax",
+   "m30_vac_relax"
+  ]
+ },
+ "m21": {
+  "migrating_iodide_host_index": 53,
+  "notes": [
+   "Sr near Pb [124, 136]: Pb-I(mig 53) = [7.112, 3.205] A"
+  ],
+  "doped_fmax_final": 0.01,
+  "sites": {
+   "Sr_hinge": {
+    "site": 136,
+    "d_A": 3.281
+   },
+   "Sr_flank": {
+    "site": 124,
+    "d_A": 3.226
+   },
+   "Sr_mid": {
+    "site": 0,
+    "d_A": 7.12
+   },
+   "Sr_far": {
+    "site": 24,
+    "d_A": 9.814
+   },
+   "GA_near": {
+    "site": 128,
+    "d_A": 4.444
+   },
+   "GA_mid": {
+    "site": 104,
+    "d_A": 7.777
+   },
+   "GA_far": {
+    "site": 4,
+    "d_A": 10.172
+   }
+  },
+  "wp2c_labels": [
+   "m21_GA104_novac",
+   "m21_GA104_vac",
+   "m21_GA128_novac",
+   "m21_GA128_vac",
+   "m21_GA4_novac",
+   "m21_GA4_vac",
+   "m21_Sr0_novac",
+   "m21_Sr0_vac",
+   "m21_Sr124_novac",
+   "m21_Sr124_vac",
+   "m21_Sr136_novac",
+   "m21_Sr136_vac",
+   "m21_Sr24_novac",
+   "m21_Sr24_vac",
+   "m21_host",
+   "m21_vac"
+  ]
+ },
+ "m05": {
+  "migrating_iodide_host_index": 53,
+  "notes": [
+   "Sr near Pb [124, 136]: Pb-I(mig 53) = [6.85, 3.303] A"
+  ],
+  "doped_fmax_final": 0.01,
+  "sites": {
+   "Sr_hinge": {
+    "site": 136,
+    "d_A": 3.278
+   },
+   "Sr_flank": {
+    "site": 124,
+    "d_A": 3.268
+   },
+   "Sr_mid": {
+    "site": 48,
+    "d_A": 7.368
+   },
+   "Sr_far": {
+    "site": 112,
+    "d_A": 9.708
+   },
+   "GA_near": {
+    "site": 128,
+    "d_A": 4.783
+   },
+   "GA_mid": {
+    "site": 40,
+    "d_A": 8.059
+   },
+   "GA_far": {
+    "site": 4,
+    "d_A": 10.271
+   }
+  },
+  "wp2c_labels": [
+   "m05_GA128_novac",
+   "m05_GA128_vac",
+   "m05_GA40_novac",
+   "m05_GA40_vac",
+   "m05_GA4_novac",
+   "m05_GA4_vac",
+   "m05_Sr112_novac",
+   "m05_Sr112_vac",
+   "m05_Sr124_novac",
+   "m05_Sr124_vac",
+   "m05_Sr136_novac",
+   "m05_Sr136_vac",
+   "m05_Sr48_novac",
+   "m05_Sr48_vac",
+   "m05_host",
+   "m05_vac"
+  ]
+ }
+}
