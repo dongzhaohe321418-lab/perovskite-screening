@@ -199,12 +199,12 @@ def map_(rows):
             hf = [r["Eb_meV"] for r in v if r["host"] == h and r["shell"] == "far"]
             p = {"n_near": len(hn), "n_far": len(hf)}
             if hf:
-                p.update({"far_median": round(float(np.median(hf)), 2), "far_mean": round(float(np.mean(hf)), 2),
-                          "far_sd": round(sd(hf), 2) if len(hf) > 1 else None})
+                p.update({"far_median": round(float(np.median(hf)), 3), "far_mean": round(float(np.mean(hf)), 3),
+                          "far_sd": round(sd(hf), 3) if len(hf) > 1 else None})
             if hn:
-                p["near_mean"] = round(float(np.mean(hn)), 2)
+                p["near_mean"] = round(float(np.mean(hn)), 3)
             if hn and hf:
-                p["near_minus_far"] = round(float(np.mean(hn) - np.mean(hf)), 2)
+                p["near_minus_far"] = round(float(np.mean(hn) - np.mean(hf)), 3)
             else:
                 excluded.append(h)
             per_host[h] = p
@@ -220,13 +220,13 @@ def map_(rows):
         s_ok = bool(c1.size > 1 and sd(c1) < CRIT1_SD)
         verdict = ("binds" if diff < 0 else "repels") if sig else "no resolved interaction"
         out[dop] = {
-            "criterion1": {"n": int(c1.size), "mean_meV": round(float(c1.mean()), 2) if c1.size else None,
-                           "sd_meV": round(sd(c1), 2) if c1.size > 1 else None,
+            "criterion1": {"n": int(c1.size), "mean_meV": round(float(c1.mean()), 3) if c1.size else None,
+                           "sd_meV": round(sd(c1), 3) if c1.size > 1 else None,
                            "mean_pass": m_ok, "sd_pass": s_ok, "pass": m_ok and s_ok},
-            "criterion2": {"near_mean_meV": round(float(near.mean()), 2) if near.size else None, "n_near": int(near.size),
-                           "far_mean_meV": round(float(far.mean()), 2) if far.size else None, "n_far": int(far.size),
-                           "far_sd_meV": round(sd(far), 2) if far.size > 1 else None,
-                           "near_minus_far_meV": round(diff, 2) if np.isfinite(diff) else None,
+            "criterion2": {"near_mean_meV": round(float(near.mean()), 3) if near.size else None, "n_near": int(near.size),
+                           "far_mean_meV": round(float(far.mean()), 3) if far.size else None, "n_far": int(far.size),
+                           "far_sd_meV": round(sd(far), 3) if far.size > 1 else None,
+                           "near_minus_far_meV": round(diff, 3) if np.isfinite(diff) else None,
                            "hosts_pooled": both, "hosts_excluded": excluded,
                            "hosts_sign_agree": f"{agree}/{len(both)}",
                            "verdict": verdict if (m_ok and s_ok) else f"{verdict} (inconclusive below the noise floor: criterion 1 failed)",
@@ -234,7 +234,7 @@ def map_(rows):
             "per_host": per_host}
     for r in rows:      # E_b relative to the host's far median (amendment c, item 3)
         ph = out[r["dopant"]]["per_host"].get(r["host"], {})
-        r["Eb_rel_far_median_meV"] = round(r["Eb_meV"] - ph["far_median"], 2) if "far_median" in ph and r["valid"] else None
+        r["Eb_rel_far_median_meV"] = round(r["Eb_meV"] - ph["far_median"], 3) if "far_median" in ph and r["valid"] else None
     return out
 
 

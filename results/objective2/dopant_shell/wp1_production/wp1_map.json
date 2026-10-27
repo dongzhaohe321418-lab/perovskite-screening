@@ -194,19 +194,19 @@
   "GA": {
    "criterion1": {
     "n": 28,
-    "mean_meV": 9.67,
-    "sd_meV": 28.35,
+    "mean_meV": 9.671,
+    "sd_meV": 28.346,
     "mean_pass": true,
     "sd_pass": false,
     "pass": false
    },
    "criterion2": {
-    "near_mean_meV": -8.81,
+    "near_mean_meV": -8.807,
     "n_near": 8,
-    "far_mean_meV": 9.83,
+    "far_mean_meV": 9.832,
     "n_far": 20,
-    "far_sd_meV": 28.21,
-    "near_minus_far_meV": -18.64,
+    "far_sd_meV": 28.207,
+    "near_minus_far_meV": -18.639,
     "hosts_pooled": [
      "m05",
      "m21",
@@ -222,47 +222,47 @@
      "n_near": 2,
      "n_far": 7,
      "far_median": 44.14,
-     "far_mean": 36.92,
-     "far_sd": 18.51,
-     "near_mean": -2.3,
-     "near_minus_far": -39.22
+     "far_mean": 36.919,
+     "far_sd": 18.515,
+     "near_mean": -2.305,
+     "near_minus_far": -39.224
     },
     "m21": {
      "n_near": 3,
      "n_far": 8,
      "far_median": -3.89,
-     "far_mean": -8.89,
-     "far_sd": 25.0,
-     "near_mean": -26.33,
-     "near_minus_far": -17.44
+     "far_mean": -8.889,
+     "far_sd": 24.997,
+     "near_mean": -26.327,
+     "near_minus_far": -17.438
     },
     "m30": {
      "n_near": 3,
      "n_far": 5,
      "far_median": 2.17,
-     "far_mean": 1.86,
-     "far_sd": 10.37,
-     "near_mean": 4.38,
-     "near_minus_far": 2.51
+     "far_mean": 1.864,
+     "far_sd": 10.367,
+     "near_mean": 4.377,
+     "near_minus_far": 2.513
     }
    }
   },
   "Sr": {
    "criterion1": {
     "n": 30,
-    "mean_meV": 11.02,
-    "sd_meV": 11.12,
+    "mean_meV": 11.019,
+    "sd_meV": 11.121,
     "mean_pass": true,
     "sd_pass": true,
     "pass": true
    },
    "criterion2": {
-    "near_mean_meV": 152.69,
+    "near_mean_meV": 152.685,
     "n_near": 6,
-    "far_mean_meV": 11.02,
+    "far_mean_meV": 11.019,
     "n_far": 30,
-    "far_sd_meV": 11.12,
-    "near_minus_far_meV": 141.67,
+    "far_sd_meV": 11.121,
+    "near_minus_far_meV": 141.666,
     "hosts_pooled": [
      "m05",
      "m21",
@@ -279,27 +279,27 @@
      "n_far": 10,
      "far_median": 8.08,
      "far_mean": 9.59,
-     "far_sd": 13.73,
-     "near_mean": 168.56,
-     "near_minus_far": 158.97
+     "far_sd": 13.726,
+     "near_mean": 168.565,
+     "near_minus_far": 158.975
     },
     "m21": {
      "n_near": 2,
      "n_far": 10,
      "far_median": 7.51,
-     "far_mean": 11.03,
-     "far_sd": 8.74,
-     "near_mean": 163.63,
-     "near_minus_far": 152.6
+     "far_mean": 11.031,
+     "far_sd": 8.742,
+     "near_mean": 163.635,
+     "near_minus_far": 152.604
     },
     "m30": {
      "n_near": 2,
      "n_far": 10,
      "far_median": 8.72,
-     "far_mean": 12.44,
-     "far_sd": 11.37,
-     "near_mean": 125.85,
-     "near_minus_far": 113.42
+     "far_mean": 12.436,
+     "far_sd": 11.366,
+     "near_mean": 125.855,
+     "near_minus_far": 113.419
     }
    }
   }

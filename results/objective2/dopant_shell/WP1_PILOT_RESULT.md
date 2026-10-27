@@ -5,7 +5,20 @@ pilot rows were valid at 0.005 (20 far-field basin hops), so the reference stage
 0.02 then failed against 0.01 (max |ΔE_b| 14.9 meV over 28 rows > 5 meV). Production WP1 runs the
 doped cells through 0.02 → 0.01 with the 0.005 references of this pilot (amendment h item 4).
 
-## Design (as pre-registered)
+## Disclosure: the gate rule was amended after one row had been read
+
+The gate rule and protocol v2.1 come from PLAN amendment j, written after the first pilot row
+(m30 Sr@136: E_b 135.3 / 132.5 / 209.8 meV at 0.02 / 0.01 / 0.005, a hop at 0.005) had been read;
+PLAN discloses that timing. On these data the amendment changes the outcome. Under the rule in force
+before j (amendment c item 2 with 0.005 as reference and v2's final-stage validity, invalid rows
+excluded), the 10 rows valid at 0.005 give max deviations of 10.4 meV (0.02) and 8.5 meV (0.01),
+both above 5 meV, so **fmax 0.005 would have been adopted**, with 20 of 30 pilot rows (and, by
+extension, a large part of production) invalid. Amendment j, motivated by that first row's hop at
+0.005, switched the reference to 0.01 and so adopted 0.01. The size of the Sr first-shell effect
+does not hinge on this choice (rows valid at both 0.01 and 0.005 differ by ≤ 8.5 meV, against an
+effect of ~140 meV), but at 0.005 both m30 first-shell Sr rows would have been invalid (hops).
+
+## Design (as pre-registered, with amendments)
 
 Hosts m30, m21, m05 × {Sr on Pb, GA on FA} × (2 nearest + 3 farthest sites) = 30 rows. Protocol v2.1
 (`scripts/29`, amendment j): host and V references relaxed through fmax 0.02 → 0.01 → 0.005 eV/Å;
@@ -25,8 +38,10 @@ E_b(stage) = E[D_j+V] − E[D_j] − E[V] + E[host], doped cells at that stage, 
 
 The references keep descending by 0.2–0.6 eV between fmax 0.02 and 0.005 (cf. `results/fa_host/
 POOL_HOMOGENEITY.md`: 0.03 → 0.02 already moved members by up to 0.6 eV): the FA orientational
-landscape has no well-defined bottom at these force thresholds. m21 and m05 needed more than the
-original 3000-step cap (amendment i); m30's references come from the v2 run (cap 3000, converged).
+landscape has no well-defined bottom at these force thresholds. m21 (amendment i) and m05
+(amendment j item 3) needed more than the original 3000-step cap; m30's references come from the v2
+run (cap 3000, converged). The `references_steps_per_stage` field of `wp1_depth.json` reports 10000
+for m30 by fallback, because that run predates the `references_protocol` record; the true cap is 3000.
 
 ## Gate
 
@@ -34,7 +49,7 @@ original 3000-step cap (amendment i); m30's references come from the v2 run (cap
 |---|---|---|---|
 | rows invalid, Sr (of 15) | 0 | 0 | 7 |
 | rows invalid, GA (of 15) | 0 | 2 | 13 |
-| reason | — | far-field basin hop | far-field basin hop (all 20) |
+| reason | — | basin check (displacement) | basin check (all 20; 19 with 0.80–1.33 Å) |
 
 - Valid at 0.005: 10 < 15 → reference stage 0.01 (amendment j item 2).
 - 0.02 vs 0.01 on the 28 rows valid at both: max |ΔE_b| = **14.9 meV** (GA; m05 GA164) → 0.02 fails;
@@ -59,5 +74,6 @@ three hosts (repulsive); Sr at d > 10 Å gives −11 to +10 meV. GA on the two n
 ## Recommendation carried forward (S2 onwards)
 
 Constrain atoms beyond the basin radius to the partner's positions in D_j and D_j+V. That removes
-far-field hops by construction and with them most of the cost (the 0.005 stage took up to 5257
-FIRE steps per doped cell) and the stage noise above.
+far-field hops by construction and is expected to remove most of the 0.005-stage cost (up to 5257
+FIRE steps per doped cell, all in hopping rows). Whether it also removes the stage-to-stage E_b
+shifts of rows without hops (up to 14.9 meV) is untested.
