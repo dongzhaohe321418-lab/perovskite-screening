@@ -38,3 +38,27 @@ Best case (S1 accepts zero-shot MACE; isovalent set only): ~3–4 weeks to a val
 MACE is charge-agnostic: no aliovalent dopant enters S4a. No metric value is compared across
 theory levels (standing rule 1). Every stage keeps the paired, multi-host design and the
 pre-registration discipline of `dopant_shell/PLAN.md`.
+
+## Update 2026-10-27 — S1 status
+
+| WP | status | result |
+|---|---|---|
+| 2a | done | single R-point k-sampling; degauss row fails (σ→0 reported beside F); nspin 1 |
+| 2b | done | **criterion 3 fails** (paired ΔE_a RMS 31.2 meV > 20), **criterion 5 fails** at every MACE stationary point; corpus claim re-stated at DFT level, provisional (`dopant_shell/WP2B_RESULT.md`) |
+| 1 | done (MACE) | **Sr repels the vacancy** (first shell +142 meV over the far plateau, 3/3 hosts); GA inconclusive (criterion 1 fails) (`WP1_RESULT.md`, `WP1_PILOT_RESULT.md`) |
+| 2c / 2d | running | DFT E_b transfer (criterion 4, far-referenced) and q = +1 check |
+| 2e | held (amendment k) | first DFT endpoint relaxation descended 977 meV by cell-wide FA reorientation; near/far partition pending |
+| 3 | not started | inputs ready (`scripts/33`, `35`); needs WP2c data |
+
+Consequences for the roadmap:
+1. Zero-shot MACE has already failed two S1 gates (criteria 3 and 5), so S2 onwards cannot use it
+   as is: either a fine-tuned potential that passes criteria 5 and 6 (WP3), or a protocol that
+   does not depend on MACE minima being DFT minima.
+2. The dominant methodological obstacle is the soft FA orientational landscape, not the dopant:
+   relaxations descend 0.2–1 eV at both MACE and DFT level and far-field basin hops invalidate
+   rows. The frozen-far-field construction (`WP1_PILOT_RESULT.md`) becomes the default for S2
+   binding maps and must itself be tested at DFT level.
+3. The metric change is supported: if Sr's +142 meV repulsion survives DFT, the corpus's
+   nearest-hop ΔE_a describes a configuration suppressed ~250-fold at 298 K.
+4. Estimate: S1 extends by about one week (WP2c/2d, the WP2e decision, WP3); best case to a
+   validated 15–20-dopant isovalent screen is now ~5–6 weeks.
