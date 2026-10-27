@@ -314,3 +314,26 @@ unavailable exactly where depth matters.
    `/data/work/v2pilot` as the record that motivated this amendment and is not used.
 4. Recommendation for S2 onwards (not applied here): constrain atoms beyond the basin radius to the
    partner's positions in D_j and D_j+V, which removes far-field hops by construction.
+
+## Amendment 2026-10-27k — WP2e relaxations held after the first one was seen to wander; WP1 gate disclosure
+
+1. **What was seen.** The first WP2e relaxation (m30 GA image 0: fixed-cell BFGS from the MACE
+   geometry, R point, nstep 300) had lowered F by 971 meV after 253 BFGS steps (~27 h at 48 ranks)
+   and was still descending (~0.4 meV per step; total force 0.0037 Ry/bohr). A descent of ~1 eV is
+   far larger than any defect-local relaxation; like the MACE references (0.2–0.6 eV between fmax
+   0.02 and 0.005, `WP1_PILOT_RESULT.md`), it indicates that the DFT relaxation wanders over the FA
+   orientational landscape. If so, ΔE_relax(dopant) − ΔE_relax(undoped) (amendment c item 5) is
+   dominated by far-field wandering and is not interpretable as the single-point bias of ΔE_a.
+2. **Decision (operational; no WP2e value other than this one trajectory has been read).** The six
+   queued WP2e relaxations (undoped and Sr image 0; the m30 Sr-hinge E_b quartet) are held, not
+   cancelled (inputs renamed `*.in.hold`). The GA relaxation runs to its 300-step limit; its
+   displacement field (per-atom displacement and FA rotation versus distance from the defects) is
+   then analysed. If the energy is carried by far-field atoms, WP2e is reported as uninformative in
+   its pre-registered form, and a relaxation with atoms beyond the basin radius frozen to the MACE
+   geometry is proposed as a new, explicitly post hoc design; the held relaxations are not run in
+   the pre-registered form. If the energy is local, the held relaxations are resumed. Meanwhile cores
+   0–47 go to WP2c/WP2d (criterion 4), which do not depend on WP2e.
+3. **Consequence for criterion 5's error bar.** Until this is resolved, the WP2b DFT re-statement
+   (`WP2B_RESULT.md` §3) stays provisional, as already stated there.
+4. **WP1 gate disclosure.** Amendment j changed the depth-gate outcome: under the rule in force
+   before j, fmax 0.005 would have been adopted (`WP1_PILOT_RESULT.md`, disclosure section).
