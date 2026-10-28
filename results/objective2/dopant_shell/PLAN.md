@@ -340,7 +340,7 @@ unavailable exactly where depth matters.
 
 ## Amendment 2026-10-28l — two analysis defects found on the first WP2c run; the WP2e decision of amendment k; written after every WP2c, WP2d and WP2e (GA) value had been read
 
-**Information state.** All 59 WP2c/WP2d single points, the WP2e GA relaxation and its two
+**Information state.** All 57 WP2c/WP2d single points (48 + 9), the WP2e GA relaxation and its two
 partition single points had finished and had been read. Nothing below changes a pre-registered
 threshold or decision rule. Items 1–2 are code defects found by inspecting the first output.
 Item 3 carries out amendment k item 2 with an analysis that k did not name. Item 4 is a new,
@@ -360,9 +360,10 @@ explicitly post hoc design that has not been run.
    ≤ 3 × 10⁻¹⁷ eV/Å (floating-point summation order). It now reads the last block, and both
    scripts read the gzipped archive directly.
 3. **WP2e decision (amendment k item 2).**
-   - **The partition single points are uninformative.** A cut by atom at 6 Å splits FA molecules
-     across the boundary (N–H 1.02 → 1.48 Å, C–H 1.09 → 1.27 Å). Both partitions therefore cost
-     +4.5 and +5.3 eV, with forces up to 9.5 eV/Å: they measure torn bonds, not regions.
+   - **The partition single points are uninformative.** A cut by atom at 6 Å splits 6 FA
+     molecules across the boundary (N–H distorted to 0.89–1.48 Å, C–H to 1.03–1.27 Å). Both
+     partitions therefore cost +4.5 and +5.3 eV, with forces up to 9.5 eV/Å: they measure
+     distorted bonds, not regions.
    - **Replacement analysis (post hoc).** The work done on each atom along the actual BFGS path,
      W_i = −Σ_k ½(F_i^k + F_i^(k+1))·Δr_i^k (`scripts/38`), has no boundary term. It sums to the
      relaxation energy within 1.2 meV of 977 meV.
@@ -384,3 +385,21 @@ explicitly post hoc design that has not been run.
      the ΔE_a bias, and the four cells of the m30 Sr-hinge E_b quartet.
    - **Scheduling.** It ranks below the WP3 DFT single points, which decide criterion 6. Whether
      and when it runs will be recorded in a later amendment, before any of its outputs is read.
+
+**Addendum to l, after the verification review (2026-10-28).** An independent review of commit
+7f23c48 against the raw outputs changed no verdict. It found the following, now corrected:
+- **Record.** The count of single points (59 → 57) and the partition bond ranges in item 3 above.
+- **`scripts/37`, two further post-read changes not listed in items 1–2.** MACE E_b is now
+  recomputed from the stored stage energies (asserted equal to `Eb_by_stage`), and rounding is
+  applied only at output. No value moved by more than 0.1 meV.
+- **`scripts/37`, post hoc diagnostics.** The WP2d diagnostics q0 − q1, ΔE_F(q = 0) and the
+  band-term row were also added after the data had been read. They are labelled as post hoc in
+  `WP2D_RESULT.md`.
+- **`scripts/38`.** Organic molecules are now found by bonding. The FA routine of `scripts/22`
+  had left one N and one H of the GA with their own distance; both lie in the 0–4 Å shell, so no
+  shell or region total changed. The GA rotation is now given as a rigid-body (Kabsch) angle,
+  12.3°, because it has no single C→N axis. The FA axis angles are unchanged.
+- **`scripts/32`.** It now refuses a frame label found twice, as `scripts/37` does.
+- **Documents.** Wording and last-digit corrections in `WP2C_RESULT.md`, `WP2D_RESULT.md`,
+  `WP2E_RESULT.md`, the roadmap and both figures, and a dated note in `WP2B_RESULT.md` that the
+  WP2e error bar will not exist.

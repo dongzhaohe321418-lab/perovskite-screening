@@ -5,7 +5,9 @@ Reads a pw.x relax trajectory started from a MACE band image and reports, agains
 (MACE) geometry:
   * per-atom displacement |dr| (minimum image, net translation removed) binned by the distance to
     the nearer defect centre (vacancy site, dopant), and the share of sum |dr|^2 beyond --rcut;
-  * the rotation of every FA/GA C->N-midpoint axis versus its distance to the defects;
+  * the rotation of every FA C->N-midpoint axis, and the rigid-body (Kabsch) rotation of every FA/GA
+    C-N skeleton, versus its distance to the defects (molecules found by bonding: C, its N within
+    1.6 A, the H within 1.25 A of either; 8 atoms for FA, 10 for GA);
   * the energy trajectory.
 It also writes two "partition" structures and their QE single-point inputs (scripts/30):
     near_only : atoms within --rcut of a defect at their relaxed positions, the rest at MACE positions
@@ -22,7 +24,9 @@ post hoc): the work done on each atom along the actual BFGS path,
 sums to E(final) - E(start) up to the discretisation error, which is reported (closure). The
 attribution is path-dependent and assigns each interaction to the atoms on which its force acts;
 it is reported per distance shell, per region (FA/GA molecules assigned by their C), for the
-first 10 BFGS steps and for the rest.
+first 10 BFGS steps and for the rest. (Until 2026-10-28 the molecules came from scripts/22
+fa_molecule, which takes 2 N and so left one N and one H of the GA with their own distance; both
+lie in the 0-4 A shell, so no shell or region total changed when this was fixed.)
 
     python scripts/38_wp2e_displacement.py --relax relax_m30_GA_img0.out --host 30 --system GA \
         --bands <band dir> --out <dir> [--jobs /data/jobs/wp2e_part]
@@ -50,6 +54,25 @@ def centres(at, system, vpos):
             if (find_mic(at.positions[N] - at.positions[c], cell, pbc=True)[1] < 1.6).sum() == 3:
                 out["dopant"] = at.positions[c]
     return out
+
+
+def molecule(at, c, sym, cell):
+    """Atoms of the organic cation whose carbon is c, by bonding: N < 1.6 A from C, H < 1.25 A from C or N."""
+    near = lambda i, idx, r: idx[find_mic(at.positions[idx] - at.positions[i], cell, pbc=True)[1] < r]
+    ns = near(c, np.flatnonzero(sym == "N"), 1.6)
+    hs = np.unique(np.concatenate([near(x, np.flatnonzero(sym == "H"), 1.25) for x in np.r_[c, ns]]))
+    mol = sorted([int(c)] + [int(x) for x in ns] + [int(x) for x in hs])
+    assert (len(ns), len(mol)) in ((2, 8), (3, 10)), f"C{c}: {len(ns)} N, {len(mol)} atoms"
+    return mol, [int(x) for x in ns]
+
+
+def kabsch_deg(P, Q):
+    """Rotation angle of the best rigid superposition of centred point sets P -> Q."""
+    P = P - P.mean(axis=0); Q = Q - Q.mean(axis=0)
+    U, _, Vt = np.linalg.svd(P.T @ Q)
+    D = np.diag([1, 1, np.sign(np.linalg.det(Vt.T @ U.T))])
+    R = Vt.T @ D @ U.T
+    return float(np.degrees(np.arccos(np.clip((np.trace(R) - 1) / 2, -1, 1))))
 
 
 def main():
@@ -87,13 +110,16 @@ def main():
         by_shell.append({"shell_A": [lo, hi], "n": int(m.sum()), "mean_dr_A": round(float(dr[m].mean()), 4) if m.any() else None,
                          "max_dr_A": round(float(dr[m].max()), 4) if m.any() else None,
                          "share_sum_dr2": round(float((dr[m] ** 2).sum() / (dr ** 2).sum()), 4)})
-    rots = []
+    rots, mols = [], {}
     for c in np.flatnonzero(sym == "C"):
-        mol = pp.fa_molecule(start, int(c)); ns = [i for i in mol if sym[i] == "N"]
+        mol, ns = molecule(start, int(c), sym, cell); mols[int(c)] = mol
+        rel = lambda P: find_mic(P[[c] + ns] - P[c], cell, pbc=True)[0]     # C-N skeleton, unwrapped about C
         def ax(P):
-            v = find_mic(P[ns] - P[c], cell, pbc=True)[0].mean(axis=0); return v / np.linalg.norm(v)
-        ang = float(np.degrees(np.arccos(np.clip(ax(start.positions) @ ax(fin.positions), -1, 1))))
-        rots.append({"C": int(c), "d_A": round(float(dmin[c]), 2), "n_N": len(ns), "rot_deg": round(ang, 2)})
+            v = rel(P)[1:].mean(axis=0); return v / np.linalg.norm(v)
+        axis = float(np.degrees(np.arccos(np.clip(ax(start.positions) @ ax(fin.positions), -1, 1)))) if len(ns) == 2 else None
+        rots.append({"C": int(c), "d_A": round(float(dmin[c]), 2), "n_N": len(ns), "kind": "FA" if len(ns) == 2 else "GA",
+                     "rot_deg": round(axis, 2) if axis is not None else None,            # FA C->N-midpoint axis
+                     "rigid_rot_deg": round(kabsch_deg(rel(start.positions), rel(fin.positions)), 2)})
     E = np.array([x.get_potential_energy() for x in tr])
     near = dmin < a.rcut
     # path work per atom (trapezoid), split at BFGS step 10
@@ -103,9 +129,8 @@ def main():
         W[int(k >= 10)] += -0.5 * np.einsum("ij,ij->i", tr[k].get_forces() + tr[k + 1].get_forces(), step)
     W *= 1000                                                   # meV
     dmol = dmin.copy()                                          # organic atoms take their molecule's C distance
-    for c in np.flatnonzero(sym == "C"):
-        for i in pp.fa_molecule(start, int(c)):
-            dmol[i] = dmin[c]
+    for c, mol in mols.items():
+        dmol[mol] = dmin[c]
     work = {"closure_meV": round(float(W.sum() - (E[-1] - E[0]) * 1000), 2),
             "total_meV": round(float(W.sum()), 1), "first10_meV": round(float(W[0].sum()), 1),
             "rest_meV": round(float(W[1].sum()), 1), "by_shell_molecule_assigned": [], "region": {}}
@@ -119,6 +144,7 @@ def main():
         work["region"][name] = {"n": int(m.sum()), "W_meV": round(float(W[:, m].sum()), 1),
                                 "W_first10_meV": round(float(W[0, m].sum()), 1), "W_rest_meV": round(float(W[1, m].sum()), 1),
                                 "share": round(float(W[:, m].sum() / W.sum()), 4)}
+    fa = [r for r in rots if r["kind"] == "FA"]
     res = {"relax": os.path.basename(a.relax), "host": h, "system": a.system, "n_steps": len(tr),
            "E_relax_meV": round(float((E[-1] - E[0]) * 1000), 1),
            "E_trajectory_meV_every10": [round(float((e - E[0]) * 1000), 1) for e in E[::10]],
@@ -126,9 +152,12 @@ def main():
            "rcut_A": a.rcut, "n_near": int(near.sum()), "n_far": int((~near).sum()),
            "share_sum_dr2_far": round(float((dr[~near] ** 2).sum() / (dr ** 2).sum()), 4),
            "by_shell": by_shell,
-           "fa_rotation": {"n": len(rots), "max_deg": max(r["rot_deg"] for r in rots),
-                           "n_over_10deg": sum(r["rot_deg"] > 10 for r in rots),
-                           "n_over_10deg_far": sum(r["rot_deg"] > 10 and r["d_A"] >= a.rcut for r in rots),
+           "fa_rotation": {"n": len(fa), "measure": "FA C->N-midpoint axis", "max_deg": max(r["rot_deg"] for r in fa),
+                           "d_A_at_max": max(fa, key=lambda r: r["rot_deg"])["d_A"],
+                           "n_over_10deg": sum(r["rot_deg"] > 10 for r in fa),
+                           "n_over_10deg_far": sum(r["rot_deg"] > 10 and r["d_A"] >= a.rcut for r in fa),
+                           "rigid_n_over_10deg": sum(r["rigid_rot_deg"] > 10 for r in fa),
+                           "ga": [r for r in rots if r["kind"] == "GA"],
                            "rows": rots},
            "path_work": work}
     os.makedirs(a.out, exist_ok=True)

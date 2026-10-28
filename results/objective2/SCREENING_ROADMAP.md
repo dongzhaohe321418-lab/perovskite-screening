@@ -68,23 +68,29 @@ Consequences for the roadmap:
 | WP | status | result |
 |---|---|---|
 | 2c | done | **criterion 4 fails**: 6 of 15 sites exceed 25 meV (far-referenced); GA near-shell sign disagrees in 2/3 hosts. Sr first-shell repulsion holds at DFT on MACE geometries (+96 to +137 meV); MACE overestimates it by +19 meV on average (`dopant_shell/WP2C_RESULT.md`) |
-| 2d | done | far-referenced E_b charge-state robust at m30 (Sr −4.9, GA −2.9 meV); the raw q = 0 offset is the finite-cell band term; the Sr ΔE_a proxy differs by 43 meV between charge states, 92% of it the band term (`WP2D_RESULT.md`) |
+| 2d | done | far-referenced E_b charge-state robust at m30 (Sr −4.9, GA −2.9 meV); removing the electron changes raw E_b by 87–104% of the neutral-cell Fermi shift, consistent with the raw q = 0 offset being the extra electron's energy (post hoc); the Sr ΔE_a proxy differs by 43 meV between charge states, matching the band term (−39.7 meV) within 3–6 meV (`WP2D_RESULT.md`) |
 | 2e | closed (amendment l) | uninformative in the pre-registered form: 81% of the −977 meV DFT relaxation energy lies beyond 6 Å of the defects; criterion 5 has no error bar; frozen-far-field relaxation proposed post hoc (`WP2E_RESULT.md`) |
-| 3 | next | frames (`scripts/35`), DFT single points, fine-tune; criterion 6 on m30/m32 |
+| 3 | next | frames (`scripts/35`), DFT single points, fine-tune; criterion 6 and the adoption rule (criteria 3–5 thresholds, amendment m) on m30/m32 |
 
 Consequences for the roadmap:
 1. **Zero-shot MACE is not validated.** It fails criteria 3, 4 and 5, so S1 cannot accept it for
-   ΔE_a or E_b at the 20–25 meV level. WP3 (criterion 6) now decides whether S2–S4 run on a
-   fine-tuned potential. If WP3 also fails, the screen needs either DFT for the decisive
+   ΔE_a or E_b at the 20–25 meV level. WP3 now decides whether S2–S4 run on a fine-tuned
+   potential. Criterion 6 alone tests only improvement over zero-shot MACE; adoption for S2 also
+   requires the thresholds of criteria 3–5 on the held-out hosts, as the 2026-10-27 update
+   (consequence 1) already required, to be fixed in amendment m before WP3. If WP3 also fails, the screen needs either DFT for the decisive
    quantities or a coarser, dopant-ranking metric whose tolerance matches the errors measured here.
 2. **Neutral 20-f.u. cells carry a band term.** It is a dopant-dependent energy of the vacancy's
-   extra electron: the Fermi-level shift is 13–66 meV, entering raw E_b nearly one-to-one, and
+   extra electron: the Fermi-level shift is 13–66 meV, entering raw E_b nearly one-to-one where
+   tested (m30), and
    ~40 meV in one paired ΔE_a. S2 onwards should compute
    barrier and binding differences for V_I⁺ or far-referenced, and never compare raw neutral-cell
    E_b with a local potential.
-3. **Frozen-far-field relaxation is necessary at both levels.** The soft FA landscape is the main
+3. **A frozen-far-field protocol is proposed at both levels.** The soft FA landscape is the main
    obstacle at both MACE and DFT level: the DFT relaxation spreads its energy over the whole cell.
-   Its DFT-level test (WP2e′) is scheduled after the WP3 single points.
+   Its DFT-level test (WP2e′, 7 relaxations) ranks below the WP3 single points; whether and when
+   it runs will be fixed by a later amendment (amendment l item 4).
 4. **Estimate.** S1 now ends with WP3, about 1 week of node time (frames, ~100 single points,
    fine-tuning, re-evaluation). Best case to a validated isovalent screen is unchanged at ~5–6
-   weeks, conditional on WP3 passing.
+   weeks, conditional on the fine-tuned potential passing the adoption rule. That estimate excludes
+   WP2e′: 7 DFT relaxations, where the one full relaxation run so far took more than a day on the
+   node.

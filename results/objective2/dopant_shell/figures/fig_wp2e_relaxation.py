@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 """Figure WP2e: where the DFT relaxation of a MACE endpoint puts its energy (m30 GA, image 0).
 
-Fixed-cell BFGS (plain PBE, R point, forc_conv_thr 0.02 eV/A) from the MACE band frame; 283 SCF
-cycles, converged. (a) F - F(start) along the relaxation (first 10 cycles shaded). (b) Share of
-the path work W_i = -sum_k 1/2 (F_i^k + F_i^(k+1)) . dr_i^k (trapezoid rule; sums to the relaxation
-energy within 1.2 meV) and share of atoms, per shell of distance to the nearer defect centre
-(vacancy site, GA carbon); organic atoms take their molecule's C distance. Per-atom work is printed
-above each pair. (c) Per-atom displacement |dr| (net translation removed) against that atom's own
-distance, with shell means. One relaxation; no replicate, so no error bars. PLAN amendments k, l.
+Fixed-cell BFGS (plain PBE, R point, forc_conv_thr 0.02 eV/A) from the MACE band frame; 282 BFGS
+steps (283 SCF cycles), converged. (a) F - F(start) against BFGS step, 0 = the MACE geometry (first
+10 steps shaded). (b) Share of the path work W_i = -sum_k 1/2 (F_i^k + F_i^(k+1)) . dr_i^k
+(trapezoid rule; sums to the relaxation energy within 1.2 meV) and share of atoms, per shell of
+distance to the nearer defect centre (vacancy site, GA carbon); organic atoms take their molecule's
+C distance (molecules by bonding). Per-atom work is printed above each pair. (c) Per-atom
+displacement |dr| (net translation removed) against that atom's own distance; the shells of (b) and
+(c) therefore differ for organic atoms. Shell means are placed at the median distance of each
+shell; dashed line: the 6 A near/far cut used in the text. One relaxation; no replicate, so no
+error bars. PLAN amendments k, l.
 
     python fig_wp2e_relaxation.py --build      # source data from ../wp2e/
     python fig_wp2e_relaxation.py
@@ -59,8 +62,8 @@ def plot():
     a.plot(k, E, color="#1a1a1a", lw=1.0, zorder=2)
     a.axhline(0, color="#9aa3ad", lw=0.5, zorder=1)
     a.set_xlim(0, k.max() + 5); a.set_ylim(-1050, 50)
-    a.set_xlabel("SCF cycle (BFGS)"); a.set_ylabel("F − F(start) (meV)")
-    a.text(20, -200, f"first 10 cycles (shaded): {E[10]:.0f} meV".replace("-", "−"), fontsize=6, va="center")
+    a.set_xlabel("BFGS step (0 = MACE geometry)"); a.set_ylabel("F − F(start) (meV)")
+    a.text(20, -200, f"first 10 steps (shaded): {E[10]:.0f} meV".replace("-", "−"), fontsize=6, va="center")
     a.text(k.max(), E[-1] + 25, f"{E[-1]:.0f} meV".replace("-", "−"), fontsize=6, ha="right", va="bottom")
     a.set_title("DFT relaxation from MACE geometry", fontsize=7.5, pad=4)
 
@@ -70,11 +73,11 @@ def plot():
     sw = [W[(dmol >= lo) & (dmol < hi)].sum() / W.sum() * 100 for lo, hi in SHELLS]
     pa = [W[(dmol >= lo) & (dmol < hi)].mean() for lo, hi in SHELLS]
     b.bar(x - w / 2, sa, width=w, color="#c9ced4", label="Atoms", zorder=2)
-    b.bar(x + w / 2, sw, width=w, color="#2f6db5", label="Relaxation energy", zorder=2)
+    b.bar(x + w / 2, sw, width=w, color="#2f6db5", label="Path work W", zorder=2)
     for i in range(len(SHELLS)):
         b.text(x[i], max(sa[i], sw[i]) + 1.2, f"{pa[i]:.1f}".replace("-", "−"), ha="center", va="bottom", fontsize=6)
     b.set_xticks(x, ["0–4", "4–6", "6–8", "8–10", ">10"])
-    b.set_xlabel("Distance to nearer defect (Å)"); b.set_ylabel("Share (%)")
+    b.set_xlabel("Shell of molecule C (Å)"); b.set_ylabel("Share (%)")
     b.set_ylim(0, 48)
     b.legend(loc="upper left", fontsize=6, handlelength=1.0, borderaxespad=0.2)
     b.text(0.98, 0.97, "numbers: path work\nper atom (meV)", transform=b.transAxes, fontsize=6, va="top", ha="right", color="#555555")
@@ -90,8 +93,8 @@ def plot():
         m = (d >= lo) & (d < hi)
         mids.append(np.median(d[m])); means.append(dr[m].mean())
     c.plot(mids, means, color="#1a1a1a", lw=1.0, marker="o", ms=3, zorder=3, label="Shell mean")
-    c.set_xlim(0, 13); c.set_ylim(0, 1.85); c.set_yticks([0, 0.5, 1.0, 1.5])
-    c.set_xlabel("Distance to nearer defect (Å)"); c.set_ylabel("|Δr| (Å)")
+    c.set_xlim(-0.4, 13); c.set_ylim(0, 1.85); c.set_yticks([0, 0.5, 1.0, 1.5]); c.set_xticks([0, 2, 4, 6, 8, 10, 12])
+    c.set_xlabel("Atom distance to defect (Å)"); c.set_ylabel("|Δr| (Å)")
     c.text(5.85, 1.82, "6 Å", fontsize=6, color="#555555", va="top", ha="right")
     c.legend(loc="upper right", fontsize=6, handletextpad=0.2, borderaxespad=0.2, markerscale=1.6, ncol=1)
     c.set_title("Displacement does not decay", fontsize=7.5, pad=4)

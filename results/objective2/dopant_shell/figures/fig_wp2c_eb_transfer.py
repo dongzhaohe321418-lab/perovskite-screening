@@ -4,13 +4,16 @@
 WP2c (PLAN criterion 4, amendments g, h): DFT single points (plain PBE, R point, scripts/30) on the
 WP1 MACE-relaxed structures of hosts m30, m21, m05; E_b = E[D_j+V] - E[D_j] - E[V] + E[host]
 (positive = repulsion), far-referenced (minus E_b at the far site of the same dopant, host and level).
-(a) far-referenced E_b, MACE vs DFT, with the +/-25 meV criterion-4 band; filled = first-shell sites
-(Sr hinge/flank, GA near), open = mid-shell sites. (b) MACE - DFT against the unrelaxed
-dopant-vacancy distance; grey ticks: the same error after removing the band residual
-[E_F(D+V) - E_F(V)] - [same at the far site] one-to-one (diagnostic only, not used by criterion 4).
-(c) WP2d (m30): change on removing the V_I0 electron (q = 0 minus q = +1) against the neutral-cell
-Fermi-level shift; E_b sites and the img3 - img0 energy difference of the Sr - undoped pair.
-Every value is one deterministic single point (or difference of four); no replicate error bars exist.
+(a) far-referenced E_b, MACE against DFT, with the +/-25 meV criterion-4 band; colour = dopant,
+filled = first-shell sites (Sr hinge/flank, GA near), open = mid-shell sites. (b) MACE - DFT per
+site class, ordered by the unrelaxed dopant-vacancy distance (range under each class); the three
+hosts are spread horizontally within a class (x carries no distance within a class). Grey ticks: the
+same error after removing the band residual [E_F(D+V) - E_F(V)] - [same at the far site]
+one-to-one (diagnostic only, not used by criterion 4; drawn where |residual| > 1 meV).
+(c) WP2d (m30): E(q = 0) - E(q = +1) against the neutral-cell Fermi-level shift; E_b sites (filled =
+hinge/near, open = far) and the img3 - img0 energy difference of the Sr - undoped pair.
+Every value is one deterministic single point or a difference of four to eight; no replicate error
+bars exist.
 
     python fig_wp2c_eb_transfer.py --build      # source data from ../wp2c/wp2cde_dft.json
     python fig_wp2c_eb_transfer.py
@@ -87,24 +90,32 @@ def plot():
     a.set_xlim(lim); a.set_ylim(lim)
     a.set_xticks([-50, 0, 50, 100, 150]); a.set_yticks([-50, 0, 50, 100, 150])
     a.set_xlabel("E$_b$ − E$_b$(far), DFT (meV)"); a.set_ylabel("E$_b$ − E$_b$(far), MACE (meV)")
-    a.text(-70, 172, "Sr first shell", fontsize=6, color=COL["Sr"], va="top")
+    a.text(-70, 172, "Sr", fontsize=6, color=COL["Sr"], va="top")
     a.text(-70, 158, "GA", fontsize=6, color=COL["GA"], va="top")
     a.set_title("Far-referenced E$_b$", fontsize=7.5, pad=4)
 
-    # (b) error against distance, with the band-residual diagnostic
+    # (b) error per site class (ordered by distance), with the band-residual diagnostic
     b = ax[1]
     b.axhspan(-TOL, TOL, color="#eceff2", lw=0, zorder=0)
     b.axhline(0, color="#4d4d4d", lw=0.6, zorder=1)
-    off = {"m30": -0.12, "m21": 0.0, "m05": 0.12}             # horizontal offset only; values untouched
-    for r in tested:
-        x = f(r, "d_A") + off[r["host"]]; y = f(r, "farref_error_meV"); yc = y + f(r, "band_residual_meV")
-        if abs(yc - y) > 1.0:
-            b.plot([x, x], [y, yc], color="#9aa3ad", lw=0.6, zorder=2)
-            b.plot([x - 0.12, x + 0.12], [yc, yc], color="#6e7a8a", lw=0.9, zorder=2)
-        pt(b, x, y, r)
-    b.set_xlim(2.5, 8.6); b.set_ylim(-70, 50)
-    b.set_xlabel("Dopant–vacancy distance (Å)"); b.set_ylabel("MACE − DFT, far-referenced (meV)")
-    b.text(8.55, 48, "grey tick: band residual removed\n(diagnostic, not used)", ha="right", va="top", fontsize=6, color="#555555")
+    classes = [("Sr", "hinge"), ("Sr", "flank"), ("GA", "near"), ("Sr", "mid"), ("GA", "mid")]
+    off = {"m30": -0.25, "m21": 0.0, "m05": 0.25}             # hosts spread within a class; values untouched
+    labs = []
+    for i, (dop, sc) in enumerate(classes):
+        rs = [r for r in tested if r["dopant"] == dop and r["site_class"] == sc]
+        ds = [f(r, "d_A") for r in rs]
+        labs.append(f"{dop} {sc}\n{min(ds):.1f}–{max(ds):.1f}")
+        for r in rs:
+            x = i + off[r["host"]]; y = f(r, "farref_error_meV"); yc = y + f(r, "band_residual_meV")
+            if abs(yc - y) > 1.0:
+                b.plot([x, x], [y, yc], color="#9aa3ad", lw=0.6, zorder=2)
+                b.plot([x - 0.09, x + 0.09], [yc, yc], color="#6e7a8a", lw=0.9, zorder=4)
+            pt(b, x, y, r)
+    b.set_xticks(range(len(classes)), labs, fontsize=6)
+    b.tick_params(axis="x", length=0)
+    b.set_xlim(-0.5, len(classes) - 0.5); b.set_ylim(-70, 50)
+    b.set_xlabel("Site class, dopant–vacancy distance (Å)"); b.set_ylabel("MACE − DFT, far-referenced (meV)")
+    b.text(4.45, 48, "grey tick: band residual removed\n(diagnostic, not used)", ha="right", va="top", fontsize=6, color="#555555")
     b.set_title("Criterion 4: 6 of 15 sites outside ±25 meV", fontsize=7.5, pad=4)
 
     # (c) WP2d band-term test
@@ -120,7 +131,7 @@ def plot():
         else:
             c.scatter(x, y, s=20, marker="o", facecolor=COL[r["dopant"]] if r["first_shell"] == "1" else "white",
                       edgecolor=COL[r["dopant"]], linewidth=0.8, zorder=3)
-    c.text(59, 22, "Sr: hinge, far", fontsize=6, color=COL["Sr"], ha="right", va="center")
+    c.text(46, 55, "Sr: hinge, far", fontsize=6, color=COL["Sr"], ha="right", va="center")
     c.text(21, 8, "GA: near, far", fontsize=6, color=COL["GA"], ha="left", va="top")
     c.set_xlim(lim_c); c.set_ylim(lim_c)
     c.set_xticks([-50, -25, 0, 25, 50]); c.set_yticks([-50, -25, 0, 25, 50])
@@ -129,8 +140,9 @@ def plot():
     c.set_title("WP2d (m30): the band term", fontsize=7.5, pad=4)
 
     hs = [c.scatter([], [], marker=m, facecolor="#777777", edgecolor="#777777", s=14, label=h) for h, m in MRK.items()]
+    hs.append(c.scatter([], [], marker="o", facecolor="#777777", edgecolor="#777777", s=14, label="Filled: first shell"))
     hs.append(c.scatter([], [], marker="o", facecolor="white", edgecolor="#777777", s=14, label="Open: mid (a, b), far (c)"))
-    hs.append(mpl.patches.Patch(color="#dfe3e8", label="±25 meV (a, b)"))
+    hs.append(mpl.patches.Patch(color="#eceff2", label="±25 meV (a, b)"))
     c.legend(handles=hs, loc="lower right", fontsize=6, handletextpad=0.3, borderaxespad=0.2, labelspacing=0.3)   # empty lower right of (c)
 
     for lab, axx in zip("abc", ax):

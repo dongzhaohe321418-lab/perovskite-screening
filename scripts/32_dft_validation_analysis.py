@@ -77,7 +77,9 @@ def main():
             glob.glob(os.path.join(a.dft, "**", "*.out.gz"), recursive=True):
         m = re.match(r"(m\d\d)_(undoped|GA|Sr)_img(\d)$", os.path.basename(f).removesuffix(".gz")[:-4])
         if m:
-            outs[(m.group(1), m.group(2), int(m.group(3)))] = f
+            k = (m.group(1), m.group(2), int(m.group(3)))
+            assert k not in outs, f"frame {k} found twice: {outs[k]} and {f}"   # same rule as scripts/37
+            outs[k] = f
     bands, skipped = {}, []
     for (host, sysn, img), f in sorted(outs.items()):
         q = parse_qe(f)

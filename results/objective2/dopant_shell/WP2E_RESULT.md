@@ -35,8 +35,8 @@ Distances are measured to the nearer of the two defect centres (vacancy site, GA
 | > 10 | 20 | −103.4 | −5.2 | −77.1 | 0.39 | 0.98 |
 | **total** | 234 | −976.2 | −4.2 | −765.9 | | |
 
-\* Organic atoms are assigned to the shell of their molecule's C, so the work columns count whole
-molecules. \*\* Displacement columns use each atom's own distance (13 / 42 / 72 / 80 / 27 atoms)
+\* Organic atoms are assigned to the shell of their molecule's C (molecules found by bonding:
+8 atoms per FA, 10 for the GA), so the work columns count whole molecules. \*\* Displacement columns use each atom's own distance (13 / 42 / 72 / 80 / 27 atoms)
 and remove the net translation.
 
 - **Path work.** W_i = −Σ_k ½(F_i^k + F_i^(k+1))·Δr_i^k along the actual BFGS path (trapezoid
@@ -48,8 +48,10 @@ and remove the net translation.
   field.
 - **Displacement is flat with distance.** Mean |Δr| does not decay with distance. 78% of Σ|Δr|²
   lies beyond 6 Å.
-- **Rotations.** 12 of the 19 C-centred molecules (18 FA and the GA) rotate their C→N axis by more
-  than 10°; 10 of those 12 lie beyond 6 Å (max 42.9° at 6.6 Å).
+- **Rotations.** 12 of the 18 FA rotate their C→N axis (C to the N–N midpoint) by more than 10°;
+  10 of those 12 lie beyond 6 Å (max 42.9° at 6.6 Å). By the rigid-body rotation of the C–N
+  skeleton (Kabsch fit), 15 of the 18 FA exceed 10°. The GA, which has no single C→N axis, rotates
+  by 12.3° on the same rigid-body measure.
 - **Organic sublattice.** It carries 78% of the work with 66% of the atoms. The relaxation is a
   cell-wide reorientation and repacking of the FA sublattice, the DFT counterpart of the
   reference descents seen with MACE (0.2–0.6 eV between fmax 0.02 and 0.005,
@@ -61,9 +63,10 @@ and remove the net translation.
   defect at their relaxed positions with the rest at MACE positions (near_only), and the reverse
   (far_only).
 - **Result.** F − F(start) = **+5280 and +4544 meV**, with forces up to 9.5 eV/Å.
-- **Why they are meaningless.** A cut by atom splits FA molecules whose atoms fall on different
-  sides of 6 Å (N–H stretched from 1.02 to 1.48 Å, C–H from 1.09 to 1.27 Å). The energies measure
-  the torn bonds. This is a design error of the partition, recorded in amendment l item 3 and in
+- **Why they are meaningless.** A cut by atom splits the 6 FA molecules whose atoms fall on
+  different sides of 6 Å. In those molecules N–H is distorted from 1.02 Å to 0.89–1.48 Å and C–H
+  from 1.09 Å to 1.03–1.27 Å; the 9.5 eV/Å maximum force is on an H of a split FA (near_only).
+  The energies measure the distorted bonds. This is a design error of the partition, recorded in amendment l item 3 and in
   the docstring of `scripts/38`. Raw files: `wp2e/raw/part_*`.
 
 ## What follows

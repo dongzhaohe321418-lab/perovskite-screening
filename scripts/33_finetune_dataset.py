@@ -32,6 +32,20 @@ a32 = importlib.util.module_from_spec(_s); _s.loader.exec_module(a32)
 Z = {"H": 1, "C": 6, "N": 7, "Sr": 38, "I": 53, "Cs": 55, "Pb": 82}
 
 
+def qe_outputs(root):
+    """pw.x outputs below root, plain or gzipped (the archive); a label present twice is an error."""
+    fs = sorted(glob.glob(os.path.join(root, "**", "*.out"), recursive=True) +
+                glob.glob(os.path.join(root, "**", "*.out.gz"), recursive=True))
+    labs = [label_of(f) for f in fs]
+    dup = sorted({l for l in labs if labs.count(l) > 1})
+    assert not dup, f"labels found twice: {dup[:5]}"
+    return fs
+
+
+def label_of(f):
+    return os.path.basename(f).removesuffix(".gz")[:-4]
+
+
 def find(frames_dirs, name):
     hits = [os.path.join(d, name) for d in frames_dirs if os.path.exists(os.path.join(d, name))]
     assert len(hits) <= 1, f"{name} found in several frame dirs: {hits}"
@@ -42,8 +56,8 @@ def collect(dft_dir, frames_dirs):
     """Atoms with REF data for band frames, WP2c binding frames and WP3 off-equilibrium frames.
     Returns (frames, unmatched): unmatched = converged outputs whose frame file was not found."""
     out, unmatched = [], []
-    for f in sorted(glob.glob(os.path.join(dft_dir, "**", "*.out"), recursive=True)):
-        lab = os.path.basename(f)[:-4]
+    for f in qe_outputs(dft_dir):
+        lab = label_of(f)
         m = re.match(r"(m\d\d)_(undoped|GA|Sr)_img(\d)$", lab)
         if not m:
             continue
@@ -59,8 +73,8 @@ def collect(dft_dir, frames_dirs):
         at.arrays["REF_forces"] = q["forces"]
         out.append(at)
     # WP2c binding-energy frames: QE label = <host>_<kind>, frame = 29's relaxed extxyz (review M4)
-    for f in sorted(glob.glob(os.path.join(dft_dir, "**", "*.out"), recursive=True)):
-        lab = os.path.basename(f)[:-4]
+    for f in qe_outputs(dft_dir):
+        lab = label_of(f)
         m = re.match(r"(m\d\d)_(host|vac|(?:Sr|GA)\d+_(?:novac|vac))$", lab)
         if not m:
             continue
@@ -77,8 +91,8 @@ def collect(dft_dir, frames_dirs):
         at.arrays["REF_forces"] = q["forces"]
         out.append(at)
     # WP3 off-equilibrium frames (scripts/35): QE label = frame label = <host>_<system>_<kind>
-    for f in sorted(glob.glob(os.path.join(dft_dir, "**", "*.out"), recursive=True)):
-        lab = os.path.basename(f)[:-4]
+    for f in qe_outputs(dft_dir):
+        lab = label_of(f)
         m = re.match(r"(m\d\d)_(undoped|GA|Sr|pristine)_(rat05f|rat10f|md300|md450)$", lab)
         if not m:
             continue

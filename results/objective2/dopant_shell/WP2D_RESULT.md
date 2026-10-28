@@ -11,8 +11,9 @@ dopants.**
   neutral MACE geometry.
 - **Second result: the barrier-energy difference.** The Sr effect on the energy difference
   img3 − img0 along the MACE path does depend on the charge state: −2.9 meV at q = 0 against
-  +40.2 meV at q = +1. That 43.0 meV difference is almost entirely (92%) the finite-cell band term
-  of the neutral cell.
+  +40.2 meV at q = +1. That 43.0 meV difference matches the finite-cell band term of the neutral
+  cell (−39.7 meV) to within 3.3 meV with F and 6.0 meV with the σ→0 estimate (post hoc
+  diagnostic).
 
 ## Method
 
@@ -23,8 +24,12 @@ dopants.**
   - GA near (FA128) + V and GA far (FA152) + V;
   - band images 0 and 3 of undoped and Sr m30 (amendment f).
 - **DFT settings.** Otherwise as in `scripts/30`. 9 single points, all converged.
-- **Binding energy.** E_b(+1) = F[D_j+V]⁺ − F[D_j] − F[V]⁺ + F[host]. The background term enters
-  F[D_j+V]⁺ and F[V]⁺ alike and cancels to first order.
+- **Binding energy.** E_b(+1) = F[D_j+V]⁺ − F[D_j] − F[V]⁺ + F[host]. The image-charge term is
+  the same in F[D_j+V]⁺ and F[V]⁺ to first order and cancels. The average-potential (alignment)
+  term does not cancel in raw E_b(+1), because the two charged cells differ in composition
+  (amendment g item 1). It is site-independent to first order, so it cancels in far-referenced
+  E_b(+1), which is what the WP2d rule uses. Raw q = +1 values and raw q0 − q1 therefore carry an
+  unquantified offset of this kind.
 - **What is not modelled.** No ionic relaxation in the charged state: MACE is charge-agnostic, and
   V_I⁺ relaxes differently from V_I⁰ in reality. No finite-size electrostatic correction is
   applied either; for far-referenced E_b and for differences between images of equal charge it
@@ -38,27 +43,40 @@ dopants.**
 |---|---|---|---|---|---|---|---|
 | Sr hinge (Pb136) | +174.3 | +127.7 | +46.6 | +47.7 | +129.4 | +124.5 | −4.9 |
 | Sr far (Pb64) | +44.9 | +3.2 | +41.8 | +48.1 | 0 | 0 | — |
-| GA near (FA128) | +15.1 | −5.3 | +20.4 | +19.7 | +35.5 | +32.5 | −2.9 |
+| GA near (FA128) | +15.1 | −5.4 | +20.4 | +19.7 | +35.5 | +32.5 | −2.9 |
 | GA far (FA152) | −20.4 | −37.9 | +17.5 | +17.4 | 0 | 0 | — |
 
-**The band term, measured directly.** Removing the electron changes the raw E_b by 87–104% of
-the Fermi-level shift ΔE_F = E_F(D_j+V) − E_F(V) of the neutral cell. This supports the reading of
-amendment g item 1: the raw q = 0 offset (+42 to +85 meV at the far Sr sites, `WP2C_RESULT.md`) is
-the energy of the delocalised V_I⁰ electron in the dopant-shifted conduction band. At q = +1 the
-far-site E_b is +3.2 (Sr) and −37.9 meV (GA).
+**The band term (post hoc diagnostic).** The q0 − q1 and ΔE_F columns, and the band-term row of
+the next table, were added to `scripts/37` after the data had been read. The pre-registered WP2d
+quantity is the far-referenced difference in the last column.
+
+- **What was measured (m30 only).** Removing the electron changes the raw E_b by 87–104% of the
+  Fermi-level shift ΔE_F = E_F(D_j+V) − E_F(V) of the neutral cell. That is what Janak's theorem
+  predicts if the raw q = 0 offset is the energy of the extra electron, which is the reading of
+  amendment g item 1. The comparison does not test whether that state is delocalised, does not
+  test the dilute limit, and cannot separate the band shift from the charged-cell alignment offset
+  noted under Method.
+- **How much of the far-site offset it explains.** At the m30 Sr far site the electron accounts for
+  41.8 of the 44.9 meV raw offset (q = +1: +3.2 meV). The m30 GA far offset is not band term:
+  removing the electron makes it larger (−20.4 → −37.9 meV). WP2d did not run at m05, where the
+  far-Sr offset (+84.6 meV) exceeds its ΔE_F (+58.0 meV; `WP2C_RESULT.md`).
 
 **ΔE_a proxy on the m30 Sr band (img3 − img0; image 3 is the MACE saddle; this is not a barrier).**
 
 | | Sr − undoped, F(img3) − F(img0) |
 |---|---|
-| DFT, q = 0 (WP2b frames) | −2.9 |
-| DFT, q = +1 | +40.2 |
+| DFT, q = 0 (WP2b frames), F | −2.9 |
+| DFT, q = 0, σ→0 estimate E₀ = F + TS/2 | −5.5 |
+| DFT, q = +1 (gapped cells, no smearing term) | +40.2 |
 | MACE | −32.6 |
-| q0 − q1 | −43.0 |
+| q0 − q1, F | −43.0 |
+| q0 − q1, E₀ | −45.7 |
 | neutral-cell band term [ΔE_F(img3 − img0)]_Sr − [same]_undoped | −39.7 |
 
-- **The difference is the band term.** The charge-state difference (−43.0 meV) matches the
-  neutral-cell band term (−39.7 meV) to within 3.3 meV. In this hinge-Sr host, the vacancy hop
+- **The difference is mostly the band term.** The charge-state difference matches the
+  neutral-cell band term (−39.7 meV) to within 3.3 meV with F (−43.0 meV) and 6.0 meV with E₀
+  (−45.7 meV). The spread comes from the smearing entropy, which only the neutral cells carry.
+  In this hinge-Sr host, the vacancy hop
   toward image 3 lowers the conduction band of the Sr cell relative to undoped, and the extra
   electron follows it. This quantifies the term flagged in `WP2B_RESULT.md` §4 (m30: −39.7 meV) as
   an energy, not only a Fermi-level shift.

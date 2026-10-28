@@ -93,124 +93,175 @@
   }
  ],
  "fa_rotation": {
-  "n": 19,
+  "n": 18,
+  "measure": "FA C->N-midpoint axis",
   "max_deg": 42.91,
+  "d_A_at_max": 6.59,
   "n_over_10deg": 12,
   "n_over_10deg_far": 10,
+  "rigid_n_over_10deg": 15,
+  "ga": [
+   {
+    "C": 127,
+    "d_A": 0.0,
+    "n_N": 3,
+    "kind": "GA",
+    "rot_deg": null,
+    "rigid_rot_deg": 12.26
+   }
+  ],
   "rows": [
    {
     "C": 4,
     "d_A": 6.63,
     "n_N": 2,
-    "rot_deg": 14.48
+    "kind": "FA",
+    "rot_deg": 14.48,
+    "rigid_rot_deg": 14.54
    },
    {
     "C": 16,
     "d_A": 9.15,
     "n_N": 2,
-    "rot_deg": 20.58
+    "kind": "FA",
+    "rot_deg": 20.58,
+    "rigid_rot_deg": 23.43
    },
    {
     "C": 28,
     "d_A": 5.11,
     "n_N": 2,
-    "rot_deg": 22.6
+    "kind": "FA",
+    "rot_deg": 22.6,
+    "rigid_rot_deg": 26.59
    },
    {
     "C": 40,
     "d_A": 8.07,
     "n_N": 2,
-    "rot_deg": 2.27
+    "kind": "FA",
+    "rot_deg": 2.27,
+    "rigid_rot_deg": 6.76
    },
    {
     "C": 56,
     "d_A": 7.73,
     "n_N": 2,
-    "rot_deg": 9.78
+    "kind": "FA",
+    "rot_deg": 9.78,
+    "rigid_rot_deg": 14.55
    },
    {
     "C": 68,
     "d_A": 8.47,
     "n_N": 2,
-    "rot_deg": 28.46
+    "kind": "FA",
+    "rot_deg": 28.46,
+    "rigid_rot_deg": 32.74
    },
    {
     "C": 80,
     "d_A": 7.93,
     "n_N": 2,
-    "rot_deg": 15.4
+    "kind": "FA",
+    "rot_deg": 15.4,
+    "rigid_rot_deg": 18.58
    },
    {
     "C": 92,
     "d_A": 4.74,
     "n_N": 2,
-    "rot_deg": 22.49
+    "kind": "FA",
+    "rot_deg": 22.49,
+    "rigid_rot_deg": 22.63
    },
    {
     "C": 104,
     "d_A": 8.08,
     "n_N": 2,
-    "rot_deg": 29.31
+    "kind": "FA",
+    "rot_deg": 29.31,
+    "rigid_rot_deg": 29.3
    },
    {
     "C": 116,
     "d_A": 6.68,
     "n_N": 2,
-    "rot_deg": 14.44
+    "kind": "FA",
+    "rot_deg": 14.44,
+    "rigid_rot_deg": 18.37
    },
    {
     "C": 127,
     "d_A": 0.0,
-    "n_N": 2,
-    "rot_deg": 4.28
+    "n_N": 3,
+    "kind": "GA",
+    "rot_deg": null,
+    "rigid_rot_deg": 12.26
    },
    {
     "C": 138,
     "d_A": 6.23,
     "n_N": 2,
-    "rot_deg": 3.66
+    "kind": "FA",
+    "rot_deg": 3.66,
+    "rigid_rot_deg": 5.43
    },
    {
     "C": 150,
     "d_A": 9.23,
     "n_N": 2,
-    "rot_deg": 5.91
+    "kind": "FA",
+    "rot_deg": 5.91,
+    "rigid_rot_deg": 15.27
    },
    {
     "C": 162,
     "d_A": 9.2,
     "n_N": 2,
-    "rot_deg": 6.62
+    "kind": "FA",
+    "rot_deg": 6.62,
+    "rigid_rot_deg": 9.02
    },
    {
     "C": 174,
     "d_A": 10.39,
     "n_N": 2,
-    "rot_deg": 33.09
+    "kind": "FA",
+    "rot_deg": 33.09,
+    "rigid_rot_deg": 34.68
    },
    {
     "C": 186,
     "d_A": 8.96,
     "n_N": 2,
-    "rot_deg": 24.06
+    "kind": "FA",
+    "rot_deg": 24.06,
+    "rigid_rot_deg": 34.03
    },
    {
     "C": 198,
     "d_A": 6.59,
     "n_N": 2,
-    "rot_deg": 42.91
+    "kind": "FA",
+    "rot_deg": 42.91,
+    "rigid_rot_deg": 42.95
    },
    {
     "C": 210,
     "d_A": 7.92,
     "n_N": 2,
-    "rot_deg": 25.3
+    "kind": "FA",
+    "rot_deg": 25.3,
+    "rigid_rot_deg": 25.43
    },
    {
     "C": 222,
     "d_A": 7.59,
     "n_N": 2,
-    "rot_deg": 9.44
+    "kind": "FA",
+    "rot_deg": 9.44,
+    "rigid_rot_deg": 22.2
    }
   ]
  },

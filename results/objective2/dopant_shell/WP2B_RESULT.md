@@ -11,6 +11,13 @@
   here — and the §3 re-statement — is provisional and has no such error bar yet.** All DFT values
   are single points on MACE geometries: a fixed-path diagnostic, not relaxed DFT barriers.
 
+**Note added 2026-10-28.** WP2e has closed without an error bar (PLAN amendment l item 3;
+`WP2E_RESULT.md`). Its one DFT relaxation spread the energy over the whole cell, and the undoped
+and Sr endpoints are not run in the pre-registered form. The relaxation-bias error bar promised
+above and in §5 will therefore not exist. The §3 re-statement stays provisional until another
+design supplies one: the frozen-far-field relaxation WP2e′ (amendment l item 4, not run), or a
+fine-tuned potential whose minima pass criterion 5.
+
 ## 1. What was computed
 
 9 hosts (m05, m06, m08, m12, m15, m20, m21, m30, m32) × {undoped, GA, Sr} × MACE CI-NEB images

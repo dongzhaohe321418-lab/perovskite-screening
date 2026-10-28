@@ -1,6 +1,6 @@
 # WP2c — DFT transfer of the MACE binding energies (2026-10-28)
 
-**Pre-registered verdict (PLAN criterion 4, as amended by g items 1–2 and h item 2): FAIL.**
+**Pre-registered verdict (PLAN criterion 4, as amended by g item 1 and h item 2): FAIL.**
 
 Criterion 4 asks, for every tested site, that |far-referenced E_b(MACE) − far-referenced
 E_b(DFT)| < 25 meV and that the near-minus-far sign agrees.
@@ -15,15 +15,18 @@ E_b(DFT)| < 25 meV and that the near-minus-far sign agrees.
 - **GA.** There is no consistent DFT sign either. The near site gives −12.1 to +36.3 meV, and
   mid-shell sites give values as large (−45.4 to +42.3 meV).
 
-All DFT values are single points on the MACE-relaxed structures. MACE minima are not DFT minima
-(criterion 5 failed in WP2b). The DFT relaxation bias is not available, because WP2e is
+All DFT values are single points on the MACE-relaxed structures. MACE minima are not DFT minima:
+criterion 5 failed on the WP2b frames, and at the 48 WP2c structures themselves the residual DFT
+force is RMS 0.12–0.15 eV/Å and max 0.28–0.36 eV/Å (none passes). The DFT relaxation bias is not available, because WP2e is
 uninformative in its pre-registered form (amendment l item 3). These are therefore fixed-geometry
 DFT energies, not relaxed DFT binding energies.
 
 ## Method
 
-- **Structures.** Script 36 made the selection geometrically, before any E_b had been read
-  (amendment f; `wp1_production/wp2cde_selection.json`). Hosts were m30, m21 and m05. For each
+- **Structures.** The selection rule (amendment f; `scripts/36`, unchanged since 2026-10-25) was
+  fixed before any v2 E_b existed. It was executed on the WP1 production output on 2026-10-27,
+  after the WP1 E_b had been read, and uses only geometry and validity flags
+  (`wp1_production/wp2cde_selection.json`). Hosts were m30, m21 and m05. For each
   host: Sr on the hinge Pb (the one holding the migrating iodide), the flank Pb, one mid-shell Pb
   and one far-shell Pb; GA on the nearest FA, one mid-shell FA and one far-shell FA. The structures
   are the WP1 production structures: D_j and D_j+V at the adopted stage fmax 0.01 eV/Å, host and V
@@ -37,6 +40,9 @@ DFT energies, not relaxed DFT binding energies.
   the same outputs.
 - **Analysis.** `scripts/37_dft_eb_analysis.py`, output `wp2c/wp2cde_dft.json`. Every difference
   is taken unrounded and stored to 3 decimals. Raw inputs and outputs are in `wp2c/raw/`.
+- **Smearing.** The degauss row of WP2a failed (amendment c item 6), so the σ→0 estimate
+  E₀ = F + TS/2 was checked beside F. It changes every far-referenced error by ≤ 2.0 meV, and no
+  site changes class (closest: m21 Sr flank +25.9 → +27.5, m21 Sr hinge +23.8 → +24.2 meV).
 
 ## Results (meV)
 
@@ -69,7 +75,7 @@ Bold: |MACE − DFT| ≥ 25 meV. Near-shell sign test: Sr agrees at 6/6 sites. G
 
 | | n sites | RMS(MACE − DFT) | mean | max | sites ≥ 25 meV | criterion 4 by host |
 |---|---|---|---|---|---|---|
-| Sr | 9 | 23.9 | +7.9 | 43.0 | 3 | m30 pass, m21 fail, m05 fail |
+| Sr | 9 | 23.8 | +7.9 | 43.0 | 3 | m30 pass, m21 fail, m05 fail |
 | GA | 6 | 31.2 | +2.5 | 60.0 | 3 | m30 fail, m21 fail, m05 fail |
 
 ## The finite-cell band term
@@ -77,19 +83,28 @@ Bold: |MACE − DFT| ≥ 25 meV. Near-shell sign test: Sr agrees at 6/6 sites. G
 - **Raw far-site values.** The raw DFT E_b at the far Sr sites is +44.9, +41.7 and +84.6 meV,
   against MACE +9.6, +4.6 and +28.8 meV. At those sites Sr raises the Fermi level of the
   neutral-vacancy cell by ΔE_F = E_F(D_j+V) − E_F(V) = +48.1, +43.0 and +58.0 meV.
-- **Interpretation.** This is the term anticipated in amendment g item 1. The extra electron of
-  V_I⁰ occupies a delocalised conduction-band-like state, and Sr shifts that band throughout the
-  20-f.u. cell. WP2d confirms the attribution directly: removing the electron (q = +1) changes the
-  raw E_b by 87–104% of ΔE_F (`WP2D_RESULT.md`). A local potential cannot represent this term, and
-  it vanishes in the dilute limit. That is why criterion 4 is far-referenced.
+- **Interpretation.** This is the term anticipated in amendment g item 1: the extra electron of
+  V_I⁰ sits in a conduction-band-like state whose energy the dopant shifts. WP2d (m30 only) is
+  consistent with it: removing the electron (q = +1) changes the raw E_b by 87–104% of ΔE_F, as
+  expected if the raw offset is the energy of that electron (Janak's theorem; `WP2D_RESULT.md`).
+  WP2d does not test whether the state is delocalised or whether the term vanishes in the dilute
+  limit; both remain the premise of amendment g. A local potential cannot represent such a term,
+  which is why criterion 4 is far-referenced.
+- **Not all of the raw far-site offset is band term.** At m30 and m21 the far-Sr offset (+44.9,
+  +41.7 meV) is close to ΔE_F (+48.1, +43.0 meV). At m05 it is +84.6 meV against ΔE_F +58.0 meV;
+  the remaining ~27 meV also appears in MACE's raw E_b at that site (+28.8 meV), so it is a real
+  far-site E_b at both levels. The GA far-site values (−20.4, −60.7, −1.4 meV, with ΔE_F +16 to
+  +17 meV) are not band term either.
 - **Far-referencing removes most of it.** The band residual left after far-referencing is ≤ 5.4 meV
   at 11 of the 15 sites. The exceptions are m21 Sr mid (+23.3 meV) and the three m05 Sr sites
   (−12.6 to −16.3 meV). The m05 Sr far site carries a larger Fermi shift than the other m05 Sr sites (58.0
   against 41.7–45.4 meV), so every far-referenced m05 Sr value inherits roughly −14 meV.
-- **Diagnostic only (amendment h item 2).** If the residual is assumed to enter E_b one-to-one, as
-  WP2d supports, removing it changes the Sr errors to −6.8, +11.5, −6.9 (m30), +29.2, +21.8, −19.7
+- **Diagnostic only (amendment h item 2).** Assume the residual enters E_b one-to-one. WP2d
+  supports that for the full ΔE_F, but it does not resolve it at the residual level: at the m30 Sr
+  hinge the far-referenced E_b(q = 0) − E_b(q = +1) is +4.9 meV against a residual of −0.4 meV (GA
+  near: +2.9 against +2.3 meV). Under that assumption, removing the residual changes the Sr errors to −6.8, +11.5, −6.9 (m30), +29.2, +21.8, −19.7
   (m21) and +5.4, +23.5, −11.2 (m05) meV. That is RMS 17.1 meV, with 1 site ≥ 25 meV (m21 hinge).
-  The GA errors are unchanged (RMS 31.0 meV, 3 sites). This is not used to reclassify any site:
+  The GA errors change by ≤ 4.2 meV (RMS 31.2 → 31.0 meV; still 3 sites ≥ 25 meV). This is not used to reclassify any site:
   criterion 4 fails either way, because GA fails with or without it.
 
 ## Limitations, stated with the result
@@ -99,6 +114,11 @@ Bold: |MACE − DFT| ≥ 25 meV. Near-shell sign test: Sr agrees at 6/6 sites. G
   measured far-site scatter only at MACE level (SD 11.1 meV Sr, 28.3 meV GA). For GA that MACE
   scatter is already above the 25 meV tolerance. A single-site GA comparison at 25 meV therefore
   tests the noise of both levels as much as their agreement.
+- **Two of the three GA far references are atypical at MACE level.** m21 FA4 (MACE raw −61.0 meV)
+  and m05 FA4 (+1.0 meV) lie 2.1 and 1.9 SD from the mean of their host's valid GA far shell
+  (d > 9 Å; −8.9 ± 25.0 meV, n = 8, and +36.9 ± 18.5 meV, n = 7). DFT agrees at both sites (raw
+  MACE − DFT −0.3 and +2.5 meV), so criterion 4 is little affected. The DFT GA far-referenced
+  values, and with them "no consistent sign", depend partly on that choice of reference.
 - **Fixed MACE geometry.** Each DFT value inherits MACE's choice of FA basin in every cell. The
   WP2e GA relaxation showed that DFT moves atoms by 0.28–0.39 Å on average in every distance shell,
   cell-wide (`WP2E_RESULT.md`). A relaxed DFT E_b does not exist here.
@@ -109,14 +129,18 @@ Bold: |MACE − DFT| ≥ 25 meV. Near-shell sign test: Sr agrees at 6/6 sites. G
 
 - **Zero-shot MACE is not validated.** It has now failed criteria 3, 4 and 5, so S1 cannot accept
   zero-shot MACE-MP-0 for either ΔE_a or E_b at the pre-registered 20–25 meV level. The decision
-  passes to WP3: does a fine-tuned potential pass criterion 6?
+  passes to WP3. Criterion 6 tests only improvement over zero-shot MACE. Whether a fine-tuned
+  potential is accepted for S2 is decided by an adoption rule that applies the thresholds of
+  criteria 3–5 on the held-out hosts. That rule is to be pre-registered as PLAN amendment m
+  before any WP3 frame exists.
 - **The qualitative Sr result stands at the fixed-geometry DFT level.** Sr next to the vacancy is
   repulsive by about 120 meV (mean of the 6 first-shell sites relative to each host's far site).
-  At 298 K that corresponds to a suppression of exp(−0.119 eV / k_BT) ≈ 1/100, rather than the
-  ≈ 1/250 implied by the MACE map (+141.7 meV, `WP1_RESULT.md`). The argument of `WP1_RESULT.md`
+  At 298 K that corresponds to a suppression of exp(−0.119 eV / k_BT) ≈ 1/100. MACE gives
+  +138.4 meV on the same sites and references (≈ 1/220); the +141.7 meV of the WP1 map (≈ 1/250,
+  `WP1_RESULT.md`) uses the pooled far shell instead. The argument of `WP1_RESULT.md`
   — the corpus's nearest-site ΔE_a describes a rare configuration — is unchanged.
 - **GA remains unclassified** at both levels.
 
-Figure: `figures/fig_wp2c_eb_transfer.*` (a: far-referenced E_b, DFT against MACE, with the
-±25 meV band; b: the error against dopant–vacancy distance, with the band-residual diagnostic;
+Figure: `figures/fig_wp2c_eb_transfer.*` (a: far-referenced E_b, MACE against DFT, with the
+±25 meV band; b: the error per site class, ordered by dopant–vacancy distance, with the band-residual diagnostic;
 c: the band-term test of WP2d).
