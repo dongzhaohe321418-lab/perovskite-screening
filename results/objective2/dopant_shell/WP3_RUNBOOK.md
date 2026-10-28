@@ -185,8 +185,10 @@ commands of this runbook, with two operational differences:
 - **scripts/35 per host.** MACE-MP-0 float64 on a 234-atom cell takes 1.0 s per call at 8 threads and
   0.56 s at 32 on the node, so one all-host process would run about 12 h. Six processes run instead, one
   per training host (`--hosts <h> --threads 10`), each into its own `--frames` directory. Seeds come from
-  the labels and the settings are identical, so each frame is the one an all-host process makes (up to
-  thread-order rounding in the MD). Their reports are merged in host order into one `frames_report.json`.
+  the labels and the settings are identical. The rattle frames are bitwise the same as an all-host
+  process would make. The MD frames are statistically equivalent but not bitwise: 1500 Langevin steps are
+  chaotic, so thread-order rounding (which differs between any two thread counts, including the default
+  5) grows into a different end frame. Their reports are merged in host order into one `frames_report.json`.
   The literal command of m 1d (`--hosts 05 06 08 12 15 20`, defaults) is then run on the merged
   directory: it resumes, adds no frame, and the driver checks that the report is unchanged.
 - **Steps 3a–3c on the node.** The archive and `scripts/33` are run in the node checkout, so the node
