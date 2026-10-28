@@ -3,12 +3,21 @@
 # 2a  scripts/35: one process per training host into its own --frames dir (same params, label seeds),
 #     merged into one frames dir, then the literal all-host invocation resumes over it (no new frames).
 # 2b  50 item-1' inputs; 2c 8 chk_ inputs; 2d rb_verify_inputs.py must pass; 2e QE chain wp3 wp3x wp3chk.
+# Resumable: relaunch by hand after a reclaim. Never edit this file in place while it runs: install a new copy
+# under another name, then mv it over this path (the running bash keeps reading the old file).
 set -euo pipefail
+{   # the whole body is parsed before any of it runs
 R=/data/work/ps_wp3; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/wp3; J=/data/jobs
 HOSTS="05 06 08 12 15 20"
-cd $R
 mkdir -p $W/frames_parts $W/logs
+# one instance only; the lock (fd 8) is inherited by scripts/35 and the QE chain, so a relaunch is also refused while
+# a process started by an earlier instance is alive (two scripts/35 writers in one --frames dir clobber each other)
+exec 8>>$W/step2.lock; flock -n 8 || { echo "node_step2 already running, or a process it started holds $W/step2.lock" >&2; exit 0; }
+[ -e $W/STEP2_DONE ] && { echo "STEP2_DONE exists: nothing to do" >&2; exit 0; }
+cd $R
 log(){ echo "[$(date -u +%FT%TZ)] $*" >> $W/step2.log; }
+on_err(){ c=${BASH_COMMAND%%$'\n'*}; log "STOP: unexpected error (exit $1) at line $2: ${c:0:160}; STEP2_DONE not written"; }
+trap 'on_err $? $LINENO' ERR
 log "start; repo $(git rev-parse --short HEAD), dirty: $(git status --porcelain | wc -l)"
 
 # 2b: item-1' inputs (no MACE)
@@ -26,7 +35,8 @@ for h in $HOSTS; do
       > $W/logs/s35_m$h.log 2>&1 && touch $W/frames_parts/m$h.done ) &
   pids+=($!)
 done
-for p in "${pids[@]}"; do wait $p || { log "2a: a scripts/35 process failed (see logs)"; exit 1; }; done
+rc=0; for p in "${pids[@]}"; do wait $p || rc=1; done     # wait for every host, so none is left running on exit
+[ $rc = 0 ] || { log "2a: a scripts/35 process failed (see logs); all others have ended"; exit 1; }
 log "2a: per-host scripts/35 done"
 
 # merge into one frames dir (records in host order, as one all-host process writes them)
@@ -42,16 +52,18 @@ for r in reps:
     m["source_sha256"].update(r["source_sha256"])
 labels = [x["label"] for x in m["records"]]
 assert len(labels) == 96 and len(set(labels)) == 96, len(labels)
-F = os.path.join(W, "frames"); os.makedirs(F)
+F = os.path.join(W, "frames"); shutil.rmtree(F, ignore_errors=True); os.makedirs(F)   # no report: an earlier merge was cut short
 n = 0
 for p in parts:
     for f in sorted(glob.glob(os.path.join(p, "*.extxyz"))):
         shutil.copy2(f, F); n += 1
 assert n == sum(x["ok"] for x in m["records"]), (n, sum(x["ok"] for x in m["records"]))
+os.sync()                                            # the frames reach the disk before the report that marks the merge done
 tmp = os.path.join(F, "frames_report.json.tmp")
 with open(tmp, "w") as fh:
     json.dump(m, fh, indent=1); fh.flush(); os.fsync(fh.fileno())
 os.replace(tmp, os.path.join(F, "frames_report.json"))
+fd = os.open(F, os.O_RDONLY); os.fsync(fd); os.close(fd)
 print(f"merged {len(labels)} records, {n} frames")
 EOF
 fi
@@ -80,8 +92,13 @@ if ! $PY scripts/wp3_runbook/rb_verify_inputs.py $J $W/frames > $W/logs/verify_i
 fi
 log "2d: $(tail -1 $W/logs/verify_inputs.log)"
 
-# 2e: the DFT, one 64-rank queue at a time
+# 2e: the DFT, one 64-rank queue at a time (first wait out any queue started outside chain.sh)
 log "2e: chain wp3 wp3x wp3chk started"
+for c in wp3 wp3x wp3chk; do flock /tmp/qe_queue_$c.lock true; done
 /data/setup/chain.sh wp3 wp3x wp3chk
-log "2e: chain finished"
-touch $W/STEP2_DONE
+for i in $J/wp3/*/*.in $J/wp3x/*/*.in $J/wp3chk/*/*.in; do b=${i%.in}
+  grep -qs "JOB DONE" $b.out || [ -e $b.gaveup ] || { log "2e: $(basename $b) has neither a JOB DONE output nor a .gaveup after the chain: STEP2_DONE not written"; exit 1; }
+done
+log "2e: chain finished; every input final"
+sync; touch $W/STEP2_DONE
+exit; }

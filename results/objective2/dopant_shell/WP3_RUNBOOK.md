@@ -155,7 +155,14 @@ The check requires:
 - exactly the 50 item-1′ labels and the 8 expected `chk_` labels;
 - every input equal to the frame that scripts/33 will pair it with (1e-6 Å);
 - tot_charge 0 (item 1′) or 1 (`chk_`);
-- prefix = label, `scf`, and positions with no if_pos columns.
+- prefix = label, `scf`, and positions with no if_pos columns;
+- for the 96 WP3 inputs: the job directories under `/data/jobs/wp3` are exactly the ok records of
+  `frames_report.json`; each frame and input is non-empty and the input equals its frame (1e-6 Å); an input
+  not yet run has the `input_sha256` of its `meta.json`. scripts/35 writes frames and inputs without fsync,
+  so a hard stop can leave an empty file under an ok record; this check catches it before its DFT, so it
+  never becomes a 1d "gave up" drop. A failure here is an amendment question, not a drop.
+
+`node_step34.sh` repeats this check before the 3a archive.
 
 ### 2e. Run the DFT
 
@@ -172,8 +179,12 @@ Handling of failed and unconverged jobs:
   n=$(ls <label>.out.try* 2>/dev/null | wc -l); mv <label>.out <label>.out.try$((n+1))
   ```
 
-  Then restart `chain.sh wp3x`. That re-run counts as the queue's retry: if it also ends without JOB DONE,
-  the queue gives up. Record each such re-run.
+  Then restart `chain.sh wp3x`. Item 1′ grants this re-run separately from the 1d resubmission (the
+  amendment governs; corrected 2026-10-29). A re-run that stops without JOB DONE (for example, a spot reclaim)
+  is resubmitted once with the identical input, and a second stop is given up by the queue. If the job had
+  already used its 1d resubmission before the unconverged output, the queue decides at once. A re-run that is
+  again unconverged is final: the job is incomplete. Record each re-run and resubmission
+  (`node_step34.sh` writes them to `<NODE_WORK>/item1p_rerun.list`).
 - **WP3 frames (dropped) and `chk_` jobs (fail their test).** These are never re-run for an unconverged
   SCF.
 
@@ -194,6 +205,35 @@ commands of this runbook, with two operational differences:
 - **Steps 3a–3c on the node.** The archive and `scripts/33` are run in the node checkout, so the node
   does not idle between the DFT and training. The archive and dataset are then copied to the Mac and
   committed.
+
+Operating the drivers (added 2026-10-29, after an adversarial review with stubbed end-to-end tests of every
+hard-stop point):
+- **Resumable.** Each step leaves a marker written after `sync` (`frames_copied`, `archived_<c>`,
+  `s33.done`, `item1p_rerun.done`, `timing.txt`), so a relaunch after a reclaim redoes only the part that
+  was cut short. A part without its marker is removed and redone, and the redo is logged.
+- **One instance.** Each driver takes a `flock` (`step2.lock`, `step34.lock`), which scripts/35, the QE
+  chain and the training inherit. A relaunch is refused while any earlier instance or child is alive.
+  Before a relaunch, check with `pgrep` that none is.
+- **Installing a new copy.** Write it as `<file>.new`, check its sha256, then `mv` it over the old one. Never
+  write onto a running driver: bash reads its script while it runs.
+- **After a reclaim.** Relaunch `node_step2.sh` (if step 2 had not finished) and the STEP2_DONE waiter, or
+  `node_step34.sh` (if STEP2_DONE exists), with `setsid nohup`. A training run cut short by the reboot is
+  classified `[node loss]` from the boot time and restarted automatically in a new, empty `run<n>`.
+- **Training restarts (4e).** A run that ends without `wp3.model` is discarded unread. It is never deleted or
+  reused, and the identical command runs in `run<n+1>`. Each restart is listed with its cause and time in
+  `<NODE_WORK>/restarts.txt` as one of four kinds:
+  - `[node loss]`;
+  - `[abnormal end]`, seen by the driver: an exception, OOM, a kill, a non-zero exit, or no Initial record
+    within the 2-epoch time + 30 min;
+  - `[start check FAIL]`, corrected by hand before the relaunch;
+  - `[operator]`.
+  The driver stops for a human at a second `[abnormal end]`, even when the causes differ. If the causes
+  differ, relaunch with `PREV_CAUSE='<cause> <UTC time>'`. `restarts.txt` and `item1p_rerun.list` go into the
+  5b model note and the WP3 result.
+- **Keep-alive after a restart.** `/data/KEEP_ALIVE` lives on `/data` and survives a reclaim. After a console
+  restart that is not followed by a driver relaunch, run `rm -f /data/KEEP_ALIVE`.
+- **Driver killed while training runs.** `step34.log` then ends with `STOP: unexpected exit 143`, and
+  KEEP_ALIVE is kept. Wait for the run to end, then do 4d–5a by hand.
 
 ## Step 3: archive, then scripts/33 (Mac, repository root, at `<C1>`)
 
@@ -290,7 +330,10 @@ done   # read the wall time only, then:
 rm -rf <NODE_WORK>/timing_8 <NODE_WORK>/timing_16 <NODE_WORK>/timing_32
 ```
 
-Choose `<T>` from the wall times.
+Choose `<T>` from the wall times: the fastest, and on equal wall times (whole seconds) the fewest threads.
+The timing is all or nothing: `node_step34.sh` writes `timing.part` and renames it to `timing.txt` only once
+all three runs have finished. A pass cut short (for example by a reclaim) is discarded, logged, and all
+three are repeated.
 
 ### 4c. Training
 
@@ -326,7 +369,8 @@ the same handling:
 3. Run the identical command from scratch in a new empty `<RUN>`.
 
 The same cause twice in succession counts as deterministic: a technical failure (never a spot reclaim or
-a node loss). Never use `--restart_latest`.
+a node loss). Never use `--restart_latest`. `node_step34.sh` applies this rule as described under "Node
+drivers used for steps 2–4": a new `run<n>` per restart, and `restarts.txt`.
 
 ## Step 5: technical-failure check; model note
 
