@@ -94,10 +94,11 @@ git clone <repo> <NODE_REPO> && cd <NODE_REPO> && git checkout <C1>
 ```
 
    Then copy `../bands` next to it.
-4. Do not create `/data/KEEP_ALIVE`. Since 2026-10-29 the idle cron stops the node in economical mode
-   (StopCharging) after 60 min without pw.x, load > 1 or a login. Chain the steps so the node does not
-   wait on the Mac (steps 3a–3c can run in `<NODE_REPO>`; pull the archive and dataset afterwards), and stop
-   the node with `python3 /data/setup/ecs_selfstop.py stop` when nothing is queued.
+4. `/data/KEEP_ALIVE` is present throughout training (item 2, Keep-alive): `node_step34.sh` creates it
+   before the pre-flight and removes it after the technical-failure check. Outside training it is not
+   needed: since 2026-10-29 the idle cron counts pw.x, a 1-min load above 1 or a login as busy, and after
+   60 idle min stops the node in economical mode (StopCharging). Chain the steps so the node does not wait
+   on the Mac, and stop it with `python3 /data/setup/ecs_selfstop.py stop` when nothing is queued.
 
 ### 2a. WP3 frames: scripts/35, ONE process, on the node
 
@@ -175,6 +176,22 @@ Handling of failed and unconverged jobs:
   the queue gives up. Record each such re-run.
 - **WP3 frames (dropped) and `chk_` jobs (fail their test).** These are never re-run for an unconverged
   SCF.
+
+### Node drivers used for steps 2–4 (2026-10-28)
+
+Steps 2a–2e run as `scripts/wp3_runbook/node_step2.sh`, and steps 2e (item-1′ re-runs), 3a–3c and 4a–5a
+as `scripts/wp3_runbook/node_step34.sh`, both in the node checkout `/data/work/ps_wp3`. They run the
+commands of this runbook, with two operational differences:
+- **scripts/35 per host.** MACE-MP-0 float64 on a 234-atom cell takes 1.0 s per call at 8 threads and
+  0.56 s at 32 on the node, so one all-host process would run about 12 h. Six processes run instead, one
+  per training host (`--hosts <h> --threads 10`), each into its own `--frames` directory. Seeds come from
+  the labels and the settings are identical, so each frame is the one an all-host process makes (up to
+  thread-order rounding in the MD). Their reports are merged in host order into one `frames_report.json`.
+  The literal command of m 1d (`--hosts 05 06 08 12 15 20`, defaults) is then run on the merged
+  directory: it resumes, adds no frame, and the driver checks that the report is unchanged.
+- **Steps 3a–3c on the node.** The archive and `scripts/33` are run in the node checkout, so the node
+  does not idle between the DFT and training. The archive and dataset are then copied to the Mac and
+  committed.
 
 ## Step 3: archive, then scripts/33 (Mac, repository root, at `<C1>`)
 
