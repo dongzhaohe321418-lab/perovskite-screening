@@ -18,7 +18,7 @@ are never compared (different pseudopotential references); only differences with
 
     python scripts/32_dft_validation_analysis.py --dft <pulled dir> --bands <bands dir> --out <dir>
 """
-import argparse, glob, json, os, re, csv
+import argparse, glob, gzip, json, os, re, csv
 import numpy as np
 from ase.io import read
 
@@ -26,17 +26,23 @@ RY = 13.605693122994  # eV
 BOHR = 0.529177210903  # A
 
 
+def read_text(path):
+    """pw.x output as text; .gz (the archived raw outputs) is read transparently."""
+    with (gzip.open(path, "rt", errors="replace") if path.endswith(".gz") else open(path, errors="replace")) as fh:
+        return fh.read()
+
+
 def parse_qe(path):
-    txt = open(path, errors="replace").read()
+    txt = read_text(path)
     if "JOB DONE" not in txt:
         return None
     F = [float(x) for x in re.findall(r"^!\s+total energy\s+=\s+([-\d.]+)\s+Ry", txt, re.M)]
     TS = [float(x) for x in re.findall(r"smearing contrib\. \(-TS\)\s+=\s+([-\d.]+)\s+Ry", txt)]
     conv = "convergence has been achieved" in txt
-    m = re.search(r"Forces acting on atoms.*?\n\n(.*?)\n\n", txt, re.S)
+    m = re.findall(r"Forces acting on atoms.*?\n\n(.*?)\n\n", txt, re.S)   # last block (relax outputs have many)
     forces = None
     if m:
-        rows = re.findall(r"atom\s+\d+\s+type\s+\d+\s+force =\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", m.group(1))
+        rows = re.findall(r"atom\s+\d+\s+type\s+\d+\s+force =\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", m[-1])
         forces = np.array(rows, float) * RY / BOHR  # eV/A
     kp = re.search(r"number of k points=\s+(\d+)", txt)
     # sigma -> 0 estimate for Gaussian smearing: E0 = F + TS/2 = F - (-TS)/2 (review m1)
@@ -67,8 +73,9 @@ def main():
     calc = mace_mp(model="medium", device="cpu", default_dtype="float64")
 
     outs = {}
-    for f in glob.glob(os.path.join(a.dft, "**", "*.out"), recursive=True):
-        m = re.match(r"(m\d\d)_(undoped|GA|Sr)_img(\d)$", os.path.basename(f)[:-4])
+    for f in glob.glob(os.path.join(a.dft, "**", "*.out"), recursive=True) + \
+            glob.glob(os.path.join(a.dft, "**", "*.out.gz"), recursive=True):
+        m = re.match(r"(m\d\d)_(undoped|GA|Sr)_img(\d)$", os.path.basename(f).removesuffix(".gz")[:-4])
         if m:
             outs[(m.group(1), m.group(2), int(m.group(3)))] = f
     bands, skipped = {}, []

@@ -62,3 +62,29 @@ Consequences for the roadmap:
    nearest-hop ΔE_a describes a configuration suppressed ~250-fold at 298 K.
 4. Estimate: S1 extends by about one week (WP2c/2d, the WP2e decision, WP3); best case to a
    validated 15–20-dopant isovalent screen is now ~5–6 weeks.
+
+## Update 2026-10-28 — S1 status after WP2c/2d/2e
+
+| WP | status | result |
+|---|---|---|
+| 2c | done | **criterion 4 fails**: 6 of 15 sites exceed 25 meV (far-referenced); GA near-shell sign disagrees in 2/3 hosts. Sr first-shell repulsion holds at DFT on MACE geometries (+96 to +137 meV); MACE overestimates it by +19 meV on average (`dopant_shell/WP2C_RESULT.md`) |
+| 2d | done | far-referenced E_b charge-state robust at m30 (Sr −4.9, GA −2.9 meV); the raw q = 0 offset is the finite-cell band term; the Sr ΔE_a proxy differs by 43 meV between charge states, 92% of it the band term (`WP2D_RESULT.md`) |
+| 2e | closed (amendment l) | uninformative in the pre-registered form: 81% of the −977 meV DFT relaxation energy lies beyond 6 Å of the defects; criterion 5 has no error bar; frozen-far-field relaxation proposed post hoc (`WP2E_RESULT.md`) |
+| 3 | next | frames (`scripts/35`), DFT single points, fine-tune; criterion 6 on m30/m32 |
+
+Consequences for the roadmap:
+1. **Zero-shot MACE is not validated.** It fails criteria 3, 4 and 5, so S1 cannot accept it for
+   ΔE_a or E_b at the 20–25 meV level. WP3 (criterion 6) now decides whether S2–S4 run on a
+   fine-tuned potential. If WP3 also fails, the screen needs either DFT for the decisive
+   quantities or a coarser, dopant-ranking metric whose tolerance matches the errors measured here.
+2. **Neutral 20-f.u. cells carry a band term.** It is a dopant-dependent energy of the vacancy's
+   extra electron: the Fermi-level shift is 13–66 meV, entering raw E_b nearly one-to-one, and
+   ~40 meV in one paired ΔE_a. S2 onwards should compute
+   barrier and binding differences for V_I⁺ or far-referenced, and never compare raw neutral-cell
+   E_b with a local potential.
+3. **Frozen-far-field relaxation is necessary at both levels.** The soft FA landscape is the main
+   obstacle at both MACE and DFT level: the DFT relaxation spreads its energy over the whole cell.
+   Its DFT-level test (WP2e′) is scheduled after the WP3 single points.
+4. **Estimate.** S1 now ends with WP3, about 1 week of node time (frames, ~100 single points,
+   fine-tuning, re-evaluation). Best case to a validated isovalent screen is unchanged at ~5–6
+   weeks, conditional on WP3 passing.

@@ -12,11 +12,22 @@ It also writes two "partition" structures and their QE single-point inputs (scri
     far_only  : the reverse
 so that F(near_only) - F(start) and F(far_only) - F(start) show which region carries the
 relaxation energy (the two need not add up to the total; the coupling is reported as the rest).
+Outcome for m30 GA (2026-10-28): both partitions cost +4.5 to +5.3 eV, because a cut by atom
+splits FA molecules whose C and H fall on different sides (N-H stretched to 1.48 A, max force
+9.5 eV/A); the partition energies measure the torn bonds, not the regions, and are not used.
+
+Energy attribution that has no boundary term (added 2026-10-28, after the partition result;
+post hoc): the work done on each atom along the actual BFGS path,
+    W_i = - sum_k 1/2 (F_i^k + F_i^(k+1)) . (r_i^(k+1) - r_i^k)        (trapezoid rule)
+sums to E(final) - E(start) up to the discretisation error, which is reported (closure). The
+attribution is path-dependent and assigns each interaction to the atoms on which its force acts;
+it is reported per distance shell, per region (FA/GA molecules assigned by their C), for the
+first 10 BFGS steps and for the rest.
 
     python scripts/38_wp2e_displacement.py --relax relax_m30_GA_img0.out --host 30 --system GA \
         --bands <band dir> --out <dir> [--jobs /data/jobs/wp2e_part]
 """
-import argparse, json, os, importlib.util
+import argparse, csv, json, os, importlib.util
 import numpy as np
 from ase.io import read, write
 from ase.geometry import find_mic
@@ -85,7 +96,30 @@ def main():
         rots.append({"C": int(c), "d_A": round(float(dmin[c]), 2), "n_N": len(ns), "rot_deg": round(ang, 2)})
     E = np.array([x.get_potential_energy() for x in tr])
     near = dmin < a.rcut
-    res = {"relax": os.path.abspath(a.relax), "host": h, "system": a.system, "n_steps": len(tr),
+    # path work per atom (trapezoid), split at BFGS step 10
+    W = np.zeros((2, len(start)))
+    for k in range(len(tr) - 1):
+        step = find_mic(tr[k + 1].positions - tr[k].positions, cell, pbc=True)[0]
+        W[int(k >= 10)] += -0.5 * np.einsum("ij,ij->i", tr[k].get_forces() + tr[k + 1].get_forces(), step)
+    W *= 1000                                                   # meV
+    dmol = dmin.copy()                                          # organic atoms take their molecule's C distance
+    for c in np.flatnonzero(sym == "C"):
+        for i in pp.fa_molecule(start, int(c)):
+            dmol[i] = dmin[c]
+    work = {"closure_meV": round(float(W.sum() - (E[-1] - E[0]) * 1000), 2),
+            "total_meV": round(float(W.sum()), 1), "first10_meV": round(float(W[0].sum()), 1),
+            "rest_meV": round(float(W[1].sum()), 1), "by_shell_molecule_assigned": [], "region": {}}
+    for lo, hi in shells:
+        m = (dmol >= lo) & (dmol < hi)
+        work["by_shell_molecule_assigned"].append({"shell_A": [lo, hi], "n": int(m.sum()),
+            "W_meV": round(float(W[:, m].sum()), 1), "W_first10_meV": round(float(W[0, m].sum()), 1),
+            "W_rest_meV": round(float(W[1, m].sum()), 1),
+            "W_organic_meV": round(float(W[:, m & np.isin(sym, ["C", "N", "H"])].sum()), 1)})
+    for name, m in (("near", dmol < a.rcut), ("far", dmol >= a.rcut)):
+        work["region"][name] = {"n": int(m.sum()), "W_meV": round(float(W[:, m].sum()), 1),
+                                "W_first10_meV": round(float(W[0, m].sum()), 1), "W_rest_meV": round(float(W[1, m].sum()), 1),
+                                "share": round(float(W[:, m].sum() / W.sum()), 4)}
+    res = {"relax": os.path.basename(a.relax), "host": h, "system": a.system, "n_steps": len(tr),
            "E_relax_meV": round(float((E[-1] - E[0]) * 1000), 1),
            "E_trajectory_meV_every10": [round(float((e - E[0]) * 1000), 1) for e in E[::10]],
            "last20_slope_meV_per_step": round(float((E[-1] - E[-21]) * 1000 / 20), 3) if len(E) > 21 else None,
@@ -95,10 +129,19 @@ def main():
            "fa_rotation": {"n": len(rots), "max_deg": max(r["rot_deg"] for r in rots),
                            "n_over_10deg": sum(r["rot_deg"] > 10 for r in rots),
                            "n_over_10deg_far": sum(r["rot_deg"] > 10 and r["d_A"] >= a.rcut for r in rots),
-                           "rows": rots}}
+                           "rows": rots},
+           "path_work": work}
     os.makedirs(a.out, exist_ok=True)
     tag = f"{h}_{a.system}_img0"
     json.dump(res, open(os.path.join(a.out, f"wp2e_displacement_{tag}.json"), "w"), indent=1)
+    with open(os.path.join(a.out, f"wp2e_atoms_{tag}.csv"), "w", newline="") as fh:      # per-atom source data
+        w = csv.writer(fh); w.writerow(["index", "symbol", "d_A", "d_molecule_A", "dr_A", "W_meV", "W_first10_meV"])
+        for i in range(len(start)):
+            w.writerow([i, sym[i], f"{dmin[i]:.4f}", f"{dmol[i]:.4f}", f"{dr[i]:.4f}", f"{W[:, i].sum():.4f}", f"{W[0, i]:.4f}"])
+    with open(os.path.join(a.out, f"wp2e_trajectory_{tag}.csv"), "w", newline="") as fh:
+        w = csv.writer(fh); w.writerow(["scf_cycle", "F_minus_F0_meV", "fmax_eVA"])
+        for k, x in enumerate(tr):
+            w.writerow([k, f"{(E[k] - E[0]) * 1000:.3f}", f"{np.linalg.norm(x.get_forces(), axis=1).max():.4f}"])
     if a.jobs:
         a30 = _load("a30", "30_qe_singlepoint.py")
         for name, mask in (("near_only", near), ("far_only", ~near)):
@@ -106,8 +149,9 @@ def main():
             x.positions[mask] = start.positions[mask] + find_mic(fin.positions[mask] - start.positions[mask], cell, pbc=True)[0]
             write(os.path.join(a.out, f"part_{tag}_{name}.extxyz"), x)
             a30.write_input(x, f"part_{tag}_{name}", os.path.join(a.jobs, f"part_{tag}_{name}"))
-    print(json.dumps({k: v for k, v in res.items() if k not in ("fa_rotation", "E_trajectory_meV_every10")}, indent=1))
+    print(json.dumps({k: v for k, v in res.items() if k not in ("fa_rotation", "E_trajectory_meV_every10", "path_work")}, indent=1))
     print("FA rotation:", {k: v for k, v in res["fa_rotation"].items() if k != "rows"})
+    print("path work:", json.dumps(work, indent=1))
 
 
 if __name__ == "__main__":

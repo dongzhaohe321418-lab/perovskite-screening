@@ -1,5 +1,5 @@
 {
- "relax": "/Users/ericdong/Library/Application Support/Claude/scratch-workspaces/74ef214a-bb0b-45f3-a0dd-dab068ffcbe9/c2cff56f-cccf-49f5-bf0f-c2a959dccdde/scratch-2026-10-05-889115/dopwork/pulled/wp2e/relax_m30_GA_img0.out",
+ "relax": "relax_m30_GA_img0.out.gz",
  "host": "m30",
  "system": "GA",
  "n_steps": 283,
@@ -213,5 +213,84 @@
     "rot_deg": 9.44
    }
   ]
+ },
+ "path_work": {
+  "closure_meV": 1.15,
+  "total_meV": -976.2,
+  "first10_meV": -324.6,
+  "rest_meV": -651.6,
+  "by_shell_molecule_assigned": [
+   {
+    "shell_A": [
+     0,
+     4
+    ],
+    "n": 12,
+    "W_meV": -36.9,
+    "W_first10_meV": -12.5,
+    "W_rest_meV": -24.3,
+    "W_organic_meV": -31.2
+   },
+   {
+    "shell_A": [
+     4,
+     6
+    ],
+    "n": 38,
+    "W_meV": -152.2,
+    "W_first10_meV": -70.6,
+    "W_rest_meV": -81.6,
+    "W_organic_meV": -88.7
+   },
+   {
+    "shell_A": [
+     6,
+     8
+    ],
+    "n": 84,
+    "W_meV": -357.6,
+    "W_first10_meV": -105.5,
+    "W_rest_meV": -252.1,
+    "W_organic_meV": -306.6
+   },
+   {
+    "shell_A": [
+     8,
+     10
+    ],
+    "n": 80,
+    "W_meV": -326.1,
+    "W_first10_meV": -113.7,
+    "W_rest_meV": -212.4,
+    "W_organic_meV": -262.3
+   },
+   {
+    "shell_A": [
+     10,
+     99
+    ],
+    "n": 20,
+    "W_meV": -103.4,
+    "W_first10_meV": -22.3,
+    "W_rest_meV": -81.1,
+    "W_organic_meV": -77.1
+   }
+  ],
+  "region": {
+   "near": {
+    "n": 50,
+    "W_meV": -189.1,
+    "W_first10_meV": -83.1,
+    "W_rest_meV": -106.0,
+    "share": 0.1937
+   },
+   "far": {
+    "n": 184,
+    "W_meV": -787.1,
+    "W_first10_meV": -241.5,
+    "W_rest_meV": -545.6,
+    "share": 0.8063
+   }
+  }
  }
 }

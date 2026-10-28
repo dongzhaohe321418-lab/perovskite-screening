@@ -337,3 +337,50 @@ unavailable exactly where depth matters.
    (`WP2B_RESULT.md` §3) stays provisional, as already stated there.
 4. **WP1 gate disclosure.** Amendment j changed the depth-gate outcome: under the rule in force
    before j, fmax 0.005 would have been adopted (`WP1_PILOT_RESULT.md`, disclosure section).
+
+## Amendment 2026-10-28l — two analysis defects found on the first WP2c run; the WP2e decision of amendment k; written after every WP2c, WP2d and WP2e (GA) value had been read
+
+**Information state.** All 59 WP2c/WP2d single points, the WP2e GA relaxation and its two
+partition single points had finished and had been read. Nothing below changes a pre-registered
+threshold or decision rule. Items 1–2 are code defects found by inspecting the first output.
+Item 3 carries out amendment k item 2 with an analysis that k did not name. Item 4 is a new,
+explicitly post hoc design that has not been run.
+
+1. **`scripts/37`, label order in the q = 0 E_b.** The vacancy and host references were passed
+   to `eb()` in swapped order, so the q = 0 E_b came out as E_b + 2(F[V] − F[host]) (≈ +911 eV;
+   obviously wrong). The error is the same constant for every site of a host, so the far-referenced
+   values (criterion 4 and the WP2d rule) were unaffected. The raw E_b, the raw MACE − DFT error and
+   the raw far-site values were wrong. The q = +1 E_b used the correct order. Fixed; `eb()` now
+   refuses |E_b| > 2 eV. No number from the faulty run is used anywhere.
+2. **`scripts/32`, force block.** `parse_qe` read the first force block of an output. For a
+   relaxation that is the starting geometry: the GA relaxation's "final" fmax read 0.369 eV/Å
+   instead of 0.017 eV/Å. Single points have one force block. Re-running `scripts/32` on the
+   archived WP2b outputs after the fix reproduces `wp2b_validation.json` and `wp2b_frames.csv`
+   (checked on 2026-10-28). Every value is identical except 12 MACE force RMSEs, which differ by
+   ≤ 3 × 10⁻¹⁷ eV/Å (floating-point summation order). It now reads the last block, and both
+   scripts read the gzipped archive directly.
+3. **WP2e decision (amendment k item 2).**
+   - **The partition single points are uninformative.** A cut by atom at 6 Å splits FA molecules
+     across the boundary (N–H 1.02 → 1.48 Å, C–H 1.09 → 1.27 Å). Both partitions therefore cost
+     +4.5 and +5.3 eV, with forces up to 9.5 eV/Å: they measure torn bonds, not regions.
+   - **Replacement analysis (post hoc).** The work done on each atom along the actual BFGS path,
+     W_i = −Σ_k ½(F_i^k + F_i^(k+1))·Δr_i^k (`scripts/38`), has no boundary term. It sums to the
+     relaxation energy within 1.2 meV of 977 meV.
+   - **What it shows.** Atoms within 6 Å of either defect (organic atoms assigned by their
+     molecule's C) are 50 of 234 and carry 19% of the energy (−189 meV). Atoms beyond 6 Å carry
+     81% (−787 meV). Per atom this is −3.1 to −5.2 meV in every shell from 0 to beyond 10 Å, and
+     the organic sublattice carries most of it. Mean displacement is 0.28–0.39 Å in every shell, and
+     10 of the 12 FA that rotate by more than 10° lie beyond 6 Å.
+   - **Decision, as amendment k specified.** The relaxation energy is spread over the cell in
+     proportion to the number of atoms; it is not concentrated at the defects. WP2e is therefore
+     reported as **uninformative in its pre-registered form**, and the six held relaxations are not
+     run in that form. Criterion 5's error bar (amendment c item 5) does not exist. Every DFT
+     single-point statement keeps its "fixed MACE geometry" qualification, and `WP2B_RESULT.md` §3
+     stays provisional.
+4. **Proposed post hoc design (WP2e′; not run).**
+   - **Relaxation.** Fixed-cell DFT relaxation in which every atom beyond 6 Å of both defect
+     centres (molecules assigned by their C) is fixed at its MACE position. The free region is
+     identical in all cells of one comparison: the m30 image-0 endpoints of undoped, GA and Sr for
+     the ΔE_a bias, and the four cells of the m30 Sr-hinge E_b quartet.
+   - **Scheduling.** It ranks below the WP3 DFT single points, which decide criterion 6. Whether
+     and when it runs will be recorded in a later amendment, before any of its outputs is read.

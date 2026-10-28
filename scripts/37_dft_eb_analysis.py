@@ -20,7 +20,8 @@ WP2e: E_relax = F(DFT-relaxed) - F(single point at the MACE geometry); the singl
     relaxed E_b quartet gives E_b(relaxed) - E_b(single point).
 Settings (c item 6): dE(img3 - img0) at degauss 0.0025 vs 0.005 must move < 3 meV; nspin 2 vs 1.
 
-    python scripts/37_dft_eb_analysis.py --dft <QE outputs> --v2 <WP1 dir> --bands <band dir> --out <dir>
+    python scripts/37_dft_eb_analysis.py --dft <QE outputs, .out or .out.gz> --v2 <WP1 dir> --bands <band dir> --out <dir>
+    (from the archive: --dft results/objective2/dopant_shell --v2 results/objective2/dopant_shell/wp1_production)
 """
 import argparse, glob, json, os, re
 import importlib.util
@@ -37,7 +38,7 @@ def qe(path):
     """F (eV), E_F (eV), converged, relax info for one pw.x output; None if unfinished."""
     if path is None or not os.path.exists(path):
         return None
-    t = open(path, errors="replace").read()
+    t = a32.read_text(path)
     if "JOB DONE" not in t:
         return None
     q = a32.parse_qe(path)
@@ -52,15 +53,34 @@ def qe(path):
 
 def index_outputs(root):
     out = {}
-    for f in glob.glob(os.path.join(root, "**", "*.out"), recursive=True):
-        k = os.path.basename(f)[:-4]
+    for f in glob.glob(os.path.join(root, "**", "*.out"), recursive=True) + \
+            glob.glob(os.path.join(root, "**", "*.out.gz"), recursive=True):
+        k = os.path.basename(f).removesuffix(".gz")[:-4]
         assert k not in out, f"label {k} found twice: {out[k]} and {f}"
         out[k] = f
     return out
 
 
+def mace_eb(r, shell, fm):
+    """Unrounded MACE E_b of one WP1 row at stage fm, from the stored energies (scripts/29)."""
+    st = lambda c: [x for x in r[c]["stages"] if abs(x["fmax_target"] - fm) < 1e-12][0]["E_eV"]
+    x = (st("with_vac") - st("no_vac") - shell["E_vac"]["E_eV"] + shell["E_host"]["E_eV"]) * 1000
+    assert abs(x - r["Eb_by_stage_meV"][str(fm)]) < 0.006, (r["dopant"], r["site_host_index"], x)
+    return x
+
+
+def rnd(x, k=3):
+    if isinstance(x, dict):
+        return {a: rnd(b, k) for a, b in x.items()}
+    if isinstance(x, list):
+        return [rnd(b, k) for b in x]
+    return round(x, k) if isinstance(x, float) else x
+
+
 def eb(F, dv, d, v, h):
-    return (F[dv] - F[d] - F[v] + F[h]) * 1000
+    x = (F[dv] - F[d] - F[v] + F[h]) * 1000
+    assert abs(x) < 2000, f"|E_b| = {x:.0f} meV: label order or composition wrong ({dv}, {d}, {v}, {h})"
+    return x
 
 
 def main():
@@ -80,7 +100,7 @@ def main():
     # ---------------- WP2c and WP2d
     for h, rec in sel.items():
         shell = json.load(open(os.path.join(a.v2, f"shell_{h}.json")))
-        Em = {(r["dopant"], r["site_host_index"]): r["Eb_meV"] for r in shell["rows"]}
+        Em = {(r["dopant"], r["site_host_index"]): mace_eb(r, shell, rec["doped_fmax_final"]) for r in shell["rows"]}
         base = [f"{h}_host", f"{h}_vac"]
         for lab in base:
             if not ok(lab):
@@ -91,30 +111,30 @@ def main():
             far = sites.get(f"{dop}_far")
             rows = {}
             for name, j in sites.items():
-                labs = [f"{h}_{dop}{j}_vac", f"{h}_{dop}{j}_novac"] + base
+                labs = [f"{h}_{dop}{j}_vac", f"{h}_{dop}{j}_novac", f"{h}_vac", f"{h}_host"]   # eb() order: D+V, D, V, host
                 miss = [l for l in labs if not ok(l)]
                 if miss:
                     out["missing"] += miss; continue
                 F = {l: R[l]["F"] for l in labs}
                 rows[name] = {"site": j, "d_A": rec["sites"][name]["d_A"],
-                              "Eb_dft_meV": round(eb(F, *labs), 2), "Eb_mace_meV": Em[(dop, j)],
-                              "dEF_meV": round((R[labs[0]]["EF"] - R[f"{h}_vac"]["EF"]) * 1000, 1)}
+                              "Eb_dft_meV": eb(F, *labs), "Eb_mace_meV": Em[(dop, j)],
+                              "dEF_meV": (R[labs[0]]["EF"] - R[f"{h}_vac"]["EF"]) * 1000}
             if far is None or f"{dop}_far" not in rows:
                 res_h[dop] = {"rows": rows, "note": "far site missing: far-referenced comparison impossible"}
                 continue
             fr = rows[f"{dop}_far"]
             for name, r in rows.items():
-                r["Eb_dft_farref_meV"] = round(r["Eb_dft_meV"] - fr["Eb_dft_meV"], 2)
-                r["Eb_mace_farref_meV"] = round(r["Eb_mace_meV"] - fr["Eb_mace_meV"], 2)
-                r["farref_error_meV"] = round(r["Eb_mace_farref_meV"] - r["Eb_dft_farref_meV"], 2)
-                r["raw_error_meV"] = round(r["Eb_mace_meV"] - r["Eb_dft_meV"], 2)
-                r["band_residual_meV"] = round(r["dEF_meV"] - fr["dEF_meV"], 1)
+                r["Eb_dft_farref_meV"] = r["Eb_dft_meV"] - fr["Eb_dft_meV"]
+                r["Eb_mace_farref_meV"] = r["Eb_mace_meV"] - fr["Eb_mace_meV"]
+                r["farref_error_meV"] = r["Eb_mace_farref_meV"] - r["Eb_dft_farref_meV"]
+                r["raw_error_meV"] = r["Eb_mace_meV"] - r["Eb_dft_meV"]
+                r["band_residual_meV"] = r["dEF_meV"] - fr["dEF_meV"]
             tested = {n: r for n, r in rows.items() if n != f"{dop}_far"}
             near = [n for n in tested if n.endswith(("_hinge", "_flank", "_near"))]
             sgn = lambda x: int(np.sign(x))
             sign_agree = all(sgn(tested[n]["Eb_mace_farref_meV"]) == sgn(tested[n]["Eb_dft_farref_meV"]) for n in near)
             res_h[dop] = {"rows": rows, "far_site_raw_dft_meV": fr["Eb_dft_meV"], "far_site_raw_mace_meV": fr["Eb_mace_meV"],
-                          "criterion4": {"max_abs_farref_error_meV": round(max(abs(r["farref_error_meV"]) for r in tested.values()), 2) if tested else None,
+                          "criterion4": {"max_abs_farref_error_meV": max(abs(r["farref_error_meV"]) for r in tested.values()) if tested else None,
                                          "near_sign_agree": sign_agree,
                                          "pass": bool(tested) and all(abs(r["farref_error_meV"]) < TOL4 for r in tested.values()) and sign_agree}}
             # WP2d at this host
@@ -129,18 +149,21 @@ def main():
                     if miss:
                         out["missing"] += miss; continue
                     F = {l: R[l]["F"] for l in labs}
-                    q[name] = {"site": j, "Eb_q1_meV": round(eb(F, *labs), 2), "Eb_q0_meV": r["Eb_dft_meV"]}
+                    e1 = eb(F, *labs)
+                    # removing the electron should change E_b by about E_F(D+V) - E_F(V) at q = 0 (amendment g item 1)
+                    q[name] = {"site": j, "Eb_q1_meV": e1, "Eb_q0_meV": r["Eb_dft_meV"],
+                               "q0_minus_q1_meV": r["Eb_dft_meV"] - e1, "dEF_q0_meV": r["dEF_meV"]}
                 if f"{dop}_far" in q:
                     fq = q[f"{dop}_far"]
                     for name, x in q.items():
-                        x["farref_q1_meV"] = round(x["Eb_q1_meV"] - fq["Eb_q1_meV"], 2)
-                        x["farref_q0_meV"] = round(x["Eb_q0_meV"] - fq["Eb_q0_meV"], 2)
-                        x["farref_q1_minus_q0_meV"] = round(x["farref_q1_meV"] - x["farref_q0_meV"], 2)
+                        x["farref_q1_meV"] = x["Eb_q1_meV"] - fq["Eb_q1_meV"]
+                        x["farref_q0_meV"] = x["Eb_q0_meV"] - fq["Eb_q0_meV"]
+                        x["farref_q1_minus_q0_meV"] = x["farref_q1_meV"] - x["farref_q0_meV"]
                     tq = {n: x for n, x in q.items() if n != f"{dop}_far"}
                     flag = any(abs(x["farref_q1_minus_q0_meV"]) > TOL_Q or np.sign(x["farref_q1_meV"]) != np.sign(x["farref_q0_meV"])
                                for x in tq.values())
                     out["wp2d"].setdefault(h, {})[dop] = {"rows": q, "far_site_raw_q1_minus_q0_meV":
-                                                          round(fq["Eb_q1_meV"] - fq["Eb_q0_meV"], 2),
+                                                          fq["Eb_q1_meV"] - fq["Eb_q0_meV"],
                                                           "label": "V_I0-specific" if flag else "charge-state robust"}
                 else:
                     out["wp2d"].setdefault(h, {})[dop] = {"rows": q, "note": "far site missing"}
@@ -160,9 +183,12 @@ def main():
                     for i in (0, 3):
                         x = fr[i].copy(); x.calc = calc; e.append(x.get_potential_energy())
                     return (e[1] - e[0]) * 1000
+                ef = lambda s: (R[f"{h}_{s}_img3"]["EF"] - R[f"{h}_{s}_img0"]["EF"]) * 1000
+                dq1, dq0 = d("Sr", "_q1") - d("undoped", "_q1"), d("Sr", "") - d("undoped", "")
                 out["wp2d"].setdefault(h, {})["dEa_img03"] = {
-                    "q1_meV": round(d("Sr", "_q1") - d("undoped", "_q1"), 2), "q0_meV": round(d("Sr", "") - d("undoped", ""), 2),
-                    "mace_meV": round(dm("Sr") - dm("undoped"), 2),
+                    "q1_meV": dq1, "q0_meV": dq0, "q0_minus_q1_meV": dq0 - dq1,
+                    "band_term_q0_meV": ef("Sr") - ef("undoped"),
+                    "mace_meV": dm("Sr") - dm("undoped"),
                     "note": "E(img3) - E(img0) differences on the MACE path, not max over images"}
             else:
                 out["missing"] += [l for l in labs if not ok(l)]
@@ -171,21 +197,21 @@ def main():
     for s in ("undoped", "GA", "Sr"):
         rl, sp = f"relax_m30_{s}_img0", f"m30_{s}_img0"
         if ok(rl) and ok(sp):
-            out["wp2e"][s] = {"E_relax_meV": round((R[rl]["F"] - R[sp]["F"]) * 1000, 2),
+            out["wp2e"][s] = {"E_relax_meV": (R[rl]["F"] - R[sp]["F"]) * 1000,
                               "bfgs_converged": R[rl]["bfgs_converged"], "final_fmax_eVA": R[rl]["fmax"]}
         else:
             out["missing"] += [l for l in (rl, sp) if not ok(l)]
     e = out["wp2e"]
     if all(k in e for k in ("undoped", "GA", "Sr")):
-        e["dEa_single_point_bias_meV"] = {d: round(-(e[d]["E_relax_meV"] - e["undoped"]["E_relax_meV"]), 2) for d in ("GA", "Sr")}
+        e["dEa_single_point_bias_meV"] = {d: -(e[d]["E_relax_meV"] - e["undoped"]["E_relax_meV"]) for d in ("GA", "Sr")}
     for h, rec in sel.items():
         q = rec.get("wp2e_quartet_labels")
         if q and all(ok(l) for l in q) and all(ok(l.replace("_relax", "")) for l in q):
             hst = [l for l in q if l.endswith("_host_relax")][0]; vac = [l for l in q if l.endswith("_vac_relax") and "Sr" not in l][0]
             dv = [l for l in q if "Sr" in l and l.endswith("_vac_relax")][0]; dn = [l for l in q if "Sr" in l and l.endswith("_novac_relax")][0]
             Fr = {l: R[l]["F"] for l in q}; Fs = {l: R[l.replace("_relax", "")]["F"] for l in q}
-            out["wp2e"]["Eb_quartet"] = {"host": h, "Eb_relaxed_meV": round(eb(Fr, dv, dn, vac, hst), 2),
-                                         "Eb_single_point_meV": round(eb(Fs, dv, dn, vac, hst), 2),
+            out["wp2e"]["Eb_quartet"] = {"host": h, "Eb_relaxed_meV": eb(Fr, dv, dn, vac, hst),
+                                         "Eb_single_point_meV": eb(Fs, dv, dn, vac, hst),
                                          "bfgs_converged": {l: R[l]["bfgs_converged"] for l in q}}
 
     # ---------------- settings rows (c item 6)
@@ -193,13 +219,14 @@ def main():
     if all(ok(l) for l in (base0, base3, "set_m30u_img0_dg0025", "set_m30u_img3_dg0025")):
         d5 = (R[base3]["F"] - R[base0]["F"]) * 1000
         d25 = (R["set_m30u_img3_dg0025"]["F"] - R["set_m30u_img0_dg0025"]["F"]) * 1000
-        out["settings"]["degauss"] = {"dE_img3_minus_img0_dg0.005_meV": round(d5, 2), "dg0.0025_meV": round(d25, 2),
-                                      "shift_meV": round(d25 - d5, 2), "pass": abs(d25 - d5) < TOL_SMEAR}
+        out["settings"]["degauss"] = {"dE_img3_minus_img0_dg0.005_meV": d5, "dg0.0025_meV": d25,
+                                      "shift_meV": d25 - d5, "pass": abs(d25 - d5) < TOL_SMEAR}
     if ok("set_m30u_img0_nspin2") and ok(base0):
-        out["settings"]["nspin2"] = {"F_nspin2_minus_nspin1_meV": round((R["set_m30u_img0_nspin2"]["F"] - R[base0]["F"]) * 1000, 2),
+        out["settings"]["nspin2"] = {"F_nspin2_minus_nspin1_meV": (R["set_m30u_img0_nspin2"]["F"] - R[base0]["F"]) * 1000,
                                      "total_magnetization_muB": R["set_m30u_img0_nspin2"]["mag"]}
     out["missing"] = sorted(set(out["missing"]))
     os.makedirs(a.out, exist_ok=True)
+    out = rnd(out)                      # every difference above is taken unrounded; values stored to 3 decimals
     json.dump(out, open(os.path.join(a.out, "wp2cde_dft.json"), "w"), indent=1)
     print(json.dumps(out, indent=1))
 

@@ -1,0 +1,6 @@
+item,dopant,first_shell,dEF_q0_meV,q0_minus_q1_meV
+E_b Sr_hinge,Sr,1,47.7,46.646
+E_b Sr_far,Sr,0,48.1,41.773
+E_b GA_near,GA,1,19.7,20.402
+E_b GA_far,GA,0,17.4,17.476
+dE(img3-img0) Sr-undoped,pair,,-39.7,-43.02
