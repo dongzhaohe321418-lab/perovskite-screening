@@ -20,7 +20,8 @@ Modes
           Also reported (amendment c, item 3): E_b - median(far) per host, with the far SD.
 Invalid rows are never used and are listed with their reasons (v2.1: per stage; the depth gate
 uses each row at the stages where it is valid, PLAN amendment j). Amendment g item 3: only files
-named shell_mNN.json are read; hosts must share one protocol, references must reach fmax <= 0.005,
+named shell_mNN.json are read; hosts must share one protocol (amendment m item 6: one model, by
+'model' + 'model_sha256', for every host's rows and references), references must reach fmax <= 0.005,
 (host, dopant, site) must be unique; map mode takes E_b and validity at an explicit --fmax; the
 depth gate is reported only for the complete pre-registered pilot set.
 
@@ -110,11 +111,17 @@ def load(inp, fm=None):
                          "reasons_by_stage": rstage,
                          "valid": not why, "invalid_reasons": why})
     # the FIRE step cap does not change a converged relaxation and every used row must be converged,
-    # so hosts may differ in steps_per_stage only (PLAN amendment i); it is reported per host
-    strip = lambda p: {k: v for k, v in p.items() if k != "steps_per_stage"}
+    # so hosts may differ in steps_per_stage only (PLAN amendment i); it is reported per host. The model
+    # is compared by identity ('model', 'model_sha256'); 'model_path' is provenance, reported in
+    # meta[h]['protocol'] (amendment m items 4, 6). SystemExit, not assert: this must survive python -O.
+    strip = lambda p: {k: v for k, v in p.items() if k not in ("steps_per_stage", "model_path")}
+    mid = lambda p: {k: p.get(k) for k in ("model", "model_sha256")}
     p0 = next(iter(protos.values()), None)
     for h, p in protos.items():
-        assert strip(p) == strip(p0), f"protocol of {h} differs from the other hosts: {p} vs {p0}"
+        if strip(p) != strip(p0):
+            raise SystemExit(f"protocol of {h} differs from the other hosts: {p} vs {p0}")
+        if mid(refproto[h]) != mid(p):      # amendment m item 6: no references from another model
+            raise SystemExit(f"{h}: references from another model {mid(refproto[h])} than its rows {mid(p)}")
         meta[h]["steps_per_stage"] = p.get("steps_per_stage")
         meta[h]["references_steps_per_stage"] = refproto[h].get("steps_per_stage")
     if fm is not None:   # amendment h item 3: map at the run's own last stage, so structures (36) match

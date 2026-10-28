@@ -38,8 +38,25 @@ here (PLAN amendment: Pb d > 8.5 A, C d > 9.0 A, from the geometric shell gaps).
 References may use their own stage list (--ref-fmax-stages) or be reused from the pilot
 (--ref-from); E_b(stage) always uses the fully relaxed references (PLAN amendment g item 4).
 
+Model (PLAN amendment m item 6). Default: zero-shot mace_mp(model="medium"), protocol record
+unchanged. --model <file> --model-sha256 <hex> (the hash of the committed wp3/ model note; a
+mismatch is refused before loading) uses MACECalculator(model_paths=[<file>], device="cpu",
+default_dtype="float64", head="Default") and writes model_path and model_sha256 into 'protocol';
+absent = zero-shot. The model is identified by 'model' + 'model_sha256' (item 4 Outcomes: "by the
+recorded sha256"); model_path is provenance only. --ref-from and resume refuse another model, and
+scripts/34 (one protocol for all hosts) refuses to pool zero-shot and fine-tuned hosts. With --model,
+--freeze-beyond is refused: it cuts by atom, and item 4 (WP3b, Scope) requires the WP3b free-region
+rule before any S2 use. The scripts/35 topology check that item 4 (Scope) requires of S2 relaxations
+is not run here; item 6 is not S2.
+
     python scripts/29_dopant_shell_scan.py --member 30 --dopants Sr GA --near 2 --far 3 \
         --out results/objective2/dopant_shell/v2
+    # item 6 (only if the model is validated; m30 and m21, all sites, references afresh, no --ref-from):
+    python scripts/29_dopant_shell_scan.py --member {30,21} --model <run>/wp3.model --model-sha256 <hex> \
+        --fmax-stages 0.02 0.01 --steps 10000 --out <dir>
+    # then scripts/34 --mode map --fmax 0.01 --inp <dir with shell_m21.json and shell_m30.json only>; rows
+    # labelled "fine-tuned-MACE level; whole-cell relaxations, geometry not validated (item 4, Scope)",
+    # m21 as the checkpoint-selection host (labels applied in the WP3 result)
 """
 import argparse, hashlib, json, os, shutil, sys, time, importlib.util
 import numpy as np
@@ -53,6 +70,26 @@ _spec = importlib.util.spec_from_file_location("pp", os.path.join(HERE, "22_pair
 pp = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(pp)
 
 PROTOCOL_VERSION = "v2.1-stage-validity"   # v2 + every check per fmax stage (PLAN amendment j)
+FOUNDATION_SHA256 = "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845"   # zero-shot medium (m item 2)
+MODEL_KEYS = ("model", "model_sha256")      # identity; model_path is recorded as provenance only
+
+
+def model_id(protocol):
+    """Model identity of a protocol record (amendment m items 4, 6); no model_sha256 = zero-shot."""
+    return {k: protocol.get(k) for k in MODEL_KEYS}
+
+
+def sans_path(protocol):
+    """Protocol record without the model_path provenance field (compared by model identity instead)."""
+    return {k: v for k, v in protocol.items() if k != "model_path"}
+
+
+def file_sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for b in iter(lambda: fh.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
 
 
 def dump_atomic(obj, path):
@@ -181,19 +218,50 @@ def main():
                     help="S2 design (not S1): hold atoms farther than this (A) from both the dopant site and "
                          "the vacancy site at the partner's positions in D_j and D_j+V (frozen far field)")
     ap.add_argument("--save-structures", action=argparse.BooleanOptionalAction, default=True)
-    ap.add_argument("--device", default="cpu")
+    ap.add_argument("--model", default=None,
+                    help="MACE model file, e.g. the WP3 fine-tuned wp3.model (PLAN amendment m item 6); path and "
+                         "sha256 go into 'protocol'. Default: zero-shot MACE-MP-0 medium")
+    ap.add_argument("--model-sha256", default=None,
+                    help="required with --model: expected sha256 of the file (the committed wp3/ model note); "
+                         "a mismatch is refused before the model is loaded")
+    ap.add_argument("--device", default="cpu", help="with --model only 'cpu' (amendment m item 3 construction)")
     ap.add_argument("--threads", type=int, default=6)
     ap.add_argument("--out", default="results/objective2/dopant_shell/v2")
     args = ap.parse_args()
+    if args.model is None and args.model_sha256 is not None:
+        ap.error("--model-sha256 needs --model")
+    if args.model is not None:          # fail closed before anything is loaded or written (amendment m items 4, 6)
+        if args.model_sha256 is None:
+            ap.error("--model needs --model-sha256 (the model is identified by its recorded sha256, amendment m item 4)")
+        if args.device != "cpu":
+            ap.error("--model runs on device 'cpu' only (device is not recorded in 'protocol')")
+        if args.freeze_beyond is not None:
+            ap.error("--freeze-beyond cuts by atom; amendment m item 4 (WP3b, Scope) requires the WP3b "
+                     "free-region rule before any S2 use, so it is refused with --model")
+        if not os.path.isfile(args.model):
+            raise SystemExit(f"--model {args.model}: no such file")
 
     import torch; torch.set_num_threads(args.threads)
-    from mace.calculators import mace_mp
-    calc = mace_mp(model="medium", device=args.device, default_dtype="float64")
+    if args.model is None:
+        from mace.calculators import mace_mp
+        calc = mace_mp(model="medium", device=args.device, default_dtype="float64")
+    else:
+        from mace.calculators import MACECalculator
+        model_sha = file_sha256(args.model)
+        if model_sha != args.model_sha256.lower():
+            raise SystemExit(f"--model {args.model}: sha256 {model_sha} != --model-sha256 {args.model_sha256}")
+        # a list, not a str: MACECalculator globs a str path, which could load a file other than the one hashed
+        calc = MACECalculator(model_paths=[args.model], device="cpu", default_dtype="float64", head="Default")
+        if calc.head != "Default":       # 0.3.16 falls back to the last head with only a warning
+            raise SystemExit(f"--model {args.model}: no head 'Default' (heads {calc.available_heads})")
     os.makedirs(args.out, exist_ok=True)
     tag = f"m{args.member:02d}"
     outp = os.path.join(args.out, f"shell_{tag}.json")
     logf = open(os.path.join(args.out, f"shell_{tag}.log"), "a")
     def log(s): print(s, flush=True); logf.write(s + "\n"); logf.flush()
+    if args.model is not None:
+        log(f"{tag}: --model {os.path.abspath(args.model)} sha256 {model_sha}"
+            + ("  [WARNING: the zero-shot foundation file, i.e. a stand-in]" if model_sha == FOUNDATION_SHA256 else ""))
 
     ref = ref_vacancy_position(args.pool, args.vac_ref)
     host = read(f"{args.pool}/{tag}.extxyz")
@@ -217,6 +285,9 @@ def main():
         protocol["ref_fmax_stages"] = ref_stages
     if args.freeze_beyond is not None:          # likewise: absent for every S1 run
         protocol["freeze_beyond_A"] = args.freeze_beyond
+    if args.model is not None:                  # likewise: absent (= zero-shot) unless --model (amendment m item 6)
+        protocol.update({"model": "MACECalculator(--model, head Default)",
+                         "model_path": os.path.abspath(args.model), "model_sha256": model_sha})
     res = {"member": args.member,
            "protocol": protocol,
            "inputs": {"pool": os.path.abspath(args.pool), "vac_ref": os.path.abspath(args.vac_ref),
@@ -226,8 +297,12 @@ def main():
     if os.path.exists(outp):
         old = json.load(open(outp))
         for k in ("protocol", "inputs", "member", "vacancy_host_index"):
-            if old.get(k) != res[k]:
+            a_, b_ = (sans_path(old.get(k) or {}), sans_path(res[k])) if k == "protocol" else (old.get(k), res[k])
+            if a_ != b_:                          # protocol: model by identity (sha256), not by path
                 raise SystemExit(f"{outp}: '{k}' differs from this run; move it aside instead of mixing results")
+        if old["protocol"].get("model_path") != protocol.get("model_path"):
+            log(f"{tag}: resumed with the same model (sha256) from another path; the record keeps "
+                f"{old['protocol'].get('model_path')}")
         res = old
     done = {(r["dopant"], r["site_host_index"]) for r in res["rows"]}
     hpath, vpath = (os.path.join(args.out, f"{tag}_host_relaxed.extxyz"),
@@ -238,6 +313,9 @@ def main():
         for k in ("inputs", "member", "vacancy_host_index"):
             if src.get(k) != res[k]:
                 raise SystemExit(f"--ref-from: '{k}' differs from this run")
+        for p in (src["protocol"], src.get("references_protocol", src["protocol"])):   # amendment m item 6
+            if model_id(p) != model_id(protocol):   # model + sha256; a path difference alone is not another model
+                raise SystemExit(f"--ref-from: reference model {model_id(p)} differs from this run's {model_id(protocol)}")
         for k in ("E_host", "E_vac"):
             got = [st["fmax_target"] for st in src[k]["stages"]]
             if got != ref_stages or not src[k]["converged"]:
