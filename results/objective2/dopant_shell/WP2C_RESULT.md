@@ -131,8 +131,8 @@ Bold: |MACE − DFT| ≥ 25 meV. Near-shell sign test: Sr agrees at 6/6 sites. G
   zero-shot MACE-MP-0 for either ΔE_a or E_b at the pre-registered 20–25 meV level. The decision
   passes to WP3. Criterion 6 tests only improvement over zero-shot MACE. Whether a fine-tuned
   potential is accepted for S2 is decided by an adoption rule that applies the thresholds of
-  criteria 3–5 on the held-out hosts. That rule is to be pre-registered as PLAN amendment m
-  before any WP3 frame exists.
+  criteria 3–5 on the held-out hosts. That rule is pre-registered as PLAN amendment m
+  (2026-10-28), written before any WP3 frame existed.
 - **The qualitative Sr result stands at the fixed-geometry DFT level.** Sr next to the vacancy is
   repulsive by about 120 meV (mean of the 6 first-shell sites relative to each host's far site).
   At 298 K that corresponds to a suppression of exp(−0.119 eV / k_BT) ≈ 1/100. MACE gives

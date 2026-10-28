@@ -94,3 +94,32 @@ Consequences for the roadmap:
    weeks, conditional on the fine-tuned potential passing the adoption rule. That estimate excludes
    WP2e′: 7 DFT relaxations, where the one full relaxation run so far took more than a day on the
    node.
+
+## Update 2026-10-28 — WP3 pre-registered (PLAN amendment m)
+
+Amendment m fixes WP3 before any WP3 DFT single point, any fine-tuning run of its protocol, or any
+fine-tuned prediction on a test host exists. It was checked against the archived data and the
+installed mace-torch 0.3.16 source before adoption.
+
+1. **Held-out set.** m30 and m32 as before, plus five corpus pairs that have no DFT yet (GA m10,
+   m18; Sr m04, m14, m27; 50 single points): 9 ΔE_a pairs on 7 test hosts. m21 selects the
+   checkpoint.
+2. **Targets.** Vacancy cells are trained on E′ = F − (E_F − E_F,ref), which removes the
+   neutral-cell band term frame by frame. A q = +1 check on training frames decides between E′
+   and raw F before training.
+3. **Adoption rule for S2.** The fine-tuned model replaces zero-shot MACE only if:
+   - (a) criterion 6 shows improvement;
+   - (b) on the 9 pairs, RMS ΔE_a < 20 meV with no class change at ±59.5 meV;
+   - (c) every far-referenced m30 E_b error is < 25 meV and the near sign agrees;
+   - (d) the frozen-far-field relaxations give a residual DFT force RMS < 0.05 and max < 0.2 eV/Å
+     on the free atoms;
+   - (e) a 5 ps MD stability check passes.
+
+   Otherwise S1 ends without a validated potential. S2 then proceeds as in consequence 1 of the
+   update above.
+4. **Scope.** A validation covers single points at fixed geometries and forces at
+   frozen-far-field vacancy minima. Barriers on the model's own paths and E_b from its own
+   relaxations need a further pre-registered DFT check before S2 quotes them with an error budget.
+5. **Estimate.** About 150 DFT single points (about 18 node-hours), 13–25 h of training, then 12
+   WP3b single points and 12 MD runs. That is still about 1 week of node time.
+
