@@ -1,0 +1,313 @@
+{
+ "script": "scripts/39_wp3_evaluate.py",
+ "plan": "amendment 2026-10-28m items 3-5",
+ "mode": "gate-only",
+ "versions": {
+  "mace": "0.3.16",
+  "torch": "2.14.1",
+  "ase": "3.29.0",
+  "numpy": "2.5.4"
+ },
+ "threads": 4,
+ "script_sha256": "59232da1d15c12754aa4515470afd41d871f3026b2a3ad1cb670b0e0efaebacf",
+ "git": {
+  "head": "c02c872bc22f14eb04df27aeb0810cd86cf7feff",
+  "uncommitted": []
+ },
+ "cache": null,
+ "zeroshot_is_item2_foundation_file": true,
+ "float64_assertion": {
+  "zeroshot": "asserted (dtype of calculator and every parameter, CPU) before its first frame",
+  "finetuned": null,
+  "note": "item 3 asks for float64 to be asserted for both arms before any frame and for the fine-tuned model not to be loaded before the gate passed; both cannot hold. Kept: the gate order. Zero-shot is asserted before its first (gate) frame, the fine-tuned arm when it is built after the gate, before its first frame"
+ },
+ "position_check": {
+  "gate_46": {
+   "n_frames": 46,
+   "n_inputs_checked": 46,
+   "n_outputs_checked": 46,
+   "max_dcell_A": 5.102196573270515e-15,
+   "max_dpos_A": 0.0,
+   "tol_A": 1e-06,
+   "output_max_dcell_A": 9.840712845521925e-06,
+   "output_max_dpos_A": 1.6589664178654089e-06,
+   "output_tol_A": 0.0001,
+   "no_input_incomplete_frames": [],
+   "failures": [],
+   "pass": true
+  }
+ },
+ "gate": {
+  "frame_energies": [
+   {
+    "group": "m30/m32 band frames vs E_mace of wp2b_validation.json",
+    "n": 30,
+    "max_abs_diff_eV": 0.0,
+    "worst": "m30_undoped_img0",
+    "tol_eV": 1e-06,
+    "pass": true
+   },
+   {
+    "group": "m30 WP2c frames vs shell_m30.json (E_host/E_vac top level; doped stage fmax 0.01)",
+    "n": 16,
+    "max_abs_diff_eV": 2.15550244320184e-10,
+    "worst": "m30_GA128_vac",
+    "tol_eV": 1e-06,
+    "pass": true
+   },
+   {
+    "group": "item-1' band images vs energy field of ../bands",
+    "n": 50,
+    "max_abs_diff_eV": 1.108219294110313e-09,
+    "worst": "m18_GA_img3",
+    "tol_eV": 1e-06,
+    "pass": true
+   }
+  ],
+  "dft_missing": {},
+  "comparators": [
+   {
+    "name": "(i) pooled, 46 frames (eV/A)",
+    "value": 0.08680896287711931,
+    "stated": 0.086809,
+    "diff": -3.712288068613567e-08,
+    "tol": 1e-06,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(i) 30 band frames (eV/A)",
+    "value": 0.08886689066071789,
+    "stated": 0.088867,
+    "diff": -1.09339282114429e-07,
+    "tol": 1e-06,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(i) 16 WP2c frames (eV/A)",
+    "value": 0.08282285851422372,
+    "stated": 0.082823,
+    "diff": -1.4148577627548509e-07,
+    "tol": 1e-06,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) raw m30_GA (meV)",
+    "value": -22.240506365960755,
+    "stated": -22.241,
+    "diff": 0.0004936340392447391,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) raw m30_Sr (meV)",
+    "value": -29.78244938435637,
+    "stated": -29.782,
+    "diff": -0.0004493843563686539,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) raw m32_GA (meV)",
+    "value": -16.393909855651145,
+    "stated": -16.394,
+    "diff": 9.014434885301625e-05,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) raw m32_Sr (meV)",
+    "value": 24.215392056703422,
+    "stated": 24.215,
+    "diff": 0.00039205670342212784,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) raw RMS (meV)",
+    "value": 23.64730379747954,
+    "stated": 23.647,
+    "diff": 0.00030379747954256686,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) Eprime m30_GA (meV)",
+    "value": -21.640506366566115,
+    "stated": -21.641,
+    "diff": 0.0004936334338836446,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) Eprime m30_Sr (meV)",
+    "value": -69.48244939280812,
+    "stated": -69.482,
+    "diff": -0.0004493928081217291,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) Eprime m32_GA (meV)",
+    "value": -18.093909863637236,
+    "stated": -18.094,
+    "diff": 9.01363627647811e-05,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) Eprime m32_Sr (meV)",
+    "value": 14.515392061639432,
+    "stated": 14.515,
+    "diff": 0.00039206163943106276,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(ii) Eprime RMS (meV)",
+    "value": 38.19099524194828,
+    "stated": 38.191,
+    "diff": -4.7580517232859165e-06,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(iii) Sr136 (meV)",
+    "value": -6.4025437520740525,
+    "stated": -6.403,
+    "diff": 0.0004562479259471175,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(iii) Sr124 (meV)",
+    "value": 14.083554508943052,
+    "stated": 14.084,
+    "diff": -0.00044549105694713376,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(iii) Sr52 (meV)",
+    "value": -3.837873144675541,
+    "stated": -3.838,
+    "diff": 0.00012685532445910752,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(iii) GA128 (meV)",
+    "value": -60.0430961389975,
+    "stated": -60.043,
+    "diff": -9.613899749894017e-05,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(iii) GA212 (meV)",
+    "value": -13.306313353268706,
+    "stated": -13.306,
+    "diff": -0.0003133532687069618,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   },
+   {
+    "name": "(iii) RMS (meV)",
+    "value": 28.41232026213448,
+    "stated": 28.412,
+    "diff": 0.00032026213447977625,
+    "tol": 0.001,
+    "pass": true,
+    "rounded_equal": true
+   }
+  ],
+  "exact": [
+   {
+    "name": "(ii) raw class changes [DFT, MACE]",
+    "value": {
+     "m32_GA": [
+      0,
+      -1
+     ]
+    },
+    "stated": {
+     "m32_GA": [
+      0,
+      -1
+     ]
+    },
+    "pass": true
+   },
+   {
+    "name": "(ii) Eprime class changes [DFT, MACE]",
+    "value": {
+     "m32_GA": [
+      0,
+      -1
+     ]
+    },
+    "stated": {
+     "m32_GA": [
+      0,
+      -1
+     ]
+    },
+    "pass": true
+   },
+   {
+    "name": "(iii) GA near-shell sign disagrees",
+    "value": true,
+    "stated": true,
+    "pass": true
+   }
+  ],
+  "reported_not_gated": {
+   "iii_rms_Sr": 9.202687005764755,
+   "iii_rms_GA": 43.48695993635491,
+   "GA128_share_of_sum_sq": 0.8931877338039781,
+   "Sr_near_sign_agree": {
+    "Sr_hinge": true,
+    "Sr_flank": true
+   },
+   "shell_m30_Eb_by_stage_consistent": true,
+   "stated": {
+    "iii_rms_Sr": 9.203,
+    "iii_rms_GA": 43.487,
+    "GA128_share_of_sum_sq": 0.893
+   }
+  },
+  "pass": true
+ },
+ "arms": {
+  "zeroshot": {
+   "model_file": "/Users/ericdong/.cache/mace/20231203mace128L1_epoch199model",
+   "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+   "dtype": "float64",
+   "device": "cpu",
+   "head": "Default",
+   "available_heads": [
+    "Default"
+   ],
+   "n_single_points": 96,
+   "n_from_cache": 0,
+   "non_finite_frames": []
+  }
+ }
+}

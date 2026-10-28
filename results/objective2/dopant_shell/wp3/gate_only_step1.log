@@ -1,0 +1,35 @@
+cuequivariance or cuequivariance_torch is not available. Cuequivariance acceleration will be disabled.
+Using Materials Project MACE for MACECalculator with /Users/ericdong/.cache/mace/20231203mace128L1_epoch199model
+Using float64 for MACECalculator, which is slower but more accurate. Recommended for geometry optimization.
+
+== QE input and output check (input cell and positions within 1e-06 A; complete outputs: one single point, header within 1e-04 A)
+   46 frames (46 inputs, 46 outputs): max |dcell| 5.10e-15 A, max |dpos| 0.00e+00 A; output header max |dcell| 9.84e-06, |dpos| 1.66e-06 A  PASS
+== Reproduction gate (zero-shot arm, amendment m item 3)
+  m30/m32 band frames vs E_mace of wp2b_validation.json: n 30, max |dE| 0.00e+00 eV (m30_undoped_img0)  PASS
+  m30 WP2c frames vs shell_m30.json (E_host/E_vac top level; doped stage fmax 0.01): n 16, max |dE| 2.16e-10 eV (m30_GA128_vac)  PASS
+  item-1' band images vs energy field of ../bands: n 50, max |dE| 1.11e-09 eV (m18_GA_img3)  PASS
+  (i) pooled, 46 frames (eV/A)       recomputed +0.0868090  stated +0.086809  diff -3.71e-08  tol 1e-06  rounded-equal True  PASS
+  (i) 30 band frames (eV/A)          recomputed +0.0888669  stated +0.088867  diff -1.09e-07  tol 1e-06  rounded-equal True  PASS
+  (i) 16 WP2c frames (eV/A)          recomputed +0.0828229  stated +0.082823  diff -1.41e-07  tol 1e-06  rounded-equal True  PASS
+  (ii) raw m30_GA (meV)              recomputed -22.2405064  stated -22.241000  diff +4.94e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) raw m30_Sr (meV)              recomputed -29.7824494  stated -29.782000  diff -4.49e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) raw m32_GA (meV)              recomputed -16.3939099  stated -16.394000  diff +9.01e-05  tol 1e-03  rounded-equal True  PASS
+  (ii) raw m32_Sr (meV)              recomputed +24.2153921  stated +24.215000  diff +3.92e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) raw RMS (meV)                 recomputed +23.6473038  stated +23.647000  diff +3.04e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) Eprime m30_GA (meV)           recomputed -21.6405064  stated -21.641000  diff +4.94e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) Eprime m30_Sr (meV)           recomputed -69.4824494  stated -69.482000  diff -4.49e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) Eprime m32_GA (meV)           recomputed -18.0939099  stated -18.094000  diff +9.01e-05  tol 1e-03  rounded-equal True  PASS
+  (ii) Eprime m32_Sr (meV)           recomputed +14.5153921  stated +14.515000  diff +3.92e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) Eprime RMS (meV)              recomputed +38.1909952  stated +38.191000  diff -4.76e-06  tol 1e-03  rounded-equal True  PASS
+  (iii) Sr136 (meV)                  recomputed -6.4025438  stated -6.403000  diff +4.56e-04  tol 1e-03  rounded-equal True  PASS
+  (iii) Sr124 (meV)                  recomputed +14.0835545  stated +14.084000  diff -4.45e-04  tol 1e-03  rounded-equal True  PASS
+  (iii) Sr52 (meV)                   recomputed -3.8378731  stated -3.838000  diff +1.27e-04  tol 1e-03  rounded-equal True  PASS
+  (iii) GA128 (meV)                  recomputed -60.0430961  stated -60.043000  diff -9.61e-05  tol 1e-03  rounded-equal True  PASS
+  (iii) GA212 (meV)                  recomputed -13.3063134  stated -13.306000  diff -3.13e-04  tol 1e-03  rounded-equal True  PASS
+  (iii) RMS (meV)                    recomputed +28.4123203  stated +28.412000  diff +3.20e-04  tol 1e-03  rounded-equal True  PASS
+  (ii) raw class changes [DFT, MACE]: {'m32_GA': [0, -1]} (stated {'m32_GA': [0, -1]})  PASS
+  (ii) Eprime class changes [DFT, MACE]: {'m32_GA': [0, -1]} (stated {'m32_GA': [0, -1]})  PASS
+  (iii) GA near-shell sign disagrees: True (stated True)  PASS
+  reported, not gated: (iii) RMS Sr 9.203, GA 43.487 meV; GA128 share 0.893 (stated 9.203, 43.487, 0.893); Sr near signs agree {'Sr_hinge': True, 'Sr_flank': True}; shell_m30 E_b by stage consistent: True
+  GATE PASS
+written results/objective2/dopant_shell/wp3/gate_only_step1.json
