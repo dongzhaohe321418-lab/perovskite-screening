@@ -219,6 +219,8 @@ hard-stop point):
 - **After a reclaim.** Relaunch `node_step2.sh` (if step 2 had not finished) and the STEP2_DONE waiter, or
   `node_step34.sh` (if STEP2_DONE exists), with `setsid nohup`. A training run cut short by the reboot is
   classified `[node loss]` from the boot time and restarted automatically in a new, empty `run<n>`.
+  `scripts/wp3_runbook/node_relaunch.sh` (installed as `/data/work/wp3_relaunch.sh`) does this. It starts
+  nothing while any driver, scripts/35, QE or training process is alive, or after a deliberate STOP.
 - **Training restarts (4e).** A run that ends without `wp3.model` is discarded unread. It is never deleted or
   reused, and the identical command runs in `run<n+1>`. Each restart is listed with its cause and time in
   `<NODE_WORK>/restarts.txt` as one of four kinds:
