@@ -1,0 +1,96 @@
+
+######## scripts/45_wp3_d3_dense_path.py  2026-11-03 14:11:10 UTC
+  git head ddb352b63513542df5082565dacfb494f0db5049; uncommitted (scripts and inputs) ['?? scripts/45_wp3_d3_dense_path.py']; script sha256 866f01f5c74b6c23db03f3aa654355cfc0e5a13b807f19814875672bb9eaa3a5; threads 4
+  check 2 (plan): results/objective2/dopant_shell/WP3_DIAGNOSTICS_D3_PLAN.md committed at ddb352b63513 (sha256 3d22e53f2d1b), identical to that commit and to HEAD ddb352b63513  PASS
+  check 1 (packages): {'mace': '0.3.16', 'torch': '2.14.1', 'ase': '3.29.0', 'numpy': '2.5.4'} = D2's  PASS; model sha256 checked at load
+  inputs: results/objective2/dopant_shell/wp3/dataset/train.xyz 71cc11cb12b0; results/objective2/dopant_shell/wp3/dataset/valid.xyz 1b5215ad684c; results/objective2/dopant_shell/wp3/dataset/test.xyz 68c3ec247fc4; results/objective2/dopant_shell/wp3/dataset/dataset_meta.json 22238cf3a906; results/objective2/dopant_shell/wp1_production/wp2cde_selection.json 5c40f22666d5; results/objective2/dopant_shell/wp3/diagnostics/d2_path_attribution.json 56d639b2592a; results/objective2/dopant_shell/wp3/run2/wp3.model 3f7bf6f5aaaa; results/objective2/dopant_shell/WP3_DIAGNOSTICS_D3_PLAN.md 3d22e53f2d1b
+cuequivariance or cuequivariance_torch is not available. Cuequivariance acceleration will be disabled.
+
+==== D3: dense-path attribution of the segment change (post hoc, descriptive)
+  check 3 (band files): 37 bands, 7 frames, same cell and species; steps 0-1..3-4 and 0-2: max |mic - raw| 2.8e-16 A, max |dr| 1.428 A (< 2), max |r + dr - r_end| 5.6e-17 A  PASS
+  check 4 (scripts/44 cross-check), 185 frames: max |d| F_eV 0.0e+00, EF_eV 0.0e+00, forces_eVA 5.0e-09, Eprime_eV 0.0e+00, cD_eV 4.3e-19, pos_A 0.0e+00, cell_A 0.0e+00; positions and cell bitwise equal: True  PASS
+  check 6 (part): i* from REF_energy_raw = D2's in 37 bands (i* = 2: ['m21_GA', 'm21_Sr']); hop_I index and group sizes = D2's  PASS
+  check 8 (molecules): partition unchanged at 1184 path points of P, C and the extensions  PASS (beside, image 4 unchanged in 37 of 37)
+Using Materials Project MACE for MACECalculator with ~/.cache/mace/20231203mace128L1_epoch199model
+Using float64 for MACECalculator, which is slower but more accurate. Recommended for geometry optimization.
+  check 1 (models): sha256 zero-shot 01bfe2210013, fine-tuned 3f7bf6f5aaaa = D2's model_files  PASS
+  single points at images 0-4: 370 (233 s)
+  check 5 (zero-shot vs stored, images 0-4): max |dE| 1.4e-09 eV, max |d eps_i| 6.8e-08 eV (tol 1e-6); max |dF| 7.6e-07 eV/A (reported)  PASS
+  check 6 (D2 reproduction): 925 items (segments_beside W and dE of 0-2, 2-3, 3-4 per model; D2b groups_meV, segment_change_meV, direct_meV; i_star; hop_I and group sizes); max |diff| 9.8e-15 meV (tol 1e-3); new n=1 quadrature vs scripts/44 path_work max |diff| 2.8e-14 meV  PASS
+  interior points: 5/37 bands, 650 single points so far (175 s, 35 s per band)
+  interior points: 10/37 bands, 930 single points so far (355 s, 35 s per band)
+  interior points: 15/37 bands, 1210 single points so far (534 s, 36 s per band)
+  interior points: 20/37 bands, 1490 single points so far (713 s, 36 s per band)
+  interior points: 25/37 bands, 1770 single points so far (892 s, 36 s per band)
+  interior points: 30/37 bands, 2050 single points so far (1071 s, 36 s per band)
+  interior points: 35/37 bands, 2330 single points so far (1245 s, 36 s per band)
+  interior points: 37/37 bands, 2442 single points so far (1315 s, 36 s per band)
+  check 9 (single points): zero-shot 1221, fine-tuned 1221, total 2442 (expected 2442, the plan 2442)  PASS
+  check 7 (identities): work 2.0e-13 meV, sum eps = E 7.3e-11 eV, sum d_eps = dS 1.1e-08 meV, E_a link 0.0e+00 meV; 'energies' - 'node_energy' = E0 within 0.0e+00 eV  PASS
+  check 10 (reported): image-1 closures (zero-shot, n = 1): m05_undoped 0-2 -19.0 (doc -19.0), full -24.6 (doc -24.6); m12_undoped 0-2 -25.7 (doc -25.7), full -30.0 (doc -30.0); m30_GA 0-2 -30.8 (doc -30.8), full -38.6 (doc -38.6); m27_Sr 0-2 -23.7 (doc -23.7), full -26.5 (doc -26.5)
+
+  band          split i* | P closure8 ZS    FT  (c4/c8)       | C closure8 ZS    FT   | max |dW8-dW4| P  C | status P / C | dS     | dW_R(P): hop_I in<6 in>6 org<6 org>6 | d_eps: hop_I in<6 in>6 org<6 org>6
+  m05_undoped   train 3  |  -0.35  -0.28 (4.0/4.0) |  -1.06  -0.97 |  0.10  0.10 | res / res |   -73.9 |   +1.2  -64.3  +12.4  -21.9   -1.4 |  +20.2 -147.9 +114.0  -33.4  -26.7
+  m05_GA        train 3  |  -0.31  -0.24 (4.0/4.0) |  -0.96  -0.84 |  0.09  0.19 | res / res |   -82.8 |   -4.4  -65.9  +16.1  -24.4   -4.3 |   +8.9 -143.4 +114.5  -32.8  -30.1
+  m05_Sr        train 3  |  -0.31  -0.22 (4.0/4.0) |  -1.02  -0.90 |  0.17  0.23 | res / res |   -83.4 |   -5.6  -65.5  +13.0  -18.9   -6.4 |  +16.6 -152.9 +122.4  -29.4  -40.1
+  m06_undoped   train 3  |  -0.29  -0.25 (4.0/4.0) |  -1.02  -1.18 |  0.08  0.50 | res / res |   -73.0 |  -59.7  -27.1  +16.3   +3.3   -5.9 |  +26.8 -145.1  +65.3   -2.9  -17.1
+  m06_GA        train 3  |  -0.39  -0.29 (4.0/4.0) |  -1.17  -1.22 |  0.20  0.30 | res / res |  -130.1 |  -54.1  -58.6  +14.0  -21.8   -9.7 |  +74.9 -157.7 +155.5 -136.0  -66.7
+  m06_Sr        train 3  |  -0.31  -0.25 (4.0/4.0) |  -1.13  -1.28 |  0.12  0.56 | res / res |   -74.2 |  -58.1  -30.9  +14.1   +2.9   -2.1 |  +27.4 -153.6  +64.7   +1.5  -14.1
+  m08_undoped   train 3  |  -0.32  -0.28 (4.0/4.0) |  -0.95  -1.02 |  0.08  0.13 | res / res |   -39.4 |  -17.2  -29.2  +13.8   -0.6   -6.1 |  +38.9 -147.2  +69.5  +12.4  -12.9
+  m08_GA        train 3  |  -0.35  -0.36 (4.0/4.0) |  -0.93  -1.18 |  0.04  0.71 | res / res |   -54.6 |  -33.7  -32.9  +23.6   -0.3  -11.3 |  +22.4 -160.6  +71.6  +27.3  -15.3
+  m08_Sr        train 3  |  -0.31  -0.26 (4.0/4.0) |  -0.97  -1.07 |  0.11  0.24 | res / res |   -39.1 |  -18.9  -31.0  +17.4   -0.8   -5.8 |  +41.9 -143.5  +69.5   +9.4  -16.5
+  m12_undoped   train 3  |  -0.47  -0.49 (4.0/4.0) |  -1.59  -2.06 |  0.10  1.53 | res / NOT |   -54.4 |  -14.0  -52.5   +8.9   +6.5   -3.4 |  +60.6 -174.7  +92.0  -69.5  +37.1
+  m12_GA        train 3  |  -0.43  -0.43 (4.0/4.0) |  -1.49  -1.86 |  0.04  1.22 | res / res |   -40.5 |  -19.9  -37.5   +9.7  +12.2   -5.0 |  +56.1 -152.8  +80.4  -53.8  +29.6
+  m12_Sr        train 3  |  -0.48  -0.49 (4.0/4.0) |  -1.53  -2.06 |  0.09  1.63 | res / NOT |   -61.4 |  -13.9  -58.1   +7.8   +7.5   -4.7 |  +57.2 -178.6  +86.4  -65.1  +38.8
+  m15_undoped   train 3  |  -0.47  -0.47 (4.0/4.0) |  -0.59  -0.73 |  0.04  0.54 | res / res |   -41.9 |  -56.2  -22.1  +21.3   -2.7  +17.9 |   +7.9 -138.9 +107.1  +15.7  -33.7
+  m15_GA        train 3  |  -0.36  -0.30 (4.0/4.0) |  -1.24  -1.40 |  0.14  0.55 | res / res |   -60.4 |  -63.8  -25.8  +15.4   -4.1  +17.9 |   -3.4 -135.3  +63.5  +18.3   -3.5
+  m15_Sr        train 3  |  -0.24  -0.17 (4.0/4.0) |  -0.90  -0.90 |  0.21  0.10 | res / res |   -20.8 |  -44.0   -2.5  +16.8   -1.8  +10.7 |  -51.3  -51.9  +65.5  +15.9   +0.9
+  m20_undoped   train 3  |  -0.73  -0.72 (4.0/4.0) |  -0.74  -0.76 |  0.16  0.26 | res / res |   -96.2 |  -71.8  -13.2  +43.6  -15.4  -39.4 |  +28.1 -127.1 +127.2  -97.9  -26.5
+  m20_GA        train 3  |  -0.74  -0.73 (4.0/4.0) |  -0.78  -0.81 |  0.15  0.27 | res / res |   -96.1 |  -67.4  -16.5  +35.7  -19.2  -28.8 |  +23.4 -126.8 +133.5 -128.7   +2.5
+  m20_Sr        train 3  |  -0.44  -0.43 (4.0/4.0) |  -1.45  -1.69 |  0.06  0.70 | res / res |   -79.0 |  -66.9  -17.2  +18.7   +4.7  -18.3 |  +55.7 -124.6  +88.7  -74.9  -23.9
+  m21_undoped   valid 3  |  -0.22  -0.24 (4.0/4.0) |  -0.88  -1.00 |  0.08  0.44 | res / res |   -27.9 |  +13.7  -18.5   +7.6  -14.8  -15.9 |  +58.1 -135.7 +105.2  -30.4  -25.1
+  m21_GA        valid 2  |  -0.22  -0.24 (4.0/4.0) |  -0.88  -1.03 |  0.07  0.49 | res / res |   -12.3 |  +17.8   -8.8   +7.2  -14.2  -14.3 |  +52.2 -104.0  +74.1  -10.4  -24.1
+  m21_Sr        valid 2  |  -0.29  -0.29 (4.0/4.0) |  -1.09  -1.15 |  0.02  0.16 | res / res |    -6.0 |  +18.5  -14.5   +7.6   -5.0  -12.6 |  +55.3 -118.2  +45.9   -1.4  +12.4
+  m30_undoped   test  3  |  -0.53  -0.34 (4.0/4.0) |  -1.50  -1.16 |  0.46  0.79 | res / NOT |   -43.3 |  -26.0  -12.4  +17.9  -23.7   +0.9 |  +35.0 -138.7  +45.6  -14.7  +29.5
+  m30_GA        test  3  |  -0.61  -0.46 (4.0/4.0) |  -1.61  -1.29 |  0.38  0.87 | res / res |   -47.9 |  -12.7  -23.5  +24.7  -40.4   +3.9 |  +22.6 -156.5  +53.2  -18.0  +50.7
+  m30_Sr        test  3  |  -0.46  -0.22 (4.0/4.0) |  -1.17  -0.75 |  0.65  1.19 | res / NOT |   -34.3 |   -9.2  -24.0  +13.2  -15.1   +0.8 |  -11.4  -79.0  +39.9   +4.0  +12.2
+  m32_undoped   test  3  |  -0.39  -0.39 (4.0/4.0) |  -1.21  -1.38 |  0.06  0.28 | res / res |   -11.0 |  +19.9  -11.2  +10.4  -29.9   -0.1 |  +31.4  -90.4  +99.6  -14.9  -36.8
+  m32_GA        test  3  |  -0.73  -0.66 (4.0/4.0) |  -0.82  -0.87 |  0.15  0.19 | res / res |   -46.2 |   +1.6  -19.9  +25.0  -40.2  -12.7 |   +1.5  -89.4 +125.8  -24.1  -60.0
+  m32_Sr        test  3  |  -0.39  -0.38 (4.0/4.0) |  -1.21  -1.37 |  0.08  0.30 | res / res |   -13.3 |  +14.0  -11.8  +12.0  -29.6   +2.2 |  +33.5  -90.1  +91.6  -17.0  -31.2
+  m10_undoped   test  3  |  -0.28  -0.18 (4.0/4.0) |  -1.07  -0.98 |  0.24  0.29 | res / res |   -12.7 |  -42.3  -40.6  +19.0   -2.9  +54.1 |  +19.5 -132.9  +66.8  -50.2  +84.2
+  m10_GA        test  3  |  -0.35  -0.25 (4.0/4.0) |  -1.34  -1.27 |  0.21  0.07 | res / res |   -41.3 |  -36.5  -37.8   +4.2   -1.8  +30.5 |  +20.5 -134.4  +67.6  -50.4  +55.3
+  m18_undoped   test  3  |  -0.36  -0.28 (4.0/4.0) |  -1.28  -1.27 |  0.23  0.06 | res / res |   -23.3 |   -3.5  -52.3  +22.0   +6.7   +3.8 |  +30.7 -174.1  +47.3  +24.9  +47.9
+  m18_GA        test  3  |  -0.29  -0.24 (4.0/4.0) |  -0.93  -0.95 |  0.14  0.07 | res / res |   -31.6 |   -3.6  -58.9  +22.1   +5.7   +3.2 |  +29.5 -182.1  +65.6  +13.1  +42.4
+  m04_undoped   test  3  |  -0.38  -0.37 (4.0/4.0) |  -1.15  -1.24 |  0.03  0.33 | res / res |    -6.7 |  -22.0  -20.4  +22.8  +17.7   -4.9 |   -6.4 -172.2  +64.5  +72.7  +34.7
+  m04_Sr        test  3  |  -0.47  -0.47 (4.0/4.0) |  -1.43  -1.56 |  0.04  0.49 | res / res |   -23.5 |  -22.4  -31.1  +23.7  +15.1   -8.8 |   -6.0 -180.7  +64.4  +69.8  +28.9
+  m14_undoped   test  3  |  -0.46  -0.36 (4.0/4.0) |  -1.43  -1.54 |  0.29  0.24 | res / res |   -60.6 |  -14.5  -49.8   -2.7   +5.9   +0.4 |  +59.6 -186.9  +74.6  -79.7  +71.8
+  m14_Sr        test  3  |  -0.49  -0.33 (4.0/4.0) |  -0.69  -0.54 |  0.51  0.79 | res / res |   -31.5 |  -19.8   -9.4   -7.9   +5.7   -0.1 |   +9.7 -105.7 +115.6  -88.1  +37.0
+  m27_undoped   test  3  |  -0.46  -0.46 (4.0/4.0) |  -1.74  -2.01 |  0.02  0.77 | res / NOT |   -26.4 |  -31.7  -31.4   +7.9  +19.3   +9.5 |  +42.3  -95.1  +45.1   +2.5  -21.1
+  m27_Sr        test  3  |  -0.48  -0.45 (4.0/4.0) |  -1.78  -2.09 |  0.06  0.90 | res / NOT |   -33.8 |  -33.0  -38.1  +10.7  +16.5  +10.1 |  +42.5 -112.1  +53.7   -0.2  -17.7
+
+  resolved: 37 of 37 bands; resolved with C not resolved: 6; criterion failures (P): {}
+    training: 18 resolved, 0 excluded
+    m21: 3 resolved, 0 excluded
+    test: 16 resolved, 0 excluded
+  item 1/2 (overall, meV): group: mean dW_R [median, range] (mean |dW8-dW4|) | mean d_eps [median, range]
+    hop_I            -23.25 [ -19.84,  -71.84 ..  +19.88] (0.15) |  +27.91 [ +28.09,  -51.28 ..  +74.87]  sign: disagree
+    inorganic_near   -31.49 [ -29.22,  -65.92 ..   -2.50] (0.04) | -136.24 [-138.87, -186.89 ..  -51.86]  sign: agree
+    inorganic_far    +15.30 [ +14.14,   -7.92 ..  +43.60] (0.02) |  +82.09 [ +71.57,  +39.95 .. +155.46]  sign: agree
+    organic_near      -5.93 [  -1.84,  -40.39 ..  +19.30] (0.02) |  -22.61 [ -14.88, -136.01 ..  +72.68]  sign: agree
+    organic_far       -1.52 [  -3.38,  -39.37 ..  +54.09] (0.01) |   +1.96 [ -12.94,  -66.73 ..  +84.16]  sign: sign not resolved
+  item 3 (overall): group: mean W_ZS,R, mean W_FT,R (meV); n e>1; median D_g; ratio dW/W_ZS (n, median, range)
+    hop_I            +210.36  +187.11; 0; 0.778; 37, -0.09 [-0.37 .. +0.19]
+    inorganic_near     +2.00   -29.49; 0; 0.065; 5, -6.88 [-10.65 .. -2.33]
+    inorganic_far      -3.36   +11.94; 0; 0.027; 9, -2.27 [-4.52 .. +1.20]
+    organic_near       -7.60   -13.53; 0; 0.049; 19, +0.91 [-3.18 .. +4.11]
+    organic_far       -35.65   -37.17; 0; 0.071; 36, +0.16 [-1.23 .. +1.97]
+  item 4 (P vs C, 31 bands with both resolved): hop_I mean |d| 1.95 max 10.89 (mean e(P)+e(C) 0.17); inorganic_near mean |d| 1.58 max 4.79 (mean e(P)+e(C) 0.04); inorganic_far mean |d| 1.19 max 2.09 (mean e(P)+e(C) 0.02); organic_near mean |d| 0.94 max 4.01 (mean e(P)+e(C) 0.03); organic_far mean |d| 0.39 max 2.16 (mean e(P)+e(C) 0.01)
+  item 5 (seen coarse D2b vs converged; median, max |.|, meV): hop_I C +18.4/49.3, P +18.0/47.3; inorganic_near C +0.4/5.8, P +1.6/5.0; inorganic_far C -1.0/2.1, P -2.1/3.5; organic_near C +0.2/5.4, P +0.7/5.9; organic_far C +0.2/2.6, P +0.2/3.8
+  item 6 (kappa): median 1.40, n > 2: 13 of 37
+  item 7 (D3a): P zeroshot median |c8| 0.39, max 0.74, median c4/c8 4.00; P finetuned median |c8| 0.33, max 0.73, median c4/c8 4.00; C zeroshot median |c8| 1.13, max 1.78, median c4/c8 4.01; C finetuned median |c8| 1.18, max 2.09, median c4/c8 4.01
+  per-band groups with agreeing signs: histogram {'0': 0, '1': 1, '2': 6, '3': 8, '4': 17, '5': 5}
+  by split training (n 18): mean dW_R hop_I -37.1, inorganic_near -36.2, inorganic_far +17.7, organic_near -5.3, organic_far -5.9; mean d_eps hop_I +28.5, inorganic_near -142.4, inorganic_far +94.0, organic_near -34.7, organic_far -12.1
+  by split m21 (n 3): mean dW_R hop_I +16.7, inorganic_near -13.9, inorganic_far +7.5, organic_near -11.3, organic_far -14.3; mean d_eps hop_I +55.2, inorganic_near -119.3, inorganic_far +75.0, organic_near -14.1, organic_far -12.3
+  by split test (n 16): mean dW_R hop_I -15.1, inorganic_near -29.5, inorganic_far +14.1, organic_near -5.7, organic_far +5.8; mean d_eps hop_I +22.2, inorganic_near -132.5, inorganic_far +70.1, organic_near -10.7, organic_far +20.5
+  mean of host means (14 hosts): dW_R hop_I -23.2, inorganic_near -32.1, inorganic_far +14.9, organic_near -4.2, organic_far -0.2; d_eps hop_I +27.5, inorganic_near -137.6, inorganic_far +80.2, organic_near -20.9, organic_far +6.1
+written results/objective2/dopant_shell/wp3/diagnostics/d3_dense_path.json and (appended) results/objective2/dopant_shell/wp3/diagnostics/d3_console.log

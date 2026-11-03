@@ -1,7 +1,9 @@
-# WP3 post hoc diagnostics D1 and D2 — result (2026-11-03)
+# WP3 post hoc diagnostics D1, D2 and D3 — result (2026-11-03)
 
 **Status.** These diagnostics are post hoc and reported only. They follow `WP3_DIAGNOSTICS_PLAN.md`, which
 was committed at d69fe75 before any D1 or D2 value was computed.
+- **D3** follows `WP3_DIAGNOSTICS_D3_PLAN.md`, committed at ddb352b before any of its interpolated-point
+  single points was computed. It is a pre-specified description with no verdict (§10).
 - Nothing here changes a WP3 verdict, a threshold or the outcome. The WP3 outcome stays **No
   improvement** (`WP3_RESULT.md`; amendment m item 4).
 - No model is validated, selected, saved or used further.
@@ -45,11 +47,36 @@ was committed at d69fe75 before any D1 or D2 value was computed.
     0 → i* path. The two conservative models show the same error, so it is a discretisation error of the
     path sampling.
   - **The literal rule.** The plan's literal rule would give "mixed", vacuously (§5).
+- **D3 (§10): a description, no verdict.**
+  - **Quadrature.** With 8 intervals per segment, all 37 bands are resolved on the band path through
+    image 1 (P). Both models close to 0.745 meV or less on P, and to 2.094 meV or less on D2a's path
+    through images 0, 2 and 3 (C); closure4/closure8 is 3.97–4.03 on P and 3.86–4.18 on C in every band.
+    For the two models the coarse D2a closures were therefore quadrature error (the segment 3 → 4, used by
+    fine-tuned m05_undoped and m05_GA, was not densified). DFT has no values at image 1 or between images,
+    so Q4 is unchanged.
+  - **The change.** Fine-tuning changes E(i\*) − E(0) by ΔS = −46.89 ± 4.74 meV (mean ± SE over bands;
+    negative in all 37). In the work gauge the group means are −23.25 ± 4.34 (hop_I), −31.49 ± 2.97
+    (inorganic < 6 Å), +15.30 ± 1.55 (inorganic ≥ 6 Å), −5.93 ± 2.62 (organic < 6 Å) and −1.52 ± 2.57 meV
+    (organic ≥ 6 Å).
+  - **The second gauge.** The MACE site energies give +27.91 ± 4.17, −136.24 ± 5.28, +82.09 ± 4.76,
+    −22.61 ± 7.80 and +1.96 ± 6.09 meV. By the plan's margin rule the signs disagree for hop_I, agree for
+    the two inorganic groups and for organic < 6 Å (just above its margin), and are not resolved for
+    organic ≥ 6 Å.
+  - **The seen coarse values.** On their own path (C), the coarse D2b hop_I values lay a median 18.4 meV
+    below their converged values (largest |difference| 49.3 meV, in a band whose C is not resolved;
+    42.9 meV over the 31 bands with C resolved); for the other four groups the median difference is
+    1.0 meV or less (largest 5.8 meV).
+  - **Caveats.** Both gauges come from the same two models, and D3 shares its inputs with D2b. A large work
+    change for hop_I and inorganic < 6 Å taken together is expected anyway: together they carry a median
+    0.84 of Σ|Δr|², known before D3. Bands share hosts, and the standard errors treat them as independent.
 - **For WP3_RESULT.md §8.**
   - **Reason 6** (a checkpoint chosen on a force-dominated m21 loss): no other choice among the kept
     checkpoints would have met the first-shell condition. Unkept epochs were not evaluated, and any
     reselection on m21 would itself be unvalidated.
-  - **Reason 7** (the systematic barrier lowering): its origin remains unattributed.
+  - **Reason 7** (the systematic barrier lowering): its origin remains unattributed. D3 describes where
+    the fine-tuned model books its change of E(i\*) − E(0), without a verdict. It does not rerun reason 7's
+    named test (a line integral of the model − DFT force residual), which D2 ran (D2c) and which cannot be
+    read (§4).
 
 ## 2. What was run
 
@@ -277,6 +304,11 @@ compare with the fall of the m21 force RMSE?**
     −19.0, −25.7, −30.8 and −23.7 meV.
   - **Full path.** The full-path closures to i* = 3 went from −74.9, −93.5, −87.6 and −105.6 meV to −24.6,
     −30.0, −38.6 and −26.5 meV. **Image 1 alone does not bring any of the four within 20 meV.**
+  - **Later, D3 (§10.1).** On the path through image 1 densified to 8 intervals per segment, both models
+    close to 0.745 meV or less, with closure4/closure8 3.97–4.03 in every band. These zero-shot image-1
+    closures, like the coarse D2a closures of both models (on the chord path C, |closure8| at most
+    2.094 meV at n = 8; at most 2.106 meV on the segment 0 → 2 alone), are therefore quadrature error. DFT
+    has no values at image 1 or between images, so Q4 is unchanged.
 
 **D2b and D2c.**
 - **No resolved-band result.** No band is resolved, so there is none.
@@ -290,6 +322,11 @@ compare with the fall of the m21 force RMSE?**
   - **Against the direct E_a change.** That change also carries the argmax differences in 6 bands (7
     model–band differences; corrected from "7 bands" on 2026-11-03 with the D3 plan). There the summed D2b
     attribution closes to RMS 21.7 meV (max 49.1 meV), against a mean |direct change| of 46.3 meV.
+  - **Against converged values (D3, §10.4).** On its own path (C), the coarse hop_I value of ΔW_g lay a
+    median 18.4 meV below its converged value (C_R − D2b; largest |difference| 49.3 meV, in a band whose C
+    is not resolved). For the other four groups the median difference is 1.0 meV or less (largest
+    5.8 meV). Summed over the five groups, these differences are minus the n = 1 closure difference of
+    the two models on C (RMS 21.7 meV, as above), to within the Richardson residual.
 
 **Q4. Is the systematic E_a lowering carried mainly by the hopping I and its first shell, or by the far
 field and the organic sublattice? It cannot be read: no band is resolved.**
@@ -542,3 +579,514 @@ for a separate clean-up. They are noted for the PI.
 - **Not committed** (off-repository):
   - the 20 checkpoints (`<CKPT_DIR>`);
   - the band geometries (`../bands`).
+- **D3.** Plan, code, outputs and figure: §10.12.
+
+## 10. D3 — where the fine-tuned model books its change of E(i\*) − E(0) (post hoc, descriptive)
+
+**Status.** D3 follows `WP3_DIAGNOSTICS_D3_PLAN.md`, committed at ddb352b before any interpolated-point
+single point was computed.
+- **What it is.** A pre-specified description, reported only, with **no verdict** (plan §7). No "mainly
+  local", "mainly far" or other binary reading is drawn, and no share of a signed sum is used.
+- **What it is not.**
+  - It does not answer Q4, which stays "cannot be read" (§4); Q4 is not answered retroactively.
+  - It does not run the test that `WP3_RESULT.md` §8 reason 7 names (a line integral of the model − DFT
+    force residual), so reason 7 stays "origin not established".
+  - It says nothing about whether the fine-tuning change moves the model towards DFT (no new DFT was
+    computed), and nothing about the recipe beyond description.
+- **Nothing here changes** a WP3 verdict, a threshold or the outcome (**No improvement**).
+
+### 10.1 Summary
+
+- **The quantity.** Per band, ΔS = [E_FT(i\*) − E_FT(0)] − [E_ZS(i\*) − E_ZS(0)], with i\* the DFT argmax
+  image of D2 (image 3 in 35 bands, image 2 in m21_GA and m21_Sr). ΔS is negative in all 37 bands: mean
+  −46.89 ± 4.74 meV (SE over bands), median −41.3, range −130.1 to −6.0 meV.
+- **Resolution.** All 37 bands are resolved on the band path P (plan §6); no band is excluded. The chord
+  path C is not resolved in 6 of them, so the path-dependence summary uses 31 bands:
+  - m12_undoped, m12_Sr, m27_undoped and m27_Sr: fine-tuned |closure8| 2.01–2.09 meV, above the 2 meV
+    bound;
+  - m30_undoped and m30_Sr: hop_I convergence ratio 1.71 and 1.88, outside [2, 8].
+- **D3a, the quadrature is resolved on P.** The median |closure8| is 0.39 (zero-shot) and 0.33 meV
+  (fine-tuned), and the largest 0.745 meV. closure4/closure8 is 3.97–4.03 on P and 3.86–4.18 on C in every
+  band (medians 4.00 and 4.01): the h² error of the trapezoid rule, which tends to zero for a conservative
+  model. With the images alone (one interval per segment, n = 1), the closures of the two models are
+  −46.0 to −10.2 meV on P and −145.0 to −24.6 meV on C.
+  - **For the two models only.** For conservative models the closure is quadrature error by construction
+    (§4). D3 shows that it converges as h², with no data, sign or wrapping defect, on D2a's path C as on P
+    (C at n = 8: largest 1.78 meV zero-shot and 2.09 meV fine-tuned). The D2a model closures ran to each
+    model's own argmax; the segment 3 → 4 (fine-tuned m05_undoped and m05_GA) was not densified. This says
+    nothing about DFT, which has no values at image 1 or between images, and does not answer Q4.
+- **The work gauge, ΔW_g** (Richardson, P; mean ± SE over the 37 bands, meV): hop_I −23.25 ± 4.34,
+  inorganic < 6 Å −31.49 ± 2.97, inorganic ≥ 6 Å +15.30 ± 1.55, organic < 6 Å −5.93 ± 2.62 and
+  organic ≥ 6 Å −1.52 ± 2.57. The mean |ΔW_g,8 − ΔW_g,4| is 0.15 meV or less per group.
+- **The site-energy gauge, Δε_g** (same order): +27.91 ± 4.17, −136.24 ± 5.28, +82.09 ± 4.76,
+  −22.61 ± 7.80 and +1.96 ± 6.09 meV. The site energies sum to ΔS in every band (within 1.2 × 10⁻⁸ meV);
+  the Richardson work terms sum to W_FT − W_ZS, which differs from ΔS by the closure difference, by less
+  than 0.01 meV (less than 0.24 meV at n = 8).
+- **Sign comparison of the two gauges** (plan §7 margin rule; §10.3):
+  - hop_I: **disagree** (work −23.25, site energy +27.91; by host 3 agree, 7 disagree, 4 not resolved);
+  - inorganic < 6 Å: **agree**;
+  - inorganic ≥ 6 Å: **agree**;
+  - organic < 6 Å: **agree**, with |mean ΔW_g| = 5.93 meV just above its 5.25 meV margin; it is "sign not
+    resolved" in the training and test splits, and per band the signs agree in 22 of 37;
+  - organic ≥ 6 Å: **sign not resolved**.
+  - The SE treats the 37 bands as independent; up to three share a host.
+  - **Per band**, the signs of all five groups agree in 5 bands, four in 17, three in 8, two in 6 and one
+    in 1. By group they agree in 12 (hop_I), 37, 35, 22 and 24 of the 37 bands.
+- **Size against the zero-shot work.** The zero-shot work of the hopping I along P has mean +210.4 meV
+  (item 3); the ratio of its fine-tuning change to it, ΔW_g/W_ZS,g, has median −0.09 (range −0.37 to
+  +0.19; |W_ZS,g| ≥ 5 meV in all 37 bands). For the other four groups the mean zero-shot work is +2.0, −3.4, −7.6 and −35.7 meV, and
+  the ratio is defined (|W_ZS,g| ≥ 5 meV) in 5, 9, 19 and 36 of the 37 bands.
+- **Path dependence** (31 bands with both P and C resolved): mean |ΔW_g(P) − ΔW_g(C)| is 0.39–1.95 meV
+  per group, largest 10.89 meV (hop_I, m14_Sr). This is well above the conservative quadrature error (mean
+  |X8 − X4|(P) + |X8 − X4|(C) 0.50 meV or less; mean e(P) + e(C) 0.17 meV or less). The mean signed
+  difference P − C is −1.18 to +1.18 meV per group.
+- **The seen coarse D2b values against their converged values.** On the same path C, the coarse hop_I
+  values of D2b lay a median 18.4 meV below their converged values (C_R − D2b; largest |difference|
+  49.3 meV, in m12_undoped, whose C is not resolved; 42.9 meV over the 31 bands with C resolved). For the
+  other four groups the median difference is 1.0 meV or less in magnitude and the largest 5.8 meV.
+- **Cancellation.** The median κ is 1.40, and κ > 2 in 13 of 37 bands. κ is ill-conditioned where |ΔS| is
+  small (plan §4); the two largest, 12.0 and 11.6, are in m10_undoped and m04_undoped, where |ΔS| is 12.7
+  and 6.7 meV (§10.3).
+- **D3d, regularity.** On P the energy profile is close to its cubic Hermite interpolant (excess −0.06 to
+  +3.83 meV, zero-shot; −0.04 to +2.61 meV, fine-tuned). The largest per-atom displacement per segment of
+  P is 0.21–0.97 Å, and no interior point of P or C has a pair closer than 1.006 Å.
+- **How to read it** (plan §2).
+  - D3 shares the models, image forces, groups and segment with D2b, so agreement with the coarse
+    picture is weak evidence.
+  - A large ΔW for hop_I and inorganic < 6 Å taken together is expected anyway: together they carry a
+    median 0.84 of Σ|Δr|² (hop_I alone 0.78, inorganic < 6 Å 0.065). These displacement shares were known
+    before D3 (plan §2).
+  - Both gauges come from the same two models, and the site-energy partition is the model's own, not
+    unique physically; they are not independent checks of each other.
+  - Up to three bands share a host. In the 18 training bands the fine-tuned model was fitted at images 0,
+    2, 3, 4 and 6, not at image 1 or at any path point, so the training-split values describe it partly
+    away from its fitted geometries. Differences between splits are not a generalisation measure.
+
+### 10.2 What was run
+
+- **Code.** `scripts/45_wp3_d3_dense_path.py` (sha256
+  866f01f5c74b6c23db03f3aa654355cfc0e5a13b807f19814875672bb9eaa3a5), reusing the group, displacement,
+  molecule and model-loading code of `scripts/44` (and `scripts/38`/`39` helpers). MACE in float64 on CPU,
+  4 threads, laptop; no MD, relaxation, training or QE.
+- **Outputs.** `wp3/diagnostics/d3_dense_path.json` (sha256 559a6777…) and `wp3/diagnostics/d3_console.log`
+  (033e2c8e…), which holds the recorded run only.
+- **Single points.** 2442: 1221 per model, 33 per model and band (images 0–4; 21 interior points of the P
+  segments 0→1, 1→2, 2→3; 7 of the chord 0→2).
+- **Inputs.** The dataset, the WP2c selection, `d2_path_attribution.json`, `wp3.model`, the plan and the
+  37 band files, each with its sha256 in the JSON head. The archived QE outputs, read by the check-4
+  cross-check, are not hashed (`input_files.note`). Package versions (mace 0.3.16, torch 2.14.1, ase
+  3.29.0, numpy 2.5.4) and the model sha256 values equal D2's. Git head ddb352b; of the six scripts used
+  and the eight hashed inputs inside the repository, only `scripts/45` was uncommitted (JSON `git`).
+
+**Checks** (plan §8; fail-closed except 10). No interpolated point was evaluated before checks 1–6 and 8
+had passed on the images.
+
+| Check | Result |
+|---|---|
+| 1 Models and packages | sha256 zero-shot 01bfe221…, fine-tuned 3f7bf6f5… and the four package versions equal D2's |
+| 2 Plan | committed at ddb352b, identical to that commit and to HEAD; no local change |
+| 3 Band files | 37 bands, 7 frames, same cell and species; steps 0→1 … 3→4 and 0→2: max \|mic − raw\| 2.8 × 10⁻¹⁶ Å, max \|Δr\| 1.428 Å, max \|r + Δr − r_end\| 5.6 × 10⁻¹⁷ Å |
+| 4 Image geometry against the dataset | 185 frames; positions and cell bitwise equal, and the dataset's DFT energies and forces equal the archived QE outputs (max \|ΔF\| 5.0 × 10⁻⁹ eV/Å) (the `scripts/44` cross-check) |
+| 5 Stored zero-shot values, images 0–4 | max \|ΔE\| 1.4 × 10⁻⁹ eV, max \|Δε_i\| 6.8 × 10⁻⁸ eV (tolerance 10⁻⁶); max \|ΔF\| 7.6 × 10⁻⁷ eV/Å (reported) |
+| 6 D2 reproduction | 925 numbers (D2a `segments_beside`, D2b `groups_meV`, `segment_change_meV`, `direct_meV`, i\*, hop_I, group sizes): max difference 9.8 × 10⁻¹⁵ meV (tolerance 10⁻³); i\* from raw F equals D2's in all 37 bands |
+| 7 Identities | work 2.0 × 10⁻¹³ meV; Σε_i = E 7.3 × 10⁻¹¹ eV; Σ_g Δε_g = ΔS 1.1 × 10⁻⁸ meV; E_a link 0; property `energies` (with E0s), not `node_energy` |
+| 8 Molecules | partition unchanged at 1184 path points of P, C and the extensions |
+| 9 Single points | 2442 (1221 + 1221), as planned |
+| 10 Image-1 scratch closures of §4 (reported) | all eight recomputed within 0.042 meV of the values in §4 |
+
+**Run record** (plan §9; every run logged with its script sha256 and its value differences). The
+development runs used real bands, so they are kept as scratch runs with their values, off-repository in
+the private WP3 record folder (`WP3_RESULT.md` §9 item 26), with a SHA256SUMS list. No choice of n, bound,
+criterion or summary was open after them (plan §9).
+
+| Run (UTC) | Script sha256 | Bands | Exit | Note |
+|---|---|---|---|---|
+| 12:54 dev1 | d27ae4fb… | m21_GA, m05_undoped | 0 | scratch; values identical to the 13:01 run (0 of 2026 numeric leaves differ; 112 geometry-list leaves exist only in the 13:01 run) |
+| 12:57 dev2 | 6f377c36… | m30_GA, m27_Sr, m21_Sr, m12_undoped | 0 | scratch; largest difference from the 13:01 run 2.8 × 10⁻¹⁴ meV (1.2 × 10⁻¹¹ in a convergence ratio); statuses equal |
+| 13:00 full | 6f377c36… | — | 7 | code defect (a TypeError in the `--bands-only` check) before check 3; no band read, no value; its console log, written into the output folder, was moved out by hand before the next run |
+| 13:01 full | 18a8dc72… | 37 | 0 | the run reviewed by A and B |
+| 13:32 review B | 18a8dc72… | 37 | 0 | scratch reproduction; JSON byte-identical to the 13:01 run |
+| 14:07, 14:08 fix-round dev | 866f01f5… | none; m21_GA, m05_undoped | 5; 0 | a fail-path test that reads no band; then 0 of 2138 values differ from the 13:01 run |
+| 14:11 full | 866f01f5… | 37 | 0 | **recorded run**; no value differs from the 13:01 run (0 of 36 487 numeric leaves, 544 of them compared at their moved keys); keys moved and head text changed (§10.9) |
+
+Reviewer B also ran 22 gate tests in scratch (on m21_GA where a band was needed): 19 injected faults, each
+stopping with the intended exit code (2–7), and 3 unchanged controls (exit 0). Reviewer A recomputed three
+bands with independent code (198 single points; §10.9).
+
+**Departures, interpretations and additions.**
+- **Departures from the plan: none** (`departures_from_plan` is empty).
+- **Interpretations of the plan's wording** (18, all in `interpretations_of_plan`). Among those that
+  shape the numbers:
+  - path points are r_k + (j/8)Δr_k with Δr_k by `find_mic`, and the quadrature step is Δr_k/n;
+  - statements, the ΔW_g/W_ZS,g ratio, its 5 meV threshold and κ use Richardson values;
+  - a convergence ratio with a zero denominator is null and falls under its criterion's exemption; bounds
+    are inclusive;
+  - item 5 is summarised over the P-resolved bands (37), including the 6 whose C is not resolved;
+  - sign comparison: SE = SD (ddof 1)/√n; "exceed" is strict; with n < 2 the sign is "not resolved"; it
+    is given for every subset;
+  - "mean of host means" averages every mean statistic over the 14 hosts with equal weight; medians,
+    ranges and counts are per host only;
+  - D_g is summed over the n = 8 steps of P;
+  - item 4 gives the mean and largest |difference|, with the signed mean beside; item 7 is given per model
+    over the P-resolved bands, so its C rows include the 6 bands whose C is not resolved;
+  - the definitions of the 6 Å crossings, the shortest bond and the Hermite excess (over j = 1…7);
+  - the 2 → 3 extension carries its criterion values but no status, and enters no criterion or summary.
+- **Additions** (12, all in `additions_to_plan`): the `--bands-only` development option (refused for the
+  default output folder); the evaluation order above; extra D2 reproductions and the assertion that the
+  new n = 1 quadrature equals `scripts/44` `path_work`; assertions on i\*, on the plan commit, on the
+  `energies` property and on the E_a link; n = 1 values beside n = 8, 4, 2; Hermite values for the chord
+  0 → 2 and the extension segment, beside D3d; D_g also along C, and Δε_g and ΔS to image 3 for the two
+  extension bands; the molecule check at the extension points, and beside it at image 4; the console log
+  written only after exit 0; ΔS, the summed ΔW and SE beside the plan's statistics.
+- **Computed for this write-up** from the per-band values, not in `summaries`: the per-band
+  closure4/closure8 ranges, the n = 1 closure ranges on P and C, the range of the summed-work residual, the per-host tallies of the sign
+  statements, the per-group per-band sign counts, item 5 over the 31 bands with C resolved, the bands of
+  the largest values, the D3d ranges and counts, the image-0 distances of the 6 Å crossings and the
+  displacement share of hop_I and inorganic < 6 Å together.
+
+### 10.3 D3a–D3c summaries over the 37 resolved bands (plan §7 items 1–3, 6, 7)
+
+**Items 1 and 2.** ΔW_g is the Richardson value on P; Δε_g the site-energy gauge (meV).
+
+| Group | ΔW_g mean ± SE | median | range | mean \|ΔW8 − ΔW4\| | Δε_g mean ± SE | median | range |
+|---|---|---|---|---|---|---|---|
+| hop_I | −23.25 ± 4.34 | −19.8 | −71.8 to +19.9 | 0.15 | +27.91 ± 4.17 | +28.1 | −51.3 to +74.9 |
+| inorganic < 6 Å | −31.49 ± 2.97 | −29.2 | −65.9 to −2.5 | 0.04 | −136.24 ± 5.28 | −138.9 | −186.9 to −51.9 |
+| inorganic ≥ 6 Å | +15.30 ± 1.55 | +14.1 | −7.9 to +43.6 | 0.02 | +82.09 ± 4.76 | +71.6 | +39.9 to +155.5 |
+| organic < 6 Å | −5.93 ± 2.62 | −1.8 | −40.4 to +19.3 | 0.02 | −22.61 ± 7.80 | −14.9 | −136.0 to +72.7 |
+| organic ≥ 6 Å | −1.52 ± 2.57 | −3.4 | −39.4 to +54.1 | 0.01 | +1.96 ± 6.09 | −12.9 | −66.7 to +84.2 |
+| sum (ΔW: W_FT − W_ZS; Δε: = ΔS) | −46.89 ± 4.74 | −41.3 | −130.1 to −6.0 | 0.17 | −46.89 ± 4.74 | −41.3 | −130.1 to −6.0 |
+
+**Sign comparison** (plan §7). A statement needs both |means| above their margins: max(2 meV, 2 SE), plus
+the mean |ΔW_g,8 − ΔW_g,4| for the work gauge.
+
+| Group | \|mean ΔW_g\| | margin | \|mean Δε_g\| | margin | Statement |
+|---|---|---|---|---|---|
+| hop_I | 23.25 | 8.82 | 27.91 | 8.33 | disagree |
+| inorganic < 6 Å | 31.49 | 5.99 | 136.24 | 10.56 | agree |
+| inorganic ≥ 6 Å | 15.30 | 3.11 | 82.09 | 9.53 | agree |
+| organic < 6 Å | 5.93 | 5.25 | 22.61 | 15.60 | agree |
+| organic ≥ 6 Å | 1.52 | 5.15 | 1.96 | 12.17 | sign not resolved |
+
+**Item 3, comparators** (meV; W_ZS,g and W_FT,g are Richardson values on P, with the mean |X8 − X4| in
+brackets).
+
+| Group | mean W_ZS,g | mean W_FT,g | bands with e(W_ZS,g) or e(W_FT,g) > 1 meV | median D_g | ΔW_g/W_ZS,g where \|W_ZS,g\| ≥ 5 meV: n; median (range) |
+|---|---|---|---|---|---|
+| hop_I | +210.4 (1.45) | +187.1 (1.34) | 0 | 0.778 | 37; −0.09 (−0.37 to +0.19) |
+| inorganic < 6 Å | +2.0 (0.14) | −29.5 (0.18) | 0 | 0.065 | 5; −6.88 (−10.65 to −2.33) |
+| inorganic ≥ 6 Å | −3.4 (0.05) | +11.9 (0.07) | 0 | 0.027 | 9; −2.27 (−4.52 to +1.20) |
+| organic < 6 Å | −7.6 (0.02) | −13.5 (0.02) | 0 | 0.049 | 19; +0.91 (−3.18 to +4.11) |
+| organic ≥ 6 Å | −35.7 (0.01) | −37.2 (0.01) | 0 | 0.071 | 36; +0.16 (−1.23 to +1.97) |
+
+The ratio is large where W_ZS,g is small; it is a scale comparison only.
+
+**Item 6, cancellation.** κ = (|L| + |N|)/|L + N|, L = ΔW(hop_I) + ΔW(inorganic < 6 Å): median 1.40,
+κ > 2 in 13 of 37 bands (largest m10_undoped 12.0 and m04_undoped 11.6, where |ΔS| is 12.7 and 6.7 meV).
+
+**Item 7, D3a** (meV; over the 37 P-resolved bands, so the C rows include the 6 bands whose C is not
+resolved).
+
+| Path | Model | median \|closure8\| | largest \|closure8\| | median closure4/closure8 |
+|---|---|---|---|---|
+| P | zero-shot | 0.39 | 0.74 | 4.00 |
+| P | fine-tuned | 0.33 | 0.73 | 4.00 |
+| C | zero-shot | 1.13 | 1.78 | 4.01 |
+| C | fine-tuned | 1.18 | 2.09 | 4.01 |
+
+**By split** (mean ΔW_g on P and mean Δε_g, meV). Per-split medians and ranges are in
+`summaries.by_split`; items 3–7 are in the table after the host table.
+
+| Split | n | ΔW_g: hop_I | in < 6 | in ≥ 6 | org < 6 | org ≥ 6 | Δε_g: hop_I | in < 6 | in ≥ 6 | org < 6 | org ≥ 6 | mean ΔS |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| training | 18 | −37.1 | −36.2 | +17.7 | −5.3 | −5.9 | +28.5 | −142.4 | +94.0 | −34.7 | −12.1 | −66.7 |
+| m21 | 3 | +16.7 | −13.9 | +7.5 | −11.3 | −14.3 | +55.2 | −119.3 | +75.0 | −14.1 | −12.3 | −15.4 |
+| test | 16 | −15.1 | −29.5 | +14.1 | −5.7 | +5.8 | +22.2 | −132.5 | +70.1 | −10.7 | +20.5 | −30.5 |
+
+- Sign statements by split: training and test as overall for hop_I (disagree) and the two inorganic groups
+  (agree), with both organic groups "sign not resolved"; m21 (n = 3) agree for hop_I and the two inorganic
+  groups, both organic groups "sign not resolved".
+- The splits differ in their bands and hosts; the differences are not a generalisation measure (plan §3).
+
+**By host** (mean ΔW_g on P and mean Δε_g, meV; per-host medians and ranges are in `summaries.by_host`).
+
+| Host | n | ΔW_g: hop_I | in < 6 | in ≥ 6 | org < 6 | org ≥ 6 | Δε_g: hop_I | in < 6 | in ≥ 6 | org < 6 | org ≥ 6 | mean ΔS |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| m05 | 3 | −2.9 | −65.2 | +13.9 | −21.7 | −4.0 | +15.2 | −148.1 | +117.0 | −31.9 | −32.3 | −80.1 |
+| m06 | 3 | −57.3 | −38.8 | +14.8 | −5.2 | −5.9 | +43.0 | −152.1 | +95.2 | −45.8 | −32.7 | −92.4 |
+| m08 | 3 | −23.3 | −31.0 | +18.3 | −0.6 | −7.7 | +34.4 | −150.4 | +70.2 | +16.4 | −14.9 | −44.3 |
+| m12 | 3 | −16.0 | −49.4 | +8.8 | +8.7 | −4.3 | +58.0 | −168.7 | +86.3 | −62.8 | +35.2 | −52.1 |
+| m15 | 3 | −54.7 | −16.8 | +17.8 | −2.9 | +15.5 | −15.6 | −108.7 | +78.7 | +16.6 | −12.1 | −41.0 |
+| m20 | 3 | −68.7 | −15.6 | +32.7 | −9.9 | −28.8 | +35.7 | −126.2 | +116.4 | −100.5 | −16.0 | −90.4 |
+| m21 | 3 | +16.7 | −13.9 | +7.5 | −11.3 | −14.3 | +55.2 | −119.3 | +75.0 | −14.1 | −12.3 | −15.4 |
+| m30 | 3 | −15.9 | −20.0 | +18.6 | −26.4 | +1.9 | +15.4 | −124.7 | +46.3 | −9.6 | +30.8 | −41.8 |
+| m32 | 3 | +11.8 | −14.3 | +15.8 | −33.2 | −3.5 | +22.2 | −90.0 | +105.7 | −18.7 | −42.7 | −23.5 |
+| m10 | 2 | −39.4 | −39.2 | +11.6 | −2.3 | +42.3 | +20.0 | −133.7 | +67.2 | −50.3 | +69.7 | −27.0 |
+| m18 | 2 | −3.5 | −55.6 | +22.0 | +6.2 | +3.5 | +30.1 | −178.1 | +56.5 | +19.0 | +45.1 | −27.4 |
+| m04 | 2 | −22.2 | −25.7 | +23.2 | +16.4 | −6.8 | −6.2 | −176.5 | +64.4 | +71.3 | +31.8 | −15.1 |
+| m14 | 2 | −17.2 | −29.6 | −5.3 | +5.8 | +0.2 | +34.7 | −146.3 | +95.1 | −83.9 | +54.4 | −46.0 |
+| m27 | 2 | −32.4 | −34.8 | +9.3 | +17.9 | +9.8 | +42.4 | −103.6 | +49.4 | +1.1 | −19.4 | −30.1 |
+| **mean of host means** | 14 hosts | −23.2 | −32.1 | +14.9 | −4.2 | −0.2 | +27.5 | −137.6 | +80.2 | −20.9 | +6.1 | −44.8 |
+
+Sign statements per host (n = 2–3; agree / disagree / sign not resolved, out of 14 hosts): hop_I 3 / 7 / 4;
+inorganic < 6 Å 13 / 0 / 1; inorganic ≥ 6 Å 12 / 1 / 1; organic < 6 Å 5 / 3 / 6; organic ≥ 6 Å
+4 / 3 / 7.
+
+**Items 3–7 by split and by host** (hop_I for items 3–5; meV). Item 4 is over the bands of the subset with
+both P and C resolved. Medians and counts have no mean of host means (§10.2). Item 3's means of W_ZS,g and
+W_FT,g, its e > 1 meV count and median D_g per subset, and all values of the other groups, are in
+`summaries.by_split`, `summaries.by_host` and `summaries.by_host_mean_of_host_means` (hop_I host means of
+W_ZS,g and W_FT,g: +209.7 and +186.5 meV).
+
+| Subset | n | item 3: ΔW/W_ZS median (n) | item 4: mean \|P − C\| (n) | item 5: C_R − D2b median (largest \|·\|) | item 6: median κ; κ > 2 | item 7: P median \|closure8\| ZS / FT |
+|---|---|---|---|---|---|---|
+| training | 18 | −0.18 (18) | 1.46 (16) | +21.7 (49.3) | 1.37; 2 | 0.35 / 0.30 |
+| m21 | 3 | +0.19 (3) | 0.31 (3) | +20.7 (22.0) | 2.36; 2 | 0.22 / 0.24 |
+| test | 16 | −0.08 (16) | 3.01 (12) | +6.2 (27.0) | 2.58; 9 | 0.46 / 0.36 |
+| m05 | 3 | −0.02 (3) | 2.58 (3) | −9.5 (11.0) | 1.00; 0 | 0.31 / 0.24 |
+| m06 | 3 | −0.29 (3) | 0.54 (3) | +27.5 (29.5) | 1.38; 0 | 0.31 / 0.25 |
+| m08 | 3 | −0.09 (3) | 1.88 (3) | +19.3 (22.6) | 1.44; 0 | 0.32 / 0.28 |
+| m12 | 3 | −0.05 (3) | 0.01 (1) | +48.8 (49.3) | 1.44; 0 | 0.47 / 0.49 |
+| m15 | 3 | −0.35 (3) | 1.95 (3) | +24.0 (26.9) | 2.74; 2 | 0.36 / 0.30 |
+| m20 | 3 | −0.27 (3) | 0.81 (3) | +8.3 (20.8) | 1.00; 0 | 0.73 / 0.72 |
+| m21 | 3 | +0.19 (3) | 0.31 (3) | +20.7 (22.0) | 2.36; 2 | 0.22 / 0.24 |
+| m30 | 3 | −0.04 (3) | 4.71 (1) | −1.1 (11.5) | 1.00; 0 | 0.53 / 0.34 |
+| m32 | 3 | +0.06 (3) | 1.47 (3) | +18.4 (18.8) | 1.33; 1 | 0.39 / 0.39 |
+| m10 | 2 | −0.30 (2) | 0.96 (2) | +3.1 (5.1) | 7.32; 2 | 0.32 / 0.22 |
+| m18 | 2 | −0.02 (2) | 0.71 (2) | +9.4 (11.5) | 3.37; 2 | 0.33 / 0.26 |
+| m04 | 2 | −0.11 (2) | 4.60 (2) | +14.3 (18.8) | 7.57; 2 | 0.42 / 0.42 |
+| m14 | 2 | −0.08 (2) | 7.19 (2) | −14.6 (26.2) | 1.06; 0 | 0.47 / 0.35 |
+| m27 | 2 | −0.13 (2) | — (0) | +24.9 (27.0) | 3.50; 2 | 0.47 / 0.45 |
+| **mean of host means** | 14 hosts | — | 2.13 (13 hosts) | — | — | — |
+
+### 10.4 Path dependence and the seen coarse values (plan §7 items 4 and 5)
+
+**Item 4.** Over the 31 bands with both P and C resolved (meV; Richardson values).
+
+| Group | mean \|ΔW_g(P) − ΔW_g(C)\| | largest | mean signed (P − C) | mean e(P) + e(C) | mean \|X8 − X4\|(P) + \|X8 − X4\|(C) |
+|---|---|---|---|---|---|
+| hop_I | 1.95 | 10.89 | −0.16 | 0.17 | 0.50 |
+| inorganic < 6 Å | 1.58 | 4.79 | +1.18 | 0.04 | 0.11 |
+| inorganic ≥ 6 Å | 1.19 | 2.09 | −1.18 | 0.02 | 0.07 |
+| organic < 6 Å | 0.94 | 4.01 | +0.20 | 0.03 | 0.08 |
+| organic ≥ 6 Å | 0.39 | 2.16 | −0.04 | 0.01 | 0.02 |
+
+**Item 5.** The seen coarse D2b `groups_meV` (path C at n = 1) against the converged values, over the 37
+P-resolved bands (6 of them with C not resolved): median signed difference and largest |difference|, meV.
+C_R − D2b is the quadrature error of the seen values on their own path. Over the 31 bands whose C is also
+resolved (computed for this write-up), C_R − D2b for hop_I has median +17.6 meV (largest 42.9 meV); for
+the other groups the medians stay at 1.0 meV or less (largest 5.8 meV).
+
+| Group | C_R − D2b: median | largest | P_R − D2b: median | largest |
+|---|---|---|---|---|
+| hop_I | +18.4 | 49.3 | +18.0 | 47.3 |
+| inorganic < 6 Å | +0.4 | 5.8 | +1.6 | 5.0 |
+| inorganic ≥ 6 Å | −1.0 | 2.1 | −2.1 | 3.5 |
+| organic < 6 Å | +0.2 | 5.4 | +0.7 | 5.9 |
+| organic ≥ 6 Å | +0.2 | 2.6 | +0.2 | 3.8 |
+
+### 10.5 The E_a link and the 2 → 3 extension
+
+**E_a link** (plan §1). In the 6 bands where a model's own argmax differs from i\* (7 model–band
+differences), E_a change = ΔS + [E_FT(i\*_FT) − E_FT(i\*)] − [E_ZS(i\*_ZS) − E_ZS(i\*)] (meV; identity
+asserted, difference 0).
+
+| Band | i\* | own argmax ZS, FT | E_a change | ΔS | FT term | ZS term |
+|---|---|---|---|---|---|---|
+| m05_undoped | 3 | 3, 4 | −63.62 | −73.92 | +10.30 | 0 |
+| m05_GA | 3 | 3, 4 | −72.61 | −82.83 | +10.22 | 0 |
+| m15_GA | 3 | 3, 2 | −50.32 | −60.41 | +10.09 | 0 |
+| m15_Sr | 3 | 3, 2 | −11.66 | −20.83 | +9.17 | 0 |
+| m21_GA | 2 | 3, 2 | −22.77 | −12.25 | 0 | +10.52 |
+| m21_Sr | 2 | 3, 3 | −14.04 | −5.95 | +7.16 | +15.25 |
+
+**The 2 → 3 extension** (m21_GA, m21_Sr; beside, no status, in no summary). To image 3, ΔS is −23.69 and
+−14.04 meV.
+- ΔW_g on P_ext (hop_I, inorganic < 6, ≥ 6, organic < 6, ≥ 6): m21_GA +16.7 / −12.8 / +6.2 / −17.9 / −16.0;
+  m21_Sr +23.9 / −25.4 / +6.7 / −6.1 / −13.0 meV.
+- ΔW_g on C_ext (same order): m21_GA +16.8 / −13.7 / +6.9 / −18.0 / −15.7; m21_Sr +23.7 / −27.2 / +7.9 /
+  −5.6 / −12.8 meV.
+- Δε_g to image 3: m21_GA +53.7 / −117.1 / +102.8 / −28.9 / −34.2; m21_Sr +64.2 / −139.6 / +70.8 /
+  −17.3 / +8.0 meV.
+
+### 10.6 D3d, path regularity (reported, no rule)
+
+- **Hermite excess on P** (37 bands, segments to i\*): −0.06 to +3.83 meV (zero-shot), −0.04 to +2.61 meV
+  (fine-tuned). Beside it, on the chord 0 → 2: 1.67–14.21 and 4.11–16.36 meV.
+- **Interior points above the higher bracketing image.** In 33 model–segment cases an interior point of P
+  lies above both its images, all in the segment 2 → 3. The largest excesses are 2.93 meV (zero-shot,
+  m04_Sr) and 8.81 meV (fine-tuned, m27_Sr). E_a and i\* are defined on the images only (plan §1); these
+  values do not enter them.
+- **The two extension segments 2 → 3** (beside, outside D3d): Hermite excess 0.13–0.57 meV; an interior
+  point lies above both images in all four model–band cases (3.02–5.35 meV).
+- **Geometry** (model-independent). The largest per-atom displacement per segment is 0.21–0.97 Å on P and
+  1.09–1.43 Å on the chord 0 → 2 of C. At the interior points, the shortest intramolecular bond and the
+  shortest pair distance differ from those at the images by −0.0021 to +0.0031 Å on P and −0.0067 to
+  +0.0031 Å on C. The shortest pair at any interior point is 1.010 Å on P and 1.006 Å on C.
+- **6 Å crossings.** 19 atoms in 16 bands (0–2 per band) cross 6 Å from the hop midpoint somewhere on P
+  between image 0 and i\*. All of them lie within 0.11 Å of 6 Å at image 0 (5.899–6.048 Å). Group
+  membership stays as at image 0 (plan §5).
+
+### 10.7 Exclusion report (plan §6)
+
+- **No band is excluded** on P, in any split or host: training 18 of 18, m21 3 of 3, test 16 of 16
+  resolved; each of the 14 hosts has all its bands resolved. No criterion failed on P, so the check on
+  selection is vacuous: the resolved set is the whole D2 set, and its ΔS and seen coarse D2b values are
+  those of all 37 bands (ΔS per band in §10.8; D2b `groups_meV` per band in `exclusion_report.by_host` and
+  `.by_split`).
+- **C not resolved** in 6 resolved bands (two bands each of hosts m12, m27 and m30), listed in §10.1. They
+  are left out of item 4 only.
+- **ΔS and the seen coarse D2b values** of the resolved bands are given per band in
+  `exclusion_report.by_host` and `.by_split`. By split, ΔS runs from −130.1 to −20.8 meV (training),
+  −27.9 to −6.0 meV (m21) and −60.6 to −6.7 meV (test).
+
+### 10.8 Per-band values
+
+ΔS, ΔW_g (Richardson, P) and Δε_g in meV; κ; and the status of C. Every band is resolved on P.
+
+| Band | Split | i\* | ΔS | ΔW_g: hop_I | in < 6 | in ≥ 6 | org < 6 | org ≥ 6 | Δε_g: hop_I | in < 6 | in ≥ 6 | org < 6 | org ≥ 6 | κ | C |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| m05_undoped | training | 3 | −73.9 | +1.2 | −64.3 | +12.4 | −21.9 | −1.4 | +20.2 | −147.9 | +114.0 | −33.4 | −26.7 | 1.00 | resolved |
+| m05_GA | training | 3 | −82.8 | −4.4 | −65.9 | +16.1 | −24.4 | −4.3 | +8.9 | −143.4 | +114.5 | −32.8 | −30.1 | 1.00 | resolved |
+| m05_Sr | training | 3 | −83.4 | −5.6 | −65.5 | +13.0 | −18.9 | −6.4 | +16.6 | −152.9 | +122.4 | −29.4 | −40.1 | 1.00 | resolved |
+| m06_undoped | training | 3 | −73.0 | −59.7 | −27.1 | +16.3 | +3.3 | −5.9 | +26.8 | −145.1 | +65.3 | −2.9 | −17.1 | 1.38 | resolved |
+| m06_GA | training | 3 | −130.1 | −54.1 | −58.6 | +14.0 | −21.8 | −9.7 | +74.9 | −157.7 | +155.5 | −136.0 | −66.7 | 1.00 | resolved |
+| m06_Sr | training | 3 | −74.2 | −58.1 | −30.9 | +14.1 | +2.9 | −2.1 | +27.4 | −153.6 | +64.7 | +1.5 | −14.1 | 1.40 | resolved |
+| m08_undoped | training | 3 | −39.4 | −17.2 | −29.2 | +13.8 | −0.6 | −6.1 | +38.9 | −147.2 | +69.5 | +12.4 | −12.9 | 1.36 | resolved |
+| m08_GA | training | 3 | −54.6 | −33.7 | −32.9 | +23.6 | −0.3 | −11.3 | +22.4 | −160.6 | +71.6 | +27.3 | −15.3 | 1.44 | resolved |
+| m08_Sr | training | 3 | −39.1 | −18.9 | −31.0 | +17.4 | −0.8 | −5.8 | +41.9 | −143.5 | +69.5 | +9.4 | −16.5 | 1.55 | resolved |
+| m12_undoped | training | 3 | −54.4 | −14.0 | −52.5 | +8.9 | +6.5 | −3.4 | +60.6 | −174.7 | +92.0 | −69.5 | +37.1 | 1.44 | not resolved: FT \|closure8\| 2.06 meV |
+| m12_GA | training | 3 | −40.5 | −19.9 | −37.5 | +9.7 | +12.2 | −5.0 | +56.1 | −152.8 | +80.4 | −53.8 | +29.6 | 1.83 | resolved |
+| m12_Sr | training | 3 | −61.4 | −13.9 | −58.1 | +7.8 | +7.5 | −4.7 | +57.2 | −178.6 | +86.4 | −65.1 | +38.8 | 1.35 | not resolved: FT \|closure8\| 2.06 meV |
+| m15_undoped | training | 3 | −41.9 | −56.2 | −22.1 | +21.3 | −2.7 | +17.9 | +7.9 | −138.9 | +107.1 | +15.7 | −33.7 | 2.74 | resolved |
+| m15_GA | training | 3 | −60.4 | −63.8 | −25.8 | +15.4 | −4.1 | +17.9 | −3.4 | −135.3 | +63.5 | +18.3 | −3.5 | 1.97 | resolved |
+| m15_Sr | training | 3 | −20.8 | −44.0 | −2.5 | +16.8 | −1.8 | +10.7 | −51.3 | −51.9 | +65.5 | +15.9 | +0.9 | 3.46 | resolved |
+| m20_undoped | training | 3 | −96.2 | −71.8 | −13.2 | +43.6 | −15.4 | −39.4 | +28.1 | −127.1 | +127.2 | −97.9 | −26.5 | 1.00 | resolved |
+| m20_GA | training | 3 | −96.1 | −67.4 | −16.5 | +35.7 | −19.2 | −28.8 | +23.4 | −126.8 | +133.5 | −128.7 | +2.5 | 1.00 | resolved |
+| m20_Sr | training | 3 | −79.0 | −66.9 | −17.2 | +18.7 | +4.7 | −18.3 | +55.7 | −124.6 | +88.7 | −74.9 | −23.9 | 1.13 | resolved |
+| m21_undoped | m21 | 3 | −27.9 | +13.7 | −18.5 | +7.6 | −14.8 | −15.9 | +58.1 | −135.7 | +105.2 | −30.4 | −25.1 | 1.00 | resolved |
+| m21_GA | m21 | 2 | −12.3 | +17.8 | −8.8 | +7.2 | −14.2 | −14.3 | +52.2 | −104.0 | +74.1 | −10.4 | −24.1 | 2.46 | resolved |
+| m21_Sr | m21 | 2 | −6.0 | +18.5 | −14.5 | +7.6 | −5.0 | −12.6 | +55.3 | −118.2 | +45.9 | −1.4 | +12.4 | 2.36 | resolved |
+| m30_undoped | test | 3 | −43.3 | −26.0 | −12.4 | +17.9 | −23.7 | +0.9 | +35.0 | −138.7 | +45.6 | −14.7 | +29.5 | 1.00 | not resolved: hop_I ratio 1.71 |
+| m30_GA | test | 3 | −47.9 | −12.7 | −23.5 | +24.7 | −40.4 | +3.9 | +22.6 | −156.5 | +53.2 | −18.0 | +50.7 | 1.00 | resolved |
+| m30_Sr | test | 3 | −34.3 | −9.2 | −24.0 | +13.2 | −15.1 | +0.8 | −11.4 | −79.0 | +39.9 | +4.0 | +12.2 | 1.00 | not resolved: hop_I ratio 1.88 |
+| m32_undoped | test | 3 | −11.0 | +19.9 | −11.2 | +10.4 | −29.9 | −0.1 | +31.4 | −90.4 | +99.6 | −14.9 | −36.8 | 2.57 | resolved |
+| m32_GA | test | 3 | −46.2 | +1.6 | −19.9 | +25.0 | −40.2 | −12.7 | +1.5 | −89.4 | +125.8 | −24.1 | −60.0 | 1.00 | resolved |
+| m32_Sr | test | 3 | −13.3 | +14.0 | −11.8 | +12.0 | −29.6 | +2.2 | +33.5 | −90.1 | +91.6 | −17.0 | −31.2 | 1.33 | resolved |
+| m10_undoped | test | 3 | −12.7 | −42.3 | −40.6 | +19.0 | −2.9 | +54.1 | +19.5 | −132.9 | +66.8 | −50.2 | +84.2 | 12.04 | resolved |
+| m10_GA | test | 3 | −41.3 | −36.5 | −37.8 | +4.2 | −1.8 | +30.5 | +20.5 | −134.4 | +67.6 | −50.4 | +55.3 | 2.60 | resolved |
+| m18_undoped | test | 3 | −23.3 | −3.5 | −52.3 | +22.0 | +6.7 | +3.8 | +30.7 | −174.1 | +47.3 | +24.9 | +47.9 | 3.79 | resolved |
+| m18_GA | test | 3 | −31.6 | −3.6 | −58.9 | +22.1 | +5.7 | +3.2 | +29.5 | −182.1 | +65.6 | +13.1 | +42.4 | 2.96 | resolved |
+| m04_undoped | test | 3 | −6.7 | −22.0 | −20.4 | +22.8 | +17.7 | −4.9 | −6.4 | −172.2 | +64.5 | +72.7 | +34.7 | 11.60 | resolved |
+| m04_Sr | test | 3 | −23.5 | −22.4 | −31.1 | +23.7 | +15.1 | −8.8 | −6.0 | −180.7 | +64.4 | +69.8 | +28.9 | 3.55 | resolved |
+| m14_undoped | test | 3 | −60.6 | −14.5 | −49.8 | −2.7 | +5.9 | +0.4 | +59.6 | −186.9 | +74.6 | −79.7 | +71.8 | 1.12 | resolved |
+| m14_Sr | test | 3 | −31.5 | −19.8 | −9.4 | −7.9 | +5.7 | −0.1 | +9.7 | −105.7 | +115.6 | −88.1 | +37.0 | 1.00 | resolved |
+| m27_undoped | test | 3 | −26.4 | −31.7 | −31.4 | +7.9 | +19.3 | +9.5 | +42.3 | −95.1 | +45.1 | +2.5 | −21.1 | 3.79 | not resolved: FT \|closure8\| 2.01 meV |
+| m27_Sr | test | 3 | −33.8 | −33.0 | −38.1 | +10.7 | +16.5 | +10.1 | +42.5 | −112.1 | +53.7 | −0.2 | −17.7 | 3.21 | not resolved: FT \|closure8\| 2.09 meV |
+
+### 10.9 Review record
+
+**Implementation review.** Two adversarial code reviews ran on the 13:01 run:
+- A, plan conformance, physics and numerics. It recomputed m05_undoped, m21_GA and m30_Sr with its own
+  code (own minimum image, interpolation, groups, molecules, Hermite solve and calculators; 198 single
+  points): all 1463 compared quantities agree with the JSON; the largest difference is 1.5 × 10⁻⁸ meV (a
+  Hermite excess), and ratios, distances, indices and criterion outcomes agree to the same or better in
+  their own units.
+- B, reproduction and provenance. Its full rerun gave a byte-identical JSON; its 19 injected faults each
+  stopped with the intended exit code; every input sha256 matched.
+
+Neither found a wrong value. Their four findings were accepted and fixed:
+
+| Finding | Problem | Fix |
+|---|---|---|
+| A1 | The extension kept a pass/fail flag under a key that says it has no status | Only the criterion values are kept |
+| A2 | `D3d.hermite` also held the chord 0 → 2 and the extension segment | D3d holds P to i\* only; the chord and the extension segment moved beside it |
+| B1 | The run log gave no value differences for the 13:01 run | Differences recorded against the development runs (none computable against the failed run) |
+| B2 | The failed run's console log had been written into the output folder and moved by hand; the run records lived only in volatile scratch | Console log written only after exit 0; run records copied, with a SHA256SUMS list, to the private WP3 record folder outside the session workspace (`WP3_RESULT.md` §9 item 26) |
+
+The fix round reran the full script to fix these code defects (A1, A2 and the code part of B2), as plan §9
+allows, giving the 14:11 recorded run. No value changed. 544 leaves moved to new keys (the chord and
+extension Hermite entries and the extension criterion values); 148 `in_P_to_i_star` flags and 92 extension
+flags were dropped. Text changed only in `script_sha256`, interpretation 18, addition 8, the new addition
+11 and `definitions`.
+
+**Final check.** The adversarial check of this section, the figure and the pointers is recorded below
+(§10.11).
+
+### 10.10 Figure
+
+- **`figures/fig_wp3_d3`** (nature-figure, Python; 183 × 146.5 mm). Every plotted and printed number is
+  read from the JSON at plot time. The script asserts the JSON sha256, the script sha256 and the plan
+  commit, recomputes every printed plan summary from the plotted values and asserts that it equals the
+  JSON. The printed additions (the closure signs and the count above 2 meV in a, the largest bar in b, the
+  clearances in c, the band of the largest |P − C| in d) are computed from the same values.
+  - **a (D3a).** |closure8| against |closure4| for 37 bands × 2 models × 2 paths (n = 148), log-log, with
+    the ratio-4 line (h²), the [2, 8] window, the 2 meV bound and the 0.5 meV exemption level. All
+    closures are negative; the four points above 2 meV are fine-tuned closures on C.
+  - **b (D3b).** ΔW_g (Richardson, P) per group for the 37 bands, beside the zero-shot work W_ZS,g on the
+    same axis, both with ±|X8 − X4| bars (all 370 inside the markers; largest 0.65 meV for ΔW_g and
+    2.7 meV for W_ZS,g, hopping I, m20_GA); ticks are means; D is the median displacement share D_g.
+  - **c (D3b against D3c).** ΔW_g against Δε_g (n = 185), with the group means ± the plan's sign margins
+    and, in brackets, |mean| − margin for each gauge. There is no y = x line: the gauges are different
+    partitions, and the plan compares signs only.
+  - **d (item 4).** ΔW_g(P) against ΔW_g(C) for the 31 bands with both resolved (n = 155), with the y = x
+    line; the 6 bands whose C is not resolved are not drawn (their values are in the source data).
+- **QA.** Render-time alignment gate PASS (4 comparisons). validate_figure.py: 19 pass, 2 documented
+  warnings (FONT-GLYPH-FLOOR: subscripts only in 7.5 pt text; LEGEND-LABEL-CASE: lower-case labels as in
+  the other WP3 figures). PDF text ≥ 5.25 pt. Collision audit 0 fail, 0 warn. Only Arial is embedded. A
+  rerun gives byte-identical outputs.
+- **Review.** One agent built the figure; two adversarial lenses (numbers and plan conformance; visual,
+  statistical honesty and QA) found no error. Their 20 findings (12 minor, 8 suggestions) were all applied
+  and are listed in the script's docstring.
+
+### 10.11 Final check
+
+Three independent lenses checked this section, the new D3 text in §1 and §4 and the two pointers against
+the JSON, the plan and the run records before commit.
+- **Numbers.** Every summary, table cell and derived statement was recomputed from the per-band values of
+  the JSON, including all 592 cells of §10.8; the D3d values were checked as look-ups (the JSON keeps no
+  interior-point energies); the checks table, the run record and the hashes were checked against the JSON
+  checks block, the console log, the run log and the files. No wrong number or sign was found.
+- **Plan conformance and rigour.** Two errors, both of wording, now corrected:
+  - the D3a statement cited path P for D2a's closures, which were on path C; both paths are now given,
+    with the per-band ratio ranges and the own-argmax limit;
+  - the path-dependence bullet compared a 31-band mean |difference| with a 37-band SE, a comparison the
+    plan does not make; it is removed, and the conservative |X8 − X4| is quoted.
+- **Provenance.** One error, now corrected: the run records had been copied only within the session
+  workspace. They are now in the private record folder, with a SHA256SUMS list.
+- **Minor findings applied.**
+  - Wording: spreads added in §1; medians no longer read as bounds; the 0.745 meV bound.
+  - Added values: the largest item-5 difference comes from a band whose C is not resolved, so the
+    31-band values are given beside it; the geometry on C; C_ext; the extension Hermite values; items
+    3–7 by split and by host.
+  - Plan reporting: the exclusion report is stated to be vacuous; the interpretation and addition lists
+    are completed; the values computed only for this write-up are listed.
+  - Caveats: host non-independence, displacement shares known before D3, and the fitted images.
+  - Records: the run-record value-difference counts, the check-4 detail and the units of reviewer A's
+    comparison.
+- **Final pass on the corrected text.** Two further lenses (the corrected text against the data and the
+  figure; consistency, rigour and hygiene of the whole change) found no error. Their 20 findings (14
+  minor, 6 suggestions) were all applied:
+  - upper bounds rounded up (2.094, 1.2 × 10⁻⁸ meV);
+  - the 0 → 2 segment bound;
+  - reason 7's named test was run by D2 and is not rerun here;
+  - the §1 caveats and 31-band value;
+  - the κ conditioning note;
+  - the mean-of-host-means row of the items 3–7 table;
+  - the figure's bar and review counts;
+  - the scope of the numbers check;
+  - the commit identity (the GitHub no-reply address).
+
+  The hygiene scan of all 22 files (raw text, PDF streams, PNG, TIFF and SVG metadata) found no local
+  path, user or host name, IP, cloud identifier or e-mail address.
+
+### 10.12 Files
+
+- **Plan.** `WP3_DIAGNOSTICS_D3_PLAN.md` (ddb352b).
+- **Code.** `scripts/45_wp3_d3_dense_path.py`.
+- **Outputs.** `wp3/diagnostics/d3_dense_path.json` and `wp3/diagnostics/d3_console.log`.
+- **Figure.** `figures/fig_wp3_d3.{py,pdf,png,svg,tiff}`, with:
+  - its layout-QA records `fig_wp3_d3.alignment.{json,svg}` and `.collision-audit.json`;
+  - its source data `figures/source_data/fig_wp3_d3_*.csv` (8 files).
+- **Not committed** (off-repository): the run log and the development and review runs with their values
+  (private WP3 record folder, `WP3_RESULT.md` §9 item 26); the band geometries (`../bands`).

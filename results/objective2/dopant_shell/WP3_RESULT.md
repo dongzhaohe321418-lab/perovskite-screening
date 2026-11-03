@@ -805,6 +805,9 @@ The fine-tuned value moves 9.0 meV towards DFT but stays below all three DFT val
    - **Post hoc, 2026-11-03.** This was run as D2 (`WP3_DIAGNOSTICS.md`). It cannot be read: the path
      0 → i* through the images with DFT frames (0, 2, 3; 0, 2 in two bands) does not close to 20 meV in any
      band.
+   - **Post hoc D3** (`WP3_DIAGNOSTICS.md`): a description of where the fine-tuned model books its change of
+     E(i*) − E(0) along a densified band path, in two gauges; no verdict; reason 7's named test (model − DFT
+     residual) not run.
 8. **The local model against the band term. Not separable with these data.** On E′ the band term is
    removed frame by frame, so a local model can in principle represent the targets. Yet the m30 Sr
    E′ pair error stays large (−69.5 → −60.5 meV).

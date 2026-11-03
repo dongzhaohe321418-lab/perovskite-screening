@@ -267,3 +267,13 @@ change nothing in the WP3 outcome or in options A–D above.
   - **Candidate changes.** Two candidate recipe changes are a stronger constraint on these energy
     differences (for example the test proposed under reason 1) and a gentler start. Neither has been
     tried.
+
+## Update 2026-11-03 (c) — WP3 post hoc diagnostic D3
+
+This diagnostic is post hoc and reported only (`dopant_shell/WP3_DIAGNOSTICS.md` §10; plan
+`dopant_shell/WP3_DIAGNOSTICS_D3_PLAN.md`, ddb352b). It changes nothing in the WP3 outcome or in options
+A–D above. D3 does not rerun reason 7's named test, which D2 ran and which cannot be read (update (b)).
+
+- **Post hoc D3** (`WP3_DIAGNOSTICS.md`): a description of where the fine-tuned model books its change of
+  E(i*) − E(0) along a densified band path, in two gauges; no verdict; reason 7's named test (model − DFT
+  residual) not run.
