@@ -277,3 +277,85 @@ A–D above. D3 does not rerun reason 7's named test, which D2 ran and which can
 - **Post hoc D3** (`WP3_DIAGNOSTICS.md`): a description of where the fine-tuned model books its change of
   E(i*) − E(0) along a densified band path, in two gauges; no verdict; reason 7's named test (model − DFT
   residual) not run.
+
+## Update 2026-11-03 (d) — S2 route chosen (delegated)
+
+**Who decided.** Item 4 of update 2026-11-03 ("The choice is the PI's") was delegated: on 2026-11-03
+the PI delegated the choice of the S2 research direction to the analyst (an AI assistant) and
+approved everything else, including the Cl/S/Ca/Rb pseudopotential download. A panel (three
+proposals, two judges, a refuter and a synthesis; notes kept off-repository in the private record
+folder) prepared the choice, and the analyst adopted it. Decision: `s2/S2_DECISION.md`. Rules:
+`s2/S2_PLAN.md`, adopted with `dopant_shell/PLAN.md` amendment n. Pseudopotential record:
+`s2/PSEUDOPOTENTIALS_S2.md`. Answers to the 13 builder questions: `s2/S2_BUILDERS_DESIGN.md` §16. No
+S2 energy value (MACE or DFT) existed when these were written or when they were revised the same day
+after three reviews, the analyst's decisions on their open issues and a review of those decisions
+(`s2/S2_PLAN.md` §20).
+
+1. **Route: option D, "A1 decides, A2 calibrates".**
+   - Every per-host decisive value Y_h is an A1 quantity: a PBE single point at the S1 fingerprint
+     (plus Cl and Ca pseudopotentials), V_I⁺, on a zero-shot MACE-MP-0 geometry relaxed with the far
+     field frozen (one 6 Å region per site, shared by the four cells of an E_b quartet).
+   - A2 frozen-far-field DFT relaxations of one first-shell quartet per sublattice on two pilot
+     hosts (m30, m05), at different first-shell sites on the two hosts (Pb136, FA128 and the
+     migrating iodide I138 on m30; Pb124 and the seeded draws FA28 and I49 on m05), estimate the
+     relaxation bias δ = E_b(A2) − E_b(A1). The validated class rests on θ̂ = Ȳ + δ̄, which adds
+     this A2 calibration to the A1 mean, with a Welch–Satterthwaite interval.
+   - Option B survives only as a reported zero-shot ledger; C, A3 and ΔE_a are not part of S2.
+2. **Why.**
+   - Zero-shot MACE energies are not re-admitted (amendment m item 4), and no validated potential
+     exists (update 2026-11-03), so DFT must supply every decisive number. This is the route of update
+     2026-10-27, consequence 1, that remains: "a protocol that does not depend on MACE minima being
+     DFT minima".
+   - A1 alone has no relaxation error bar (WP2e closed without one); A2 everywhere is unaffordable
+     (about 9 node-h per relaxation [I]). Measuring the bias on two hosts and correcting for it is the
+     cheapest design whose bias term has its own variance.
+   - Binding is the first-order transport effect; barriers matter only for binders, so they wait
+     for S3.
+3. **Question and dopants.** Is V_I⁺ attracted to, repelled by or indifferent to the first shell of
+   Ca (B), Cl (X), Cs and GA (A), relative to two far sites, by more than k_BT = 25.7 meV? Sr is the
+   positive control. Rb, DMA, AA and SCN are deferred (`s2/S2_BUILDERS_DESIGN.md` §10).
+4. **Stages, gates and node-hours** (estimates [I] from measured unit costs: 6.74 min per single
+   point, 6.15 min per DFT ionic step):
+
+   | stage | content | gates | node-h |
+   |---|---|---|---|
+   | S2-0 (laptop) | Stage-0 code with self-tests; T4 report archived, `s2b-2` frozen; host and m05 calibration-cell admissibility; pre-flight | review | 0 |
+   | C1 | pw.x smoke tests; elements gate G1 (Cl, Ca: cutoff, valence, spin); DFT noise pilot (106 single points on m30, m05); pose pilot (m30); q = 0 link rows | G1; gate N (σ_far ≤ 25 meV; sets n = 8 or 10); pose rule | ≈ 29 |
+   | C2 | A2 on m30: hinge region (Sr, Ca) and the Sr far quartet | K2 (first relaxation converges or plateaus within 200 steps); cost projection; K3 (relaxed Sr hinge E_b > +25.7 meV) | ≈ 91 (67–145) |
+   | C3 | A1 production: 8 (or 10) drawn hosts × 76 single points | validity; ≥ n − 1 valid hosts | ≈ 92 (n = 10: 114) |
+   | C4 | A2 on the remaining regions of m30 and m05 | calibration controls | ≈ 237 (173–376) |
+   | S2-5 (laptop) | one evaluation, adversarial check, result note | rule V with controls C1–C5 | 0 |
+
+   - **Budget.** About 449 node-h (360–663 before the cap, no allowance for interruptions); **hard
+     cap 520 node-h**, enforced by a pre-registered cut order that protects the Sr, Ca and Cl
+     calibration. The node is stopped after each campaign. Calendar about 3–5 weeks from the stage
+     durations of `s2/S2_DECISION.md` §8 (20–35.5 days), longer if campaigns wait for a console
+     login [I]. Costs are stated in node-hours only; the currency figure of the S4a row of the
+     stages table is not used.
+   - **Hosts.** Production m06, m02, m16, m12, m32, m26, m22, m23 (reserves m33, m13), drawn by a
+     seeded rule from 28 eligible members. m32 is a WP3 test host, used for DFT measurement only; the
+     item-1′ hosts and m21 are excluded (amendment n item 3). 15 DFT-free hosts remain for any later
+     option C (13 if n = 10).
+5. **What S2 can resolve [MC].**
+   - A validated class ("repels", "binds", or "no first-shell interaction beyond k_BT") for effects of
+     about 43–79 meV (1.7–3.1 k_BT), depending on the measured bias noise s_δ (5–20 meV) and host
+     noise s_Y (13–30 meV), with no site-type offset of the calibration sites. The Sr control is classified "repels" with probability ≥ 0.95 for
+     s_δ ≤ 20 meV under rule V alone; with gate N and C2, which control C1 also requires, about 0.9
+     at a far-site noise of 15 meV and 0.6 at 20 meV. A −75 meV binder is found with probability
+     0.99 / 0.92 / 0.71 / 0.46 at s_δ = 5 / 10 / 15 / 20 meV (`s2/S2_PLAN.md` §18).
+   - Unresolved dopants are reported with an upper bound on |θ|. The A1 tier is reported for every
+     dopant, labelled "fixed-geometry DFT; relaxation bias not bounded".
+   - S2 also measures the DFT noise floor per sublattice and the number of hosts each dopant needs,
+     which was the deliverable of S3.
+6. **What S2 cannot resolve.**
+   - Effects below about 2 k_BT; "no interaction" unless both noise terms are small.
+   - Barriers, ΔE_a and hop classes; transport rates; relaxed DFT minima.
+   - Vacancies without a Cs neighbour (every pool host has the native Cs in the vacancy cage), other
+     vacancy sites, the dilute limit, SOC and dispersion (a D3(BJ) correction is reported only), and
+     anything about experiment.
+   - Aliovalent dopants (S4b).
+7. **Effect on the stages table.** S2 now includes the 5-dopant pilot of S3 and its host-count
+   deliverable. S3 becomes: hop barriers and hop classes for any dopant classified "binds" (hop
+   classes move from the S2 row to S3), a Cs-distal vacancy check for Sr and every classified
+   dopant, and the deferred tokens once their starts are physical.
+   The estimates of S3, S4a and S4b are not revised here; they depend on what S2 finds.

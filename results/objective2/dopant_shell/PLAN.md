@@ -1295,3 +1295,107 @@ explicitly post hoc design that has not been run.
    8. Write the WP3 result with every verdict, and add the roadmap update.
 
    The item-1′ outputs are archived but not analysed before step 6.
+
+## Amendment 2026-11-03n — S2 pre-registration (`../s2/S2_PLAN.md`); written before any S2 energy value exists
+
+**Information state.**
+- **Read.** Every S1 result: WP1 (pilot and production), WP2a–2e, WP3 with adoption (a)–(e)
+  (`WP3_RESULT.md`), and the post hoc diagnostics D1–D3 (`WP3_DIAGNOSTICS.md`). In particular:
+  - the DFT E_b of m05, m21 and m30 at the WP2c sites, including the sites used for calibration in
+    the new plan (Pb136 and FA128 on m30; Pb124 on m05, where WP2c measured Sr and where its
+    +36.1 meV zero-shot overestimate lies), and the q = +1 values of m30 at Pb136 and FA128 (WP2d);
+  - the zero-shot MACE E_b at every Pb and FA site of m30, m21 and m05 (WP1), which include the
+    noise-pilot sites of the new plan;
+  - the WP2b band single points of m06, m12 and m32, the WP3 training frames of m06 and m12 and the
+    WP3 test-host results of m32, which are production hosts of the new plan. No E_b of any of its
+    production or reserve hosts (draw ranks 1–12) exists at any level.
+- **Also read.** The builders design and `scripts/42` at `s2b-2` (`../s2/S2_BUILDERS_DESIGN.md`), and
+  the notes of the S2 panel: three proposals, two judges, a refuter and a synthesis, kept
+  off-repository in the private record folder.
+- **In the repository, not cited by the panel.** The one eligible host with any E_b is m15 (draw
+  rank 14, outside every production and reserve list): the exploratory zero-shot MACE map of
+  protocol v1 (`v1_exploratory/`, 38 of 39 sites; "do not report as binding energies"). The panel
+  notes do not mention it.
+- **Done without any calculator** for the new plan on 2026-11-03: the host draw, a site census of
+  the 36 members with `scripts/42` (ase and numpy only), the sha256 and header fields of the
+  downloaded pseudopotentials (`../s2/PSEUDOPOTENTIALS_S2.md`), three reviews of the new plan
+  (facts; rules and statistics; feasibility and conformance), whose corrections are included in
+  the new plan and in this amendment, and the analyst's decisions on the reviews' open issues,
+  including a seeded draw of the m05 A and X calibration sites executed once with one seed string,
+  and a review of those decisions (`../s2/S2_PLAN.md` §§11, 20). The MACE-MP-0 element table was
+  read from the model object on the laptop (Z = 16, 17, 20 and 37 covered); no structure was
+  evaluated.
+- **Does not exist.** Any S2 cell evaluated by any calculator; any Cl, Ca, S or Rb pseudopotential
+  on the node; any frozen-far-field DFT relaxation (WP2e′, amendment l item 4, never ran).
+- **Choices made knowing those values** are listed in `../s2/S2_PLAN.md` §0: the pilot hosts m30 and
+  m05, the calibration sites (Pb136 and FA128 on m30, Pb124 on m05; the m05 A and X sites FA28 and
+  I49 were drawn), q = +1, the dopant set, the two-site far rule, the planning values of the power
+  statement, the exclusion of m21, the host-draw rule and the n-rule threshold.
+
+1. **What this amendment does.**
+   - **Delegation.** Roadmap update 2026-11-03, item 4, left the S2 route to the PI. On 2026-11-03
+     the PI delegated the choice of the S2 research direction to the analyst (an AI assistant) and
+     approved everything else, including the Cl/S/Ca/Rb pseudopotential download.
+   - **Decision.** The route is option D, "A1 decides, A2 calibrates" (`../s2/S2_DECISION.md`):
+     fixed-geometry PBE single points on frozen-far-field zero-shot MACE geometries for every
+     per-host decisive value, and frozen-far-field DFT relaxations (the WP2e′ design) on two pilot
+     hosts to estimate and correct the relaxation bias. The validated class rests on θ̂ = Ȳ + δ̄,
+     which adds this calibration to the A1 mean.
+   - **Rules.** `../s2/S2_PLAN.md` is the S2 pre-registration. It holds every S2 rule, sections 0–20
+     (§20 records the pre-commit reviews and the analyst's decisions on their open issues), and is
+     adopted with this amendment at the same commit. Later changes to S2 are dated amendments to
+     that file, written before any value they affect is read.
+   - **S1 is unchanged.** No criterion, verdict or result of this plan changes. The WP3 outcome stays
+     "No improvement" and S1 ends without a validated potential.
+2. **Zero-shot MACE-MP-0: geometry generator only.**
+   - In S2, zero-shot MACE-MP-0 medium (the foundation file of amendment m item 2, sha256 `01bfe221…`,
+     float64) only relaxes geometries: the host (whole cell) and the frozen-far-field cells of each
+     site, whose positions are then evaluated by DFT.
+   - **It is not re-admitted for any energy.** Amendment m item 4 (Outcomes) states without
+     qualification that zero-shot MACE is not re-admitted. This amendment reads that as excluding
+     every MACE energy and adopts, as a new rule, zero-shot MACE as a geometry generator whose
+     geometries are evaluated by DFT and whose relaxation bias is measured (A2). No MACE energy,
+     zero-shot or fine-tuned, enters any S2 decision, gate, pose choice or class. Pose choices use
+     geometric criteria and DFT energies only.
+   - The zero-shot E_b of every S2 cell is reported as a ledger labelled "zero-shot MACE, not
+     re-admitted". It decides nothing.
+   - The evaluated `wp3.model` and every other fine-tuned model are not used in S2, not even for
+     geometry.
+3. **Hosts.**
+   - **Pilot hosts m30 and m05.** m30 is a WP3 test host and m05 a WP3 training host. They carry the
+     noise, pose and calibration pilots; their E_b values never enter Ȳ_d, and δ, a_pose, a_far and
+     σ_far measured on them enter the decisive rules only as `../s2/S2_PLAN.md` §§8–14 state.
+   - **Production hosts by a seeded draw** (`../s2/S2_PLAN.md` §3) from 28 eligible members: the 36
+     minus m30 and m05, minus m21 (WP2c E_b known; WP3 checkpoint selection), minus the item-1′
+     hosts. Executed result: m06, m02, m16, m12, m32, m26, m22, m23; reserves m33, m13 (n = 10 adds
+     m33 and m13, reserves m17, m03).
+   - **WP3 test host m32 in S2.** The draw puts m32 into production. Under item 4 ("Test hosts used
+     up") the seven test hosts are used up for validating a model: no later model may be validated on
+     them. S2 uses m32 (and the pilot m30) only to measure DFT values at a new protocol; this
+     validates no model and is consistent with item 4. The WP3 training hosts m06 and m12 enter
+     production on the same terms; no model is trained or evaluated in S2.
+   - **Item-1′ hosts excluded.** m04, m10, m14, m18 and m27 are not used in S2, as item 1′
+     ("Isolation") requires: "These hosts are test only, and no other frame of them is used
+     anywhere."
+   - **Held-out hosts for a later fine-tune.** Every host that receives S2 DFT has DFT before any
+     later amendment could name it, so none can be a held-out host of a further fine-tune (item 4,
+     "Test hosts used up"). 15 DFT-free members remain at n = 8 (13 at n = 10), reserves counted as
+     used.
+4. **Relation to the open items of S1.**
+   - WP2e′ (amendment l item 4) is carried out in a modified form by the A2 calibration of
+     `../s2/S2_PLAN.md` §11: one free region per site, R_j = S(v, 6 Å) ∪ S(j, 6 Å) with whole
+     molecules, shared by the four cells of an E_b quartet, at q = +1 for vacancy cells. The three
+     m30 image-0 ΔE_a relaxations of WP2e′ are not run.
+   - The hard-coded assumptions listed in `../s2/S2_BUILDERS_DESIGN.md` §11 that bear on binding
+     maps (S2 tokens in `scripts/29`, the I-only refill check, builder identity, the per-atom freeze
+     cut, FA recognition, PSEUDO and MOMENT, shell keys, `sane()`, the Sr/GA centre atoms and
+     `count("I") == 59`) are handled in new S2 code (Stage 0). Those that concern paths (`scripts/22`
+     SYSTEMS, `28`, `13`, `11`, `checks.py`) do not arise, because S2 builds no path. `scripts/29`,
+     `30`, `33`, `34` and `35` are not edited, and S2 tokens are never passed to `scripts/29`. The
+     generalised topology check that §11 says "needs a PLAN amendment" is defined in
+     `../s2/S2_PLAN.md` §5 and adopted with this amendment.
+5. **Order.** This amendment, `../s2/S2_PLAN.md`, `../s2/S2_DECISION.md`,
+   `../s2/PSEUDOPOTENTIALS_S2.md`, the answers of `../s2/S2_BUILDERS_DESIGN.md` §16 with the
+   2026-11-03 corrections of its §11, the dated note in `../CURRENT_STATUS.md` and the roadmap
+   update 2026-11-03 (d) are committed together, before any S2 calculation. This amendment is not
+   edited after that commit.

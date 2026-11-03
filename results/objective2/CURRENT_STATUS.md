@@ -3,6 +3,14 @@
 **Updated 2026-07-28. This file names the authoritative result for each question;
 anything it does not name is historical.**
 
+**Note 2026-11-03.** The sentence above no longer holds: this index predates the dopant–vacancy
+study (stage S1, `dopant_shell/PLAN.md`, 2026-10-25 onwards) and does not name its results, which
+are not historical. The corpus headline below is MACE level only; PLAN criterion 3 failed, and the
+corpus claim is re-stated at fixed-geometry DFT level, provisionally, in `dopant_shell/WP2B_RESULT.md`
+§3. The current state of Objective 2 is in `SCREENING_ROADMAP.md` (updates 2026-10-27 to
+2026-11-03 (d)). The S2 route chosen on 2026-11-03 is recorded in `s2/S2_DECISION.md`; its rules
+are in `s2/S2_PLAN.md`. Nothing below is changed by this note.
+
 ## Headline — 108-path merged corpus
 
 **Both additives are equivalent to no effect at the 10x rate scale by the confidence-interval
