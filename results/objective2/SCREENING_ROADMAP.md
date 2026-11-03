@@ -236,3 +236,34 @@ Consequences for the roadmap:
 5. **Estimate.** The best case of the 2026-10-28 updates no longer applies: about 5–6 weeks to a
    validated isovalent screen, conditional on a fine-tuned potential passing the adoption rule. A
    revised estimate depends on the option chosen and is not made here.
+
+## Update 2026-11-03 (b) — WP3 post hoc diagnostics D1 and D2
+
+These diagnostics are post hoc and reported only (`dopant_shell/WP3_DIAGNOSTICS.md`; plan d69fe75). They
+change nothing in the WP3 outcome or in options A–D above.
+
+- **D1, checkpoint trajectory (`WP3_RESULT.md` §8 reason 6).**
+  - **Q1.** No kept checkpoint of run2 gets the five m21 E_b errors below 25 meV. None gets the two
+    first-shell Sr sites alone below 25 meV either.
+  - **The collapse.** The first-shell Sr E_b errors fall below −25 meV between kept epochs 3 and 11, at the
+    training host m05 as at m21. From kept epoch 11 on, none is back within 25 meV.
+  - **Q3.** The m21 loss does not rank the kept checkpoints by E_b (Spearman ρ = −0.12, descriptive).
+  - **What follows.** Choosing a different one of the kept checkpoints would not have met the condition.
+    The size still differs: the m21 E_b RMS is 63.8 meV at the selected epoch 82 and 31.3 meV at epoch 7.
+    Unkept epochs were not evaluated.
+- **D2, path attribution (reason 7): cannot be read.**
+  - **Why.** The path 0 → i* through the band images with DFT frames (0, 2, 3; 0, 2 in two bands) is too
+    coarse. The DFT path-work closure is −42 to −145 meV in all 37 bands, against the 20 meV rule.
+  - **Image 1.** In a zero-shot check on four bands, adding image 1 alone did not bring any within 20 meV.
+  - **Consequence.** The origin of the barrier lowering stays unattributed.
+- **For the recipe of option C.** This is interpretation, not tested.
+  - **m05 errors.** At m05, whose binding frames are training data, the first-shell Sr errors were within
+    18.4 meV of zero at kept epochs 4–8. From epoch 11 on they lay at −28 to −105 meV, while the logged
+    m21 force and energy RMSEs fell overall.
+  - **The start of training.**
+    - In the first epochs the m21 force RMSE rose above its Initial value (79.8 → 122.5 meV/Å at
+      epoch 1).
+    - The first-shell Sr errors overshot by up to +183 meV at m21 and +194 meV at m05 (kept epoch 2).
+  - **Candidate changes.** Two candidate recipe changes are a stronger constraint on these energy
+    differences (for example the test proposed under reason 1) and a gentler start. Neither has been
+    tried.

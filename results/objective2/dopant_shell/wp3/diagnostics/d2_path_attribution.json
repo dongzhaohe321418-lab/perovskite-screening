@@ -1,0 +1,5832 @@
+{
+ "script": "scripts/44_wp3_diagnostics.py",
+ "script_sha256": "f13f0308e677783ddca79c2fc0f564535e327cf76b0397780884f29088c12b4a",
+ "git": {
+  "head": "d69fe75a6f90eef79df432cd660fc0733989c592",
+  "uncommitted": [
+   "?? scripts/44_wp3_diagnostics.py"
+  ]
+ },
+ "versions": {
+  "mace": "0.3.16",
+  "torch": "2.14.1",
+  "ase": "3.29.0",
+  "numpy": "2.5.4"
+ },
+ "threads": 4,
+ "float64_cpu": "asserted for every arm before its first frame (scripts/39 Arm)",
+ "model_files": {
+  "zeroshot": {
+   "call": "mace_mp(model=\"medium\", device=\"cpu\", default_dtype=\"float64\")",
+   "file": "~/.cache/mace/20231203mace128L1_epoch199model",
+   "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845"
+  },
+  "finetuned": {
+   "file": "results/objective2/dopant_shell/wp3/run2/wp3.model",
+   "sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "head": "Default"
+  }
+ },
+ "wp3_eval_json": {
+  "file": "results/objective2/dopant_shell/wp3/wp3_eval.json",
+  "sha256": "dda75f6340237fad042dab1a151f6730197bbb6978177b33b8fc7549105d65c7"
+ },
+ "input_files": {
+  "dataset_train": {
+   "file": "results/objective2/dopant_shell/wp3/dataset/train.xyz",
+   "sha256": "71cc11cb12b0bfc8a3a5e0d644a10d537793ca5c6dfa4f508b7cc973e793ade0"
+  },
+  "dataset_valid": {
+   "file": "results/objective2/dopant_shell/wp3/dataset/valid.xyz",
+   "sha256": "1b5215ad684c85a106bd7852e495d392cce65037ee906d135cf3a8a8e4474820"
+  },
+  "dataset_test": {
+   "file": "results/objective2/dopant_shell/wp3/dataset/test.xyz",
+   "sha256": "68c3ec247fc4c0c2f3cfdd6dfc100e3ab4d9bdab08ad7ddf54395b2abe3acabe"
+  },
+  "E0s": {
+   "file": "results/objective2/dopant_shell/wp3/dataset/E0s.json",
+   "sha256": "606f3cd5194ebce5f5649befc44f07f401de9c75135e8e0b9f5b9e8f53019f61"
+  },
+  "dataset_meta": {
+   "file": "results/objective2/dopant_shell/wp3/dataset/dataset_meta.json",
+   "sha256": "22238cf3a906f2bcb290116a552cd29db46d629abd250eefc4de0229bcfb7dbd"
+  },
+  "train_log": {
+   "file": "results/objective2/dopant_shell/wp3/run2/results/wp3_run-123_train.txt",
+   "sha256": "26a0915b4e19d4401b8cd58294b00b7074de3cc613a170a9a199c4cb08dd09c2"
+  },
+  "wp2cde_selection": {
+   "file": "results/objective2/dopant_shell/wp1_production/wp2cde_selection.json",
+   "sha256": "5c40f22666d5e3e71e05208cfc9b42981d49e74154b2e734145a5e53bd31b743"
+  },
+  "wp2c_structures": {
+   "file": "results/objective2/dopant_shell/wp1_production/v2prod_structures.tar.gz",
+   "sha256": "643165662de73198b669079e6ce39d5c0b97733391ab011275090f466f40aa6c"
+  },
+  "wp3_eval_json": {
+   "file": "results/objective2/dopant_shell/wp3/wp3_eval.json",
+   "sha256": "dda75f6340237fad042dab1a151f6730197bbb6978177b33b8fc7549105d65c7"
+  },
+  "wp3_model": {
+   "file": "results/objective2/dopant_shell/wp3/run2/wp3.model",
+   "sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca"
+  },
+  "note": "sha256 at the start of the run; the git status of every input inside the repository is in 'git'. The archived QE outputs and the band geometries (../bands) are not hashed: they are tied to the hashed dataset by the fail-closed cross-check (data_cross_check)"
+ },
+ "part": "D2",
+ "plan": "WP3_DIAGNOSTICS_PLAN.md D2 (commit d69fe75)",
+ "status": "post hoc, reported only",
+ "definitions": {
+  "work": "W(i*) = -sum_k 1/2 (F_k + F_k+1) . dr_k over images 0 -> ... -> i* of {0, 2, 3, 4}; dr_k minimum-image (ase find_mic, band cell); per atom, meV",
+  "closure": "W(i*) - [E(i*) - E(0)], i* each level's own argmax over images 2-4 (DFT: raw F)",
+  "resolved": "|DFT closure| <= 20 meV",
+  "D2b": "dF = F_finetuned - F_zeroshot on the DFT-argmax segment; closure vs the direct E_a change (own argmax each) and vs the change of E(i*) - E(0) on that segment",
+  "D2c": "dF = F_finetuned - F_DFT (raw F), same segment; direct = E_a(FT) - E_a(DFT raw)",
+  "groups": "image 0, minimum image, distances to the hop midpoint; hop_I = the I with the largest image-0 -> image-6 displacement; molecules by scripts/38 molecule(), assigned whole by their C; near = d < 6 A, far = d >= 6 A",
+  "shares": "group sum / sum over the five groups (they add to 1; a group can exceed 1 or be negative when groups carry opposite signs)",
+  "side_above_half": "per band, which side carries more than half the summed attribution (local = hop_I + inorganic_near); counted for Q4 only over resolved bands",
+  "segments_beside": "W and closure of the single segments 0-2, 2-3, 3-4 (reported, no rule)"
+ },
+ "departures_from_plan": [
+  "Q4 with no resolved band is reported as 'cannot be read', not as the plan's literal 'mixed' (with n = 0 neither count can exceed n/2, so the literal 'otherwise' branch is vacuous); the literal result is kept beside as plan_literal_reading"
+ ],
+ "interpretations_of_plan": [
+  "resolved = |DFT closure| <= 20 meV; Q4 shares are of the summed attribution (the five groups add to 1)",
+  "groups at image 0 and minimum image: distances to the hop midpoint r_I(0) + 1/2 mic(r_I(6) - r_I(0)); inorganic = not C, N or H; molecules by scripts/38 molecule(), assigned whole by the distance of their C"
+ ],
+ "additions_to_plan": [
+  "a summary of D2b and D2c over all 37 bands (all_37_bands_beside): not a Q4 reading and not evidence for one; its share counts are named not_a_reading_share_counts and carry the attribution closure scale",
+  "per-segment closures (0-2, 2-3, 3-4) beside D2a; the D2b closure also against the change of E(i*) - E(0) on the DFT segment; the D2c counts and per-split counts beside Q4",
+  "reproduction of the 37 band E_a values of wp3_eval.json (task rule, exit 6); dataset vs archived QE cross-check (exit 5)"
+ ],
+ "data_cross_check": {
+  "n_frames": 155,
+  "max_abs_diff": {
+   "F_eV": 0.0,
+   "EF_eV": 0.0,
+   "forces_eVA": 4.999985613041158e-09,
+   "Eprime_eV": 0.0,
+   "cD_eV": 4.336808689942018e-19,
+   "pos_A": 0.0,
+   "cell_A": 0.0
+  },
+  "positions_cell_bitwise_equal": true,
+  "tol": {
+   "energy_eV": 1e-06,
+   "forces_eVA": 1e-06,
+   "geometry_A": 1e-06
+  },
+  "failures": [],
+  "pass": true
+ },
+ "reproduction_wp3_eval_Ea": {
+  "n_leaves": 222,
+  "n_numeric": 222,
+  "max_abs_diff_meV": 0.0,
+  "tol_meV": 1e-06,
+  "failures": [],
+  "pass": true
+ },
+ "bands": {
+  "m05_undoped": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.8635523112447627,
+    "second_largest_I_displacement_A": 0.16361186640826184,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 83.49881897447631,
+     "W_meV": 20.566607002593656,
+     "closure_meV": -62.93221197188265,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -14.949613132510109,
+       "dE_meV": 39.71597061899956,
+       "closure_meV": -54.66558375150967
+      },
+      "2-3": {
+       "W_meV": 35.51622013510372,
+       "dE_meV": 43.782848355476744,
+       "closure_meV": -8.266628220373022
+      },
+      "3-4": {
+       "W_meV": -21.098062757669396,
+       "dE_meV": -22.379732501576655,
+       "closure_meV": 1.2816697439072584
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 170.13180417529838,
+     "W_meV": 95.28029065751504,
+     "closure_meV": -74.85151351778335,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 41.57986863365694,
+       "dE_meV": 110.84709152714822,
+       "closure_meV": -69.26722289349128
+      },
+      "2-3": {
+       "W_meV": 53.7004220238581,
+       "dE_meV": 59.28471264815016,
+       "closure_meV": -5.584290624292059
+      },
+      "3-4": {
+       "W_meV": -26.40944300457864,
+       "dE_meV": -27.253336426383612,
+       "closure_meV": 0.843893421804971
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 4,
+     "Ea_meV": 106.51356188463978,
+     "W_meV": 42.382078335085865,
+     "closure_meV": -64.13148354955392,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -11.909294386414814,
+       "dE_meV": 46.16688867099583,
+       "closure_meV": -58.076183057410645
+      },
+      "2-3": {
+       "W_meV": 45.979169777715725,
+       "dE_meV": 50.04374298732728,
+       "closure_meV": -4.064573209611552
+      },
+      "3-4": {
+       "W_meV": 8.312202943784996,
+       "dE_meV": 10.302930226316676,
+       "closure_meV": -1.9907272825316795
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": 14.011658949406325,
+     "inorganic_near": -64.53382880823324,
+     "inorganic_far": 13.646117425705754,
+     "organic_near": -22.63324644665756,
+     "organic_far": -1.7011163864354168
+    },
+    "sum_meV": -61.210415266214135,
+    "shares": {
+     "hop_I": -0.2289097188520503,
+     "inorganic_near": 1.0542949027149224,
+     "inorganic_far": -0.22293783445769075,
+     "organic_near": 0.3697613608439325,
+     "organic_far": 0.027791289750886065
+    },
+    "local_share": 0.8253851838628722,
+    "far_or_organic_share": 0.17461481613712782,
+    "side_above_half": "local",
+    "direct_meV": -63.6182422906586,
+    "segment_change_meV": -73.92117251697528,
+    "closure_vs_direct_meV": 2.4078270244444653,
+    "closure_vs_segment_meV": 12.71075725076114
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 28.625979021242642,
+     "inorganic_near": -16.28258104167733,
+     "inorganic_far": 2.6400993766101255,
+     "organic_near": -0.5011402106111476,
+     "organic_far": -0.9790887568570042
+    },
+    "sum_meV": 13.503268388707287,
+    "shares": {
+     "hop_I": 2.1199296494160182,
+     "inorganic_near": -1.2058251804647804,
+     "inorganic_far": 0.19551558190297297,
+     "organic_near": -0.0371125120367339,
+     "organic_far": -0.07250753881747704
+    },
+    "local_share": 0.914104468951238,
+    "far_or_organic_share": 0.08589553104876202,
+    "side_above_half": "local",
+    "direct_meV": 23.014742910163477,
+    "segment_change_meV": 12.711812683846802,
+    "closure_vs_direct_meV": -9.51147452145619,
+    "closure_vs_segment_meV": 0.7914557048604856
+   }
+  },
+  "m05_GA": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.764279313624351,
+    "second_largest_I_displacement_A": 0.2244137092601,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 8,
+     "organic_far": 146
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 69.78400819934905,
+     "W_meV": 14.85600289161971,
+     "closure_meV": -54.928005307729336,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -18.97553861929518,
+       "dE_meV": 29.12924475094769,
+       "closure_meV": -48.10478337024287
+      },
+      "2-3": {
+       "W_meV": 33.83154151091489,
+       "dE_meV": 40.654763448401354,
+       "closure_meV": -6.8232219374864655
+      },
+      "3-4": {
+       "W_meV": -18.67908273531978,
+       "dE_meV": -19.075045696808957,
+       "closure_meV": 0.3959629614891753
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 158.70373456436937,
+     "W_meV": 91.44912375802718,
+     "closure_meV": -67.25461080634219,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 37.03879294384798,
+       "dE_meV": 99.55530298361737,
+       "closure_meV": -62.516510039769386
+      },
+      "2-3": {
+       "W_meV": 54.41033081417923,
+       "dE_meV": 59.148431580752,
+       "closure_meV": -4.738100766572771
+      },
+      "3-4": {
+       "W_meV": -24.27092732302547,
+       "dE_meV": -23.765713807051725,
+       "closure_meV": -0.5052135159737468
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 4,
+     "Ea_meV": 86.09271075692959,
+     "W_meV": 31.00231020733638,
+     "closure_meV": -55.09040054959321,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -17.989713306554805,
+       "dE_meV": 32.11372684745584,
+       "closure_meV": -50.10344015401064
+      },
+      "2-3": {
+       "W_meV": 40.961867165724584,
+       "dE_meV": 43.76121655513998,
+       "closure_meV": -2.799349389415397
+      },
+      "3-4": {
+       "W_meV": 8.03015634816662,
+       "dE_meV": 10.217767354333773,
+       "closure_meV": -2.1876110061671525
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": 8.988406879708918,
+     "inorganic_near": -64.93422433584233,
+     "inorganic_far": 17.293746277120654,
+     "organic_near": -25.201530867549298,
+     "organic_far": -4.623367852295356
+    },
+    "sum_meV": -68.47696989885742,
+    "shares": {
+     "hop_I": -0.13126174965079604,
+     "inorganic_near": 0.9482636926217992,
+     "inorganic_far": -0.2525483575377831,
+     "organic_near": 0.36802929371397025,
+     "organic_far": 0.06751712085280952
+    },
+    "local_share": 0.8170019429710031,
+    "far_or_organic_share": 0.18299805702899685,
+    "side_above_half": "local",
+    "direct_meV": -72.61102380743978,
+    "segment_change_meV": -82.82879116177355,
+    "closure_vs_direct_meV": 4.134053908582359,
+    "closure_vs_segment_meV": 14.351821262916133
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 21.50551317933349,
+     "inorganic_near": -17.969596555934338,
+     "inorganic_far": 5.341755431628946,
+     "organic_near": 0.5091756892218795,
+     "organic_far": -1.2706967766999464
+    },
+    "sum_meV": 8.116150967550032,
+    "shares": {
+     "hop_I": 2.649718230392308,
+     "inorganic_near": -2.214054005128825,
+     "inorganic_far": 0.6581636360617655,
+     "organic_near": 0.06273610375874772,
+     "organic_far": -0.15656396508399634
+    },
+    "local_share": 0.43566422526348303,
+    "far_or_organic_share": 0.564335774736517,
+    "side_above_half": "far_or_organic",
+    "direct_meV": 16.308702557580546,
+    "segment_change_meV": 6.090935203246772,
+    "closure_vs_direct_meV": -8.192551590030513,
+    "closure_vs_segment_meV": 2.02521576430326
+   }
+  },
+  "m05_Sr": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.8432473421982984,
+    "second_largest_I_displacement_A": 0.22682489804025435,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 22.47987041482702,
+     "W_meV": -34.08907426684241,
+     "closure_meV": -56.56894468166943,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -50.65342279131365,
+       "dE_meV": 0.28054940048605204,
+       "closure_meV": -50.933972191799704
+      },
+      "2-3": {
+       "W_meV": 16.564348524471242,
+       "dE_meV": 22.199321014340967,
+       "closure_meV": -5.634972489869725
+      },
+      "3-4": {
+       "W_meV": -57.86384544321153,
+       "dE_meV": -57.12227807089221,
+       "closure_meV": -0.7415673723193237
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 139.97840458296196,
+     "W_meV": 75.20879465311063,
+     "closure_meV": -64.76960992985133,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 32.38354323470374,
+       "dE_meV": 96.00105074378007,
+       "closure_meV": -63.61750750907633
+      },
+      "2-3": {
+       "W_meV": 42.8252514184069,
+       "dE_meV": 43.97735383918189,
+       "closure_meV": -1.1521024207749875
+      },
+      "3-4": {
+       "W_meV": -73.28258436295914,
+       "dE_meV": -68.97759385401514,
+       "closure_meV": -4.304990508944002
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 56.5764777129516,
+     "W_meV": 1.1940731197054788,
+     "closure_meV": -55.38240459324612,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -31.211265543772043,
+       "dE_meV": 24.57743302511517,
+       "closure_meV": -55.78869856888721
+      },
+      "2-3": {
+       "W_meV": 32.405338663477494,
+       "dE_meV": 31.99904468783643,
+       "closure_meV": 0.40629397564106284
+      },
+      "3-4": {
+       "W_meV": -11.34941764337368,
+       "dE_meV": -3.138781074085273,
+       "closure_meV": -8.210636569288408
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": 3.6248233547638193,
+     "inorganic_near": -65.8045017734311,
+     "inorganic_far": 14.526257803503873,
+     "organic_near": -19.69458231947809,
+     "organic_far": -6.666718598763677
+    },
+    "sum_meV": -74.01472153340518,
+    "shares": {
+     "hop_I": -0.048974356447829395,
+     "inorganic_near": 0.8890731520719355,
+     "inorganic_far": -0.1962617368890284,
+     "organic_near": 0.2660900684546831,
+     "organic_far": 0.0900728728102392
+    },
+    "local_share": 0.840098795624106,
+    "far_or_organic_share": 0.15990120437589395,
+    "side_above_half": "local",
+    "direct_meV": -83.40192687001036,
+    "segment_change_meV": -83.40192687001036,
+    "closure_vs_direct_meV": 9.387205336605177,
+    "closure_vs_segment_meV": 9.387205336605177
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 43.8334972234487,
+     "inorganic_near": -12.023004113709538,
+     "inorganic_far": 1.1249997964310636,
+     "organic_near": 2.225331020053402,
+     "organic_far": 0.12232346032425723
+    },
+    "sum_meV": 35.28314738654789,
+    "shares": {
+     "hop_I": 1.2423352356643993,
+     "inorganic_near": -0.34075769890906754,
+     "inorganic_far": 0.03188490482739595,
+     "organic_near": 0.06307064944273752,
+     "organic_far": 0.0034669089745348078
+    },
+    "local_share": 0.9015775367553317,
+    "far_or_organic_share": 0.0984224632446683,
+    "side_above_half": "local",
+    "direct_meV": 34.09660729812458,
+    "segment_change_meV": 34.09660729812458,
+    "closure_vs_direct_meV": 1.1865400884233068,
+    "closure_vs_segment_meV": 1.1865400884233068
+   }
+  },
+  "m06_undoped": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.8937231755031028,
+    "second_largest_I_displacement_A": 0.24545471284012282,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 133.12694522028323,
+     "W_meV": 63.90973904601172,
+     "closure_meV": -69.21720617427151,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 27.937145057778963,
+       "dE_meV": 93.83846547279973,
+       "closure_meV": -65.90132041502076
+      },
+      "2-3": {
+       "W_meV": 35.97259398823277,
+       "dE_meV": 39.28847974748351,
+       "closure_meV": -3.3158857592507403
+      },
+      "3-4": {
+       "W_meV": -51.37663404357158,
+       "dE_meV": -51.388294756179675,
+       "closure_meV": 0.011660712608097867
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 192.0671725874854,
+     "W_meV": 137.58528506969017,
+     "closure_meV": -54.48188751779523,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 78.77562314854625,
+       "dE_meV": 132.83693150697218,
+       "closure_meV": -54.06130835842593
+      },
+      "2-3": {
+       "W_meV": 58.80966192114395,
+       "dE_meV": 59.230241080513224,
+       "closure_meV": -0.42057915936927515
+      },
+      "3-4": {
+       "W_meV": -35.5376679549086,
+       "dE_meV": -34.495119408802566,
+       "closure_meV": -1.0425485461060333
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 119.0713016258087,
+     "W_meV": 36.9835683358859,
+     "closure_meV": -82.0877332899228,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 16.807418497969675,
+       "dE_meV": 101.0384446271928,
+       "closure_meV": -84.23102612922312
+      },
+      "2-3": {
+       "W_meV": 20.176149837916224,
+       "dE_meV": 18.032856998615898,
+       "closure_meV": 2.143292839300326
+      },
+      "3-4": {
+       "W_meV": -22.96881903958691,
+       "dE_meV": -21.302867637132294,
+       "closure_meV": -1.665951402454617
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -87.74691820472273,
+     "inorganic_near": -28.727497214757975,
+     "inorganic_far": 18.65059452288631,
+     "organic_near": 3.0706218823762192,
+     "organic_far": -5.848517719586099
+    },
+    "sum_meV": -100.60171673380428,
+    "shares": {
+     "hop_I": 0.8722208830382507,
+     "inorganic_near": 0.2855567295215444,
+     "inorganic_far": -0.18539042004856085,
+     "organic_near": -0.030522559475810875,
+     "organic_far": 0.05813536696457661
+    },
+    "local_share": 1.1577776125597952,
+    "far_or_organic_share": -0.15777761255979517,
+    "side_above_half": "local",
+    "direct_meV": -72.9958709616767,
+    "segment_change_meV": -72.9958709616767,
+    "closure_vs_direct_meV": -27.60584577212758,
+    "closure_vs_segment_meV": -27.60584577212758
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -24.57365484786908,
+     "inorganic_near": 2.124251932359173,
+     "inorganic_far": -2.246208944595332,
+     "organic_near": -1.0958854727652965,
+     "organic_far": -1.134673377255302
+    },
+    "sum_meV": -26.926170710125838,
+    "shares": {
+     "hop_I": 0.9126308791702018,
+     "inorganic_near": -0.07889172044654416,
+     "inorganic_far": 0.0834210318569593,
+     "organic_near": 0.04069964067906538,
+     "organic_far": 0.04214016874031767
+    },
+    "local_share": 0.8337391587236577,
+    "far_or_organic_share": 0.16626084127634233,
+    "side_above_half": "local",
+    "direct_meV": -14.055643594474532,
+    "segment_change_meV": -14.055643594474532,
+    "closure_vs_direct_meV": -12.870527115651306,
+    "closure_vs_segment_meV": -12.870527115651306
+   }
+  },
+  "m06_GA": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 52,
+    "hop_I_displacement_A": 4.100868279473989,
+    "second_largest_I_displacement_A": 0.2875627685569382,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 26,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 92.89722362882458,
+     "W_meV": 9.15607154019257,
+     "closure_meV": -83.741152088632,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -30.052870682635074,
+       "dE_meV": 46.50072161166463,
+       "closure_meV": -76.5535922942997
+      },
+      "2-3": {
+       "W_meV": 39.208942222827645,
+       "dE_meV": 46.396502017159946,
+       "closure_meV": -7.1875597943323015
+      },
+      "3-4": {
+       "W_meV": -55.32442914049285,
+       "dE_meV": -54.46318141184747,
+       "closure_meV": -0.861247728645381
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 175.1020300480377,
+     "W_meV": 117.52077916823941,
+     "closure_meV": -57.58125087979829,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 47.3249460724908,
+       "dE_meV": 97.85382291192946,
+       "closure_meV": -50.52887683943865
+      },
+      "2-3": {
+       "W_meV": 70.19583309574865,
+       "dE_meV": 77.24820713610825,
+       "closure_meV": -7.052374040359595
+      },
+      "3-4": {
+       "W_meV": -49.25135906044717,
+       "dE_meV": -46.64738442147609,
+       "closure_meV": -2.6039746389710814
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 45.01074987638276,
+     "W_meV": -35.60030224870479,
+     "closure_meV": -80.61105212508755,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -58.23242697484416,
+       "dE_meV": 23.405786079820246,
+       "closure_meV": -81.6382130546644
+      },
+      "2-3": {
+       "W_meV": 22.63212472613938,
+       "dE_meV": 21.604963796562515,
+       "closure_meV": 1.0271609295768656
+      },
+      "3-4": {
+       "W_meV": -21.258977455830262,
+       "dE_meV": -15.768221535836346,
+       "closure_meV": -5.490755919993916
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -77.05086816815789,
+     "inorganic_near": -59.588375909616175,
+     "inorganic_far": 16.07494307662303,
+     "organic_near": -22.653662875514694,
+     "organic_far": -9.903117540278458
+    },
+    "sum_meV": -153.12108141694418,
+    "shares": {
+     "hop_I": 0.5032022204594457,
+     "inorganic_near": 0.38915853622636576,
+     "inorganic_far": -0.10498190665759102,
+     "organic_near": 0.14794607421710562,
+     "organic_far": 0.06467507575467392
+    },
+    "local_share": 0.8923607566858116,
+    "far_or_organic_share": 0.1076392433141884,
+    "side_above_half": "local",
+    "direct_meV": -130.09128017165494,
+    "segment_change_meV": -130.09128017165494,
+    "closure_vs_direct_meV": -23.029801245289235,
+    "closure_vs_segment_meV": -23.029801245289235
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -34.139394532830764,
+     "inorganic_near": -7.760804239453415,
+     "inorganic_far": 0.05242198667537579,
+     "organic_near": -4.1777708413537376,
+     "organic_far": 1.26917383806521
+    },
+    "sum_meV": -44.75637378889733,
+    "shares": {
+     "hop_I": 0.7627828539875966,
+     "inorganic_near": 0.1734010953626147,
+     "inorganic_far": -0.0011712742172240072,
+     "organic_near": 0.09334471244384221,
+     "organic_far": -0.028357387576829398
+    },
+    "local_share": 0.9361839493502112,
+    "far_or_organic_share": 0.06381605064978879,
+    "side_above_half": "local",
+    "direct_meV": -47.886473752441816,
+    "segment_change_meV": -47.886473752441816,
+    "closure_vs_direct_meV": 3.130099963544488,
+    "closure_vs_segment_meV": 3.130099963544488
+   }
+  },
+  "m06_Sr": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.832490597645343,
+    "second_largest_I_displacement_A": 0.4557252113953462,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 133.96097419899888,
+     "W_meV": 59.74896504534282,
+     "closure_meV": -74.21200915365606,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 38.81639548843324,
+       "dE_meV": 109.83971298264805,
+       "closure_meV": -71.02331749421481
+      },
+      "2-3": {
+       "W_meV": 20.932569556909584,
+       "dE_meV": 24.12126121635083,
+       "closure_meV": -3.188691659441247
+      },
+      "3-4": {
+       "W_meV": -84.66862401698862,
+       "dE_meV": -83.74480991915334,
+       "closure_meV": -0.923814097835276
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 211.26909597069243,
+     "W_meV": 155.3472621097283,
+     "closure_meV": -55.92183386096414,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 101.87517055316836,
+       "dE_meV": 159.25485516117988,
+       "closure_meV": -57.379684608011516
+      },
+      "2-3": {
+       "W_meV": 53.4720915565599,
+       "dE_meV": 52.01424080951256,
+       "closure_meV": 1.4578507470473454
+      },
+      "3-4": {
+       "W_meV": -73.3517643540061,
+       "dE_meV": -69.06154526882347,
+       "closure_meV": -4.290219085182628
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 137.11765852349345,
+     "W_meV": 51.210077891010485,
+     "closure_meV": -85.90758063248296,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 34.482933705065335,
+       "dE_meV": 123.88658846612088,
+       "closure_meV": -89.40365476105555
+      },
+      "2-3": {
+       "W_meV": 16.727144185945175,
+       "dE_meV": 13.231070057372563,
+       "closure_meV": 3.4960741285726122
+      },
+      "3-4": {
+       "W_meV": -34.80130495229125,
+       "dE_meV": -29.058510292088613,
+       "closure_meV": -5.742794660202634
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -87.67511948189718,
+     "inorganic_near": -33.587395706214245,
+     "inorganic_far": 16.584501157030978,
+     "organic_near": 2.6232371481297863,
+     "organic_far": -2.0824073357671278
+    },
+    "sum_meV": -104.13718421871779,
+    "shares": {
+     "hop_I": 0.8419194367475351,
+     "inorganic_near": 0.3225302850101183,
+     "inorganic_far": -0.1592562856529594,
+     "organic_near": -0.02519020624391226,
+     "organic_far": 0.01999677013921827
+    },
+    "local_share": 1.1644497217576533,
+    "far_or_organic_share": -0.16444972175765327,
+    "side_above_half": "local",
+    "direct_meV": -74.15143744719899,
+    "segment_change_meV": -74.15143744719899,
+    "closure_vs_direct_meV": -29.985746771518805,
+    "closure_vs_segment_meV": -29.985746771518805
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -9.824506847959675,
+     "inorganic_near": 10.339437800013838,
+     "inorganic_far": -6.0204735107566085,
+     "organic_near": -0.7692165271964246,
+     "organic_far": -2.2641280684334504
+    },
+    "sum_meV": -8.53888715433232,
+    "shares": {
+     "hop_I": 1.1505605672485177,
+     "inorganic_near": -1.21086478988869,
+     "inorganic_far": 0.7050653559348233,
+     "organic_near": 0.09008393169900977,
+     "organic_far": 0.26515493500633913
+    },
+    "local_share": -0.06030422264017226,
+    "far_or_organic_share": 1.0603042226401722,
+    "side_above_half": "far_or_organic",
+    "direct_meV": 3.156684324494563,
+    "segment_change_meV": 3.156684324494563,
+    "closure_vs_direct_meV": -11.695571478826883,
+    "closure_vs_segment_meV": -11.695571478826883
+   }
+  },
+  "m08_undoped": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.9071112295422985,
+    "second_largest_I_displacement_A": 0.14562542511120308,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 199.23374273639638,
+     "W_meV": 133.8308125022715,
+     "closure_meV": -65.40293023412488,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 57.04260082231639,
+       "dE_meV": 117.39590676734224,
+       "closure_meV": -60.35330594502585
+      },
+      "2-3": {
+       "W_meV": 76.78821167995511,
+       "dE_meV": 81.83783596905414,
+       "closure_meV": -5.049624289099029
+      },
+      "3-4": {
+       "W_meV": -15.406595142481827,
+       "dE_meV": -15.643553851987235,
+       "closure_meV": 0.23695870950540865
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 209.29161875096725,
+     "W_meV": 153.57411378528974,
+     "closure_meV": -55.717504965677506,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 81.97506529677996,
+       "dE_meV": 136.03551389905988,
+       "closure_meV": -54.06044860227992
+      },
+      "2-3": {
+       "W_meV": 71.5990484885098,
+       "dE_meV": 73.25610485190737,
+       "closure_meV": -1.6570563633975723
+      },
+      "3-4": {
+       "W_meV": -32.22536562109164,
+       "dE_meV": -32.638293816035,
+       "closure_meV": 0.41292819494336186
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 169.89452308916952,
+     "W_meV": 95.75439188943774,
+     "closure_meV": -74.14013119973178,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 48.25187047377614,
+       "dE_meV": 121.4030347764492,
+       "closure_meV": -73.15116430267307
+      },
+      "2-3": {
+       "W_meV": 47.50252141566159,
+       "dE_meV": 48.49148831272032,
+       "closure_meV": -0.9889668970587309
+      },
+      "3-4": {
+       "W_meV": -10.498245174708636,
+       "dE_meV": -12.41727224260103,
+       "closure_meV": 1.9190270678923937
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -36.28328501565309,
+     "inorganic_near": -31.47943693538149,
+     "inorganic_far": 17.343907861591205,
+     "organic_near": -1.1876011330405554,
+     "organic_far": -6.2133066733681055
+    },
+    "sum_meV": -57.81972189585204,
+    "shares": {
+     "hop_I": 0.6275243779450976,
+     "inorganic_near": 0.5444411682242942,
+     "inorganic_far": -0.2999652591347979,
+     "organic_near": 0.02053972406127663,
+     "organic_far": 0.10745998890412936
+    },
+    "local_share": 1.1719655461693919,
+    "far_or_organic_share": -0.17196554616939186,
+    "side_above_half": "local",
+    "direct_meV": -39.39709566179772,
+    "segment_change_meV": -39.39709566179772,
+    "closure_vs_direct_meV": -18.42262623405432,
+    "closure_vs_segment_meV": -18.42262623405432
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -41.918818197662375,
+     "inorganic_near": -0.28967700875250335,
+     "inorganic_far": 2.737323078762647,
+     "organic_near": 1.1170904737220457,
+     "organic_far": 0.27766104109641565
+    },
+    "sum_meV": -38.07642061283377,
+    "shares": {
+     "hop_I": 1.1009127833705439,
+     "inorganic_near": 0.007607779410201883,
+     "inorganic_far": -0.071890241643145,
+     "organic_near": -0.029338116759471004,
+     "organic_far": -0.007292204378129733
+    },
+    "local_share": 1.1085205627807457,
+    "far_or_organic_share": -0.10852056278074573,
+    "side_above_half": "local",
+    "direct_meV": -29.339219647226855,
+    "segment_change_meV": -29.339219647226855,
+    "closure_vs_direct_meV": -8.737200965606917,
+    "closure_vs_segment_meV": -8.737200965606917
+   }
+  },
+  "m08_GA": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 48,
+    "hop_I_displacement_A": 4.043336418141739,
+    "second_largest_I_displacement_A": 0.16363760092062954,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 18,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 210.28605542960577,
+     "W_meV": 138.7942373997704,
+     "closure_meV": -71.49181802983537,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 45.931374222328785,
+       "dE_meV": 112.24873700120952,
+       "closure_meV": -66.31736277888074
+      },
+      "2-3": {
+       "W_meV": 92.86286317744157,
+       "dE_meV": 98.03731842839625,
+       "closure_meV": -5.174455250954679
+      },
+      "3-4": {
+       "W_meV": -7.132205306864409,
+       "dE_meV": -8.237702961196192,
+       "closure_meV": 1.1054976543317823
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 213.83305682002174,
+     "W_meV": 155.48437290184964,
+     "closure_meV": -58.3486839181721,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 73.09783621142384,
+       "dE_meV": 127.9421941333112,
+       "closure_meV": -54.844357921887365
+      },
+      "2-3": {
+       "W_meV": 82.38653669042573,
+       "dE_meV": 85.89086268671053,
+       "closure_meV": -3.5043259962848055
+      },
+      "3-4": {
+       "W_meV": -25.33340656582713,
+       "dE_meV": -25.552376699579327,
+       "closure_meV": 0.21897013375219743
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 159.23861716873944,
+     "W_meV": 74.9168199557373,
+     "closure_meV": -84.32179721300214,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 22.48336351955797,
+       "dE_meV": 105.93745688674971,
+       "closure_meV": -83.45409336719175
+      },
+      "2-3": {
+       "W_meV": 52.43345643617933,
+       "dE_meV": 53.30116028198972,
+       "closure_meV": -0.8677038458103965
+      },
+      "3-4": {
+       "W_meV": -10.938056521009274,
+       "dE_meV": -15.144104167120531,
+       "closure_meV": 4.206047646111257
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -53.32591907651255,
+     "inorganic_near": -37.127352238995414,
+     "inorganic_far": 25.297450664517022,
+     "organic_near": -3.957365083458419,
+     "organic_far": -11.45436721166292
+    },
+    "sum_meV": -80.56755294611227,
+    "shares": {
+     "hop_I": 0.6618783508564504,
+     "inorganic_near": 0.4608226374186653,
+     "inorganic_far": -0.31399055499969397,
+     "organic_near": 0.049118595994907636,
+     "organic_far": 0.14217097072967066
+    },
+    "local_share": 1.1227009882751158,
+    "far_or_organic_share": -0.12270098827511577,
+    "side_above_half": "local",
+    "direct_meV": -54.5944396512823,
+    "segment_change_meV": -54.5944396512823,
+    "closure_vs_direct_meV": -25.97311329482997,
+    "closure_vs_segment_meV": -25.97311329482997
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -65.98484243095004,
+     "inorganic_near": -7.089093820145086,
+     "inorganic_far": 3.829544652873161,
+     "organic_near": 4.961036125922398,
+     "organic_far": 0.4059380282665054
+    },
+    "sum_meV": -63.877417444033064,
+    "shares": {
+     "hop_I": 1.032991706165382,
+     "inorganic_near": 0.11097965609452319,
+     "inorganic_far": -0.05995146338263379,
+     "organic_near": -0.07766494520961288,
+     "organic_far": -0.006354953667658413
+    },
+    "local_share": 1.143971362259905,
+    "far_or_organic_share": -0.14397136225990503,
+    "side_above_half": "local",
+    "direct_meV": -51.04743826086633,
+    "segment_change_meV": -51.04743826086633,
+    "closure_vs_direct_meV": -12.829979183166735,
+    "closure_vs_segment_meV": -12.829979183166735
+   }
+  },
+  "m08_Sr": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.8815356777778938,
+    "second_largest_I_displacement_A": 0.18965917383977798,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 160.83725221687928,
+     "W_meV": 94.38973340515116,
+     "closure_meV": -66.44751881172812,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 39.31455516404378,
+       "dE_meV": 100.99369948147796,
+       "closure_meV": -61.67914431743418
+      },
+      "2-3": {
+       "W_meV": 55.075178241107366,
+       "dE_meV": 59.84355273540132,
+       "closure_meV": -4.768374494293951
+      },
+      "3-4": {
+       "W_meV": -55.21938192782029,
+       "dE_meV": -53.81677491823211,
+       "closure_meV": -1.4026070095881735
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 194.62535702496098,
+     "W_meV": 142.83544855723073,
+     "closure_meV": -51.78990846773024,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 82.53987837002917,
+       "dE_meV": 135.52801634386924,
+       "closure_meV": -52.98813797384007
+      },
+      "2-3": {
+       "W_meV": 60.29557018720159,
+       "dE_meV": 59.09734068109174,
+       "closure_meV": 1.198229506109854
+      },
+      "3-4": {
+       "W_meV": -84.08998004212022,
+       "dE_meV": -80.6685994741656,
+       "closure_meV": -3.421380567954614
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 155.56720488530118,
+     "W_meV": 83.41047933272476,
+     "closure_meV": -72.15672555257642,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 45.49287180158937,
+       "dE_meV": 120.32206557341851,
+       "closure_meV": -74.82919377182915
+      },
+      "2-3": {
+       "W_meV": 37.91760753113546,
+       "dE_meV": 35.24513931188267,
+       "closure_meV": 2.672468219252792
+      },
+      "3-4": {
+       "W_meV": -34.983635393676344,
+       "dE_meV": -31.721402454422787,
+       "closure_meV": -3.2622329392535576
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -39.41150257091047,
+     "inorganic_near": -33.5669462020784,
+     "inorganic_far": 20.79375387172685,
+     "organic_near": -1.3221882076953975,
+     "organic_far": -5.91808611554853
+    },
+    "sum_meV": -59.42496922450594,
+    "shares": {
+     "hop_I": 0.663214522198823,
+     "inorganic_near": 0.5648626602609312,
+     "inorganic_far": -0.3499161066986607,
+     "organic_near": 0.022249707908138846,
+     "organic_far": 0.0995892163307676
+    },
+    "local_share": 1.2280771824597543,
+    "far_or_organic_share": -0.22807718245975428,
+    "side_above_half": "local",
+    "direct_meV": -39.058152139659796,
+    "segment_change_meV": -39.058152139659796,
+    "closure_vs_direct_meV": -20.366817084846147,
+    "closure_vs_segment_meV": -20.366817084846147
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -22.65572720480793,
+     "inorganic_near": 3.9233904420703,
+     "inorganic_far": 4.472493912882462,
+     "organic_near": 1.570559789361071,
+     "organic_far": 1.7100289880677932
+    },
+    "sum_meV": -10.979254072426304,
+    "shares": {
+     "hop_I": 2.0635033177441757,
+     "inorganic_near": -0.3573458102152536,
+     "inorganic_far": -0.40735863141329837,
+     "organic_near": -0.14304795016133487,
+     "organic_far": -0.15575092595428883
+    },
+    "local_share": 1.7061575075289221,
+    "far_or_organic_share": -0.7061575075289221,
+    "side_above_half": "local",
+    "direct_meV": -5.270047331578098,
+    "segment_change_meV": -5.270047331578098,
+    "closure_vs_direct_meV": -5.709206740848206,
+    "closure_vs_segment_meV": -5.709206740848206
+   }
+  },
+  "m12_undoped": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 126,
+    "hop_I_displacement_A": 4.150450534646526,
+    "second_largest_I_displacement_A": 0.28955099407534235,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 248.5388698260067,
+     "W_meV": 103.83379117894039,
+     "closure_meV": -144.70507864706633,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 32.161067496996154,
+       "dE_meV": 174.5473010232672,
+       "closure_meV": -142.38623352627104
+      },
+      "2-3": {
+       "W_meV": 71.6727236819442,
+       "dE_meV": 73.9915688027395,
+       "closure_meV": -2.318845120795288
+      },
+      "3-4": {
+       "W_meV": -28.88239505403319,
+       "dE_meV": -31.595684791682288,
+       "closure_meV": 2.7132897376490988
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 238.27029022413626,
+     "W_meV": 144.74512456426697,
+     "closure_meV": -93.52516565986929,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 76.75619654157566,
+       "dE_meV": 165.9240881383539,
+       "closure_meV": -89.16789159677825
+      },
+      "2-3": {
+       "W_meV": 67.98892802269123,
+       "dE_meV": 72.34620208578235,
+       "closure_meV": -4.3572740630911255
+      },
+      "3-4": {
+       "W_meV": -61.943068354699086,
+       "dE_meV": -62.39515237189153,
+       "closure_meV": 0.4520840171924405
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 183.82982623006683,
+     "W_meV": 41.15485294111555,
+     "closure_meV": -142.67497328895126,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 8.536013962241832,
+       "dE_meV": 151.65058229467832,
+       "closure_meV": -143.11456833243648
+      },
+      "2-3": {
+       "W_meV": 32.61883897887373,
+       "dE_meV": 32.17924393538851,
+       "closure_meV": 0.4395950434852196
+      },
+      "3-4": {
+       "W_meV": -17.033225373349957,
+       "dE_meV": -17.793765291571617,
+       "closure_meV": 0.7605399182216601
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -61.37531461754281,
+     "inorganic_near": -55.99880334661669,
+     "inorganic_far": 11.9240446745754,
+     "organic_near": 5.149470209970648,
+     "organic_far": -3.289668543537921
+    },
+    "sum_meV": -103.59027162315138,
+    "shares": {
+     "hop_I": 0.5924814527064726,
+     "inorganic_near": 0.5405797520285825,
+     "inorganic_far": -0.11510776531172351,
+     "organic_near": -0.049709978835694,
+     "organic_far": 0.031756539412362284
+    },
+    "local_share": 1.133061204735055,
+    "far_or_organic_share": -0.133061204735055,
+    "side_above_half": "local",
+    "direct_meV": -54.44046399406943,
+    "segment_change_meV": -54.44046399406943,
+    "closure_vs_direct_meV": -49.14980762908195,
+    "closure_vs_segment_meV": -49.14980762908195
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -79.48809039946906,
+     "inorganic_near": 7.216064588279025,
+     "inorganic_far": 4.284440468135181,
+     "organic_near": 3.196505756558669,
+     "organic_far": 2.1121413486713676
+    },
+    "sum_meV": -62.678938237824816,
+    "shares": {
+     "hop_I": 1.2681786359855796,
+     "inorganic_near": -0.11512742224347941,
+     "inorganic_far": -0.06835534532953612,
+     "organic_near": -0.05099808398843738,
+     "organic_far": -0.033697784424126624
+    },
+    "local_share": 1.1530512137421,
+    "far_or_organic_share": -0.15305121374210007,
+    "side_above_half": "local",
+    "direct_meV": -64.70904359593987,
+    "segment_change_meV": -64.70904359593987,
+    "closure_vs_direct_meV": 2.0301053581150583,
+    "closure_vs_segment_meV": 2.0301053581150583
+   }
+  },
+  "m12_GA": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 126,
+    "hop_I_displacement_A": 4.000918933577202,
+    "second_largest_I_displacement_A": 0.30734571701764973,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 18,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 232.65980141877662,
+     "W_meV": 103.05003559953988,
+     "closure_meV": -129.60976581923674,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 40.69559625077381,
+       "dE_meV": 168.5071896063164,
+       "closure_meV": -127.81159335554258
+      },
+      "2-3": {
+       "W_meV": 62.35443934876604,
+       "dE_meV": 64.15261181246024,
+       "closure_meV": -1.7981724636941934
+      },
+      "3-4": {
+       "W_meV": -35.11102353040209,
+       "dE_meV": -38.68819656781852,
+       "closure_meV": 3.5771730374164292
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 200.31023153205751,
+     "W_meV": 115.67669882864259,
+     "closure_meV": -84.63353270341493,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 53.74350331958898,
+       "dE_meV": 135.72537165123322,
+       "closure_meV": -81.98186833164424
+      },
+      "2-3": {
+       "W_meV": 61.933195509053554,
+       "dE_meV": 64.5848598808243,
+       "closure_meV": -2.6516643717707424
+      },
+      "3-4": {
+       "W_meV": -51.56499051469547,
+       "dE_meV": -50.88441120074094,
+       "closure_meV": -0.6805793139545244
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 159.76105086156167,
+     "W_meV": 33.18295660286326,
+     "closure_meV": -126.57809425869841,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 10.949683450001821,
+       "dE_meV": 139.3390572629869,
+       "closure_meV": -128.38937381298507
+      },
+      "2-3": {
+       "W_meV": 22.23327315286145,
+       "dE_meV": 20.421993598574772,
+       "closure_meV": 1.8112795542866778
+      },
+      "3-4": {
+       "W_meV": -23.703524056608156,
+       "dE_meV": -27.592887621722184,
+       "closure_meV": 3.889363565114028
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -62.85438696497047,
+     "inorganic_near": -39.73867781324195,
+     "inorganic_far": 12.749811462716584,
+     "organic_near": 12.174492837413725,
+     "organic_far": -4.824981747697166
+    },
+    "sum_meV": -82.49374222577927,
+    "shares": {
+     "hop_I": 0.7619291508553784,
+     "inorganic_near": 0.48171748233314626,
+     "inorganic_far": -0.15455489251319565,
+     "organic_near": -0.1475808044214195,
+     "organic_far": 0.05848906374609055
+    },
+    "local_share": 1.2436466331885248,
+    "far_or_organic_share": -0.24364663318852475,
+    "side_above_half": "local",
+    "direct_meV": -40.54918067049584,
+    "segment_change_meV": -40.54918067049584,
+    "closure_vs_direct_meV": -41.94456155528343,
+    "closure_vs_segment_meV": -41.94456155528343
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -90.86375145538236,
+     "inorganic_near": 6.995142391789509,
+     "inorganic_far": 3.9934805682321386,
+     "organic_near": 9.258958502145738,
+     "organic_far": 0.7490909965383998
+    },
+    "sum_meV": -69.86707899667657,
+    "shares": {
+     "hop_I": 1.3005231184733594,
+     "inorganic_near": -0.10012072198012248,
+     "inorganic_far": -0.05715825859017378,
+     "organic_near": -0.13252247890005775,
+     "organic_far": -0.0107216590030053
+    },
+    "local_share": 1.2004023964932369,
+    "far_or_organic_share": -0.20040239649323688,
+    "side_above_half": "local",
+    "direct_meV": -72.89875055721495,
+    "segment_change_meV": -72.89875055721495,
+    "closure_vs_direct_meV": 3.031671560538385,
+    "closure_vs_segment_meV": 3.031671560538385
+   }
+  },
+  "m12_Sr": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 126,
+    "hop_I_displacement_A": 4.087868600211276,
+    "second_largest_I_displacement_A": 0.3887245418306527,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 240.35382088914048,
+     "W_meV": 96.34516321557028,
+     "closure_meV": -144.0086576735702,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 42.594253796707456,
+       "dE_meV": 184.06897323438898,
+       "closure_meV": -141.47471943768153
+      },
+      "2-3": {
+       "W_meV": 53.75090941886287,
+       "dE_meV": 56.2848476547515,
+       "closure_meV": -2.533938235888634
+      },
+      "3-4": {
+       "W_meV": -63.63665079825386,
+       "dE_meV": -66.36095186695457,
+       "closure_meV": 2.7243010687007043
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 252.08859057238442,
+     "W_meV": 155.60248654988206,
+     "closure_meV": -96.48610402250236,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 92.59631600374048,
+       "dE_meV": 181.05050496660624,
+       "closure_meV": -88.45418896286576
+      },
+      "2-3": {
+       "W_meV": 63.00617054614155,
+       "dE_meV": 71.03808560577818,
+       "closure_meV": -8.031915059636631
+      },
+      "3-4": {
+       "W_meV": -101.09641859445385,
+       "dE_meV": -98.31137694550307,
+       "closure_meV": -2.7850416489507808
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 190.7358567113988,
+     "W_meV": 45.76902903145688,
+     "closure_meV": -144.96682767994193,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 21.811191946354523,
+       "dE_meV": 166.43457605096046,
+       "closure_meV": -144.62338410460595
+      },
+      "2-3": {
+       "W_meV": 23.95783708510231,
+       "dE_meV": 24.30128066043835,
+       "closure_meV": -0.34344357533604253
+      },
+      "3-4": {
+       "W_meV": -37.5245587681207,
+       "dE_meV": -36.84898157371208,
+       "closure_meV": -0.6755771944086177
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -61.062500123765204,
+     "inorganic_near": -61.2188211858219,
+     "inorganic_far": 10.71289033956984,
+     "organic_near": 6.328420166958779,
+     "organic_far": -4.593446715366727
+    },
+    "sum_meV": -109.83345751842522,
+    "shares": {
+     "hop_I": 0.5559553664558143,
+     "inorganic_near": 0.5573786218607575,
+     "inorganic_far": -0.09753758628396715,
+     "organic_near": -0.05761832787515724,
+     "organic_far": 0.041821925842552565
+    },
+    "local_share": 1.1133339883165716,
+    "far_or_organic_share": -0.1133339883165716,
+    "side_above_half": "local",
+    "direct_meV": -61.35273386098561,
+    "segment_change_meV": -61.35273386098561,
+    "closure_vs_direct_meV": -48.48072365743961,
+    "closure_vs_segment_meV": -48.48072365743961
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -66.84925471926346,
+     "inorganic_near": 11.337546359179656,
+     "inorganic_far": 0.9289433703464972,
+     "organic_near": 2.2274799908682885,
+     "organic_far": 1.7791508147555728
+    },
+    "sum_meV": -50.57613418411344,
+    "shares": {
+     "hop_I": 1.3217549304165994,
+     "inorganic_near": -0.22416791125053825,
+     "inorganic_far": -0.01836722765256917,
+     "organic_near": -0.044042116440919404,
+     "organic_far": -0.03517767507257257
+    },
+    "local_share": 1.097587019166061,
+    "far_or_organic_share": -0.09758701916606105,
+    "side_above_half": "local",
+    "direct_meV": -49.61796417774167,
+    "segment_change_meV": -49.61796417774167,
+    "closure_vs_direct_meV": -0.9581700063717733,
+    "closure_vs_segment_meV": -0.9581700063717733
+   }
+  },
+  "m15_undoped": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.851045489042694,
+    "second_largest_I_displacement_A": 0.22947848123887774,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": -22.50381643534638,
+     "W_meV": -64.42022440946201,
+     "closure_meV": -41.91640797411563,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -99.47364054928826,
+       "dE_meV": -64.33887375169434,
+       "closure_meV": -35.134766797593926
+      },
+      "2-3": {
+       "W_meV": 35.05341613982625,
+       "dE_meV": 41.83505731634796,
+       "closure_meV": -6.78164117652171
+      },
+      "3-4": {
+       "W_meV": -48.81012196231917,
+       "dE_meV": -50.41712036472745,
+       "closure_meV": 1.60699840240828
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 55.10618593939398,
+     "W_meV": 30.51420995691207,
+     "closure_meV": -24.591975982481912,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -36.74007892571308,
+       "dE_meV": -22.044451977535573,
+       "closure_meV": -14.695626948177505
+      },
+      "2-3": {
+       "W_meV": 67.25428888262512,
+       "dE_meV": 77.15063791692955,
+       "closure_meV": -9.896349034304436
+      },
+      "3-4": {
+       "W_meV": -54.00772709972649,
+       "dE_meV": -58.6212483926829,
+       "closure_meV": 4.613521292956413
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 13.210923061706126,
+     "W_meV": -34.28937146175755,
+     "closure_meV": -47.50029452346367,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -56.18603311605623,
+       "dE_meV": -5.719715292798355,
+       "closure_meV": -50.466317823257874
+      },
+      "2-3": {
+       "W_meV": 21.896661654298672,
+       "dE_meV": 18.93063835450448,
+       "closure_meV": 2.966023299794191
+      },
+      "3-4": {
+       "W_meV": -31.88308847526651,
+       "dE_meV": -32.753541847341694,
+       "closure_meV": 0.8704533720751826
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -78.46131364746843,
+     "inorganic_near": -22.27450053616682,
+     "inorganic_far": 24.56009783558813,
+     "organic_near": -2.7610489433995458,
+     "organic_far": 14.133183872777074
+    },
+    "sum_meV": -64.8035814186696,
+    "shares": {
+     "hop_I": 1.2107558244437415,
+     "inorganic_near": 0.3437232950484685,
+     "inorganic_far": -0.3789929090016696,
+     "organic_near": 0.042606425184459035,
+     "organic_far": -0.21809263567499948
+    },
+    "local_share": 1.55447911949221,
+    "far_or_organic_share": -0.5544791194922101,
+    "side_above_half": "local",
+    "direct_meV": -41.895262877687856,
+    "segment_change_meV": -41.895262877687856,
+    "closure_vs_direct_meV": -22.90831854098174,
+    "closure_vs_segment_meV": -22.90831854098174
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -14.629200087817765,
+     "inorganic_near": 6.540346079295438,
+     "inorganic_far": 10.568896127883308,
+     "organic_near": 0.432024418770395,
+     "organic_far": 27.218786409573063
+    },
+    "sum_meV": 30.13085294770444,
+    "shares": {
+     "hop_I": -0.48552226892509226,
+     "inorganic_near": 0.2170647505613917,
+     "inorganic_far": 0.35076657624750424,
+     "organic_near": 0.014338273779379,
+     "organic_far": 0.9033526683368173
+    },
+    "local_share": -0.2684575183637005,
+    "far_or_organic_share": 1.2684575183637006,
+    "side_above_half": "far_or_organic",
+    "direct_meV": 35.714739497052506,
+    "segment_change_meV": 35.714739497052506,
+    "closure_vs_direct_meV": -5.583886549348065,
+    "closure_vs_segment_meV": -5.583886549348065
+   }
+  },
+  "m15_GA": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 4.099800273378674,
+    "second_largest_I_displacement_A": 0.3416660121167894,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 8,
+     "organic_far": 146
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 56.666351287276484,
+     "W_meV": -24.574308838040142,
+     "closure_meV": -81.24066012531662,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -31.45248121384907,
+       "dE_meV": 49.24594232579693,
+       "closure_meV": -80.698423539646
+      },
+      "2-3": {
+       "W_meV": 6.878172375808905,
+       "dE_meV": 7.420408961479552,
+       "closure_meV": -0.542236585670647
+      },
+      "3-4": {
+       "W_meV": -85.95735852736162,
+       "dE_meV": -90.97773244138807,
+       "closure_meV": 5.02037391402645
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 126.76666379093149,
+     "W_meV": 58.970428698050895,
+     "closure_meV": -67.7962350928806,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 31.142778582533865,
+       "dE_meV": 98.46030782432535,
+       "closure_meV": -67.31752924179149
+      },
+      "2-3": {
+       "W_meV": 27.827650115517017,
+       "dE_meV": 28.306355966606134,
+       "closure_meV": -0.4787058510891171
+      },
+      "3-4": {
+       "W_meV": -97.67647000813177,
+       "dE_meV": -102.73155705635872,
+       "closure_meV": 5.055087048226952
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 2,
+     "Ea_meV": 76.44860094296746,
+     "W_meV": -18.659388396460347,
+     "closure_meV": -95.1079893394278,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -18.659388396460347,
+       "dE_meV": 76.44860094296746,
+       "closure_meV": -95.1079893394278
+      },
+      "2-3": {
+       "W_meV": -8.941851122792276,
+       "dE_meV": -10.094995115650818,
+       "closure_meV": 1.153143992858542
+      },
+      "3-4": {
+       "W_meV": -57.84364559022107,
+       "dE_meV": -55.003320187097415,
+       "closure_meV": -2.840325403123657
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -89.89559771094272,
+     "inorganic_near": -27.780493069563725,
+     "inorganic_far": 18.262392768519234,
+     "organic_near": -4.190665093091781,
+     "organic_far": 17.032694887775442
+    },
+    "sum_meV": -86.57166821730355,
+    "shares": {
+     "hop_I": 1.0383951188891933,
+     "inorganic_near": 0.32089589633218,
+     "inorganic_far": -0.21095114769740603,
+     "organic_near": 0.048406888528159026,
+     "organic_far": -0.19674675605212635
+    },
+    "local_share": 1.3592910152213735,
+    "far_or_organic_share": -0.3592910152213735,
+    "side_above_half": "local",
+    "direct_meV": -50.31806284796403,
+    "segment_change_meV": -60.41305796361485,
+    "closure_vs_direct_meV": -36.253605369339525,
+    "closure_vs_segment_meV": -26.158610253688707
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -32.19942271706599,
+     "inorganic_near": 3.52493437886498,
+     "inorganic_far": 9.457983798650485,
+     "organic_near": -0.8923312188608401,
+     "organic_far": 17.081905077198883
+    },
+    "sum_meV": -3.026930681212485,
+    "shares": {
+     "hop_I": 10.637647871132616,
+     "inorganic_near": -1.1645243152555484,
+     "inorganic_far": -3.1246119567105315,
+     "organic_near": 0.29479737491160607,
+     "organic_far": -5.643308974078143
+    },
+    "local_share": 9.473123555877068,
+    "far_or_organic_share": -8.473123555877068,
+    "side_above_half": "local",
+    "direct_meV": 19.782249655690975,
+    "segment_change_meV": 9.687254540040158,
+    "closure_vs_direct_meV": -22.80918033690346,
+    "closure_vs_segment_meV": -12.714185221252643
+   }
+  },
+  "m15_Sr": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.6234397643459655,
+    "second_largest_I_displacement_A": 0.24860749407949445,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 87.8397153574042,
+     "W_meV": 27.441548868772582,
+     "closure_meV": -60.39816648863162,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 15.407282098307574,
+       "dE_meV": 75.90221628197469,
+       "closure_meV": -60.49493418366711
+      },
+      "2-3": {
+       "W_meV": 12.034266770465026,
+       "dE_meV": 11.937499075429514,
+       "closure_meV": 0.09676769503551164
+      },
+      "3-4": {
+       "W_meV": -58.63628734624818,
+       "dE_meV": -59.98056207317859,
+       "closure_meV": 1.3442747269304078
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 62.96059540636634,
+     "W_meV": 12.26492934847738,
+     "closure_meV": -50.69566605788896,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -5.8636416142187855,
+       "dE_meV": 45.817936849971375,
+       "closure_meV": -51.68157846419016
+      },
+      "2-3": {
+       "W_meV": 18.128570962696173,
+       "dE_meV": 17.142658556394963,
+       "closure_meV": 0.9859124063012104
+      },
+      "3-4": {
+       "W_meV": -65.74432721444691,
+       "dE_meV": -68.10587422637582,
+       "closure_meV": 2.3615470119289057
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 2,
+     "Ea_meV": 51.2997125624679,
+     "W_meV": -9.974124638797887,
+     "closure_meV": -61.27383720126579,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -9.974124638797887,
+       "dE_meV": 51.2997125624679,
+       "closure_meV": -61.27383720126579
+      },
+      "2-3": {
+       "W_meV": -7.011826483438897,
+       "dE_meV": -9.17138128716033,
+       "closure_meV": 2.1595548037214325
+      },
+      "3-4": {
+       "W_meV": -29.623415410092193,
+       "dE_meV": -27.615018698270433,
+       "closure_meV": -2.00839671182176
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -53.11443654416128,
+     "inorganic_near": -3.563965545920631,
+     "inorganic_far": 19.13637261473988,
+     "organic_near": -1.9430328465252815,
+     "organic_far": 10.234181851153162
+    },
+    "sum_meV": -29.25088047071415,
+    "shares": {
+     "hop_I": 1.8158235133242986,
+     "inorganic_near": 0.1218413083151072,
+     "inorganic_far": -0.6542152682856548,
+     "organic_near": 0.06642647384480058,
+     "organic_far": -0.34987602719855143
+    },
+    "local_share": 1.9376648216394057,
+    "far_or_organic_share": -0.9376648216394057,
+    "side_above_half": "local",
+    "direct_meV": -11.660882843898435,
+    "segment_change_meV": -20.832264131058764,
+    "closure_vs_direct_meV": -17.589997626815716,
+    "closure_vs_segment_meV": -8.418616339655387
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -52.65082805081772,
+     "inorganic_near": -6.71049799089368,
+     "inorganic_far": 1.5523300070764732,
+     "organic_near": -0.5877440715034389,
+     "organic_far": 13.969240115129011
+    },
+    "sum_meV": -44.427499991009356,
+    "shares": {
+     "hop_I": 1.1850954490230712,
+     "inorganic_near": 0.15104379027070308,
+     "inorganic_far": -0.034940746325825514,
+     "organic_near": 0.013229285276515191,
+     "organic_far": -0.3144277782444639
+    },
+    "local_share": 1.336139239293774,
+    "far_or_organic_share": -0.3361392392937741,
+    "side_above_half": "local",
+    "direct_meV": -36.5400027949363,
+    "segment_change_meV": -45.71138408209663,
+    "closure_vs_direct_meV": -7.887497196073056,
+    "closure_vs_segment_meV": 1.2838840910872733
+   }
+  },
+  "m20_undoped": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 4.165934580198008,
+    "second_largest_I_displacement_A": 0.36756933479773796,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 11,
+     "inorganic_far": 68,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": -15.785733325174078,
+     "W_meV": -64.45296052591658,
+     "closure_meV": -48.6672272007425,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -127.2908358978269,
+       "dE_meV": -91.00344718899578,
+       "closure_meV": -36.287388708831116
+      },
+      "2-3": {
+       "W_meV": 62.83787537191033,
+       "dE_meV": 75.2177138638217,
+       "closure_meV": -12.379838491911372
+      },
+      "3-4": {
+       "W_meV": -70.76997438881156,
+       "dE_meV": -73.76993204525206,
+       "closure_meV": 2.9999576564405004
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 71.27451798578477,
+     "W_meV": 24.475768727614806,
+     "closure_meV": -46.79874925816996,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -69.94278523534135,
+       "dE_meV": -43.84936122414729,
+       "closure_meV": -26.09342401119406
+      },
+      "2-3": {
+       "W_meV": 94.41855396295615,
+       "dE_meV": 115.12387920993206,
+       "closure_meV": -20.705325246975903
+      },
+      "3-4": {
+       "W_meV": -55.25084095592259,
+       "dE_meV": -55.160483652116454,
+       "closure_meV": -0.09035730380613671
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": -24.883302918169647,
+     "W_meV": -73.82092957510741,
+     "closure_meV": -48.937626656937766,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -111.44330891343147,
+       "dE_meV": -65.24735993298236,
+       "closure_meV": -46.1959489804491
+      },
+      "2-3": {
+       "W_meV": 37.622379338324066,
+       "dE_meV": 40.364057014812715,
+       "closure_meV": -2.7416776764886492
+      },
+      "3-4": {
+       "W_meV": -48.50996608880121,
+       "dE_meV": -46.53762953239493,
+       "closure_meV": -1.972336556406276
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -78.48978826080972,
+     "inorganic_near": -8.865139857753508,
+     "inorganic_far": 45.13091963263429,
+     "organic_near": -14.38232256037168,
+     "organic_far": -41.69036725642164
+    },
+    "sum_meV": -98.29669830272226,
+    "shares": {
+     "hop_I": 0.7984987249427888,
+     "inorganic_near": 0.09018756490123121,
+     "inorganic_far": -0.45912955787838927,
+     "organic_near": 0.14631541861231948,
+     "organic_far": 0.42412784942204973
+    },
+    "local_share": 0.88868628984402,
+    "far_or_organic_share": 0.11131371015598002,
+    "side_above_half": "local",
+    "direct_meV": -96.15782090395442,
+    "segment_change_meV": -96.15782090395442,
+    "closure_vs_direct_meV": -2.138877398767846,
+    "closure_vs_segment_meV": -2.138877398767846
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -8.2054670957953,
+     "inorganic_near": -5.303328609600409,
+     "inorganic_far": 4.573330837752903,
+     "organic_near": -3.1375265954201375,
+     "organic_far": 2.7050224138721024
+    },
+    "sum_meV": -9.36796904919084,
+    "shares": {
+     "hop_I": 0.875906725642315,
+     "inorganic_near": 0.5661129516710438,
+     "inorganic_far": -0.48818808150822457,
+     "organic_near": 0.3349206833354282,
+     "organic_far": -0.2887522791405624
+    },
+    "local_share": 1.442019677313359,
+    "far_or_organic_share": -0.4420196773133589,
+    "side_above_half": "local",
+    "direct_meV": -9.097569592995569,
+    "segment_change_meV": -9.097569592995569,
+    "closure_vs_direct_meV": -0.27039945619527117,
+    "closure_vs_segment_meV": -0.27039945619527117
+   }
+  },
+  "m20_GA": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.9733867699095042,
+    "second_largest_I_displacement_A": 0.312931322774282,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 11,
+     "inorganic_far": 68,
+     "organic_near": 26,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 37.21157069958281,
+     "W_meV": -14.06310924053166,
+     "closure_meV": -51.27467994011447,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -87.97111540831082,
+       "dE_meV": -48.671101772924885,
+       "closure_meV": -39.30001363538594
+      },
+      "2-3": {
+       "W_meV": 73.90800616777915,
+       "dE_meV": 85.88267247250769,
+       "closure_meV": -11.974666304728544
+      },
+      "3-4": {
+       "W_meV": -42.44831569406998,
+       "dE_meV": -44.31523912353441,
+       "closure_meV": 1.8669234294644284
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 104.96201504770397,
+     "W_meV": 56.689085378805075,
+     "closure_meV": -48.2729296688989,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -40.211608509278044,
+       "dE_meV": -11.462644586799797,
+       "closure_meV": -28.748963922478247
+      },
+      "2-3": {
+       "W_meV": 96.90069388808314,
+       "dE_meV": 116.42465963450377,
+       "closure_meV": -19.52396574642063
+      },
+      "3-4": {
+       "W_meV": -37.269699587610205,
+       "dE_meV": -38.385326959542,
+       "closure_meV": 1.1156273719317937
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 8.822251184028573,
+     "W_meV": -43.33655788256888,
+     "closure_meV": -52.158809066597456,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -84.81736261330158,
+       "dE_meV": -34.92067937622778,
+       "closure_meV": -49.8966832370738
+      },
+      "2-3": {
+       "W_meV": 41.48080473073277,
+       "dE_meV": 43.742930560256355,
+       "closure_meV": -2.2621258295235833
+      },
+      "3-4": {
+       "W_meV": -27.970431511867286,
+       "dE_meV": -26.941747404634953,
+       "closure_meV": -1.0286841072323334
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -76.81608421107187,
+     "inorganic_near": -11.67604039427673,
+     "inorganic_far": 37.28956088684084,
+     "organic_near": -18.37993262205228,
+     "organic_far": -30.443146920813895
+    },
+    "sum_meV": -100.02564326137393,
+    "shares": {
+     "hop_I": 0.7679639111177333,
+     "inorganic_near": 0.11673047044312856,
+     "inorganic_far": -0.3728000107872402,
+     "organic_near": 0.18375220616201632,
+     "organic_far": 0.304353423064362
+    },
+    "local_share": 0.8846943815608618,
+    "far_or_organic_share": 0.11530561843913822,
+    "side_above_half": "local",
+    "direct_meV": -96.1397638636754,
+    "segment_change_meV": -96.1397638636754,
+    "closure_vs_direct_meV": -3.885879397698531,
+    "closure_vs_segment_meV": -3.885879397698531
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -23.91845640052928,
+     "inorganic_near": -4.8144599827856975,
+     "inorganic_far": 5.349902306211973,
+     "organic_near": -8.974425278812904,
+     "organic_far": 3.0839907138787286
+    },
+    "sum_meV": -29.27344864203718,
+    "shares": {
+     "hop_I": 0.8170699903865088,
+     "inorganic_near": 0.16446507692544463,
+     "inorganic_far": -0.18275613412112368,
+     "organic_near": 0.30657219067539154,
+     "organic_far": -0.10535112386622136
+    },
+    "local_share": 0.9815350673119535,
+    "far_or_organic_share": 0.018464932688046498,
+    "side_above_half": "local",
+    "direct_meV": -28.389319515554234,
+    "segment_change_meV": -28.389319515554234,
+    "closure_vs_direct_meV": -0.8841291264829465,
+    "closure_vs_segment_meV": -0.8841291264829465
+   }
+  },
+  "m20_Sr": {
+   "split": "train",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 4.123920712156904,
+    "second_largest_I_displacement_A": 0.31726613432166073,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 117.06610477995127,
+     "W_meV": 14.763918596626816,
+     "closure_meV": -102.30218618332447,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -14.360505460711764,
+       "dE_meV": 82.49567123129964,
+       "closure_meV": -96.8561766920114
+      },
+      "2-3": {
+       "W_meV": 29.12442405733859,
+       "dE_meV": 34.570433548651636,
+       "closure_meV": -5.4460094913130455
+      },
+      "3-4": {
+       "W_meV": -128.67404888368014,
+       "dE_meV": -132.9586427891627,
+       "closure_meV": 4.284593905482552
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 200.5343373566575,
+     "W_meV": 113.04637273355931,
+     "closure_meV": -87.48796462309818,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 56.45147480020613,
+       "dE_meV": 139.11135582134193,
+       "closure_meV": -82.6598810211358
+      },
+      "2-3": {
+       "W_meV": 56.59489793335315,
+       "dE_meV": 61.42298153531556,
+       "closure_meV": -4.828083601962405
+      },
+      "3-4": {
+       "W_meV": -124.33540573784187,
+       "dE_meV": -120.2295746843447,
+       "closure_meV": -4.10583105349717
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 121.48689696914516,
+     "W_meV": 10.910872249864454,
+     "closure_meV": -110.57602471928071,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -7.026552723387802,
+       "dE_meV": 99.71337782917544,
+       "closure_meV": -106.73993055256324
+      },
+      "2-3": {
+       "W_meV": 17.93742497325225,
+       "dE_meV": 21.77351913996972,
+       "closure_meV": -3.836094166717473
+      },
+      "3-4": {
+       "W_meV": -92.82470100809782,
+       "dE_meV": -87.05433056456968,
+       "closure_meV": -5.770370443528137
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -88.29310209444428,
+     "inorganic_near": -18.07302027251201,
+     "inorganic_far": 20.988729228746998,
+     "organic_near": 1.9195715869498606,
+     "organic_far": -18.677678932435402
+    },
+    "sum_meV": -102.13550048369484,
+    "shares": {
+     "hop_I": 0.8644702544786531,
+     "inorganic_near": 0.17695140462348086,
+     "inorganic_far": -0.2054988630725679,
+     "organic_near": -0.018794362174357836,
+     "organic_far": 0.18287156614479166
+    },
+    "local_share": 1.041421659102134,
+    "far_or_organic_share": -0.04142165910213391,
+    "side_above_half": "local",
+    "direct_meV": -79.04744038751232,
+    "segment_change_meV": -79.04744038751232,
+    "closure_vs_direct_meV": -23.088060096182517,
+    "closure_vs_segment_meV": -23.088060096182517
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 3.27489787632112,
+     "inorganic_near": -8.881448331522444,
+     "inorganic_far": 6.907796625775081,
+     "organic_near": -6.054740901609076,
+     "organic_far": 0.9004483842729458
+    },
+    "sum_meV": -3.8530463467623735,
+    "shares": {
+     "hop_I": -0.8499502942841426,
+     "inorganic_near": 2.3050458084900334,
+     "inorganic_far": -1.792814309534466,
+     "organic_near": 1.5714165770927557,
+     "organic_far": -0.23369778176418043
+    },
+    "local_share": 1.4550955142058906,
+    "far_or_organic_share": -0.45509551420589056,
+    "side_above_half": "local",
+    "direct_meV": 4.4207921891938895,
+    "segment_change_meV": 4.4207921891938895,
+    "closure_vs_direct_meV": -8.273838535956262,
+    "closure_vs_segment_meV": -8.273838535956262
+   }
+  },
+  "m21_undoped": {
+   "split": "valid",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.748270088256296,
+    "second_largest_I_displacement_A": 0.29013692757331444,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 24,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 33.84484192065429,
+     "W_meV": -32.458638776238175,
+     "closure_meV": -66.30348069689246,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -35.05084542498045,
+       "dE_meV": 29.528843951993622,
+       "closure_meV": -64.57968937697407
+      },
+      "2-3": {
+       "W_meV": 2.5922066487422804,
+       "dE_meV": 4.3159979686606675,
+       "closure_meV": -1.7237913199183872
+      },
+      "3-4": {
+       "W_meV": -76.80561326009114,
+       "dE_meV": -76.8607373611303,
+       "closure_meV": 0.055124101039169204
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 93.5788295414568,
+     "W_meV": 45.02259730089636,
+     "closure_meV": -48.55623224056044,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 26.579571781876314,
+       "dE_meV": 76.1673846220674,
+       "closure_meV": -49.58781284019109
+      },
+      "2-3": {
+       "W_meV": 18.443025519020054,
+       "dE_meV": 17.411444919389396,
+       "closure_meV": 1.031580599630658
+      },
+      "3-4": {
+       "W_meV": -71.28976609948066,
+       "dE_meV": -64.81425594120083,
+       "closure_meV": -6.475510158279832
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 65.67415584868286,
+     "W_meV": -2.9865740512652295,
+     "closure_meV": -68.66072989994808,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -6.845221585244609,
+       "dE_meV": 62.117784065776505,
+       "closure_meV": -68.96300565102112
+      },
+      "2-3": {
+       "W_meV": 3.8586475339793633,
+       "dE_meV": 3.5563717829063535,
+       "closure_meV": 0.30227575107300986
+      },
+      "3-4": {
+       "W_meV": -42.64808340315947,
+       "dE_meV": -40.35138005565386,
+       "closure_meV": -2.2967033475056056
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -6.342239324686233,
+     "inorganic_near": -19.35065113558737,
+     "inorganic_far": 9.474275467923313,
+     "organic_near": -15.653056909047603,
+     "organic_far": -16.137499450763727
+    },
+    "sum_meV": -48.009171352161616,
+    "shares": {
+     "hop_I": 0.13210474469896621,
+     "inorganic_near": 0.40306155241973585,
+     "inorganic_far": -0.1973430326140535,
+     "organic_near": 0.3260430552784957,
+     "organic_far": 0.3361336802168558
+    },
+    "local_share": 0.5351662971187021,
+    "far_or_organic_share": 0.4648337028812979,
+    "side_above_half": "local",
+    "direct_meV": -27.90467369277394,
+    "segment_change_meV": -27.90467369277394,
+    "closure_vs_direct_meV": -20.104497659387675,
+    "closure_vs_segment_meV": -20.104497659387675
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 29.762947563426216,
+     "inorganic_near": -0.4545597181207892,
+     "inorganic_far": 5.453931209031629,
+     "organic_near": -5.678199497998369,
+     "organic_far": 0.38794516863423456
+    },
+    "sum_meV": 29.47206472497292,
+    "shares": {
+     "hop_I": 1.0098697814750257,
+     "inorganic_near": -0.015423409332282772,
+     "inorganic_far": 0.1850542627374961,
+     "organic_near": -0.19266378351792202,
+     "organic_far": 0.01316314863768307
+    },
+    "local_share": 0.9944463721427429,
+    "far_or_organic_share": 0.005553627857257104,
+    "side_above_half": "local",
+    "direct_meV": 31.82931392802857,
+    "segment_change_meV": 31.82931392802857,
+    "closure_vs_direct_meV": -2.3572492030556482,
+    "closure_vs_segment_meV": -2.3572492030556482
+   }
+  },
+  "m21_GA": {
+   "split": "valid",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.7009121987619933,
+    "second_largest_I_displacement_A": 0.3029005454241655,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 26,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 2,
+     "Ea_meV": 19.560632892535068,
+     "W_meV": -45.02342041674555,
+     "closure_meV": -64.58405330928062,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -45.02342041674555,
+       "dE_meV": 19.560632892535068,
+       "closure_meV": -64.58405330928062
+      },
+      "2-3": {
+       "W_meV": -2.6012808289065976,
+       "dE_meV": -1.541933190310374,
+       "closure_meV": -1.0593476385962237
+      },
+      "3-4": {
+       "W_meV": -79.10239705483055,
+       "dE_meV": -80.36910140071996,
+       "closure_meV": 1.2667043458894085
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 79.23725964337791,
+     "W_meV": 31.966935711634804,
+     "closure_meV": -47.27032393174311,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 20.28610015567799,
+       "dE_meV": 68.71622522180587,
+       "closure_meV": -48.430125066127886
+      },
+      "2-3": {
+       "W_meV": 11.680835555956827,
+       "dE_meV": 10.52103442157204,
+       "closure_meV": 1.1598011343847876
+      },
+      "3-4": {
+       "W_meV": -79.62700805566072,
+       "dE_meV": -74.69081962199198,
+       "closure_meV": -4.936188433668747
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 2,
+     "Ea_meV": 56.46321731910575,
+     "W_meV": -12.338594381917734,
+     "closure_meV": -68.80181170102348,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -12.338594381917734,
+       "dE_meV": 56.46321731910575,
+       "closure_meV": -68.80181170102348
+      },
+      "2-3": {
+       "W_meV": -0.341051864691829,
+       "dE_meV": -0.9207487892126665,
+       "closure_meV": 0.5796969245208374
+      },
+      "3-4": {
+       "W_meV": -44.93691141466843,
+       "dE_meV": -43.88464857765939,
+       "closure_meV": -1.0522628370090388
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 2,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -2.693495244837827,
+     "inorganic_near": -9.83144123378031,
+     "inorganic_far": 9.208505774604546,
+     "organic_near": -14.915538861631461,
+     "organic_far": -14.392724971950653
+    },
+    "sum_meV": -32.6246945375957,
+    "shares": {
+     "hop_I": 0.0825600142166519,
+     "inorganic_near": 0.30134967922690764,
+     "inorganic_far": -0.28225569327531774,
+     "organic_near": 0.4571855483410963,
+     "organic_far": 0.44116045149066196
+    },
+    "local_share": 0.3839096934435596,
+    "far_or_organic_share": 0.6160903065564405,
+    "side_above_half": "far_or_organic",
+    "direct_meV": -22.77404232427216,
+    "segment_change_meV": -12.25300790270012,
+    "closure_vs_direct_meV": -9.850652213323542,
+    "closure_vs_segment_meV": -20.371686634895582
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 2,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 26.536694004595706,
+     "inorganic_near": 4.31027204306268,
+     "inorganic_far": 5.245565322468114,
+     "organic_near": -4.318228419216374,
+     "organic_far": 0.910523083917689
+    },
+    "sum_meV": 32.684826034827815,
+    "shares": {
+     "hop_I": 0.8118964432094308,
+     "inorganic_near": 0.13187379484503922,
+     "inorganic_far": 0.16048931442616893,
+     "organic_near": -0.13211722205940518,
+     "organic_far": 0.02785766957876622
+    },
+    "local_share": 0.9437702380544699,
+    "far_or_organic_share": 0.05622976194553009,
+    "side_above_half": "local",
+    "direct_meV": 36.902584426570684,
+    "segment_change_meV": 36.902584426570684,
+    "closure_vs_direct_meV": -4.217758391742869,
+    "closure_vs_segment_meV": -4.217758391742869
+   }
+  },
+  "m21_Sr": {
+   "split": "valid",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.870092080154751,
+    "second_largest_I_displacement_A": 0.238309844220431,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 24,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 2,
+     "Ea_meV": -3.571358378394507,
+     "W_meV": -74.84886275019448,
+     "closure_meV": -71.27750437179998,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -74.84886275019448,
+       "dE_meV": -3.571358378394507,
+       "closure_meV": -71.27750437179998
+      },
+      "2-3": {
+       "W_meV": -10.708934123527573,
+       "dE_meV": -8.274438339867629,
+       "closure_meV": -2.434495783659944
+      },
+      "3-4": {
+       "W_meV": -122.91076930855714,
+       "dE_meV": -121.72483015456237,
+       "closure_meV": -1.1859391539947666
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 85.8132094388111,
+     "W_meV": 35.58950301515578,
+     "closure_meV": -50.22370642365532,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 17.26918715854349,
+       "dE_meV": 70.55936070651114,
+       "closure_meV": -53.290173547967655
+      },
+      "2-3": {
+       "W_meV": 18.32031585661228,
+       "dE_meV": 15.253848732299957,
+       "closure_meV": 3.0664671243123216
+      },
+      "3-4": {
+       "W_meV": -119.92287632943683,
+       "dE_meV": -108.29716111743437,
+       "closure_meV": -11.625715212002461
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 71.77121003041975,
+     "W_meV": -1.6027626941767537,
+     "closure_meV": -73.37397272459651,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -10.255143647939686,
+       "dE_meV": 64.60893608164042,
+       "closure_meV": -74.86407972958011
+      },
+      "2-3": {
+       "W_meV": 8.652380953762924,
+       "dE_meV": 7.16227394877933,
+       "closure_meV": 1.490107004983594
+      },
+      "3-4": {
+       "W_meV": -57.81633806327226,
+       "dE_meV": -50.11101228592452,
+       "closure_meV": -7.7053257773477455
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 2,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -3.643076434912821,
+     "inorganic_near": -15.465619174408527,
+     "inorganic_far": 9.725722106646081,
+     "organic_near": -5.51307311945342,
+     "organic_far": -12.628284184354474
+    },
+    "sum_meV": -27.52433080648316,
+    "shares": {
+     "hop_I": 0.13235840175466573,
+     "inorganic_near": 0.5618890167809534,
+     "inorganic_far": -0.35334999332137285,
+     "organic_near": 0.20029817103327557,
+     "organic_far": 0.4588044037524782
+    },
+    "local_share": 0.6942474185356191,
+    "far_or_organic_share": 0.3057525814643809,
+    "side_above_half": "local",
+    "direct_meV": -14.041999408391348,
+    "segment_change_meV": -5.95042462487072,
+    "closure_vs_direct_meV": -13.482331398091812,
+    "closure_vs_segment_meV": -21.57390618161244
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 2,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 57.04675479700703,
+     "inorganic_near": 0.45966017281207217,
+     "inorganic_far": 4.02555350893691,
+     "organic_near": 1.2582707407176943,
+     "organic_far": 1.80347988278109
+    },
+    "sum_meV": 64.5937191022548,
+    "shares": {
+     "hop_I": 0.8831625673496122,
+     "inorganic_near": 0.007116174439257929,
+     "inorganic_far": 0.06232112912656841,
+     "organic_near": 0.019479769212944597,
+     "organic_far": 0.02792035987161692
+    },
+    "local_share": 0.8902787417888701,
+    "far_or_organic_share": 0.10972125821112988,
+    "side_above_half": "local",
+    "direct_meV": 75.34256840881426,
+    "segment_change_meV": 68.18029446003493,
+    "closure_vs_direct_meV": -10.748849306559464,
+    "closure_vs_segment_meV": -3.5865753577801343
+   }
+  },
+  "m30_undoped": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 137,
+    "hop_I_displacement_A": 3.965474334465852,
+    "second_largest_I_displacement_A": 0.28340587148771756,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 211.20811325090472,
+     "W_meV": 132.7312072113505,
+     "closure_meV": -78.47690603955422,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 63.75192958179094,
+       "dE_meV": 137.8089363424806,
+       "closure_meV": -74.05700676068966
+      },
+      "2-3": {
+       "W_meV": 68.97927762955952,
+       "dE_meV": 73.39917690842412,
+       "closure_meV": -4.419899278864605
+      },
+      "3-4": {
+       "W_meV": -37.92564319082052,
+       "dE_meV": -37.72899518662598,
+       "closure_meV": -0.1966480041945431
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 220.061701441864,
+     "W_meV": 145.83230949089426,
+     "closure_meV": -74.22939195096973,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 67.68080937398818,
+       "dE_meV": 137.2760822739565,
+       "closure_meV": -69.59527289996831
+      },
+      "2-3": {
+       "W_meV": 78.15150011690604,
+       "dE_meV": 82.7856191679075,
+       "closure_meV": -4.634119051001463
+      },
+      "3-4": {
+       "W_meV": -45.71063259600392,
+       "dE_meV": -46.669048454987205,
+       "closure_meV": 0.9584158589832867
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 176.76211515208706,
+     "W_meV": 102.40355413436552,
+     "closure_meV": -74.35856101772154,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 53.48001864550296,
+       "dE_meV": 131.58479747653473,
+       "closure_meV": -78.10477883103178
+      },
+      "2-3": {
+       "W_meV": 48.92353548886258,
+       "dE_meV": 45.17731767555233,
+       "closure_meV": 3.7462178133102526
+      },
+      "3-4": {
+       "W_meV": -17.102892048984003,
+       "dE_meV": -16.632992977974936,
+       "closure_meV": -0.4698990710090669
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -30.505410756182386,
+     "inorganic_near": -13.024011953617544,
+     "inorganic_far": 20.31017769479604,
+     "organic_near": -21.172833392687416,
+     "organic_far": 0.9633230511626145
+    },
+    "sum_meV": -43.42875535652869,
+    "shares": {
+     "hop_I": 0.7024242464640764,
+     "inorganic_near": 0.2998937419849319,
+     "inorganic_far": -0.46766658468702327,
+     "organic_near": 0.4875302830778567,
+     "organic_far": -0.02218168683984164
+    },
+    "local_share": 1.0023179884490083,
+    "far_or_organic_share": -0.0023179884490083236,
+    "side_above_half": "local",
+    "direct_meV": -43.299586289776926,
+    "segment_change_meV": -43.299586289776926,
+    "closure_vs_direct_meV": -0.1291690667517642,
+    "closure_vs_segment_meV": -0.1291690667517642
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -31.98215943810638,
+     "inorganic_near": -4.909234929962869,
+     "inorganic_far": -0.3241685849495426,
+     "organic_near": -0.7069468051347374,
+     "organic_far": 7.594856681168645
+    },
+    "sum_meV": -30.327653076984884,
+    "shares": {
+     "hop_I": 1.0545543816701421,
+     "inorganic_near": 0.1618732223525862,
+     "inorganic_far": 0.010688878039018072,
+     "organic_near": 0.023310303746227785,
+     "organic_far": -0.2504267858079743
+    },
+    "local_share": 1.2164276040227284,
+    "far_or_organic_share": -0.21642760402272843,
+    "side_above_half": "local",
+    "direct_meV": -34.445998098817654,
+    "segment_change_meV": -34.445998098817654,
+    "closure_vs_direct_meV": 4.11834502183277,
+    "closure_vs_segment_meV": 4.11834502183277
+   }
+  },
+  "m30_GA": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 136,
+    "hop_I_displacement_A": 4.153420156190738,
+    "second_largest_I_displacement_A": 0.24568848588788184,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 26,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 305.9708134678658,
+     "W_meV": 217.5138117785731,
+     "closure_meV": -88.4570016892927,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 124.66395671202129,
+       "dE_meV": 204.55656200647354,
+       "closure_meV": -79.89260529445225
+      },
+      "2-3": {
+       "W_meV": 92.8498550665518,
+       "dE_meV": 101.41425146139227,
+       "closure_meV": -8.564396394840472
+      },
+      "3-4": {
+       "W_meV": -43.44785767417871,
+       "dE_meV": -43.98720587778371,
+       "closure_meV": 0.5393482036050017
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 292.5838952928643,
+     "W_meV": 205.02758705019897,
+     "closure_meV": -87.55630824266535,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 112.36550618406832,
+       "dE_meV": 192.12509449903337,
+       "closure_meV": -79.75958831496504
+      },
+      "2-3": {
+       "W_meV": 92.66208086613068,
+       "dE_meV": 100.45880079383096,
+       "closure_meV": -7.7967199277002806
+      },
+      "3-4": {
+       "W_meV": -48.28274575614116,
+       "dE_meV": -50.20069511147085,
+       "closure_meV": 1.9179493553296894
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 244.6666178002488,
+     "W_meV": 164.52963179843448,
+     "closure_meV": -80.13698600181431,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 96.15514400381741,
+       "dE_meV": 174.88330228661653,
+       "closure_meV": -78.72815828279911
+      },
+      "2-3": {
+       "W_meV": 68.37448779461711,
+       "dE_meV": 69.78331551363226,
+       "closure_meV": -1.4088277190151501
+      },
+      "3-4": {
+       "W_meV": -12.633041665553796,
+       "dE_meV": -11.284743159194477,
+       "closure_meV": -1.3482985063593187
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -6.84625878957533,
+     "inorganic_near": -25.783368924326947,
+     "inorganic_far": 27.391437660944746,
+     "organic_near": -39.176633867489116,
+     "organic_far": 3.9168686686821417
+    },
+    "sum_meV": -40.49795525176451,
+    "shares": {
+     "hop_I": 0.16905196193274563,
+     "inorganic_near": 0.6366585365616344,
+     "inorganic_far": -0.6763659421978173,
+     "organic_near": 0.9673731333826336,
+     "organic_far": -0.09671768967919639
+    },
+    "local_share": 0.80571049849438,
+    "far_or_organic_share": 0.19428950150561997,
+    "side_above_half": "local",
+    "direct_meV": -47.91727749261554,
+    "segment_change_meV": -47.91727749261554,
+    "closure_vs_direct_meV": 7.419322240851031,
+    "closure_vs_segment_meV": 7.419322240851031
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -44.40777259473151,
+     "inorganic_near": -9.453994894385339,
+     "inorganic_far": 3.203603320279644,
+     "organic_near": -8.204993322924034,
+     "organic_far": 5.878977511622703
+    },
+    "sum_meV": -52.984179980138535,
+    "shares": {
+     "hop_I": 0.838132676798585,
+     "inorganic_near": 0.1784305220526057,
+     "inorganic_far": -0.06046339344084471,
+     "organic_near": 0.15485741830862965,
+     "organic_far": -0.11095722371897566
+    },
+    "local_share": 1.0165631988511907,
+    "far_or_organic_share": -0.01656319885119073,
+    "side_above_half": "local",
+    "direct_meV": -61.30419566761702,
+    "segment_change_meV": -61.30419566761702,
+    "closure_vs_direct_meV": 8.320015687478488,
+    "closure_vs_segment_meV": 8.320015687478488
+   }
+  },
+  "m30_Sr": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 137,
+    "hop_I_displacement_A": 3.8862445901077876,
+    "second_largest_I_displacement_A": 0.4620604062389906,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 208.34275428205729,
+     "W_meV": 153.21933982655594,
+     "closure_meV": -55.12341445550135,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 96.13663242539408,
+       "dE_meV": 148.62328545132186,
+       "closure_meV": -52.48665302592778
+      },
+      "2-3": {
+       "W_meV": 57.08270740116184,
+       "dE_meV": 59.71946883073542,
+       "closure_meV": -2.636761429573582
+      },
+      "3-4": {
+       "W_meV": -36.639169705587605,
+       "dE_meV": -36.29699601151515,
+       "closure_meV": -0.3421736940724571
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 187.4138930886602,
+     "W_meV": 129.01471527736066,
+     "closure_meV": -58.39917781129952,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 68.17542568053362,
+       "dE_meV": 122.87437845748173,
+       "closure_meV": -54.698952776948104
+      },
+      "2-3": {
+       "W_meV": 60.83928959682712,
+       "dE_meV": 64.53951463117846,
+       "closure_meV": -3.700225034351341
+      },
+      "3-4": {
+       "W_meV": -35.59315357905672,
+       "dE_meV": -36.105720132582064,
+       "closure_meV": 0.5125665535253461
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 153.10505304660182,
+     "W_meV": 108.16492726484627,
+     "closure_meV": -44.940125781755555,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 72.04435146859821,
+       "dE_meV": 121.62445185822435,
+       "closure_meV": -49.58010038962614
+      },
+      "2-3": {
+       "W_meV": 36.12057579624804,
+       "dE_meV": 31.480601188377477,
+       "closure_meV": 4.639974607870563
+      },
+      "3-4": {
+       "W_meV": -11.146747440794698,
+       "dE_meV": -10.596580774290487,
+       "closure_meV": -0.5501666665042109
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -0.6785080576589451,
+     "inorganic_near": -22.963518269099673,
+     "inorganic_far": 15.720466640173509,
+     "organic_near": -13.875938785667579,
+     "organic_far": 0.9477104597382189
+    },
+    "sum_meV": -20.84978801251447,
+    "shares": {
+     "hop_I": 0.0325426837554267,
+     "inorganic_near": 1.1013789807031371,
+     "inorganic_far": -0.7539868813408445,
+     "organic_near": 0.6655194181033858,
+     "organic_far": -0.045454201221105155
+    },
+    "local_share": 1.1339216644585637,
+    "far_or_organic_share": -0.13392166445856368,
+    "side_above_half": "local",
+    "direct_meV": -34.308840042058364,
+    "segment_change_meV": -34.308840042058364,
+    "closure_vs_direct_meV": 13.459052029543894,
+    "closure_vs_segment_meV": 13.459052029543894
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -43.234067093226884,
+     "inorganic_near": -6.367073435749413,
+     "inorganic_far": -1.0952423041590937,
+     "organic_near": 1.3866708545414443,
+     "organic_far": 4.255299416884277
+    },
+    "sum_meV": -45.05441256170967,
+    "shares": {
+     "hop_I": 0.9595967328174679,
+     "inorganic_near": 0.1413196416006673,
+     "inorganic_far": 0.024309323812822404,
+     "organic_near": -0.030777692476672804,
+     "organic_far": -0.09444800575428483
+    },
+    "local_share": 1.1009163744181352,
+    "far_or_organic_share": -0.10091637441813517,
+    "side_above_half": "local",
+    "direct_meV": -55.23770123545546,
+    "segment_change_meV": -55.23770123545546,
+    "closure_vs_direct_meV": 10.183288673745793,
+    "closure_vs_segment_meV": 10.183288673745793
+   }
+  },
+  "m32_undoped": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.8221525978370274,
+    "second_largest_I_displacement_A": 0.19064834236838643,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 177.17333584732842,
+     "W_meV": 85.67030835603057,
+     "closure_meV": -91.50302749129784,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 12.53613328290303,
+       "dE_meV": 98.97992084734142,
+       "closure_meV": -86.4437875644384
+      },
+      "2-3": {
+       "W_meV": 73.13417507312752,
+       "dE_meV": 78.193414999987,
+       "closure_meV": -5.059239926859476
+      },
+      "3-4": {
+       "W_meV": -49.47579704156428,
+       "dE_meV": -50.593041989486665,
+       "closure_meV": 1.1172449479223872
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 175.22086835901973,
+     "W_meV": 105.02440413814523,
+     "closure_meV": -70.1964642208745,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 38.15749002053419,
+       "dE_meV": 107.61103994991572,
+       "closure_meV": -69.45354992938152
+      },
+      "2-3": {
+       "W_meV": 66.86691411761107,
+       "dE_meV": 67.60982840910401,
+       "closure_meV": -0.7429142914929372
+      },
+      "3-4": {
+       "W_meV": -51.26988588480821,
+       "dE_meV": -52.30559945789537,
+       "closure_meV": 1.0357135730871576
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 164.1850872838404,
+     "W_meV": 70.7023634469605,
+     "closure_meV": -93.4827238368799,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 11.526700984517163,
+       "dE_meV": 106.96627343713772,
+       "closure_meV": -95.43957245262055
+      },
+      "2-3": {
+       "W_meV": 59.17566246244338,
+       "dE_meV": 57.21881384670269,
+       "closure_meV": 1.9568486157406895
+      },
+      "3-4": {
+       "W_meV": -28.179048662806167,
+       "dE_meV": -27.107487359899096,
+       "closure_meV": -1.071561302907071
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": 1.3250335528476853,
+     "inorganic_near": -12.649942510974196,
+     "inorganic_far": 13.129814726531519,
+     "organic_near": -35.731376597100244,
+     "organic_far": -0.3955698624895092
+    },
+    "sum_meV": -34.322040691184746,
+    "shares": {
+     "hop_I": -0.03860590822002044,
+     "inorganic_near": 0.3685661533005291,
+     "inorganic_far": -0.38254761261627934,
+     "organic_near": 1.0410621244405631,
+     "organic_far": 0.011525243095207539
+    },
+    "local_share": 0.3299602450805087,
+    "far_or_organic_share": 0.6700397549194913,
+    "side_above_half": "far_or_organic",
+    "direct_meV": -11.03578107517933,
+    "segment_change_meV": -11.03578107517933,
+    "closure_vs_direct_meV": -23.286259616005417,
+    "closure_vs_segment_meV": -23.286259616005417
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -6.278376040355312,
+     "inorganic_near": -6.446183005865237,
+     "inorganic_far": 4.0718278357887785,
+     "organic_near": -7.515586444838619,
+     "organic_far": 1.2003727462003386
+    },
+    "sum_meV": -14.96794490907005,
+    "shares": {
+     "hop_I": 0.41945478009815734,
+     "inorganic_near": 0.43066586929773343,
+     "inorganic_far": -0.27203653277220397,
+     "organic_near": 0.5021121129517544,
+     "organic_far": -0.08019622957544123
+    },
+    "local_share": 0.8501206493958907,
+    "far_or_organic_share": 0.14987935060410928,
+    "side_above_half": "local",
+    "direct_meV": -12.988248563488014,
+    "segment_change_meV": -12.988248563488014,
+    "closure_vs_direct_meV": -1.9796963455820364,
+    "closure_vs_segment_meV": -1.9796963455820364
+   }
+  },
+  "m32_GA": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 48,
+    "hop_I_displacement_A": 3.9464555092648985,
+    "second_largest_I_displacement_A": 0.16710585180896206,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 18,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 130.39220091013703,
+     "W_meV": 66.16506730683706,
+     "closure_meV": -64.22713360329998,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -33.204399355090956,
+       "dE_meV": 16.738676087697968,
+       "closure_meV": -49.943075442788924
+      },
+      "2-3": {
+       "W_meV": 99.36946666192806,
+       "dE_meV": 113.65352482243907,
+       "closure_meV": -14.284058160511009
+      },
+      "3-4": {
+       "W_meV": -50.62023251736098,
+       "dE_meV": -52.438790327869356,
+       "closure_meV": 1.8185578105083735
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 112.0458235661772,
+     "W_meV": 59.8545254960428,
+     "closure_meV": -52.19129807013441,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -32.79660321725487,
+       "dE_meV": 0.83062492967656,
+       "closure_meV": -33.62722814693143
+      },
+      "2-3": {
+       "W_meV": 92.65112871329777,
+       "dE_meV": 111.21519863650065,
+       "closure_meV": -18.56406992320288
+      },
+      "3-4": {
+       "W_meV": -43.7552507297063,
+       "dE_meV": -47.38019154206086,
+       "closure_meV": 3.6249408123545592
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 65.87218336062506,
+     "W_meV": 10.632915527049363,
+     "closure_meV": -55.239267833575695,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -61.290080427685666,
+       "dE_meV": -6.3820527284406126,
+       "closure_meV": -54.908027699245054
+      },
+      "2-3": {
+       "W_meV": 71.92299595473501,
+       "dE_meV": 72.25423608906567,
+       "closure_meV": -0.33124013433065613
+      },
+      "3-4": {
+       "W_meV": -26.002509512369922,
+       "dE_meV": -27.795596441137604,
+       "closure_meV": 1.793086928767682
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -2.721217502135488,
+     "inorganic_near": -20.628153383631773,
+     "inorganic_far": 27.62760334774995,
+     "organic_near": -41.34941334143038,
+     "organic_far": -12.15042908954571
+    },
+    "sum_meV": -49.2216099689934,
+    "shares": {
+     "hop_I": 0.0552850161514361,
+     "inorganic_near": 0.4190873357581405,
+     "inorganic_far": -0.5612901196274086,
+     "organic_near": 0.8400662507276373,
+     "organic_far": 0.2468515169901947
+    },
+    "local_share": 0.4743723519095766,
+    "far_or_organic_share": 0.5256276480904234,
+    "side_above_half": "far_or_organic",
+    "direct_meV": -46.17364020555215,
+    "segment_change_meV": -46.17364020555215,
+    "closure_vs_direct_meV": -3.0479697634412517,
+    "closure_vs_segment_meV": -3.0479697634412517
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -35.687903541519574,
+     "inorganic_near": -12.145279896076469,
+     "inorganic_far": 4.683534564420594,
+     "organic_near": -13.344731354232671,
+     "organic_far": 0.9622284476204284
+    },
+    "sum_meV": -55.53215177978769,
+    "shares": {
+     "hop_I": 0.6426529928651005,
+     "inorganic_near": 0.21870717245458957,
+     "inorganic_far": -0.08433915154221132,
+     "organic_near": 0.24030639776306703,
+     "organic_far": -0.017327411540545696
+    },
+    "local_share": 0.86136016531969,
+    "far_or_organic_share": 0.13863983468031005,
+    "side_above_half": "local",
+    "direct_meV": -64.52001754951198,
+    "segment_change_meV": -64.52001754951198,
+    "closure_vs_direct_meV": 8.987865769724287,
+    "closure_vs_segment_meV": 8.987865769724287
+   }
+  },
+  "m32_Sr": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.7623328056635645,
+    "second_largest_I_displacement_A": 0.34400426917371324,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 151.65340938256122,
+     "W_meV": 60.932199554631225,
+     "closure_meV": -90.72120982793,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 5.305361586522999,
+       "dE_meV": 91.4933882013429,
+       "closure_meV": -86.1880266148199
+      },
+      "2-3": {
+       "W_meV": 55.6268379681082,
+       "dE_meV": 60.160021181218326,
+       "closure_meV": -4.533183213110128
+      },
+      "3-4": {
+       "W_meV": -88.08259262108015,
+       "dE_meV": -87.34351574094035,
+       "closure_meV": -0.7390768801398053
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 173.91633395095596,
+     "W_meV": 106.44468017241078,
+     "closure_meV": -67.47165377854517,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 49.138377280324804,
+       "dE_meV": 115.78185568305344,
+       "closure_meV": -66.64347840272863
+      },
+      "2-3": {
+       "W_meV": 57.30630289208599,
+       "dE_meV": 58.13447826790252,
+       "closure_meV": -0.8281753758165351
+      },
+      "3-4": {
+       "W_meV": -103.53277219766844,
+       "dE_meV": -101.5954945876274,
+       "closure_meV": -1.9372776100410363
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 160.64191100304015,
+     "W_meV": 70.36330984531347,
+     "closure_meV": -90.27860115772668,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 20.299051466948534,
+       "dE_meV": 113.35324314131867,
+       "closure_meV": -93.05419167437014
+      },
+      "2-3": {
+       "W_meV": 50.06425837836494,
+       "dE_meV": 47.28866786172148,
+       "closure_meV": 2.7755905166434616
+      },
+      "3-4": {
+       "W_meV": -55.01612894147149,
+       "dE_meV": -47.717333494802006,
+       "closure_meV": -7.298795446669487
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -3.9333663585800593,
+     "inorganic_near": -13.386556596068987,
+     "inorganic_far": 14.7004219126778,
+     "organic_near": -35.48696064333869,
+     "organic_far": 2.025091358212613
+    },
+    "sum_meV": -36.081370327097325,
+    "shares": {
+     "hop_I": 0.10901377422536743,
+     "inorganic_near": 0.37101020484290204,
+     "inorganic_far": -0.4074241576583829,
+     "organic_near": 0.9835258561864478,
+     "organic_far": -0.05612567759633445
+    },
+    "local_share": 0.48002397906826944,
+    "far_or_organic_share": 0.5199760209317306,
+    "side_above_half": "far_or_organic",
+    "direct_meV": -13.27442294791581,
+    "segment_change_meV": -13.27442294791581,
+    "closure_vs_direct_meV": -22.806947379181516,
+    "closure_vs_segment_meV": -22.806947379181516
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 11.126807142300208,
+     "inorganic_near": -4.7246329507614995,
+     "inorganic_far": 5.4362078170459025,
+     "organic_near": -5.403714284862099,
+     "organic_far": 2.996442566959769
+    },
+    "sum_meV": 9.43111029068228,
+    "shares": {
+     "hop_I": 1.1797982209256144,
+     "inorganic_near": -0.5009625383587474,
+     "inorganic_far": 0.5764122833360088,
+     "organic_near": -0.5729669273617598,
+     "organic_far": 0.3177189614588841
+    },
+    "local_share": 0.678835682566867,
+    "far_or_organic_share": 0.321164317433133,
+    "side_above_half": "local",
+    "direct_meV": 8.988501620478928,
+    "segment_change_meV": 8.988501620478928,
+    "closure_vs_direct_meV": 0.44260867020335226,
+    "closure_vs_segment_meV": 0.44260867020335226
+   }
+  },
+  "m10_undoped": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 3.92669522734657,
+    "second_largest_I_displacement_A": 0.2529846857206477,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 44.50939236267004,
+     "W_meV": -8.738616929123141,
+     "closure_meV": -53.24800929179318,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -14.172659660460056,
+       "dE_meV": 36.59183136187494,
+       "closure_meV": -50.764491022334994
+      },
+      "2-3": {
+       "W_meV": 5.434042731336918,
+       "dE_meV": 7.917561000795104,
+       "closure_meV": -2.4835182694581857
+      },
+      "3-4": {
+       "W_meV": -60.83397308935453,
+       "dE_meV": -60.503564920509234,
+       "closure_meV": -0.33040816884529534
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 85.94189977998212,
+     "W_meV": 38.53548737433681,
+     "closure_meV": -47.40641240564531,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 15.79762262655763,
+       "dE_meV": 60.876375533098326,
+       "closure_meV": -45.0787529065407
+      },
+      "2-3": {
+       "W_meV": 22.737864747779145,
+       "dE_meV": 25.065524246883797,
+       "closure_meV": -2.3276594991046515
+      },
+      "3-4": {
+       "W_meV": -70.27490660182175,
+       "dE_meV": -70.39255869176486,
+       "closure_meV": 0.11765208994310683
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 73.21539320400916,
+     "W_meV": 19.718552219611936,
+     "closure_meV": -53.496840984397224,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 11.062456269244926,
+       "dE_meV": 63.50647316139657,
+       "closure_meV": -52.444016892151645
+      },
+      "2-3": {
+       "W_meV": 8.656095950367012,
+       "dE_meV": 9.70892004261259,
+       "closure_meV": -1.0528240922455776
+      },
+      "3-4": {
+       "W_meV": -27.118604532417955,
+       "dE_meV": -22.361629526130855,
+       "closure_meV": -4.7569750062870995
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -48.40035227687902,
+     "inorganic_near": -40.194558083613444,
+     "inorganic_far": 20.381655725525764,
+     "organic_near": -3.1849253247841376,
+     "organic_far": 52.581244805025946
+    },
+    "sum_meV": -18.81693515472489,
+    "shares": {
+     "hop_I": 2.5721697969887405,
+     "inorganic_near": 2.1360842110103504,
+     "inorganic_far": -1.0831549111443888,
+     "organic_near": 0.16925845248419266,
+     "organic_far": -2.794357549338895
+    },
+    "local_share": 4.70825400799909,
+    "far_or_organic_share": -3.7082540079990904,
+    "side_above_half": "local",
+    "direct_meV": -12.726506575972962,
+    "segment_change_meV": -12.726506575972962,
+    "closure_vs_direct_meV": -6.090428578751929,
+    "closure_vs_segment_meV": -6.090428578751929
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 24.42770243042937,
+     "inorganic_near": -7.946255775926144,
+     "inorganic_far": -1.3044338264003237,
+     "organic_near": -0.12834842710022776,
+     "organic_far": 13.408504747732378
+    },
+    "sum_meV": 28.457169148735055,
+    "shares": {
+     "hop_I": 0.8584024047773284,
+     "inorganic_near": -0.2792356377541988,
+     "inorganic_far": -0.04583849572606932,
+     "organic_near": -0.004510231725067177,
+     "organic_far": 0.47118196042800686
+    },
+    "local_share": 0.5791667670231296,
+    "far_or_organic_share": 0.42083323297687036,
+    "side_above_half": "local",
+    "direct_meV": 28.70600084133912,
+    "segment_change_meV": 28.70600084133912,
+    "closure_vs_direct_meV": -0.2488316926040639,
+    "closure_vs_segment_meV": -0.2488316926040639
+   }
+  },
+  "m10_GA": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 49,
+    "hop_I_displacement_A": 4.020305131130185,
+    "second_largest_I_displacement_A": 0.2631649836121135,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 8,
+     "organic_far": 146
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 109.36310555553064,
+     "W_meV": 40.281165475465485,
+     "closure_meV": -69.08194008006515,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 33.43942153484399,
+       "dE_meV": 99.5810203748988,
+       "closure_meV": -66.14159884005481
+      },
+      "2-3": {
+       "W_meV": 6.841743940621492,
+       "dE_meV": 9.782085180631839,
+       "closure_meV": -2.940341240010347
+      },
+      "3-4": {
+       "W_meV": -62.454357016170974,
+       "dE_meV": -64.82459699327592,
+       "closure_meV": 2.3702399771049443
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 152.41652610188794,
+     "W_meV": 92.80926604055898,
+     "closure_meV": -59.60726006132896,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 69.69000630460094,
+       "dE_meV": 127.33483970714587,
+       "closure_meV": -57.64483340254493
+      },
+      "2-3": {
+       "W_meV": 23.119259735958007,
+       "dE_meV": 25.081686394742064,
+       "closure_meV": -1.9624266587840573
+      },
+      "3-4": {
+       "W_meV": -72.7060500782845,
+       "dE_meV": -79.24480689734992,
+       "closure_meV": 6.538756819065412
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 111.1213283293182,
+     "W_meV": 53.0348474655693,
+     "closure_meV": -58.0864808637489,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 39.34143131878244,
+       "dE_meV": 97.97201692708768,
+       "closure_meV": -58.63058560830524
+      },
+      "2-3": {
+       "W_meV": 13.693416146786856,
+       "dE_meV": 13.149311402230524,
+       "closure_meV": 0.5441047445563321
+      },
+      "3-4": {
+       "W_meV": -25.8197440046112,
+       "dE_meV": -21.889392839511856,
+       "closure_meV": -3.930351165099342
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -36.72547329539818,
+     "inorganic_near": -35.5621189760954,
+     "inorganic_far": 5.5695039609063866,
+     "organic_near": -2.0206635838830973,
+     "organic_far": 28.964333319480616
+    },
+    "sum_meV": -39.774418574989674,
+    "shares": {
+     "hop_I": 0.9233440641289805,
+     "inorganic_near": 0.8940952564535289,
+     "inorganic_far": -0.14002728790128724,
+     "organic_near": 0.05080309546381903,
+     "organic_far": -0.7282151281450413
+    },
+    "local_share": 1.8174393205825095,
+    "far_or_organic_share": -0.8174393205825095,
+    "side_above_half": "local",
+    "direct_meV": -41.295197772569736,
+    "segment_change_meV": -41.295197772569736,
+    "closure_vs_direct_meV": 1.5207791975800617,
+    "closure_vs_segment_meV": 1.5207791975800617
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 27.286345616772252,
+     "inorganic_near": -5.813193733538567,
+     "inorganic_far": -3.363603879830235,
+     "organic_near": -0.567276119802711,
+     "organic_far": -4.788589893496931
+    },
+    "sum_meV": 12.753681990103809,
+    "shares": {
+     "hop_I": 2.139487689746775,
+     "inorganic_near": -0.4558051343956437,
+     "inorganic_far": -0.26373590641825756,
+     "organic_near": -0.044479399771994284,
+     "organic_far": -0.3754672491608797
+    },
+    "local_share": 1.6836825553511314,
+    "far_or_organic_share": -0.6836825553511314,
+    "side_above_half": "local",
+    "direct_meV": 1.7582227737875655,
+    "segment_change_meV": 1.7582227737875655,
+    "closure_vs_direct_meV": 10.995459216316243,
+    "closure_vs_segment_meV": 10.995459216316243
+   }
+  },
+  "m18_undoped": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 4.04831016006343,
+    "second_largest_I_displacement_A": 0.11433099679939668,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 24,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 199.1870752099203,
+     "W_meV": 122.60953305765142,
+     "closure_meV": -76.57754215226888,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 73.769547658751,
+       "dE_meV": 146.27888846735004,
+       "closure_meV": -72.50934080859905
+      },
+      "2-3": {
+       "W_meV": 48.83998539890042,
+       "dE_meV": 52.90818674257025,
+       "closure_meV": -4.068201343669834
+      },
+      "3-4": {
+       "W_meV": -46.34105742536271,
+       "dE_meV": -48.13803073193412,
+       "closure_meV": 1.7969733065714095
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 197.08108928512047,
+     "W_meV": 114.26710824361832,
+     "closure_meV": -82.81398104150215,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 67.23639229330672,
+       "dE_meV": 147.82257316392133,
+       "closure_meV": -80.58618087061461
+      },
+      "2-3": {
+       "W_meV": 47.03071595031158,
+       "dE_meV": 49.258516121199136,
+       "closure_meV": -2.227800170887555
+      },
+      "3-4": {
+       "W_meV": -54.66476171181793,
+       "dE_meV": -57.80888147501173,
+       "closure_meV": 3.1441197631937996
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 173.7732017209055,
+     "W_meV": 83.45077780592561,
+     "closure_meV": -90.32242391497988,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 46.32897163633612,
+       "dE_meV": 135.49511626479216,
+       "closure_meV": -89.16614462845604
+      },
+      "2-3": {
+       "W_meV": 37.121806169589526,
+       "dE_meV": 38.27808545611333,
+       "closure_meV": -1.1562792865238052
+      },
+      "3-4": {
+       "W_meV": -22.375919806952798,
+       "dE_meV": -19.344934698892757,
+       "closure_meV": -3.0309851080600403
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -9.341684583962149,
+     "inorganic_near": -54.13732610170034,
+     "inorganic_far": 23.342754288063254,
+     "organic_near": 5.920906623922073,
+     "organic_far": 3.3990193359845513
+    },
+    "sum_meV": -30.81633043769261,
+    "shares": {
+     "hop_I": 0.30314071958859784,
+     "inorganic_near": 1.7567739355326664,
+     "inorganic_far": -0.7574800099985901,
+     "organic_near": -0.19213535615129534,
+     "organic_far": -0.11029928897137874
+    },
+    "local_share": 2.059914655121264,
+    "far_or_organic_share": -1.059914655121264,
+    "side_above_half": "local",
+    "direct_meV": -23.30788756421498,
+    "segment_change_meV": -23.30788756421498,
+    "closure_vs_direct_meV": -7.50844287347763,
+    "closure_vs_segment_meV": -7.50844287347763
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -22.751504227322215,
+     "inorganic_near": -7.367451111673848,
+     "inorganic_far": -2.913968998563776,
+     "organic_near": -3.0333523828597766,
+     "organic_far": -3.092478531306108
+    },
+    "sum_meV": -39.15875525172572,
+    "shares": {
+     "hop_I": 0.5810068292791191,
+     "inorganic_near": 0.1881431384709085,
+     "inorganic_far": 0.07441423967211924,
+     "organic_near": 0.0774629418979322,
+     "organic_far": 0.078972850679921
+    },
+    "local_share": 0.7691499677500276,
+    "far_or_organic_share": 0.23085003224997236,
+    "side_above_half": "local",
+    "direct_meV": -25.413873489014804,
+    "segment_change_meV": -25.413873489014804,
+    "closure_vs_direct_meV": -13.744881762710918,
+    "closure_vs_segment_meV": -13.744881762710918
+   }
+  },
+  "m18_GA": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 3.676949014640074,
+    "second_largest_I_displacement_A": 0.25704014631217414,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 12,
+     "inorganic_far": 67,
+     "organic_near": 26,
+     "organic_far": 128
+    },
+    "n_molecules": {
+     "organic_near": 3,
+     "organic_far": 16
+    },
+    "n_GA_molecules": 1
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 146.2931744463276,
+     "W_meV": 93.12329988666795,
+     "closure_meV": -53.16987455965966,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 43.654494182494425,
+       "dE_meV": 92.54429193970282,
+       "closure_meV": -48.88979775720839
+      },
+      "2-3": {
+       "W_meV": 49.46880570417354,
+       "dE_meV": 53.748882506624795,
+       "closure_meV": -4.280076802451255
+      },
+      "3-4": {
+       "W_meV": -25.30954593169951,
+       "dE_meV": -25.231757885194384,
+       "closure_meV": -0.07778804650512683
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 166.9443821326695,
+     "W_meV": 112.23805516569766,
+     "closure_meV": -54.70632696697183,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 53.92634109124862,
+       "dE_meV": 106.06650764862025,
+       "closure_meV": -52.14016655737163
+      },
+      "2-3": {
+       "W_meV": 58.31171407444905,
+       "dE_meV": 60.877874484049244,
+       "closure_meV": -2.5661604096001938
+      },
+      "3-4": {
+       "W_meV": -26.028904308162282,
+       "dE_meV": -27.192704083518038,
+       "closure_meV": 1.1637997753557556
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 135.379991523223,
+     "W_meV": 67.29570506828318,
+     "closure_meV": -68.08428645493981,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 28.418674991324174,
+       "dE_meV": 93.91894729924388,
+       "closure_meV": -65.50027230791972
+      },
+      "2-3": {
+       "W_meV": 38.87703007695895,
+       "dE_meV": 41.461044223979115,
+       "closure_meV": -2.584014147020163
+      },
+      "3-4": {
+       "W_meV": -10.53782805774629,
+       "dE_meV": -11.52665050176438,
+       "closure_meV": 0.9888224440180888
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -15.053586209528305,
+     "inorganic_near": -61.00479499220111,
+     "inorganic_far": 23.09072150733899,
+     "organic_near": 5.287828807643383,
+     "organic_far": 2.737480789332544
+    },
+    "sum_meV": -44.942350097414504,
+    "shares": {
+     "hop_I": 0.3349532495941801,
+     "inorganic_near": 1.357401089617489,
+     "inorganic_far": -0.5137853596282537,
+     "organic_near": -0.11765803960366521,
+     "organic_far": -0.06091093997975039
+    },
+    "local_share": 1.6923543392116691,
+    "far_or_organic_share": -0.6923543392116691,
+    "side_above_half": "local",
+    "direct_meV": -31.56439060944649,
+    "segment_change_meV": -31.56439060944649,
+    "closure_vs_direct_meV": -13.377959487968013,
+    "closure_vs_segment_meV": -13.377959487968013
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -14.354437938666706,
+     "inorganic_near": -3.5322395441518086,
+     "inorganic_far": -4.532526946513476,
+     "organic_near": -0.6217374293978282,
+     "organic_far": -2.786652959654978
+    },
+    "sum_meV": -25.827594818384796,
+    "shares": {
+     "hop_I": 0.5557791207274485,
+     "inorganic_near": 0.13676223314597855,
+     "inorganic_far": 0.1754916390157669,
+     "organic_near": 0.024072602724712806,
+     "organic_far": 0.10789440438609332
+    },
+    "local_share": 0.692541353873427,
+    "far_or_organic_share": 0.30745864612657303,
+    "side_above_half": "local",
+    "direct_meV": -10.913182923104614,
+    "segment_change_meV": -10.913182923104614,
+    "closure_vs_direct_meV": -14.914411895280182,
+    "closure_vs_segment_meV": -14.914411895280182
+   }
+  },
+  "m04_undoped": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 4.037697623040129,
+    "second_largest_I_displacement_A": 0.2727545842781803,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 135.42916454025544,
+     "W_meV": 53.72136333233723,
+     "closure_meV": -81.70780120791821,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 20.586021390284714,
+       "dE_meV": 98.84740138659254,
+       "closure_meV": -78.26137999630782
+      },
+      "2-3": {
+       "W_meV": 33.13534194205252,
+       "dE_meV": 36.581763153662905,
+       "closure_meV": -3.446421211610385
+      },
+      "3-4": {
+       "W_meV": -120.66202503395965,
+       "dE_meV": -123.63302860467229,
+       "closure_meV": 2.9710035707126394
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 139.40563721871513,
+     "W_meV": 64.92350267847914,
+     "closure_meV": -74.48213454023599,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 28.22010595255638,
+       "dE_meV": 100.9447070744045,
+       "closure_meV": -72.72460112184812
+      },
+      "2-3": {
+       "W_meV": 36.703396725922715,
+       "dE_meV": 38.46093014431062,
+       "closure_meV": -1.7575334183879079
+      },
+      "3-4": {
+       "W_meV": -116.14644923764398,
+       "dE_meV": -117.5589522329119,
+       "closure_meV": 1.4125029952679284
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 132.6866234303452,
+     "W_meV": 49.207101721198256,
+     "closure_meV": -83.47952170914695,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 22.129390640585775,
+       "dE_meV": 104.65263079095166,
+       "closure_meV": -82.5232401503659
+      },
+      "2-3": {
+       "W_meV": 27.077711080612488,
+       "dE_meV": 28.033992639393546,
+       "closure_meV": -0.9562815587810576
+      },
+      "3-4": {
+       "W_meV": -88.76146858879316,
+       "dE_meV": -84.50119612098206,
+       "closure_meV": -4.260272467811106
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -27.352818181531745,
+     "inorganic_near": -25.052319416935457,
+     "inorganic_far": 24.87622134550429,
+     "organic_near": 16.232232290284244,
+     "organic_far": -4.419716994602187
+    },
+    "sum_meV": -15.716400957280854,
+    "shares": {
+     "hop_I": 1.7403996154005061,
+     "inorganic_near": 1.5940239425699814,
+     "inorganic_far": -1.5828192098891456,
+     "organic_near": -1.0328212123377027,
+     "organic_far": 0.28121686425636067
+    },
+    "local_share": 3.3344235579704877,
+    "far_or_organic_share": -2.3344235579704877,
+    "side_above_half": "local",
+    "direct_meV": -6.719013788369921,
+    "segment_change_meV": -6.719013788369921,
+    "closure_vs_direct_meV": -8.997387168910933,
+    "closure_vs_segment_meV": -8.997387168910933
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -4.694619936544086,
+     "inorganic_near": -3.1811644057976816,
+     "inorganic_far": 4.74794040013284,
+     "organic_near": -2.9053434299594225,
+     "organic_far": 1.5189257610293496
+    },
+    "sum_meV": -4.514261611139001,
+    "shares": {
+     "hop_I": 1.039953006923668,
+     "inorganic_near": 0.7046920803056951,
+     "inorganic_far": -1.05176456508795,
+     "organic_near": 0.6435921708193536,
+     "organic_far": -0.3364726929607668
+    },
+    "local_share": 1.744645087229363,
+    "far_or_organic_share": -0.7446450872293631,
+    "side_above_half": "local",
+    "direct_meV": -2.742541109910235,
+    "segment_change_meV": -2.742541109910235,
+    "closure_vs_direct_meV": -1.7717205012287662,
+    "closure_vs_segment_meV": -1.7717205012287662
+   }
+  },
+  "m04_Sr": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 53,
+    "hop_I_displacement_A": 4.060732579333938,
+    "second_largest_I_displacement_A": 0.40289581356135185,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 16,
+     "organic_far": 136
+    },
+    "n_molecules": {
+     "organic_near": 2,
+     "organic_far": 17
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 96.33374957775231,
+     "W_meV": -3.771625766053006,
+     "closure_meV": -100.10537534380532,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -18.384012094639573,
+       "dE_meV": 78.74988786352333,
+       "closure_meV": -97.1338999581629
+      },
+      "2-3": {
+       "W_meV": 14.61238632858656,
+       "dE_meV": 17.583861714228988,
+       "closure_meV": -2.971475385642428
+      },
+      "3-4": {
+       "W_meV": -171.60118352992555,
+       "dE_meV": -176.42719962168485,
+       "closure_meV": 4.8260160917593
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 131.9947491081166,
+     "W_meV": 46.139033781044,
+     "closure_meV": -85.8557153270726,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 19.2064589921208,
+       "dE_meV": 104.47062550906594,
+       "closure_meV": -85.26416651694514
+      },
+      "2-3": {
+       "W_meV": 26.932574788923198,
+       "dE_meV": 27.524123599050654,
+       "closure_meV": -0.5915488101274562
+      },
+      "3-4": {
+       "W_meV": -180.1968108714759,
+       "dE_meV": -175.53136489596,
+       "closure_meV": -4.665445975515894
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 108.4520815347787,
+     "W_meV": 4.770647105034726,
+     "closure_meV": -103.68143442974397,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -8.110748453338402,
+       "dE_meV": 95.73231663671322,
+       "closure_meV": -103.84306509005162
+      },
+      "2-3": {
+       "W_meV": 12.881395558373095,
+       "dE_meV": 12.719764898065478,
+       "closure_meV": 0.1616306603076172
+      },
+      "3-4": {
+       "W_meV": -117.85564229036902,
+       "dE_meV": -111.43505634390749,
+       "closure_meV": -6.420585946461529
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -36.476717722803116,
+     "inorganic_near": -36.07108235845223,
+     "inorganic_far": 25.516891864284325,
+     "organic_near": 13.701144015343797,
+     "organic_far": -8.038622474382086
+    },
+    "sum_meV": -41.36838667600931,
+    "shares": {
+     "hop_I": 0.881753451215853,
+     "inorganic_near": 0.8719480080515412,
+     "inorganic_far": -0.6168210538189126,
+     "organic_near": -0.33119841299707914,
+     "organic_far": 0.1943180075485977
+    },
+    "local_share": 1.753701459267394,
+    "far_or_organic_share": -0.7537014592673941,
+    "side_above_half": "local",
+    "direct_meV": -23.542667573337894,
+    "segment_change_meV": -23.542667573337894,
+    "closure_vs_direct_meV": -17.825719102671414,
+    "closure_vs_segment_meV": -17.825719102671414
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": 5.695041372752456,
+     "inorganic_near": -2.12664225297177,
+     "inorganic_far": 4.9763428167764605,
+     "organic_near": -2.527400674097935,
+     "organic_far": 2.524931608628486
+    },
+    "sum_meV": 8.542272871087697,
+    "shares": {
+     "hop_I": 0.6666892358388571,
+     "inorganic_near": -0.24895508315704068,
+     "inorganic_far": 0.5825548881281308,
+     "organic_near": -0.2958698126645208,
+     "organic_far": 0.2955807718545736
+    },
+    "local_share": 0.4177341526818164,
+    "far_or_organic_share": 0.5822658473181836,
+    "side_above_half": "far_or_organic",
+    "direct_meV": 12.118331957026385,
+    "segment_change_meV": 12.118331957026385,
+    "closure_vs_direct_meV": -3.576059085938688,
+    "closure_vs_segment_meV": -3.576059085938688
+   }
+  },
+  "m14_undoped": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 137,
+    "hop_I_displacement_A": 4.0082697598906885,
+    "second_largest_I_displacement_A": 0.16659564356086468,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 237.13226486870553,
+     "W_meV": 129.62161079684012,
+     "closure_meV": -107.51065407186542,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 46.74309219827602,
+       "dE_meV": 147.95660648087505,
+       "closure_meV": -101.21351428259904
+      },
+      "2-3": {
+       "W_meV": 82.87851859856401,
+       "dE_meV": 89.17565838783048,
+       "closure_meV": -6.297139789266467
+      },
+      "3-4": {
+       "W_meV": -25.137186133962572,
+       "dE_meV": -29.088155570207164,
+       "closure_meV": 3.9509694362445913
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 240.1115316290543,
+     "W_meV": 137.62707313214824,
+     "closure_meV": -102.48445849690606,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 64.73088488204232,
+       "dE_meV": 168.78342119321132,
+       "closure_meV": -104.052536311169
+      },
+      "2-3": {
+       "W_meV": 72.89618825010587,
+       "dE_meV": 71.32811043584297,
+       "closure_meV": 1.5680778142628924
+      },
+      "3-4": {
+       "W_meV": -50.882644813196585,
+       "dE_meV": -51.61750146430677,
+       "closure_meV": 0.734856651110185
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 179.53487549675629,
+     "W_meV": 75.08250948695579,
+     "closure_meV": -104.4523660098005,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 32.667505351860086,
+       "dE_meV": 139.14575935632456,
+       "closure_meV": -106.47825400446447
+      },
+      "2-3": {
+       "W_meV": 42.41500413509576,
+       "dE_meV": 40.389116140431724,
+       "closure_meV": 2.025887994664032
+      },
+      "3-4": {
+       "W_meV": -24.458725607225674,
+       "dE_meV": -26.057443144964054,
+       "closure_meV": 1.5987175377383807
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -14.880732273012569,
+     "inorganic_near": -54.48375051151504,
+     "inorganic_far": 0.04134097034918749,
+     "organic_near": 5.1926399648847426,
+     "organic_far": 1.5859382041012413
+    },
+    "sum_meV": -62.54456364519244,
+    "shares": {
+     "hop_I": 0.23792207357028053,
+     "inorganic_near": 0.8711188844580419,
+     "inorganic_far": -0.0006609842317185182,
+     "organic_near": -0.08302304248762443,
+     "organic_far": -0.0253569313089795
+    },
+    "local_share": 1.1090409580283225,
+    "far_or_organic_share": -0.10904095802832248,
+    "side_above_half": "local",
+    "direct_meV": -60.57665613229801,
+    "segment_change_meV": -60.57665613229801,
+    "closure_vs_direct_meV": -1.9679075128944277,
+    "closure_vs_segment_meV": -1.9679075128944277
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -67.02770272987291,
+     "inorganic_near": 5.957203954843749,
+     "inorganic_far": 0.8745545117185621,
+     "organic_near": 2.42493237357328,
+     "organic_far": 3.231910579853041
+    },
+    "sum_meV": -54.53910130988428,
+    "shares": {
+     "hop_I": 1.2289843638792282,
+     "inorganic_near": -0.10922812829268434,
+     "inorganic_far": -0.01603536711669402,
+     "organic_near": -0.044462272302492126,
+     "organic_far": -0.05925859616735769
+    },
+    "local_share": 1.1197562355865438,
+    "far_or_organic_share": -0.1197562355865438,
+    "side_above_half": "local",
+    "direct_meV": -57.59738937194925,
+    "segment_change_meV": -57.59738937194925,
+    "closure_vs_direct_meV": 3.0582880620649675,
+    "closure_vs_segment_meV": 3.0582880620649675
+   }
+  },
+  "m14_Sr": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 137,
+    "hop_I_displacement_A": 3.797042683290846,
+    "second_largest_I_displacement_A": 0.40592806121933495,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 14,
+     "inorganic_far": 65,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 95.75550761655904,
+     "W_meV": 48.78836727602666,
+     "closure_meV": -46.96714034053238,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -28.606535974788756,
+       "dE_meV": 11.411230865633115,
+       "closure_meV": -40.01776684042187
+      },
+      "2-3": {
+       "W_meV": 77.39490325081545,
+       "dE_meV": 84.34427675092593,
+       "closure_meV": -6.949373500110482
+      },
+      "3-4": {
+       "W_meV": -8.044894163199924,
+       "dE_meV": -10.099369945237413,
+       "closure_meV": 2.054475782037489
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 100.35369384354453,
+     "W_meV": 49.32089068028886,
+     "closure_meV": -51.03280316325567,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -16.880913272252393,
+       "dE_meV": 34.99097932422046,
+       "closure_meV": -51.871892596472854
+      },
+      "2-3": {
+       "W_meV": 66.20180395254123,
+       "dE_meV": 65.36271451932407,
+       "closure_meV": 0.8390894332171541
+      },
+      "3-4": {
+       "W_meV": -27.930194214800732,
+       "dE_meV": -26.94950766135662,
+       "closure_meV": -0.9806865534441123
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 68.83597317209933,
+     "W_meV": 35.459852342609665,
+     "closure_meV": -33.376120829489665,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": -6.163674314011757,
+       "dE_meV": 31.300674891099334,
+       "closure_meV": -37.46434920511109
+      },
+      "2-3": {
+       "W_meV": 41.62352665662143,
+       "dE_meV": 37.535298280999996,
+       "closure_meV": 4.0882283756214335
+      },
+      "3-4": {
+       "W_meV": -7.236131919467102,
+       "dE_meV": -8.029043950955383,
+       "closure_meV": 0.7929120314882816
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -4.544416062409937,
+     "inorganic_near": -12.37261831173174,
+     "inorganic_far": -5.867202724346444,
+     "organic_near": 7.235320833000037,
+     "organic_far": 1.6878779278089127
+    },
+    "sum_meV": -13.861038337679172,
+    "shares": {
+     "hop_I": 0.3278553851233942,
+     "inorganic_near": 0.8926184323506715,
+     "inorganic_far": 0.42328738882406275,
+     "organic_near": -0.5219898146686379,
+     "organic_far": -0.12177139162949051
+    },
+    "local_share": 1.2204738174740657,
+    "far_or_organic_share": -0.2204738174740657,
+    "side_above_half": "local",
+    "direct_meV": -31.517720671445204,
+    "segment_change_meV": -31.517720671445204,
+    "closure_vs_direct_meV": 17.65668233376603,
+    "closure_vs_segment_meV": 17.65668233376603
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -39.37564529719245,
+     "inorganic_near": 8.256201355719046,
+     "inorganic_far": 2.9002308659010314,
+     "organic_near": 4.700796054967558,
+     "organic_far": 10.189902087187832
+    },
+    "sum_meV": -13.328514933416981,
+    "shares": {
+     "hop_I": 2.9542410008837994,
+     "inorganic_near": -0.6194389545244284,
+     "inorganic_far": -0.2175959497655385,
+     "organic_near": -0.35268715820558655,
+     "organic_far": -0.7645189383882459
+    },
+    "local_share": 2.334802046359371,
+    "far_or_organic_share": -1.3348020463593708,
+    "side_above_half": "local",
+    "direct_meV": -26.919534444459714,
+    "segment_change_meV": -26.919534444459714,
+    "closure_vs_direct_meV": 13.591019511042733,
+    "closure_vs_segment_meV": 13.591019511042733
+   }
+  },
+  "m27_undoped": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 137,
+    "hop_I_displacement_A": 3.7693178801048273,
+    "second_largest_I_displacement_A": 0.3413103758971323,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 269.4066016410943,
+     "W_meV": 146.98742352393595,
+     "closure_meV": -122.41917811715837,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 99.922784677892,
+       "dE_meV": 219.4576531619532,
+       "closure_meV": -119.5348684840612
+      },
+      "2-3": {
+       "W_meV": 47.06463884604388,
+       "dE_meV": 49.94894847914111,
+       "closure_meV": -2.8843096330972315
+      },
+      "3-4": {
+       "W_meV": -50.7971891351002,
+       "dE_meV": -57.25806287955493,
+       "closure_meV": 6.46087374445473
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 267.803297431783,
+     "W_meV": 160.1294529454663,
+     "closure_meV": -107.67384448631668,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 105.60699629230632,
+       "dE_meV": 209.90230389134013,
+       "closure_meV": -104.2953075990338
+      },
+      "2-3": {
+       "W_meV": 54.52245665316001,
+       "dE_meV": 57.90099354044287,
+       "closure_meV": -3.3785368872828556
+      },
+      "3-4": {
+       "W_meV": -65.36815653150269,
+       "dE_meV": -71.93248322710133,
+       "closure_meV": 6.564326695598638
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 241.4518442528788,
+     "W_meV": 109.34587407108826,
+     "closure_meV": -132.10597018179055,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 85.27828138374778,
+       "dE_meV": 216.03416523430496,
+       "closure_meV": -130.75588385055718
+      },
+      "2-3": {
+       "W_meV": 24.067592687340493,
+       "dE_meV": 25.417679018573835,
+       "closure_meV": -1.3500863312333422
+      },
+      "3-4": {
+       "W_meV": -40.48221774413655,
+       "dE_meV": -45.56463527842425,
+       "closure_meV": 5.0824175342877
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -52.81809788629755,
+     "inorganic_near": -34.62678298416309,
+     "inorganic_far": 8.973959926163726,
+     "organic_near": 18.551407927721,
+     "organic_far": 9.135934142197883
+    },
+    "sum_meV": -50.78357887437804,
+    "shares": {
+     "hop_I": 1.040062537084128,
+     "inorganic_near": 0.6818499946571003,
+     "inorganic_far": -0.17670987600858867,
+     "organic_near": -0.36530327989705325,
+     "organic_far": -0.17989937583558643
+    },
+    "local_share": 1.7219125317412285,
+    "far_or_organic_share": -0.7219125317412285,
+    "side_above_half": "local",
+    "direct_meV": -26.351453178904194,
+    "segment_change_meV": -26.351453178904194,
+    "closure_vs_direct_meV": -24.432125695473843,
+    "closure_vs_segment_meV": -24.432125695473843
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -41.37793528745877,
+     "inorganic_near": -9.61302947529791,
+     "inorganic_far": 8.009013000376296,
+     "organic_near": 5.535257338427057,
+     "organic_far": -0.19485502889434225
+    },
+    "sum_meV": -37.64154945284767,
+    "shares": {
+     "hop_I": 1.0992622750370982,
+     "inorganic_near": 0.2553834689334411,
+     "inorganic_far": -0.21277054522978453,
+     "organic_near": -0.14705179300232823,
+     "organic_far": 0.005176594261573391
+    },
+    "local_share": 1.3546457439705393,
+    "far_or_organic_share": -0.3546457439705393,
+    "side_above_half": "local",
+    "direct_meV": -27.954757388215512,
+    "segment_change_meV": -27.954757388215512,
+    "closure_vs_direct_meV": -9.686792064632158,
+    "closure_vs_segment_meV": -9.686792064632158
+   }
+  },
+  "m27_Sr": {
+   "split": "test",
+   "groups": {
+    "hop_I_index": 137,
+    "hop_I_displacement_A": 3.7620742606999813,
+    "second_largest_I_displacement_A": 0.5373957567533055,
+    "n_atoms": {
+     "hop_I": 1,
+     "inorganic_near": 13,
+     "inorganic_far": 66,
+     "organic_near": 8,
+     "organic_far": 144
+    },
+    "n_molecules": {
+     "organic_near": 1,
+     "organic_far": 18
+    },
+    "n_GA_molecules": 0
+   },
+   "D2a": {
+    "dft": {
+     "i_star": 3,
+     "Ea_meV": 275.6820915383287,
+     "W_meV": 149.44486615949185,
+     "closure_meV": -126.23722537883683,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 112.46299552998445,
+       "dE_meV": 236.12245034018997,
+       "closure_meV": -123.65945481020552
+      },
+      "2-3": {
+       "W_meV": 36.98187062950739,
+       "dE_meV": 39.559641198138706,
+       "closure_meV": -2.5777705686313155
+      },
+      "3-4": {
+       "W_meV": -82.86219952124986,
+       "dE_meV": -89.41879210760817,
+       "closure_meV": 6.556592586358306
+      }
+     }
+    },
+    "zeroshot": {
+     "i_star": 3,
+     "Ea_meV": 279.64917100894127,
+     "W_meV": 174.01415380080948,
+     "closure_meV": -105.63501720813179,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 122.0239187058955,
+       "dE_meV": 224.9216984407667,
+       "closure_meV": -102.89777973487121
+      },
+      "2-3": {
+       "W_meV": 51.990235094913935,
+       "dE_meV": 54.72747256817456,
+       "closure_meV": -2.7372374732606275
+      },
+      "3-4": {
+       "W_meV": -107.56575860748765,
+       "dE_meV": -113.23431381015325,
+       "closure_meV": 5.668555202665601
+      }
+     }
+    },
+    "finetuned": {
+     "i_star": 3,
+     "Ea_meV": 245.83149657701142,
+     "W_meV": 110.52104337925758,
+     "closure_meV": -135.31045319775384,
+     "segments_beside": {
+      "0-2": {
+       "W_meV": 93.6396279152064,
+       "dE_meV": 229.83224494964816,
+       "closure_meV": -136.19261703444175
+      },
+      "2-3": {
+       "W_meV": 16.881415464051162,
+       "dE_meV": 15.999251627363265,
+       "closure_meV": 0.8821638366878979
+      },
+      "3-4": {
+       "W_meV": -56.89570424983379,
+       "dE_meV": -63.313247097539715,
+       "closure_meV": 6.417542847705924
+      }
+     }
+    }
+   },
+   "resolved": false,
+   "status": "not resolved",
+   "D2b": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_zeroshot",
+    "groups_meV": {
+     "hop_I": -59.239935368609466,
+     "inorganic_near": -41.60092834366212,
+     "inorganic_far": 12.074564301608124,
+     "organic_near": 15.536361128773057,
+     "organic_far": 9.736827860338515
+    },
+    "sum_meV": -63.49311042155189,
+    "shares": {
+     "hop_I": 0.9330135974642889,
+     "inorganic_near": 0.6552038176655658,
+     "inorganic_far": -0.19017125199003598,
+     "organic_near": -0.24469365299041085,
+     "organic_far": -0.15335251014940793
+    },
+    "local_share": 1.5882174151298547,
+    "far_or_organic_share": -0.5882174151298547,
+    "side_above_half": "local",
+    "direct_meV": -33.817674431929845,
+    "segment_change_meV": -33.817674431929845,
+    "closure_vs_direct_meV": -29.675435989622045,
+    "closure_vs_segment_meV": -29.675435989622045
+   },
+   "D2c": {
+    "status": "not resolved",
+    "i_star_dft": 3,
+    "dF": "F_finetuned - F_DFT (raw F)",
+    "groups_meV": {
+     "hop_I": -45.95114355948006,
+     "inorganic_near": 3.9573939965691967,
+     "inorganic_far": 1.1410896489881068,
+     "organic_near": 2.821015480470112,
+     "organic_far": -0.8921783467815915
+    },
+    "sum_meV": -38.92382278023423,
+    "shares": {
+     "hop_I": 1.1805403549112434,
+     "inorganic_near": -0.10167022953816311,
+     "inorganic_far": -0.029315970721343423,
+     "organic_near": -0.0724752935084948,
+     "organic_far": 0.02292113885675806
+    },
+    "local_share": 1.0788701253730804,
+    "far_or_organic_share": -0.07887012537308036,
+    "side_above_half": "local",
+    "direct_meV": -29.850594961317256,
+    "segment_change_meV": -29.850594961317256,
+    "closure_vs_direct_meV": -9.073227818916976,
+    "closure_vs_segment_meV": -9.073227818916976
+   }
+  }
+ },
+ "summary": {
+  "D2a": {
+   "dft": {
+    "max_abs_closure_meV": 144.70507864706633,
+    "rms_closure_meV": 83.23172337794074,
+    "n_abs_closure_above_20meV": 37
+   },
+   "zeroshot": {
+    "max_abs_closure_meV": 107.67384448631668,
+    "rms_closure_meV": 69.44246047994561,
+    "n_abs_closure_above_20meV": 37
+   },
+   "finetuned": {
+    "max_abs_closure_meV": 144.96682767994193,
+    "rms_closure_meV": 85.6949328423614,
+    "n_abs_closure_above_20meV": 37
+   },
+   "n_bands": 37,
+   "n_resolved": 0,
+   "not_resolved": {
+    "m05_undoped": -62.93221197188265,
+    "m05_GA": -54.928005307729336,
+    "m05_Sr": -56.56894468166943,
+    "m06_undoped": -69.21720617427151,
+    "m06_GA": -83.741152088632,
+    "m06_Sr": -74.21200915365606,
+    "m08_undoped": -65.40293023412488,
+    "m08_GA": -71.49181802983537,
+    "m08_Sr": -66.44751881172812,
+    "m12_undoped": -144.70507864706633,
+    "m12_GA": -129.60976581923674,
+    "m12_Sr": -144.0086576735702,
+    "m15_undoped": -41.91640797411563,
+    "m15_GA": -81.24066012531662,
+    "m15_Sr": -60.39816648863162,
+    "m20_undoped": -48.6672272007425,
+    "m20_GA": -51.27467994011447,
+    "m20_Sr": -102.30218618332447,
+    "m21_undoped": -66.30348069689246,
+    "m21_GA": -64.58405330928062,
+    "m21_Sr": -71.27750437179998,
+    "m30_undoped": -78.47690603955422,
+    "m30_GA": -88.4570016892927,
+    "m30_Sr": -55.12341445550135,
+    "m32_undoped": -91.50302749129784,
+    "m32_GA": -64.22713360329998,
+    "m32_Sr": -90.72120982793,
+    "m10_undoped": -53.24800929179318,
+    "m10_GA": -69.08194008006515,
+    "m18_undoped": -76.57754215226888,
+    "m18_GA": -53.16987455965966,
+    "m04_undoped": -81.70780120791821,
+    "m04_Sr": -100.10537534380532,
+    "m14_undoped": -107.51065407186542,
+    "m14_Sr": -46.96714034053238,
+    "m27_undoped": -122.41917811715837,
+    "m27_Sr": -126.23722537883683
+   },
+   "argmax_differs_from_dft": {
+    "zeroshot": [
+     "m21_GA",
+     "m21_Sr"
+    ],
+    "finetuned": [
+     "m05_undoped",
+     "m05_GA",
+     "m15_GA",
+     "m15_Sr",
+     "m21_Sr"
+    ]
+   }
+  },
+  "D2b": {
+   "resolved": {
+    "n": 0,
+    "reading_counts": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    }
+   },
+   "by_split": {
+    "train": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    },
+    "valid": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    },
+    "test": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    }
+   },
+   "all_37_bands_beside": {
+    "note": "reported beside, not a Q4 reading and not to be cited as evidence for one: these bands include those whose DFT closure exceeds 20 meV, which the plan reports as 'not resolved' in D2b and D2c",
+    "n": 37,
+    "mean_group_meV": {
+     "hop_I": -36.921718926629865,
+     "inorganic_near": -32.88455579481054,
+     "inorganic_far": 17.466349421677887,
+     "organic_near": -6.688214540593956,
+     "organic_far": -1.8111197849809542
+    },
+    "mean_sum_meV": -60.83925962533742,
+    "mean_direct_meV": -46.31433818996344,
+    "share_of_band_summed_change": {
+     "hop_I": 0.6068732452367528,
+     "inorganic_near": 0.5405153842653809,
+     "inorganic_far": -0.28709010479811575,
+     "organic_near": 0.1099325432587702,
+     "organic_far": 0.02976893203721181
+    },
+    "local_share_median": 1.133061204735055,
+    "max_abs_closure_vs_direct_meV": 49.14980762908195,
+    "rms_closure_vs_direct_meV": 21.69546938175049,
+    "max_abs_closure_vs_segment_meV": 49.14980762908195,
+    "rms_closure_vs_segment_meV": 21.74380936531836,
+    "n_sum_negative": 37,
+    "n_direct_negative": 37,
+    "not_a_reading_share_counts": {
+     "n_bands": 37,
+     "n_local_share_above_half": 33,
+     "n_far_or_organic_share_above_half": 4,
+     "n_not_resolved": 37,
+     "closure_vs_direct_rms_meV": 21.69546938175049,
+     "closure_vs_direct_max_abs_meV": 49.14980762908195,
+     "mean_abs_direct_meV": 46.31433818996344,
+     "note": "not a Q4 reading and not evidence for one: 37 of these 37 bands are not resolved (the plan lets them enter no reading), and the summed attribution closes on the direct E_a change only to RMS 21.7 meV (max |.| 49.1) against a mean |direct change| of 46.3 meV"
+    }
+   },
+   "reading_counts": {
+    "n_resolved": 0,
+    "n_local_share_above_half": 0,
+    "n_far_or_organic_share_above_half": 0,
+    "reading": "cannot be read: no resolved band",
+    "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+   }
+  },
+  "D2c": {
+   "resolved": {
+    "n": 0,
+    "reading_counts": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    }
+   },
+   "by_split": {
+    "train": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    },
+    "valid": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    },
+    "test": {
+     "n_resolved": 0,
+     "n_local_share_above_half": 0,
+     "n_far_or_organic_share_above_half": 0,
+     "reading": "cannot be read: no resolved band",
+     "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+    }
+   },
+   "all_37_bands_beside": {
+    "note": "reported beside, not a Q4 reading and not to be cited as evidence for one: these bands include those whose DFT closure exceeds 20 meV, which the plan reports as 'not resolved' in D2b and D2c",
+    "n": 37,
+    "mean_group_meV": {
+     "hop_I": -18.537905471488337,
+     "inorganic_near": -2.601718414321489,
+     "inorganic_far": 2.7239056803249815,
+     "organic_near": -1.0140955432766696,
+     "organic_far": 3.0498881129878614
+    },
+    "mean_sum_meV": -16.379925635773652,
+    "mean_direct_meV": -13.15133689825637,
+    "share_of_band_summed_change": {
+     "hop_I": 1.1317453988314616,
+     "inorganic_near": 0.1588357891344362,
+     "inorganic_far": -0.16629536304951156,
+     "organic_near": 0.061910875899332,
+     "organic_far": -0.1861967008157183
+    },
+    "local_share_median": 1.0165631988511907,
+    "max_abs_closure_vs_direct_meV": 22.80918033690346,
+    "rms_closure_vs_direct_meV": 8.658855319405605,
+    "max_abs_closure_vs_segment_meV": 14.914411895280182,
+    "rms_closure_vs_segment_meV": 7.532629649565525,
+    "n_sum_negative": 26,
+    "n_direct_negative": 23,
+    "not_a_reading_share_counts": {
+     "n_bands": 37,
+     "n_local_share_above_half": 33,
+     "n_far_or_organic_share_above_half": 4,
+     "n_not_resolved": 37,
+     "closure_vs_direct_rms_meV": 8.658855319405605,
+     "closure_vs_direct_max_abs_meV": 22.80918033690346,
+     "mean_abs_direct_meV": 31.10485270303183,
+     "note": "not a Q4 reading and not evidence for one: 37 of these 37 bands are not resolved (the plan lets them enter no reading), and the summed attribution closes on the direct E_a change only to RMS 8.7 meV (max |.| 22.8) against a mean |direct change| of 31.1 meV"
+    }
+   },
+   "reading_counts": {
+    "n_resolved": 0,
+    "n_local_share_above_half": 0,
+    "n_far_or_organic_share_above_half": 0,
+    "reading": "cannot be read: no resolved band",
+    "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+   }
+  }
+ },
+ "Q4": {
+  "question": "is the systematic E_a lowering carried mainly by the hopping I and its first shell, or by the far field and the organic sublattice?",
+  "rule": "D2b over the resolved bands: 'mainly local' if hop_I + inorganic_near carry > 1/2 of the summed change in more than half the resolved bands; 'mainly far or organic' if inorganic_far + organic_near + organic_far do; otherwise 'mixed'",
+  "n_resolved": 0,
+  "n_local_share_above_half": 0,
+  "n_far_or_organic_share_above_half": 0,
+  "reading": "cannot be read: no resolved band",
+  "plan_literal_reading": "mixed (vacuous: 0 resolved bands)",
+  "D2c_beside": {
+   "n_resolved": 0,
+   "n_local_share_above_half": 0,
+   "n_far_or_organic_share_above_half": 0,
+   "reading": "cannot be read: no resolved band",
+   "plan_literal_reading": "mixed (vacuous: 0 resolved bands)"
+  },
+  "dft_closure_range_meV": [
+   -144.70507864706633,
+   -41.91640797411563
+  ],
+  "dft_segment_closure_rms_meV_beside": {
+   "0-2": 79.2340676690023,
+   "2-3": 5.731511477760507,
+   "3-4": 2.5963153125227594
+  }
+ },
+ "n_single_points_this_part": {
+  "zeroshot": 155,
+  "finetuned": 170
+ }
+}

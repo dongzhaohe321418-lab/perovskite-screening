@@ -786,6 +786,12 @@ The fine-tuned value moves 9.0 meV towards DFT but stays below all three DFT val
      E_b is unknown.
    - **What would test it** (a diagnostic only): evaluating the 20 kept checkpoints on the m21
      quartets. They are kept off-repository.
+   - **Post hoc, 2026-11-03.** This diagnostic has since been run as D1 (`WP3_DIAGNOSTICS.md`).
+     - **The condition.** No kept checkpoint meets the m21 E_b condition, nor the same condition on the two
+       first-shell Sr sites alone. The five-site rule cannot discriminate, because m21 Sr_mid fails at every
+       checkpoint and at zero-shot.
+     - **Better m21 E_b.** Several kept checkpoints have a better m21 E_b than the selected epoch 82 (RMS
+       31.3 meV at epoch 7, against 63.8 meV), but none meets the condition.
 7. **A systematic lowering of the absolute barriers. Observed; its origin is not established.**
    - **What is observed.** E_a fell in 37 of 37 bands. Zero-shot overestimated the low-barrier
      training hosts by up to +117 meV, so a lowering is what those targets ask for. But the
@@ -796,6 +802,9 @@ The fine-tuned value moves 9.0 meV towards DFT but stays below all three DFT val
      which is the −35.1 meV change of the m32 GA pair error.
    - **What would test it.** A line integral of the model − DFT force residual along the band
      images, which would show whether the lowering follows from the force residuals.
+   - **Post hoc, 2026-11-03.** This was run as D2 (`WP3_DIAGNOSTICS.md`). It cannot be read: the path
+     0 → i* through the images with DFT frames (0, 2, 3; 0, 2 in two bands) does not close to 20 meV in any
+     band.
 8. **The local model against the band term. Not separable with these data.** On E′ the band term is
    removed frame by frame, so a local model can in principle represent the targets. Yet the m30 Sr
    E′ pair error stays large (−69.5 → −60.5 meV).

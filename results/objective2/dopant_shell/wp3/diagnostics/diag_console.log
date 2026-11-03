@@ -1,0 +1,169 @@
+
+######## scripts/44_wp3_diagnostics.py all  2026-11-03 11:09:03 UTC
+  git head d69fe75a6f90eef79df432cd660fc0733989c592; uncommitted (scripts and inputs) ['?? scripts/44_wp3_diagnostics.py']; script sha256 f13f0308e677783ddca79c2fc0f564535e327cf76b0397780884f29088c12b4a; threads 4
+  inputs: results/objective2/dopant_shell/wp3/dataset/train.xyz 71cc11cb12b0; results/objective2/dopant_shell/wp3/dataset/valid.xyz 1b5215ad684c; results/objective2/dopant_shell/wp3/dataset/test.xyz 68c3ec247fc4; results/objective2/dopant_shell/wp3/dataset/E0s.json 606f3cd5194e; results/objective2/dopant_shell/wp3/dataset/dataset_meta.json 22238cf3a906; results/objective2/dopant_shell/wp3/run2/results/wp3_run-123_train.txt 26a0915b4e19; results/objective2/dopant_shell/wp1_production/wp2cde_selection.json 5c40f22666d5; results/objective2/dopant_shell/wp1_production/v2prod_structures.tar.gz 643165662de7; results/objective2/dopant_shell/wp3/wp3_eval.json dda75f634023; results/objective2/dopant_shell/wp3/run2/wp3.model 3f7bf6f5aaaa
+  models: zero-shot ~/.cache/mace/20231203mace128L1_epoch199model (sha256 01bfe2210013, checked at load); fine-tuned results/objective2/dopant_shell/wp3/run2/wp3.model (sha256 3f7bf6f5aaaa, checked at load)
+cuequivariance or cuequivariance_torch is not available. Cuequivariance acceleration will be disabled.
+
+==== D1: checkpoint trajectory (reason 6)
+  checkpoints in <CKPT_DIR>: [0, 2, 3, 4, 6, 7, 8, 11, 15, 26, 27, 31, 33, 35, 56, 59, 77, 80, 81, 82]
+  epochs at which the logged m21 eval loss improved (running minimum from epoch 0): [0, 2, 3, 4, 6, 7, 8, 11, 15, 26, 27, 31, 33, 35, 56, 59, 77, 80, 81, 82]
+  dataset vs archived QE and geometry, 62 frames: max |d| F_eV 0.0e+00, EF_eV 0.0e+00, forces_eVA 5.0e-09, Eprime_eV 0.0e+00, cD_eV 4.3e-19, pos_A 0.0e+00, cell_A 0.0e+00; positions and cell bitwise equal: True  PASS
+Using Materials Project MACE for MACECalculator with ~/.cache/mace/20231203mace128L1_epoch199model
+Using float64 for MACECalculator, which is slower but more accurate. Recommended for geometry optimization.
+  epoch  0: <CKPT_DIR>/wp3_run-123_epoch-0.pt loaded (strict; last_epoch 0; bitwise = wp3.model False); 31 m21 single points
+  epoch  2: <CKPT_DIR>/wp3_run-123_epoch-2.pt loaded (strict; last_epoch 2; bitwise = wp3.model False); 31 m21 single points
+  epoch  3: <CKPT_DIR>/wp3_run-123_epoch-3.pt loaded (strict; last_epoch 3; bitwise = wp3.model False); 31 m21 single points
+  epoch  4: <CKPT_DIR>/wp3_run-123_epoch-4.pt loaded (strict; last_epoch 4; bitwise = wp3.model False); 31 m21 single points
+  epoch  6: <CKPT_DIR>/wp3_run-123_epoch-6.pt loaded (strict; last_epoch 6; bitwise = wp3.model False); 31 m21 single points
+  epoch  7: <CKPT_DIR>/wp3_run-123_epoch-7.pt loaded (strict; last_epoch 7; bitwise = wp3.model False); 31 m21 single points
+  epoch  8: <CKPT_DIR>/wp3_run-123_epoch-8.pt loaded (strict; last_epoch 8; bitwise = wp3.model False); 31 m21 single points
+  epoch 11: <CKPT_DIR>/wp3_run-123_epoch-11.pt loaded (strict; last_epoch 11; bitwise = wp3.model False); 31 m21 single points
+  epoch 15: <CKPT_DIR>/wp3_run-123_epoch-15.pt loaded (strict; last_epoch 15; bitwise = wp3.model False); 31 m21 single points
+  epoch 26: <CKPT_DIR>/wp3_run-123_epoch-26.pt loaded (strict; last_epoch 26; bitwise = wp3.model False); 31 m21 single points
+  epoch 27: <CKPT_DIR>/wp3_run-123_epoch-27.pt loaded (strict; last_epoch 27; bitwise = wp3.model False); 31 m21 single points
+  epoch 31: <CKPT_DIR>/wp3_run-123_epoch-31.pt loaded (strict; last_epoch 31; bitwise = wp3.model False); 31 m21 single points
+  epoch 33: <CKPT_DIR>/wp3_run-123_epoch-33.pt loaded (strict; last_epoch 33; bitwise = wp3.model False); 31 m21 single points
+  epoch 35: <CKPT_DIR>/wp3_run-123_epoch-35.pt loaded (strict; last_epoch 35; bitwise = wp3.model False); 31 m21 single points
+  epoch 56: <CKPT_DIR>/wp3_run-123_epoch-56.pt loaded (strict; last_epoch 56; bitwise = wp3.model False); 31 m21 single points
+  epoch 59: <CKPT_DIR>/wp3_run-123_epoch-59.pt loaded (strict; last_epoch 59; bitwise = wp3.model False); 31 m21 single points
+  epoch 77: <CKPT_DIR>/wp3_run-123_epoch-77.pt loaded (strict; last_epoch 77; bitwise = wp3.model False); 31 m21 single points
+  epoch 80: <CKPT_DIR>/wp3_run-123_epoch-80.pt loaded (strict; last_epoch 80; bitwise = wp3.model False); 31 m21 single points
+  epoch 81: <CKPT_DIR>/wp3_run-123_epoch-81.pt loaded (strict; last_epoch 81; bitwise = wp3.model False); 31 m21 single points
+  epoch 82: <CKPT_DIR>/wp3_run-123_epoch-82.pt loaded (strict; last_epoch 82; bitwise = wp3.model True); 31 m21 single points
+  check 1: epoch 82 vs wp3.model on 31 m21 frames: max |dE| 0.00e+00 eV, max |dF| 0.00e+00 eV/A (tol 1e-6)  PASS
+  check 2: epoch  0: RMSE_E/atom 15.833926 (log 15.833926) meV, RMSE_F 108.80522 (log 108.80522) meV/A; rel diff 0.0e+00, 1.3e-16  PASS
+  check 2: epoch  2: RMSE_E/atom 11.893787 (log 11.893787) meV, RMSE_F 69.33258 (log 69.33258) meV/A; rel diff 0.0e+00, 0.0e+00  PASS
+  check 2: epoch  3: RMSE_E/atom 3.951521 (log 3.951521) meV, RMSE_F 49.64053 (log 49.64053) meV/A; rel diff 0.0e+00, 1.4e-16  PASS
+  check 2: epoch  4: RMSE_E/atom 3.962553 (log 3.962553) meV, RMSE_F 41.46181 (log 41.46181) meV/A; rel diff 0.0e+00, 1.7e-16  PASS
+  check 2: epoch  6: RMSE_E/atom 3.529900 (log 3.529900) meV, RMSE_F 43.85810 (log 43.85810) meV/A; rel diff 0.0e+00, 6.3e-16  PASS
+  check 2: epoch  7: RMSE_E/atom 2.850030 (log 2.850030) meV, RMSE_F 34.78084 (log 34.78084) meV/A; rel diff 0.0e+00, 4.0e-16  PASS
+  check 2: epoch  8: RMSE_E/atom 1.255779 (log 1.255779) meV, RMSE_F 30.59067 (log 30.59067) meV/A; rel diff 0.0e+00, 3.4e-16  PASS
+  check 2: epoch 11: RMSE_E/atom 1.000316 (log 1.000316) meV, RMSE_F 29.41008 (log 29.41008) meV/A; rel diff 0.0e+00, 2.4e-16  PASS
+  check 2: epoch 15: RMSE_E/atom 1.035356 (log 1.035356) meV, RMSE_F 25.90398 (log 25.90398) meV/A; rel diff 0.0e+00, 1.3e-16  PASS
+  check 2: epoch 26: RMSE_E/atom 0.968707 (log 0.968707) meV, RMSE_F 22.14783 (log 22.14783) meV/A; rel diff 0.0e+00, 3.1e-16  PASS
+  check 2: epoch 27: RMSE_E/atom 0.903050 (log 0.903050) meV, RMSE_F 22.35662 (log 22.35662) meV/A; rel diff 1.7e-12, 9.3e-16  PASS
+  check 2: epoch 31: RMSE_E/atom 0.742062 (log 0.742062) meV, RMSE_F 20.43621 (log 20.43621) meV/A; rel diff 0.0e+00, 1.7e-16  PASS
+  check 2: epoch 33: RMSE_E/atom 0.593886 (log 0.593886) meV, RMSE_F 20.96843 (log 20.96843) meV/A; rel diff 0.0e+00, 1.7e-16  PASS
+  check 2: epoch 35: RMSE_E/atom 0.527593 (log 0.527593) meV, RMSE_F 18.54389 (log 18.54389) meV/A; rel diff 0.0e+00, 0.0e+00  PASS
+  check 2: epoch 56: RMSE_E/atom 0.509563 (log 0.509563) meV, RMSE_F 17.17040 (log 17.17040) meV/A; rel diff 0.0e+00, 6.1e-16  PASS
+  check 2: epoch 59: RMSE_E/atom 0.408044 (log 0.408044) meV, RMSE_F 16.42470 (log 16.42470) meV/A; rel diff 0.0e+00, 2.1e-16  PASS
+  check 2: epoch 77: RMSE_E/atom 0.372989 (log 0.372989) meV, RMSE_F 16.72820 (log 16.72820) meV/A; rel diff 0.0e+00, 2.1e-16  PASS
+  check 2: epoch 80: RMSE_E/atom 0.387959 (log 0.387959) meV, RMSE_F 16.36784 (log 16.36784) meV/A; rel diff 0.0e+00, 4.2e-16  PASS
+  check 2: epoch 81: RMSE_E/atom 0.276412 (log 0.276412) meV, RMSE_F 15.72066 (log 15.72066) meV/A; rel diff 0.0e+00, 0.0e+00  PASS
+  check 2: epoch 82: RMSE_E/atom 0.252008 (log 0.252008) meV, RMSE_F 15.60094 (log 15.60094) meV/A; rel diff 0.0e+00, 1.1e-16  PASS
+  D1 checks PASS
+  reported: zero-shot (E0s.json) vs logged Initial: RMSE_E/atom rel diff 3.3e-10, RMSE_F rel diff 3.7e-15; wp3.model E0s = E0s.json: True
+  reproduction of wp3_eval.json reported.item5.m21 (zero-shot, epoch 82): 126 numbers, max |diff| 0.00e+00 meV; 96 exact leaves  PASS
+  reproduction of wp3_eval.json reported.item5.m05 (zero-shot, epoch 82): 126 numbers, max |diff| 0.00e+00 meV; 96 exact leaves  PASS
+
+  m21 / m05 far-referenced E_b errors (raw F, meV), logged m21 loss, RMSE_E/atom (meV), RMSE_F (meV/A)
+  model     loss      RMSE_E  RMSE_F | m21   Sr136   Sr124     Sr0   GA128   GA104    RMS | m05   Sr136   Sr124    Sr48   GA128    GA40    RMS
+  Initial   0.33214  0.3334  79.819 |       +23.8   +25.9   -43.0   +21.5   +26.1   29.1 |       +21.7   +36.1    +2.8   +27.1   +13.8   23.3
+  0         9.66622 15.8339 108.805 |      +165.9  +131.0   -65.7   +14.1   +34.1  100.3 |      +150.9  +161.6   +15.1   +24.2   +28.1  100.5
+  2         5.26707 11.8938  69.333 |      +182.7  +157.1   -58.1    +3.5   +10.6  111.0 |      +175.6  +193.9   -10.5   +39.1   +43.4  120.0
+  3         0.67865  3.9515  49.641 |       +46.4   +15.6   -60.2   +10.6   +19.0   36.0 |       +59.0   +54.6    +1.2   +46.9   +41.9   45.6
+  4         0.63833  3.9626  41.462 |       -15.2   -40.4   -56.5    -5.0    +7.1   32.0 |       +11.0    -6.1    +6.6   +36.8   +40.7   25.3
+  6         0.54365  3.5299  43.858 |       -32.4   -55.5   -53.4    +4.2   +16.5   38.2 |        +5.4    -7.3   +11.2   +31.3   +33.8   21.6
+  7         0.34952  2.8500  34.781 |       -19.4   -38.5   -50.0   +10.7   +20.4   31.3 |       +18.4    +6.0    +9.0   +28.6   +32.3   21.5
+  8         0.10613  1.2558  30.591 |       -31.2   -42.9   -53.1   +12.6   +23.7   35.6 |        +7.1    -2.7    +9.2   +22.4   +28.8   17.2
+  11        0.08081  1.0003  29.410 |       -68.8   -75.7   -50.0   +18.0   +26.9   52.9 |       -27.7   -37.4    +9.2   +21.0   +17.6   24.5
+  15        0.07292  1.0354  25.904 |       -93.7   -94.7   -48.1   +21.7   +37.4   66.2 |       -62.6   -73.1    +2.9   +18.1   +18.0   44.5
+  26        0.05837  0.9687  22.148 |      -100.1   -94.6   -44.1   +22.0   +37.6   67.5 |       -68.5   -80.7    +9.1    +5.7   +15.9   48.1
+  27        0.05487  0.9031  22.357 |       -98.1   -93.2   -46.3   +23.1   +38.4   67.0 |       -67.3   -80.8    +7.8    +4.0   +16.1   47.7
+  31        0.04092  0.7421  20.436 |      -115.5  -108.4   -49.8   +20.7   +35.9   76.6 |       -84.9   -99.4    +8.8    +3.3   +10.6   58.8
+  33        0.03501  0.5939  20.968 |      -101.2   -92.7   -46.5   +13.7   +26.9   66.2 |       -75.8   -86.5   +10.5    +7.2   +13.7   52.1
+  35        0.02747  0.5276  18.544 |       -96.2   -88.8   -47.4    +1.8   +19.7   62.9 |       -69.6   -80.5   +10.9    +5.8   +18.3   48.6
+  56        0.02446  0.5096  17.170 |       -99.0   -90.8   -38.1   +17.4   +24.7   63.9 |       -79.6   -80.0    +6.9    -5.6   +12.8   50.9
+  59        0.01978  0.4080  16.425 |      -121.5  -112.4   -41.6   +16.9   +24.6   77.5 |       -93.9  -104.5   +11.5    -2.9   +16.6   63.5
+  77        0.01937  0.3730  16.728 |       -65.5   -60.4   -41.6   +21.9   +32.9   47.4 |       -42.8   -37.9    +8.4   -11.6   +11.2   26.8
+  80        0.01915  0.3880  16.368 |       -97.9   -91.2   -46.1   +27.9   +35.5   66.4 |       -69.1   -71.2   +10.7   -12.5    +8.0   45.1
+  81        0.01540  0.2764  15.721 |       -95.1   -89.3   -44.7   +31.8   +38.9   65.6 |       -66.2   -68.5   +10.2   -11.6    +8.5   43.3
+  82        0.01475  0.2520  15.601 |       -93.0   -87.8   -42.0   +28.5   +38.0   63.8 |       -64.4   -64.5    +9.3   -11.7   +10.3   41.6
+
+  absolute E_a errors raw F (meV) | paired dE_a errors raw / E' (meV)
+  Initial   +59.7  +59.7  +89.4   +86.6  +88.9 +117.5 |   -0.1   -5.0  +29.7  +20.8    +2.3   -0.3  +30.9  +23.6
+  0        +224.0 +227.0 +242.4  +194.1 +184.0 +193.6 |   +2.9   -2.0  +18.4   +9.5   -10.1  -12.7   -0.5   -7.8
+  2        +111.2 +107.5 +145.3   +81.5  +78.7  +69.0 |   -3.7   -8.6  +34.1  +25.2    -2.8   -5.4  -12.4  -19.7
+  3         +94.5  +89.8 +127.9   +89.9  +84.5  +81.7 |   -4.7   -9.6  +33.4  +24.5    -5.4   -8.0   -8.2  -15.5
+  4         +68.8  +67.5  +96.3   +65.9  +63.7  +67.7 |   -1.3   -6.2  +27.5  +18.6    -2.2   -4.8   +1.8   -5.5
+  6         +54.3  +56.0  +71.0   +49.2  +46.5  +42.5 |   +1.6   -3.3  +16.7   +7.8    -2.7   -5.3   -6.7  -14.0
+  7         +37.7  +44.2  +60.0   +37.7  +36.6  +31.7 |   +6.5   +1.6  +22.4  +13.5    -1.1   -3.7   -6.0  -13.3
+  8         +45.8  +51.4  +66.8   +30.5  +30.3  +34.4 |   +5.6   +0.7  +21.0  +12.1    -0.2   -2.8   +3.8   -3.5
+  11        +61.3  +63.1  +82.9   +35.2  +35.4  +37.1 |   +1.7   -3.2  +21.6  +12.7    +0.2   -2.4   +1.9   -5.4
+  15        +73.2  +78.1 +100.1   +32.8  +33.4  +38.8 |   +4.9   -0.0  +26.8  +17.9    +0.6   -2.0   +6.0   -1.3
+  26        +27.9  +36.5  +64.8   +14.0  +13.2  +26.7 |   +8.6   +3.7  +37.0  +28.1    -0.8   -3.4  +12.8   +5.5
+  27        +37.5  +45.0  +79.6   +16.9  +15.0  +26.6 |   +7.5   +2.6  +42.1  +33.2    -1.9   -4.5   +9.7   +2.4
+  31        +42.1  +50.2  +82.5   +19.4  +15.9  +30.5 |   +8.2   +3.3  +40.4  +31.5    -3.5   -6.1  +11.1   +3.8
+  33        +39.4  +47.0  +78.2   +17.1  +12.8  +31.3 |   +7.6   +2.7  +38.7  +29.8    -4.3   -6.9  +14.2   +6.9
+  35        +39.4  +47.4  +79.2   +17.8  +13.9  +27.7 |   +8.1   +3.2  +39.9  +31.0    -4.0   -6.6   +9.8   +2.5
+  56        +22.3  +30.5  +63.7    +1.5   -3.7  +22.6 |   +8.2   +3.3  +41.5  +32.6    -5.2   -7.8  +21.1  +13.8
+  59        +24.2  +32.2  +66.4   +13.5   +7.7  +32.0 |   +8.1   +3.2  +42.3  +33.4    -5.8   -8.4  +18.5  +11.2
+  77        +33.7  +39.7  +74.7   +36.7  +28.7  +44.8 |   +6.1   +1.2  +41.0  +32.1    -8.1  -10.7   +8.1   +0.8
+  80        +37.8  +42.3  +81.8   +35.0  +26.6  +46.5 |   +4.5   -0.4  +44.0  +35.1    -8.4  -11.0  +11.5   +4.2
+  81        +28.8  +34.3  +72.3   +25.3  +17.2  +36.8 |   +5.5   +0.6  +43.5  +34.6    -8.0  -10.6  +11.5   +4.2
+  82        +31.8  +36.9  +75.3   +23.0  +16.3  +34.1 |   +5.1   +0.2  +43.5  +34.6    -6.7   -9.3  +11.1   +3.8
+
+  Q1: no; checkpoints meeting: []; smallest max |m21 E_b error| {'epoch': 7, 'max_abs_error_meV': 49.9762525287224, 'sites_at_or_above_25meV': ['Sr124 (Sr_flank)', 'Sr0 (Sr_mid)']}; sites >= 25 meV per checkpoint: 0: 4; 2: 3; 3: 2; 4: 2; 6: 3; 7: 2; 8: 3; 11: 4; 15: 4; 26: 4; 27: 4; 31: 4; 33: 4; 35: 3; 56: 3; 59: 3; 77: 4; 80: 5; 81: 5; 82: 5
+      beside (first-shell Sr only): checkpoints meeting []
+      caveat: the plan rule cannot discriminate here: Sr0 (Sr_mid), not a first-shell Sr site, has |error| >= 25 meV at every kept checkpoint (-65.7 to -38.1 meV; Initial -43.0), so no checkpoint could meet the rule whatever happened at the first-shell Sr sites; the reading about the first-shell Sr collapse rests on the first-shell-only check beside it, which is met by no checkpoint
+  Q2 m21: Sr_hinge (Initial +23.8) first |err|>25 at epoch 0 (after Initial; RMSE_F fall fraction -0.45) (+165.9), first < -25 at an epoch in (4, 6] (kept epoch 6; RMSE_F fall fraction 0.56-0.63), stays >25 from epoch 8 (after 7; RMSE_F fall fraction 0.77); Sr_flank (Initial +25.9) first |err|>25 at Initial (already) (+25.9), first < -25 at epoch 4 (after 3; RMSE_F fall fraction 0.60), stays >25 from epoch 4 (after 3; RMSE_F fall fraction 0.60); both > 25 at epoch 0 (after Initial; RMSE_F fall fraction -0.45), both < -25 at an epoch in (4, 6] (kept epoch 6; RMSE_F fall fraction 0.56-0.63)
+  Q2 m05: Sr_hinge (Initial +21.7) first |err|>25 at epoch 0 (after Initial; RMSE_F fall fraction -0.45) (+150.9), first < -25 at an epoch in (8, 11] (kept epoch 11; RMSE_F fall fraction 0.69-0.78), stays >25 from an epoch in (8, 11] (kept epoch 11; RMSE_F fall fraction 0.69-0.78); Sr_flank (Initial +36.1) first |err|>25 at Initial (already) (+36.1), first < -25 at an epoch in (8, 11] (kept epoch 11; RMSE_F fall fraction 0.69-0.78), stays >25 from an epoch in (8, 11] (kept epoch 11; RMSE_F fall fraction 0.69-0.78); both > 25 at epoch 0 (after Initial; RMSE_F fall fraction -0.45), both < -25 at an epoch in (8, 11] (kept epoch 11; RMSE_F fall fraction 0.69-0.78)
+  Q2 RMSE_F fall: Initial 79.819 -> epoch 82 15.601 meV/A; first epoch at or below the midpoint 47.710: 4; first below Initial: 2
+  Q3: Spearman rho(m21 loss, m21 E_b RMS) over 20 checkpoints = -0.1158 (scipy -0.1158)
+written results/objective2/dopant_shell/wp3/diagnostics/d1_checkpoints.json
+
+==== D2: attribution of the barrier change along the band path (reason 7)
+  dataset vs archived QE and geometry, 155 frames: max |d| F_eV 0.0e+00, EF_eV 0.0e+00, forces_eVA 5.0e-09, Eprime_eV 0.0e+00, cD_eV 4.3e-19, pos_A 0.0e+00, cell_A 0.0e+00; positions and cell bitwise equal: True  PASS
+  single points: zero-shot 155, fine-tuned 170 (others reused in memory)
+  reproduction of the 37 band E_a values of wp3_eval.json: 222 numbers, max |diff| 0.00e+00 meV  PASS
+
+  band          split  i*(D/Z/F)  closure DFT   ZS    FT  | D2b sum  hop_I  in<6  in>6  org<6 org>6 local | D2c sum  hop_I  in<6  in>6  org<6 org>6 local
+  m05_undoped   train  3/3/4      -62.9  -74.9  -64.1 |   -61.2  +14.0  -64.5  +13.6  -22.6   -1.7 +0.83 |   +13.5  +28.6  -16.3   +2.6   -0.5   -1.0 +0.91 |  NOT RESOLVED
+  m05_GA        train  3/3/4      -54.9  -67.3  -55.1 |   -68.5   +9.0  -64.9  +17.3  -25.2   -4.6 +0.82 |    +8.1  +21.5  -18.0   +5.3   +0.5   -1.3 +0.44 |  NOT RESOLVED
+  m05_Sr        train  3/3/3      -56.6  -64.8  -55.4 |   -74.0   +3.6  -65.8  +14.5  -19.7   -6.7 +0.84 |   +35.3  +43.8  -12.0   +1.1   +2.2   +0.1 +0.90 |  NOT RESOLVED
+  m06_undoped   train  3/3/3      -69.2  -54.5  -82.1 |  -100.6  -87.7  -28.7  +18.7   +3.1   -5.8 +1.16 |   -26.9  -24.6   +2.1   -2.2   -1.1   -1.1 +0.83 |  NOT RESOLVED
+  m06_GA        train  3/3/3      -83.7  -57.6  -80.6 |  -153.1  -77.1  -59.6  +16.1  -22.7   -9.9 +0.89 |   -44.8  -34.1   -7.8   +0.1   -4.2   +1.3 +0.94 |  NOT RESOLVED
+  m06_Sr        train  3/3/3      -74.2  -55.9  -85.9 |  -104.1  -87.7  -33.6  +16.6   +2.6   -2.1 +1.16 |    -8.5   -9.8  +10.3   -6.0   -0.8   -2.3 -0.06 |  NOT RESOLVED
+  m08_undoped   train  3/3/3      -65.4  -55.7  -74.1 |   -57.8  -36.3  -31.5  +17.3   -1.2   -6.2 +1.17 |   -38.1  -41.9   -0.3   +2.7   +1.1   +0.3 +1.11 |  NOT RESOLVED
+  m08_GA        train  3/3/3      -71.5  -58.3  -84.3 |   -80.6  -53.3  -37.1  +25.3   -4.0  -11.5 +1.12 |   -63.9  -66.0   -7.1   +3.8   +5.0   +0.4 +1.14 |  NOT RESOLVED
+  m08_Sr        train  3/3/3      -66.4  -51.8  -72.2 |   -59.4  -39.4  -33.6  +20.8   -1.3   -5.9 +1.23 |   -11.0  -22.7   +3.9   +4.5   +1.6   +1.7 +1.71 |  NOT RESOLVED
+  m12_undoped   train  3/3/3     -144.7  -93.5 -142.7 |  -103.6  -61.4  -56.0  +11.9   +5.1   -3.3 +1.13 |   -62.7  -79.5   +7.2   +4.3   +3.2   +2.1 +1.15 |  NOT RESOLVED
+  m12_GA        train  3/3/3     -129.6  -84.6 -126.6 |   -82.5  -62.9  -39.7  +12.7  +12.2   -4.8 +1.24 |   -69.9  -90.9   +7.0   +4.0   +9.3   +0.7 +1.20 |  NOT RESOLVED
+  m12_Sr        train  3/3/3     -144.0  -96.5 -145.0 |  -109.8  -61.1  -61.2  +10.7   +6.3   -4.6 +1.11 |   -50.6  -66.8  +11.3   +0.9   +2.2   +1.8 +1.10 |  NOT RESOLVED
+  m15_undoped   train  3/3/3      -41.9  -24.6  -47.5 |   -64.8  -78.5  -22.3  +24.6   -2.8  +14.1 +1.55 |   +30.1  -14.6   +6.5  +10.6   +0.4  +27.2 -0.27 |  NOT RESOLVED
+  m15_GA        train  3/3/2      -81.2  -67.8  -95.1 |   -86.6  -89.9  -27.8  +18.3   -4.2  +17.0 +1.36 |    -3.0  -32.2   +3.5   +9.5   -0.9  +17.1 +9.47 |  NOT RESOLVED
+  m15_Sr        train  3/3/2      -60.4  -50.7  -61.3 |   -29.3  -53.1   -3.6  +19.1   -1.9  +10.2 +1.94 |   -44.4  -52.7   -6.7   +1.6   -0.6  +14.0 +1.34 |  NOT RESOLVED
+  m20_undoped   train  3/3/3      -48.7  -46.8  -48.9 |   -98.3  -78.5   -8.9  +45.1  -14.4  -41.7 +0.89 |    -9.4   -8.2   -5.3   +4.6   -3.1   +2.7 +1.44 |  NOT RESOLVED
+  m20_GA        train  3/3/3      -51.3  -48.3  -52.2 |  -100.0  -76.8  -11.7  +37.3  -18.4  -30.4 +0.88 |   -29.3  -23.9   -4.8   +5.3   -9.0   +3.1 +0.98 |  NOT RESOLVED
+  m20_Sr        train  3/3/3     -102.3  -87.5 -110.6 |  -102.1  -88.3  -18.1  +21.0   +1.9  -18.7 +1.04 |    -3.9   +3.3   -8.9   +6.9   -6.1   +0.9 +1.46 |  NOT RESOLVED
+  m21_undoped   valid  3/3/3      -66.3  -48.6  -68.7 |   -48.0   -6.3  -19.4   +9.5  -15.7  -16.1 +0.54 |   +29.5  +29.8   -0.5   +5.5   -5.7   +0.4 +0.99 |  NOT RESOLVED
+  m21_GA        valid  2/3/2      -64.6  -47.3  -68.8 |   -32.6   -2.7   -9.8   +9.2  -14.9  -14.4 +0.38 |   +32.7  +26.5   +4.3   +5.2   -4.3   +0.9 +0.94 |  NOT RESOLVED
+  m21_Sr        valid  2/3/3      -71.3  -50.2  -73.4 |   -27.5   -3.6  -15.5   +9.7   -5.5  -12.6 +0.69 |   +64.6  +57.0   +0.5   +4.0   +1.3   +1.8 +0.89 |  NOT RESOLVED
+  m30_undoped   test   3/3/3      -78.5  -74.2  -74.4 |   -43.4  -30.5  -13.0  +20.3  -21.2   +1.0 +1.00 |   -30.3  -32.0   -4.9   -0.3   -0.7   +7.6 +1.22 |  NOT RESOLVED
+  m30_GA        test   3/3/3      -88.5  -87.6  -80.1 |   -40.5   -6.8  -25.8  +27.4  -39.2   +3.9 +0.81 |   -53.0  -44.4   -9.5   +3.2   -8.2   +5.9 +1.02 |  NOT RESOLVED
+  m30_Sr        test   3/3/3      -55.1  -58.4  -44.9 |   -20.8   -0.7  -23.0  +15.7  -13.9   +0.9 +1.13 |   -45.1  -43.2   -6.4   -1.1   +1.4   +4.3 +1.10 |  NOT RESOLVED
+  m32_undoped   test   3/3/3      -91.5  -70.2  -93.5 |   -34.3   +1.3  -12.6  +13.1  -35.7   -0.4 +0.33 |   -15.0   -6.3   -6.4   +4.1   -7.5   +1.2 +0.85 |  NOT RESOLVED
+  m32_GA        test   3/3/3      -64.2  -52.2  -55.2 |   -49.2   -2.7  -20.6  +27.6  -41.3  -12.2 +0.47 |   -55.5  -35.7  -12.1   +4.7  -13.3   +1.0 +0.86 |  NOT RESOLVED
+  m32_Sr        test   3/3/3      -90.7  -67.5  -90.3 |   -36.1   -3.9  -13.4  +14.7  -35.5   +2.0 +0.48 |    +9.4  +11.1   -4.7   +5.4   -5.4   +3.0 +0.68 |  NOT RESOLVED
+  m10_undoped   test   3/3/3      -53.2  -47.4  -53.5 |   -18.8  -48.4  -40.2  +20.4   -3.2  +52.6 +4.71 |   +28.5  +24.4   -7.9   -1.3   -0.1  +13.4 +0.58 |  NOT RESOLVED
+  m10_GA        test   3/3/3      -69.1  -59.6  -58.1 |   -39.8  -36.7  -35.6   +5.6   -2.0  +29.0 +1.82 |   +12.8  +27.3   -5.8   -3.4   -0.6   -4.8 +1.68 |  NOT RESOLVED
+  m18_undoped   test   3/3/3      -76.6  -82.8  -90.3 |   -30.8   -9.3  -54.1  +23.3   +5.9   +3.4 +2.06 |   -39.2  -22.8   -7.4   -2.9   -3.0   -3.1 +0.77 |  NOT RESOLVED
+  m18_GA        test   3/3/3      -53.2  -54.7  -68.1 |   -44.9  -15.1  -61.0  +23.1   +5.3   +2.7 +1.69 |   -25.8  -14.4   -3.5   -4.5   -0.6   -2.8 +0.69 |  NOT RESOLVED
+  m04_undoped   test   3/3/3      -81.7  -74.5  -83.5 |   -15.7  -27.4  -25.1  +24.9  +16.2   -4.4 +3.33 |    -4.5   -4.7   -3.2   +4.7   -2.9   +1.5 +1.74 |  NOT RESOLVED
+  m04_Sr        test   3/3/3     -100.1  -85.9 -103.7 |   -41.4  -36.5  -36.1  +25.5  +13.7   -8.0 +1.75 |    +8.5   +5.7   -2.1   +5.0   -2.5   +2.5 +0.42 |  NOT RESOLVED
+  m14_undoped   test   3/3/3     -107.5 -102.5 -104.5 |   -62.5  -14.9  -54.5   +0.0   +5.2   +1.6 +1.11 |   -54.5  -67.0   +6.0   +0.9   +2.4   +3.2 +1.12 |  NOT RESOLVED
+  m14_Sr        test   3/3/3      -47.0  -51.0  -33.4 |   -13.9   -4.5  -12.4   -5.9   +7.2   +1.7 +1.22 |   -13.3  -39.4   +8.3   +2.9   +4.7  +10.2 +2.33 |  NOT RESOLVED
+  m27_undoped   test   3/3/3     -122.4 -107.7 -132.1 |   -50.8  -52.8  -34.6   +9.0  +18.6   +9.1 +1.72 |   -37.6  -41.4   -9.6   +8.0   +5.5   -0.2 +1.35 |  NOT RESOLVED
+  m27_Sr        test   3/3/3     -126.2 -105.6 -135.3 |   -63.5  -59.2  -41.6  +12.1  +15.5   +9.7 +1.59 |   -38.9  -46.0   +4.0   +1.1   +2.8   -0.9 +1.08 |  NOT RESOLVED
+
+  D2a: 0 of 37 bands resolved (|DFT closure| <= 20 meV); max |closure| DFT 144.7, zero-shot 107.7, fine-tuned 145.0 meV
+  D2a beside, per-segment closure RMS over 37 bands (dft): 0-2 79.2 meV (max |.| 142.4), 2-3 5.7 meV (max |.| 14.3), 3-4 2.6 meV (max |.| 6.6)
+  D2a beside, per-segment closure RMS over 37 bands (zeroshot): 0-2 66.3 meV (max |.| 104.3), 2-3 6.7 meV (max |.| 20.7), 3-4 3.7 meV (max |.| 11.6)
+  D2a beside, per-segment closure RMS over 37 bands (finetuned): 0-2 85.9 meV (max |.| 144.6), 2-3 2.2 meV (max |.| 4.6), 3-4 3.8 meV (max |.| 8.2)
+  D2b [resolved]: no band
+  D2b [all 37, beside, NOT A READING]: n 37; mean per group (meV) hop_I -36.9, inorganic_near -32.9, inorganic_far +17.5, organic_near -6.7, organic_far -1.8; mean sum -60.8, mean direct -46.3; share of the band-summed change: hop_I +0.61, inorganic_near +0.54, inorganic_far -0.29, organic_near +0.11, organic_far +0.03; closure vs direct RMS 21.7 (max |.| 49.1), vs segment RMS 21.7 meV
+  D2c [resolved]: no band
+  D2c [all 37, beside, NOT A READING]: n 37; mean per group (meV) hop_I -18.5, inorganic_near -2.6, inorganic_far +2.7, organic_near -1.0, organic_far +3.0; mean sum -16.4, mean direct -13.2; share of the band-summed change: hop_I +1.13, inorganic_near +0.16, inorganic_far -0.17, organic_near +0.06, organic_far -0.19; closure vs direct RMS 8.7 (max |.| 22.8), vs segment RMS 7.5 meV
+  Q4: cannot be read: no resolved band (local in 0, far or organic in 0 of 0 resolved bands; the plan's literal rule: mixed (vacuous: 0 resolved bands)); D2c beside: cannot be read: no resolved band
+written results/objective2/dopant_shell/wp3/diagnostics/d2_path_attribution.json
