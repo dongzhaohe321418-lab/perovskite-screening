@@ -1,0 +1,15 @@
+kind,label,system,dft_meV,model_meV,model
+frozen far field,wp3b_m30_undoped_img0,undoped,-224.12875971349422,-244.49754653323907,finetuned
+unconstrained,wp3bu_m30_undoped_img0,undoped,-842.96752064256,-1025.6646010966506,finetuned
+frozen far field,wp3b_m30_GA_img0,GA,-202.3215547815198,-251.7704599595163,finetuned
+unconstrained,wp3bu_m30_GA_img0,GA,-766.6997193882708,-982.5893894158071,finetuned
+frozen far field,wp3b_m30_Sr_img0,Sr,-234.33874396141618,-249.05666342237964,finetuned
+unconstrained,wp3bu_m30_Sr_img0,Sr,-888.3891747536836,-1069.8298975912621,finetuned
+frozen far field,wp3b_m32_undoped_img0,undoped,-368.50026607862674,-386.75398666237015,finetuned
+unconstrained,wp3bu_m32_undoped_img0,undoped,-1151.069801984704,-1293.7531847710488,finetuned
+frozen far field,wp3b_m32_GA_img0,GA,-361.35020221991,-435.58239869889803,finetuned
+unconstrained,wp3bu_m32_GA_img0,GA,-1154.9528667965205,-1335.842815344222,finetuned
+frozen far field,wp3b_m32_Sr_img0,Sr,-352.0104381314013,-377.10575471282937,finetuned
+unconstrained,wp3bu_m32_Sr_img0,Sr,-1116.95393465925,-1260.1621928915847,finetuned
+WP2e DFT minimum,m30_GA_img0 (WP2e),GA,-977.3089100344805,-868.3167664567009,finetuned
+WP2e DFT minimum,m30_GA_img0 (WP2e),GA,-977.3089100344805,227.00468530820217,zeroshot

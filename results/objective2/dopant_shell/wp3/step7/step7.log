@@ -1,0 +1,149 @@
+[2026-11-03T00:22:02Z] start; boot 06740b92; repo 5cf6c5f
+[2026-11-03T00:22:02Z] installed driver: sha256sum /data/work/wp3_step7.sh = a8fd3f3805e370ffb6cbf23b42f6738bde110073bec2cdec56ebfbf99beeb873; git show HEAD:scripts/wp3_runbook/node_step7.sh | sha256sum = a8fd3f3805e370ffb6cbf23b42f6738bde110073bec2cdec56ebfbf99beeb873
+[2026-11-03T00:22:02Z] journal: system journal (20 systemd[1] line(s)) and kernel journal (20 line(s)) of this boot readable through 'sudo -n journalctl'; 9 boots listed (persistent journal)
+[2026-11-03T00:22:02Z] installed relaunch script: sha256sum /data/work/wp3_relaunch.sh = 6d90693a1b6b631857b8acb5d5135ac6e0d08bbb54c13e24519d5cf93bab8ec5; git show HEAD:scripts/wp3_runbook/node_relaunch.sh | sha256sum = 6d90693a1b6b631857b8acb5d5135ac6e0d08bbb54c13e24519d5cf93bab8ec5
+[2026-11-03T00:22:02Z] WARN: besides results/objective2/dopant_shell/wp3/wp3_eval.json, these paths changed between the note commit and 5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96: results/objective2/dopant_shell/wp3/step6_scripts39.log; list them in the WP3 result
+[2026-11-03T00:22:02Z] pre: step 6 done: 5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96 adds results/objective2/dopant_shell/wp3/wp3_eval.json (scripts/39 run at c1d0aceb2eb6, after the note commit c1d0aceb2eb6; it evaluated the note's model)
+[2026-11-03T00:22:03Z] WARN: /data/KEEP_ALIVE exists (kept while the node waited for step 6?). Step 7 neither needs nor creates it: remove it now, or the idle stop never comes after STEP7_DONE or a STOP
+[2026-11-03T00:22:03Z] preconditions PASS: note commit c1d0aceb2eb6d3b236975820802560c76eca7ce7 (results/objective2/dopant_shell/wp3/MODEL_NOTE_2026-11-03.md), step-6 commit 5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96 (checkout; adds wp3_eval.json), model /data/work/wp3/run2/wp3.model sha256 3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca, scripts_commit 4c1aaa87a9485e3f94159505bc3c60c64f526b73
+[2026-11-03T00:22:05Z] 7a: -> /data/work/wp3/wp3b/wp3b_region.json; region_id c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571; matches PLAN (6.0 A, 81/83/81, 25 inorganic + 7 molecules, identical sets): True
+[2026-11-03T00:22:15Z] 7a: reproduced: True -> /data/work/wp3/wp3b/wp3b_zeroshot.json
+[2026-11-03T00:22:16Z] pool: run=24
+[2026-11-03T00:22:16Z] wp3bu_m30_undoped_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9229)
+[2026-11-03T00:22:21Z] wp2e_minimum.json written and checked (dE -868.3 meV, force 0.052 eV/A): parallel invocations may start
+[2026-11-03T00:22:21Z] wp3bu_m30_GA_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9396)
+[2026-11-03T00:22:21Z] wp3bu_m30_Sr_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9415)
+[2026-11-03T00:22:21Z] wp3bu_m32_undoped_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9434)
+[2026-11-03T00:22:21Z] wp3bu_m32_GA_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9453)
+[2026-11-03T00:22:21Z] wp3bu_m32_Sr_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9472)
+[2026-11-03T00:22:21Z] wp3b_m30_undoped_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9491)
+[2026-11-03T00:22:21Z] wp3b_m30_GA_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9510)
+[2026-11-03T00:22:21Z] wp3b_m30_Sr_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9529)
+[2026-11-03T00:22:21Z] wp3b_m32_undoped_img0: launch L1 (run, attempt 1, 6 threads, wrapper 9548)
+[2026-11-03T00:26:26Z] spot termination notice recorded (2026-11-03T00:26:23Z 1793665584 2026-11-03T00:31:21Z): nothing new is started for 1800 s (a launch now would be cut and spend an attempt); running children continue
+[2026-11-03T00:47:03Z] start; boot 81c114d9; repo 5cf6c5f
+[2026-11-03T00:47:03Z] installed driver: sha256sum /data/work/wp3_step7.sh = a8fd3f3805e370ffb6cbf23b42f6738bde110073bec2cdec56ebfbf99beeb873; git show HEAD:scripts/wp3_runbook/node_step7.sh | sha256sum = a8fd3f3805e370ffb6cbf23b42f6738bde110073bec2cdec56ebfbf99beeb873
+[2026-11-03T00:47:03Z] journal: system journal (20 systemd[1] line(s)) and kernel journal (20 line(s)) of this boot readable through 'sudo -n journalctl'; 10 boots listed (persistent journal)
+[2026-11-03T00:47:03Z] installed relaunch script: sha256sum /data/work/wp3_relaunch.sh = 6d90693a1b6b631857b8acb5d5135ac6e0d08bbb54c13e24519d5cf93bab8ec5; git show HEAD:scripts/wp3_runbook/node_relaunch.sh | sha256sum = 6d90693a1b6b631857b8acb5d5135ac6e0d08bbb54c13e24519d5cf93bab8ec5
+[2026-11-03T00:47:03Z] WARN: besides results/objective2/dopant_shell/wp3/wp3_eval.json, these paths changed between the note commit and 5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96: results/objective2/dopant_shell/wp3/step6_scripts39.log; list them in the WP3 result
+[2026-11-03T00:47:03Z] pre: step 6 done: 5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96 adds results/objective2/dopant_shell/wp3/wp3_eval.json (scripts/39 run at c1d0aceb2eb6, after the note commit c1d0aceb2eb6; it evaluated the note's model)
+[2026-11-03T00:47:05Z] preconditions PASS: note commit c1d0aceb2eb6d3b236975820802560c76eca7ce7 (results/objective2/dopant_shell/wp3/MODEL_NOTE_2026-11-03.md), step-6 commit 5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96 (checkout; adds wp3_eval.json), model /data/work/wp3/run2/wp3.model sha256 3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca, scripts_commit 4c1aaa87a9485e3f94159505bc3c60c64f526b73
+[2026-11-03T00:47:06Z] wp3bu_m30_undoped_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3bu_m30_GA_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3bu_m30_Sr_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3bu_m32_undoped_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3bu_m32_GA_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3bu_m32_Sr_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3b_m30_undoped_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3b_m30_GA_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3b_m30_Sr_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:06Z] wp3b_m32_undoped_img0: attempt 1 classified: rerun with --rerun-cause spot-reclaim (attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown)
+[2026-11-03T00:47:07Z] pool: run=24
+[2026-11-03T00:47:07Z] wp3bu_m30_undoped_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5410)
+[2026-11-03T00:47:07Z] wp3bu_m30_GA_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5435)
+[2026-11-03T00:47:07Z] wp3bu_m30_Sr_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5460)
+[2026-11-03T00:47:07Z] wp3bu_m32_undoped_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5485)
+[2026-11-03T00:47:07Z] wp3bu_m32_GA_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5510)
+[2026-11-03T00:47:07Z] wp3bu_m32_Sr_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5535)
+[2026-11-03T00:47:07Z] wp3b_m30_undoped_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5560)
+[2026-11-03T00:47:07Z] wp3b_m30_GA_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5585)
+[2026-11-03T00:47:07Z] wp3b_m30_Sr_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5610)
+[2026-11-03T00:47:07Z] wp3b_m32_undoped_img0: launch L2 (run, attempt 2, --rerun-cause spot-reclaim, 6 threads, wrapper 5635)
+[2026-11-03T00:57:10Z] pool status: run=14 running=10; running: wp3bu_m30_undoped_img0 wp3bu_m30_GA_img0 wp3bu_m30_Sr_img0 wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3bu_m32_Sr_img0 wp3b_m30_undoped_img0 wp3b_m30_GA_img0 wp3b_m30_Sr_img0 wp3b_m32_undoped_img0
+[2026-11-03T01:04:04Z] wp3b_m30_undoped_img0: L2 ended (exit 0)
+[2026-11-03T01:04:04Z] wp3b_m30_undoped_img0: complete (428 steps, fmax 0.009848973631812656, converged True, fails none; launch L2)
+[2026-11-03T01:04:04Z] wp3b_m32_GA_img0: launch L1 (run, attempt 1, 6 threads, wrapper 16977)
+[2026-11-03T01:04:10Z] wp3b_m30_Sr_img0: L2 ended (exit 0)
+[2026-11-03T01:04:10Z] wp3b_m30_Sr_img0: complete (453 steps, fmax 0.00999404711785027, converged True, fails none; launch L2)
+[2026-11-03T01:04:10Z] wp3b_m32_Sr_img0: launch L1 (run, attempt 1, 6 threads, wrapper 17200)
+[2026-11-03T01:07:14Z] pool status: done=2 run=12 running=10; running: wp3bu_m30_undoped_img0 wp3bu_m30_GA_img0 wp3bu_m30_Sr_img0 wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3bu_m32_Sr_img0 wp3b_m30_GA_img0 wp3b_m32_undoped_img0 wp3b_m32_GA_img0 wp3b_m32_Sr_img0
+[2026-11-03T01:07:50Z] wp3b_m32_undoped_img0: L2 ended (exit 0)
+[2026-11-03T01:07:50Z] wp3b_m32_undoped_img0: complete (512 steps, fmax 0.00987994853253334, converged True, fails none; launch L2)
+[2026-11-03T01:07:51Z] wp3md_m30_undoped_md450: launch L1 (run, attempt 1, 8 threads, wrapper 19743)
+[2026-11-03T01:09:28Z] wp3b_m30_GA_img0: L2 ended (exit 0)
+[2026-11-03T01:09:28Z] wp3b_m30_GA_img0: complete (606 steps, fmax 0.009437820088771894, converged True, fails none; launch L2)
+[2026-11-03T01:09:28Z] wp3md_m30_GA_md450: launch L1 (run, attempt 1, 8 threads, wrapper 20880)
+[2026-11-03T01:17:19Z] pool status: done=4 run=10 running=10; running: wp3bu_m30_undoped_img0 wp3bu_m30_GA_img0 wp3bu_m30_Sr_img0 wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3bu_m32_Sr_img0 wp3b_m32_GA_img0 wp3b_m32_Sr_img0 wp3md_m30_undoped_md450 wp3md_m30_GA_md450
+[2026-11-03T01:22:45Z] wp3b_m32_Sr_img0: L1 ended (exit 0)
+[2026-11-03T01:22:46Z] wp3b_m32_Sr_img0: complete (441 steps, fmax 0.009886063955839955, converged True, fails none; launch L1)
+[2026-11-03T01:27:21Z] pool status: done=5 run=10 running=9; running: wp3bu_m30_undoped_img0 wp3bu_m30_GA_img0 wp3bu_m30_Sr_img0 wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3bu_m32_Sr_img0 wp3b_m32_GA_img0 wp3md_m30_undoped_md450 wp3md_m30_GA_md450
+[2026-11-03T01:30:56Z] wp3b_m32_GA_img0: L1 ended (exit 0)
+[2026-11-03T01:30:56Z] wp3b_m32_GA_img0: complete (646 steps, fmax 0.00976591134262913, converged True, fails none; launch L1)
+[2026-11-03T01:30:56Z] wp3md_m30_Sr_md450: launch L1 (run, attempt 1, 8 threads, wrapper 33918)
+[2026-11-03T01:36:48Z] wp3bu_m30_GA_img0: L2 ended (exit 0)
+[2026-11-03T01:36:49Z] wp3bu_m30_GA_img0: complete (1223 steps, fmax 0.009904221659351238, converged True, fails none; launch L2)
+[2026-11-03T01:36:49Z] wp3md_m32_undoped_md450: launch L1 (run, attempt 1, 8 threads, wrapper 37421)
+[2026-11-03T01:37:25Z] pool status: done=7 run=8 running=9; running: wp3bu_m30_undoped_img0 wp3bu_m30_Sr_img0 wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3bu_m32_Sr_img0 wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450
+[2026-11-03T01:38:00Z] wp3bu_m30_undoped_img0: L2 ended (exit 0)
+[2026-11-03T01:38:01Z] wp3bu_m30_undoped_img0: complete (1288 steps, fmax 0.009998676735564585, converged True, fails none; launch L2)
+[2026-11-03T01:38:01Z] wp3md_m32_GA_md450: launch L1 (run, attempt 1, 8 threads, wrapper 38367)
+[2026-11-03T01:47:28Z] pool status: done=8 run=7 running=9; running: wp3bu_m30_Sr_img0 wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3bu_m32_Sr_img0 wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450
+[2026-11-03T01:48:04Z] wp3bu_m30_Sr_img0: L2 ended (exit 0)
+[2026-11-03T01:48:04Z] wp3bu_m30_Sr_img0: complete (1497 steps, fmax 0.00984994978409338, converged True, fails none; launch L2)
+[2026-11-03T01:57:31Z] pool status: done=9 run=7 running=8; running: wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3bu_m32_Sr_img0 wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450
+[2026-11-03T02:05:09Z] wp3bu_m32_Sr_img0: L2 ended (exit 0)
+[2026-11-03T02:05:10Z] wp3bu_m32_Sr_img0: complete (1933 steps, fmax 0.009984671467443317, converged True, fails none; launch L2)
+[2026-11-03T02:05:10Z] wp3md_m32_Sr_md450: launch L1 (run, attempt 1, 8 threads, wrapper 53680)
+[2026-11-03T02:07:33Z] pool status: done=10 run=6 running=8; running: wp3bu_m32_undoped_img0 wp3bu_m32_GA_img0 wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450
+[2026-11-03T02:07:38Z] wp3bu_m32_undoped_img0: L2 ended (exit 0)
+[2026-11-03T02:07:38Z] wp3bu_m32_undoped_img0: complete (2069 steps, fmax 0.009953248773443094, converged True, fails none; launch L2)
+[2026-11-03T02:07:39Z] wp3md_m30_undoped_md300: launch L1 (run, attempt 1, 8 threads, wrapper 55288)
+[2026-11-03T02:09:51Z] wp3bu_m32_GA_img0: L2 ended (exit 0)
+[2026-11-03T02:09:52Z] wp3bu_m32_GA_img0: complete (2021 steps, fmax 0.009991359807193468, converged True, fails none; launch L2)
+[2026-11-03T02:09:52Z] wp3md_m30_GA_md300: launch L1 (run, attempt 1, 8 threads, wrapper 56540)
+[2026-11-03T02:17:36Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T02:27:38Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T02:37:40Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T02:47:42Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T02:57:44Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T03:07:46Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T03:17:48Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T03:27:50Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T03:37:52Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T03:47:54Z] pool status: done=12 run=4 running=8; running: wp3md_m30_undoped_md450 wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300
+[2026-11-03T03:56:30Z] wp3md_m30_undoped_md450: L1 ended (exit 0)
+[2026-11-03T03:56:30Z] wp3md_m30_undoped_md450: complete (FAIL at 900.0 fs: sane(): composition or organic bonding pattern changed; launch L1)
+[2026-11-03T03:56:30Z] wp3md_m30_Sr_md300: launch L1 (run, attempt 1, 8 threads, wrapper 112283)
+[2026-11-03T03:57:57Z] pool status: done=13 run=3 running=8; running: wp3md_m30_GA_md450 wp3md_m30_Sr_md450 wp3md_m32_undoped_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300 wp3md_m30_Sr_md300
+[2026-11-03T04:01:41Z] wp3md_m30_GA_md450: L1 ended (exit 0)
+[2026-11-03T04:01:41Z] wp3md_m30_GA_md450: complete (pass; launch L1)
+[2026-11-03T04:01:41Z] wp3md_m32_undoped_md300: launch L1 (run, attempt 1, 8 threads, wrapper 115105)
+[2026-11-03T04:06:27Z] wp3md_m32_undoped_md450: L1 ended (exit 0)
+[2026-11-03T04:06:27Z] wp3md_m32_undoped_md450: complete (FAIL at 3600.0 fs: sane(): composition or organic bonding pattern changed; launch L1)
+[2026-11-03T04:06:27Z] wp3md_m32_GA_md300: launch L1 (run, attempt 1, 8 threads, wrapper 117476)
+[2026-11-03T04:07:59Z] pool status: done=15 run=1 running=8; running: wp3md_m30_Sr_md450 wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300 wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300
+[2026-11-03T04:11:49Z] wp3md_m30_Sr_md450: L1 ended (exit 0)
+[2026-11-03T04:11:49Z] wp3md_m30_Sr_md450: complete (pass; launch L1)
+[2026-11-03T04:11:49Z] wp3md_m32_Sr_md300: launch L1 (run, attempt 1, 8 threads, wrapper 120242)
+[2026-11-03T04:18:02Z] pool status: done=16 running=8; running: wp3md_m32_GA_md450 wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300 wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T04:25:46Z] wp3md_m32_GA_md450: L1 ended (exit 0)
+[2026-11-03T04:25:46Z] wp3md_m32_GA_md450: complete (pass; launch L1)
+[2026-11-03T04:28:04Z] pool status: done=17 running=7; running: wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300 wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T04:38:05Z] pool status: done=17 running=7; running: wp3md_m32_Sr_md450 wp3md_m30_undoped_md300 wp3md_m30_GA_md300 wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T04:44:01Z] wp3md_m30_undoped_md300: L1 ended (exit 0)
+[2026-11-03T04:44:01Z] wp3md_m30_undoped_md300: complete (pass; launch L1)
+[2026-11-03T04:48:05Z] pool status: done=18 running=6; running: wp3md_m32_Sr_md450 wp3md_m30_GA_md300 wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T04:49:17Z] wp3md_m32_Sr_md450: L1 ended (exit 0)
+[2026-11-03T04:49:17Z] wp3md_m32_Sr_md450: complete (pass; launch L1)
+[2026-11-03T04:56:54Z] wp3md_m30_GA_md300: L1 ended (exit 0)
+[2026-11-03T04:56:54Z] wp3md_m30_GA_md300: complete (pass; launch L1)
+[2026-11-03T04:58:06Z] pool status: done=20 running=4; running: wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T05:08:10Z] pool status: done=20 running=4; running: wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T05:18:10Z] pool status: done=20 running=4; running: wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T05:28:10Z] pool status: done=20 running=4; running: wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T05:38:14Z] pool status: done=20 running=4; running: wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T05:48:14Z] pool status: done=20 running=4; running: wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T05:58:19Z] pool status: done=20 running=4; running: wp3md_m30_Sr_md300 wp3md_m32_undoped_md300 wp3md_m32_GA_md300 wp3md_m32_Sr_md300
+[2026-11-03T06:02:23Z] wp3md_m30_Sr_md300: L1 ended (exit 0)
+[2026-11-03T06:02:23Z] wp3md_m30_Sr_md300: complete (pass; launch L1)
+[2026-11-03T06:04:45Z] wp3md_m32_undoped_md300: L1 ended (exit 0)
+[2026-11-03T06:04:45Z] wp3md_m32_undoped_md300: complete (pass; launch L1)
+[2026-11-03T06:05:46Z] wp3md_m32_Sr_md300: L1 ended (exit 0)
+[2026-11-03T06:05:46Z] wp3md_m32_Sr_md300: complete (pass; launch L1)
+[2026-11-03T06:08:23Z] pool status: done=23 running=1; running: wp3md_m32_GA_md300
+[2026-11-03T06:08:33Z] wp3md_m32_GA_md300: L1 ended (exit 0)
+[2026-11-03T06:08:34Z] wp3md_m32_GA_md300: complete (pass; launch L1)
+[2026-11-03T06:08:39Z] pool done: done=24
+[2026-11-03T06:08:40Z] 7c: chain wp3b launch C1 for 12 inputs (first waiting out any queue started outside chain.sh)
+[2026-11-03T07:32:55Z] 7c: chain done; 12 of 12 with JOB DONE, 0 given up
+[2026-11-03T07:33:01Z] done: done=24; 10 line(s) in /data/work/wp3/step7_reruns.list. Next: runbook 7e on the Mac (--model-sha256 3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca; scripts/41 analyse --commit 4c1aaa87a9485e3f94159505bc3c60c64f526b73, the note's scripts_commit = <CN>; outputs made at the step-6 commit 5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96), then step 8

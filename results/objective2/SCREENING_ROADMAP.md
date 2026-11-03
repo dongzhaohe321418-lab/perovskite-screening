@@ -123,3 +123,116 @@ installed mace-torch 0.3.16 source before adoption.
 5. **Estimate.** About 150 DFT single points (about 18 node-hours), 13–25 h of training, then 12
    WP3b single points and 12 MD runs. That is still about 1 week of node time.
 
+## Update 2026-11-03 — S1 ends without a validated potential (WP3)
+
+| WP | status | result |
+|---|---|---|
+| 3 | done; **outcome No improvement** (amendment m item 4) | **Criterion 6: No improvement**, also as amended by h. The force RMSE fell (0.0868 → 0.0149 eV/Å on the 46 m30/m32 frames). The paired ΔE_a RMS rose: 23.6 → 32.8 meV on raw F and 38.2 → 42.8 meV on E′. The far-referenced E_b RMS rose: 28.4 → 69.4 meV. Adoption (a)–(c) are not met. (b): 9-pair RMS 30.9 meV on E′, with class changes at m32 GA and m10 GA. (c): Sr hinge error −117.8 meV and Sr flank error −98.5 meV, with the flank sign lost. (d) fails: in all six frozen-far-field relaxations the free-atom residual DFT force RMS is 0.053–0.058 eV/Å against 0.05 (zero-shot minimum 0.142–0.160). (e) fails: 10 of 12 MD runs pass; m30 and m32 undoped at 450 K each have one frame in which a formamidinium C–H stretches past the 1.25 Å cut-off of the bonding-pattern test (1.252 and 1.262 Å; post hoc diagnosis). All five conditions fail (`dopant_shell/wp3/wp3_outcome.json`). See `dopant_shell/WP3_RESULT.md`. |
+| item 6 | not run | The WP1 map with the fine-tuned model is not run, because the outcome is not Validated. Amendment m item 6 recorded this in advance as a deviation from the WP3 row. |
+
+**What stands.**
+- **Sr repulsion.** The Sr first-shell repulsion holds at DFT on MACE geometries (WP2c: +95.6 to
+  +136.7 meV at 6 sites on 3 hosts). Zero-shot MACE reproduced the m30 hinge value to −6.4 meV
+  (zero-shot still fails criterion 4: 6 of 15 sites above 25 meV, and first-shell Sr is
+  overestimated by +19.2 meV on average, WP2c).
+- **The fine-tuned model does not reproduce it.** It gives +11.6 meV at the m30 hinge and −3.0 meV
+  at the flank, and it is not used anywhere.
+- **Charge state.** The WP2d charge-state result is unaffected.
+
+Consequences for the roadmap:
+
+1. **S1 ends without a validated potential.** Under amendment m item 4 (Outcomes), it follows that:
+   - zero-shot MACE is not re-admitted;
+   - the 7 WP3 test hosts and the validation host m21 are used up. A further fine-tune needs new
+     held-out hosts, named in an amendment before their DFT exists. Neither the evaluated
+     `wp3.model` (sha256 3f7bf6f5…65d2ca) nor any other model is validated. Under item 4, any other
+     model (retrained, re-seeded, or given other data or settings) is a new model.
+2. **What the earlier consequences now imply for S2.**
+   - **Update 2026-10-27, consequence 1** named two routes:
+     - "a fine-tuned potential that passes criteria 5 and 6 (WP3)". This route is closed for this
+       model, because criterion 6 failed.
+     - "a protocol that does not depend on MACE minima being DFT minima". This route remains.
+   - **Update 2026-10-28 (S1 status after WP2c/2d/2e), consequence 1** now applies as written:
+     "If WP3 also fails, the screen needs either DFT for the decisive quantities or a coarser,
+     dopant-ranking metric whose tolerance matches the errors measured here." Amendment m item 4
+     refers S2 to exactly this.
+   - **Update 2026-10-28 (S1 status after WP2c/2d/2e), consequences 2 and 3** are unchanged.
+     - Barrier and binding differences should be computed for V_I⁺ or far-referenced. Raw
+       neutral-cell E_b should never be compared with a local potential.
+     - The frozen-far-field protocol is still untested at DFT level; update 2026-10-27,
+       consequence 2, requires that test. WP2e′ stays unscheduled.
+     - WP3b (d) failed, and in any case it concerns the forces of a model that is not adopted.
+       It validates nothing for S2. Its `wp3bu_` cells (reported) do not meet criterion 5
+       either: the whole-cell RMS is 0.057–0.059 eV/Å.
+3. **Options for S2.** They are listed with their costs as far as the repository records them. They
+   are not ranked, and they can be combined.
+   - **A. DFT for the decisive quantities.**
+     - **A1. Fixed-geometry DFT single points on MACE geometries** (the WP2b/WP2c protocol).
+       - Cost per single point: about 6.7 min of node time per 233-atom cell at the WP2b settings.
+         The WP3 chain ran 153 single points in 17.2 h (`dopant_shell/wp3/run2/node_logs/step2.log`);
+         the 2026-10-28 estimate was about 18 node-hours per 150.
+       - Cost per quantity:
+         - a far-referenced E_b needs about 2 single points per site, plus host and V once per host
+           (WP2c: 48 for 21 sites on 3 hosts);
+         - a paired ΔE_a on 5 images needs 10 per pair.
+       - Limitation: criterion 5 failed, and no relaxation-bias error bar exists (WP2e closed,
+         amendment l). These values are fixed-geometry DFT energies, not relaxed DFT values.
+     - **A2. DFT relaxations.**
+       - Whole cell: the one whole-cell DFT relaxation (m30 GA image 0) took 282 BFGS steps and
+         more than a day on the node. It spread −977 meV over the whole cell (`WP2E_RESULT.md`).
+       - Frozen far field (WP2e′): not run, so the repository has no cost figure.
+     - **A3. DFT barriers on DFT paths (NEB).** None has been run in this repository, so there is no
+       cost basis.
+     - **New chemistries under any A route** (`s2/S2_BUILDERS_DESIGN.md` §11; `scripts/42`, commit
+       b9a6a8d).
+       - Pseudopotentials for Cl, S, Ca and Rb are not verified and not on the node. Downloading
+         them needs the user's approval.
+       - Each new element needs a cutoff spot check.
+   - **B. A coarser, dopant-ranking metric whose tolerance matches the measured errors.**
+     - **The errors measured for zero-shot MACE against fixed-geometry DFT:**
+       - paired ΔE_a: RMS 31.2 meV over the 18 WP2b pairs, with 3 class changes; 20.5 meV (raw F)
+         and 31.0 meV (E′) over the 9 WP3 test pairs;
+       - far-referenced E_b: 6 of 15 WP2c sites above 25 meV, largest |error| 60.0 meV (m30 GA
+         near); first-shell Sr overestimated by +19.2 meV on average;
+       - GA near − far at MACE level: −18.6 meV, against a far SD of 28.2 meV (WP1).
+     - **(Interpretation, not a measurement.)** At the error level listed above (paired ΔE_a RMS
+       about 20–31 meV; E_b errors up to 60 meV), the GA near − far (−18.6 meV) would not be
+       resolved; the DFT-confirmed Sr first-shell repulsion (+95.6 to +136.7 meV, WP2c) would be.
+     - **Cost.** MACE-level evaluation is cheap next to DFT: 0.56–1.0 s per force call on a
+       234-atom cell on the node (`WP3_RUNBOOK.md`, node drivers). The roadmap's S2 gate also
+       requires per-chemistry DFT spot checks, priced as under A1.
+     - **Open point for the decision.** Amendment m item 4 does not re-admit zero-shot MACE.
+       Whether a coarser metric may be computed with it, at a tolerance set from the errors above,
+       would itself need a pre-registered rule: the metric, the tolerance and the DFT spot checks,
+       fixed before any S2 value exists.
+   - **C. A further fine-tune under a new pre-registration.**
+     - **Held-out hosts.** It needs new hosts, named before their DFT exists. All five admissible
+       corpus pairs without DFT were used by WP3 (amendment m item 1′), so new pairs need hosts
+       outside that set.
+     - **Recipe.** It needs a recipe that addresses the WP3 failure. The cause of that failure is
+       not established: `WP3_RESULT.md` §8 lists candidate reasons, the most consistent being a
+       small effective energy weight on near-equilibrium frames. None is tested.
+     - **Measured WP3 cost** (node wall time, `dopant_shell/wp3/run2/node_logs/`).
+       - `scripts/35` frames: about 5.8 h (`step2.log`, 2026-10-28 20:54 to 2026-10-29 02:50, less
+         the 8-min gap of a node loss);
+       - 153 DFT single points, about 17 node-hours;
+       - training: 7.6 h for run2, the run that was used (100 epochs at 32 threads). A further
+         ~7.9 h was lost to run1 (discarded after a node loss), and the three 2-epoch timing runs
+         took 51 min;
+       - 10 single points per held-out ΔE_a pair;
+       - the (d)/(e) checks (step 7): 7.2 h of node wall time (2026-11-03 00:22–07:33,
+         including an outage of about 16 min after a spot reclaim);
+       - plus pre-flight and the laptop evaluation (step 6: 4 min).
+     - **Scope.** A model of this kind covers H, C, N, Sr, I, Cs and Pb only. Each new chemistry
+       needs its own validation (amendment m item 4, Scope).
+   - **D. Combinations.** For example, a coarse MACE-level ranking with DFT (A1) on the candidates
+     it retains. A combination needs its own pre-registered decision rule.
+4. **The choice is the PI's.** Choosing among A–D, or any other route, is a PI decision. No S2
+   result that depends on the energy level should be produced before that decision and its
+   pre-registration.
+   - **Independent of the choice.** The S2 builders (`scripts/42`, provisional, geometry only) do
+     not depend on it.
+   - **Open PI questions.** Thirteen are listed in `s2/S2_BUILDERS_DESIGN.md` §12.
+5. **Estimate.** The best case of the 2026-10-28 updates no longer applies: about 5–6 weeks to a
+   validated isovalent screen, conditional on a fine-tuned potential passing the adoption rule. A
+   revised estimate depends on the option chosen and is not made here.

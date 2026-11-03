@@ -1,0 +1,17 @@
+# Console output of the one runbook-7e run of scripts/41 analyse (Mac, at 602e487, 2026-11-03), unredacted (it holds no
+# local path); the command was
+# scripts/41_wp3_md.py analyse --work <MAC_STAGE>/wp3md --model-sha256 3f7bf6f5...65d2ca --commit 4c1aaa87a9485e3f94159505bc3c60c64f526b73 \
+#   --out results/objective2/dopant_shell/wp3/wp3md_result.json   (exit code 0)
+wp3md_m30_undoped_md300  pass                 attempts 1  minII 3.717405962519879  
+wp3md_m30_undoped_md450  fail                 attempts 1  minII 3.483378006643066  t = 900 fs: sane(): composition or organic bonding pattern changed
+wp3md_m30_GA_md300       pass                 attempts 1  minII 3.709627043877129  
+wp3md_m30_GA_md450       pass                 attempts 1  minII 3.4068561533853825  
+wp3md_m30_Sr_md300       pass                 attempts 1  minII 3.71407370811662  
+wp3md_m30_Sr_md450       pass                 attempts 1  minII 3.5635698635783637  
+wp3md_m32_undoped_md300  pass                 attempts 1  minII 3.565559908594971  
+wp3md_m32_undoped_md450  fail                 attempts 1  minII 3.5001220904292762  t = 3600 fs: sane(): composition or organic bonding pattern changed
+wp3md_m32_GA_md300       pass                 attempts 1  minII 3.7169134800767525  
+wp3md_m32_GA_md450       pass                 attempts 1  minII 3.532292562106488  
+wp3md_m32_Sr_md300       pass                 attempts 1  minII 3.723318395118581  
+wp3md_m32_Sr_md450       pass                 attempts 1  minII 3.5157854032150153  
+(e) fail: {'pass': 10, 'fail': 2, 'cannot be evaluated': 0}

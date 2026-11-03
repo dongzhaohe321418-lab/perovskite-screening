@@ -1,0 +1,2458 @@
+{
+ "item": "PLAN amendment m item 4 (d), WP3b",
+ "pass": false,
+ "verdict": "fail",
+ "reasons": [
+  "wp3b_m30_undoped_img0: free-atom residual RMS 0.0543 / max 0.1513 eV/A (needs < 0.05 / < 0.2)",
+  "wp3b_m30_GA_img0: free-atom residual RMS 0.0579 / max 0.1475 eV/A (needs < 0.05 / < 0.2)",
+  "wp3b_m30_Sr_img0: free-atom residual RMS 0.0551 / max 0.1539 eV/A (needs < 0.05 / < 0.2)",
+  "wp3b_m32_undoped_img0: free-atom residual RMS 0.0526 / max 0.1208 eV/A (needs < 0.05 / < 0.2)",
+  "wp3b_m32_GA_img0: free-atom residual RMS 0.0556 / max 0.1243 eV/A (needs < 0.05 / < 0.2)",
+  "wp3b_m32_Sr_img0: free-atom residual RMS 0.0540 / max 0.1183 eV/A (needs < 0.05 / < 0.2)"
+ ],
+ "notes": [
+  "relaxation: one FIRE run to fmax 0.01 eV/A, the 10 000-step cap bounding the whole relaxation: item 4 names one fmax and 'at most 10 000 steps'. m (Information state) ascribes these values to protocol v2.1, whose doped WP1 cells are relaxed in two restarted FIRE stages (0.02 then 0.01, <= 10 000 steps each); that staged scheme is not used here (an interpretation of item 4, to be stated in the WP3 result)",
+  "step cap: fail if FIRE stops at the cap without max per-atom |F| < 0.01 eV/A over the gated atoms (ASE's strict test); converging on the last allowed step is not a fail",
+  "item 4 Scope: a WP3b pass is not criterion 5; an S2 protocol that relaxes whole cells needs criterion 5 on all atoms of a fine-tuned full-cell minimum, pre-registered for that protocol. The wp3bu_ values of WP3b do not meet this requirement",
+  "surface: item 4 does not define 'the free atoms within 1 A of the 6 A surface'; both are reported"
+ ],
+ "thresholds": {
+  "free_rms_eVA": 0.05,
+  "free_max_eVA": 0.2,
+  "fmax_relax_eVA": 0.01,
+  "steps": 10000,
+  "vacancy_I_A": 1.2,
+  "dopant_move_A": 1.0
+ },
+ "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+ "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+ "code": {
+  "analysing": {
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "git": {
+    "head": "602e4873ca8dab2d34131cecad20bf039737c4a8",
+    "uncommitted": [],
+    "script_equals_head": true
+   }
+  },
+  "records": {
+   "wp3b_m30_undoped_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3bu_m30_undoped_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3b_m30_GA_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3bu_m30_GA_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3b_m30_Sr_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3bu_m30_Sr_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3b_m32_undoped_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3bu_m32_undoped_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3b_m32_GA_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3bu_m32_GA_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3b_m32_Sr_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "wp3bu_m32_Sr_img0": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   }
+  }
+ },
+ "region": {
+  "path": "<MAC_STAGE>/wp3b_work/wp3b_region.json",
+  "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+  "file_sha256": "4def9021e5d064548f3cad1a98623d0d17a065a50f520203a13133fa1730f0b3",
+  "n_free": {
+   "m30_undoped": 81,
+   "m30_GA": 83,
+   "m30_Sr": 81,
+   "m32_undoped": 81,
+   "m32_GA": 83,
+   "m32_Sr": 81
+  },
+  "surface_definition": {
+   "surface": "free atoms with |d - radius| < 1 A, d = distance to the nearest fixed point, organic atoms at their molecule's C distance (the distance the region is cut by)",
+   "surface_own": "free atoms with |d - radius| < 1 A in each atom's own distance",
+   "about": "item 4 does not define 'the free atoms within 1 A of the 6 A surface'; both are reported"
+  }
+ },
+ "inputs": {
+  "dft": "<REPO>/results/objective2/dopant_shell/wp3/wp3b/raw",
+  "wp2b": "<REPO>/results/objective2/dopant_shell/wp2b/raw",
+  "wp2e": "<REPO>/results/objective2/dopant_shell/wp2e/relax_m30_GA_img0.out.gz",
+  "work": "<MAC_STAGE>/wp3b_work/relax"
+ },
+ "cells": {
+  "wp3b_m30_undoped_img0": {
+   "label": "wp3b_m30_undoped_img0",
+   "fails": [
+    "free-atom residual RMS 0.0543 / max 0.1513 eV/A (needs < 0.05 / < 0.2)"
+   ],
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9493,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5562,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m30_undoped_img0.attempt1",
+     "finished": "2026-11-03T01:04:02Z"
+    }
+   ],
+   "steps": 428,
+   "converged": true,
+   "fmax_eVA": 0.009848973631812656,
+   "nearest_I_to_vacancy_site_A": 4.116800801589984,
+   "dopant_displacement_A": null,
+   "E_img0_eV": -79751.28553889591,
+   "E_relaxed_eV": -79751.53003644245,
+   "dE_relax_model_meV": -244.49754653323907,
+   "max_dr_nonfree_A": 0.0,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 0.0,
+    "max_fa_rot_deg": 1.2074182697257333e-06,
+    "within_amendment_c_bounds": true,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m30_undoped_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.633187765205276e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m30_undoped_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.05433202156068448,
+    "max_eVA": 0.15134444451984874,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.12826610687308532,
+    "max_eVA": 0.3818202120871721,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.058994882240159134,
+    "max_eVA": 0.15134444451984874,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.055435464638568105,
+    "max_eVA": 0.15134444451984874,
+    "n": 32
+   },
+   "F_dft_eV": -79751.55141505037,
+   "dE_relax_dft_meV": -224.12875971349422,
+   "free_pass": false,
+   "whole_cell_below_thresholds": false,
+   "status": "fail",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.1534028662705475,
+     "max_eVA": 0.33191021370963014,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15216807374523547,
+     "max_eVA": 0.3543252428746822,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.16050193333565568,
+     "max_eVA": 0.2704983111858035,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.15266488088850846,
+     "max_eVA": 0.2698102913677117,
+     "n": 32
+    }
+   }
+  },
+  "wp3b_m30_GA_img0": {
+   "label": "wp3b_m30_GA_img0",
+   "fails": [
+    "free-atom residual RMS 0.0579 / max 0.1475 eV/A (needs < 0.05 / < 0.2)"
+   ],
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9512,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5586,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m30_GA_img0.attempt1",
+     "finished": "2026-11-03T01:09:23Z"
+    }
+   ],
+   "steps": 606,
+   "converged": true,
+   "fmax_eVA": 0.009437820088771894,
+   "nearest_I_to_vacancy_site_A": 4.028840408816359,
+   "dopant_displacement_A": 0.18721175911679905,
+   "E_img0_eV": -80046.3972284509,
+   "E_relaxed_eV": -80046.64899891085,
+   "dE_relax_model_meV": -251.7704599595163,
+   "max_dr_nonfree_A": 0.0,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 0.0,
+    "max_fa_rot_deg": 1.2074182697257333e-06,
+    "within_amendment_c_bounds": true,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m30_GA_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.6042271051012014e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m30_GA_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.057943000634293605,
+    "max_eVA": 0.1475105554257342,
+    "n": 83
+   },
+   "whole_cell": {
+    "rms_eVA": 0.12867631565350762,
+    "max_eVA": 0.37180571309348825,
+    "n": 234
+   },
+   "surface_1A": {
+    "rms_eVA": 0.06079586499560467,
+    "max_eVA": 0.1475105554257342,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.057065699812053464,
+    "max_eVA": 0.1475105554257342,
+    "n": 32
+   },
+   "F_dft_eV": -80046.6576078439,
+   "dE_relax_dft_meV": -202.3215547815198,
+   "free_pass": false,
+   "whole_cell_below_thresholds": false,
+   "status": "fail",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.14210948254390057,
+     "max_eVA": 0.26995552885679364,
+     "n": 83
+    },
+    "whole_cell": {
+     "rms_eVA": 0.14902059266337217,
+     "max_eVA": 0.36942534474715616,
+     "n": 234
+    },
+    "surface_1A": {
+     "rms_eVA": 0.16019922209891846,
+     "max_eVA": 0.26995552885679364,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.15241830103907084,
+     "max_eVA": 0.26995552885679364,
+     "n": 32
+    }
+   }
+  },
+  "wp3b_m30_Sr_img0": {
+   "label": "wp3b_m30_Sr_img0",
+   "fails": [
+    "free-atom residual RMS 0.0551 / max 0.1539 eV/A (needs < 0.05 / < 0.2)"
+   ],
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9531,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5612,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m30_Sr_img0.attempt1",
+     "finished": "2026-11-03T01:04:05Z"
+    }
+   ],
+   "steps": 453,
+   "converged": true,
+   "fmax_eVA": 0.00999404711785027,
+   "nearest_I_to_vacancy_site_A": 4.117941143199094,
+   "dopant_displacement_A": 0.028408471709401646,
+   "E_img0_eV": -78866.85211062715,
+   "E_relaxed_eV": -78867.10116729057,
+   "dE_relax_model_meV": -249.05666342237964,
+   "max_dr_nonfree_A": 0.0,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 0.0,
+    "max_fa_rot_deg": 1.2074182697257333e-06,
+    "within_amendment_c_bounds": true,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m30_Sr_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.484163147471447e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m30_Sr_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.05512659080962607,
+    "max_eVA": 0.15386172573978113,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.12903013119452666,
+    "max_eVA": 0.379571979941147,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.05888631335891626,
+    "max_eVA": 0.15386172573978113,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.05313155253108928,
+    "max_eVA": 0.15386172573978113,
+    "n": 32
+   },
+   "F_dft_eV": -78867.00881343106,
+   "dE_relax_dft_meV": -234.33874396141618,
+   "free_pass": false,
+   "whole_cell_below_thresholds": false,
+   "status": "fail",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.15977552183217358,
+     "max_eVA": 0.3368829157649614,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15508130538178588,
+     "max_eVA": 0.3544420911930665,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.16957771905344632,
+     "max_eVA": 0.2965642949702317,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.15998255225321933,
+     "max_eVA": 0.2738294643557637,
+     "n": 32
+    }
+   }
+  },
+  "wp3b_m32_undoped_img0": {
+   "label": "wp3b_m32_undoped_img0",
+   "fails": [
+    "free-atom residual RMS 0.0526 / max 0.1208 eV/A (needs < 0.05 / < 0.2)"
+   ],
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9550,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5637,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m32_undoped_img0.attempt1",
+     "finished": "2026-11-03T01:07:48Z"
+    }
+   ],
+   "steps": 512,
+   "converged": true,
+   "fmax_eVA": 0.00987994853253334,
+   "nearest_I_to_vacancy_site_A": 4.031505691962057,
+   "dopant_displacement_A": null,
+   "E_img0_eV": -79751.11594102389,
+   "E_relaxed_eV": -79751.50269501055,
+   "dE_relax_model_meV": -386.75398666237015,
+   "max_dr_nonfree_A": 0.0,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 0.0,
+    "max_fa_rot_deg": 1.2074182697257333e-06,
+    "within_amendment_c_bounds": true,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m32_undoped_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.5362318221048204e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m32_undoped_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.052558198772846336,
+    "max_eVA": 0.1208415668989443,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.1358909766084806,
+    "max_eVA": 0.4553088987043207,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.0566995729361761,
+    "max_eVA": 0.1208415668989443,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.05663950307842009,
+    "max_eVA": 0.1208415668989443,
+    "n": 34
+   },
+   "F_dft_eV": -79751.44367524008,
+   "dE_relax_dft_meV": -368.50026607862674,
+   "free_pass": false,
+   "whole_cell_below_thresholds": false,
+   "status": "fail",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.15685261326302755,
+     "max_eVA": 0.35960972841751,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.1560470748595829,
+     "max_eVA": 0.3845687888841874,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.17371340134471644,
+     "max_eVA": 0.35960972841751,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.17296211976658535,
+     "max_eVA": 0.35960972841751,
+     "n": 34
+    }
+   }
+  },
+  "wp3b_m32_GA_img0": {
+   "label": "wp3b_m32_GA_img0",
+   "fails": [
+    "free-atom residual RMS 0.0556 / max 0.1243 eV/A (needs < 0.05 / < 0.2)"
+   ],
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T01:04:08Z",
+     "host": "<NODE_HOST>",
+     "pid": 16978,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "finished": "2026-11-03T01:30:51Z"
+    }
+   ],
+   "steps": 646,
+   "converged": true,
+   "fmax_eVA": 0.00976591134262913,
+   "nearest_I_to_vacancy_site_A": 4.097958194128466,
+   "dopant_displacement_A": 0.23836808566725842,
+   "E_img0_eV": -80046.16918491598,
+   "E_relaxed_eV": -80046.60476731468,
+   "dE_relax_model_meV": -435.58239869889803,
+   "max_dr_nonfree_A": 0.0,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 0.0,
+    "max_fa_rot_deg": 1.2074182697257333e-06,
+    "within_amendment_c_bounds": true,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m32_GA_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.6305691692910384e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m32_GA_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.05557353216088926,
+    "max_eVA": 0.12428203039164644,
+    "n": 83
+   },
+   "whole_cell": {
+    "rms_eVA": 0.1361316891002021,
+    "max_eVA": 0.4584081091142523,
+    "n": 234
+   },
+   "surface_1A": {
+    "rms_eVA": 0.05670283700131333,
+    "max_eVA": 0.12428203039164644,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.05746262651135021,
+    "max_eVA": 0.12428203039164644,
+    "n": 34
+   },
+   "F_dft_eV": -80046.51174896317,
+   "dE_relax_dft_meV": -361.35020221991,
+   "free_pass": false,
+   "whole_cell_below_thresholds": false,
+   "status": "fail",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.14811428511101785,
+     "max_eVA": 0.365435161464632,
+     "n": 83
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15321227913077376,
+     "max_eVA": 0.38008105810588083,
+     "n": 234
+    },
+    "surface_1A": {
+     "rms_eVA": 0.17466608598258157,
+     "max_eVA": 0.365435161464632,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.17456468173158557,
+     "max_eVA": 0.365435161464632,
+     "n": 34
+    }
+   }
+  },
+  "wp3b_m32_Sr_img0": {
+   "label": "wp3b_m32_Sr_img0",
+   "fails": [
+    "free-atom residual RMS 0.0540 / max 0.1183 eV/A (needs < 0.05 / < 0.2)"
+   ],
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T01:04:14Z",
+     "host": "<NODE_HOST>",
+     "pid": 17201,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "finished": "2026-11-03T01:22:43Z"
+    }
+   ],
+   "steps": 441,
+   "converged": true,
+   "fmax_eVA": 0.009886063955839955,
+   "nearest_I_to_vacancy_site_A": 4.018214109083599,
+   "dopant_displacement_A": 0.01568959301045282,
+   "E_img0_eV": -78866.70545366316,
+   "E_relaxed_eV": -78867.08255941788,
+   "dE_relax_model_meV": -377.10575471282937,
+   "max_dr_nonfree_A": 0.0,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 0.0,
+    "max_fa_rot_deg": 1.2074182697257333e-06,
+    "within_amendment_c_bounds": true,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m32_Sr_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.5514302986486374e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3b_m32_Sr_img0.in.gz",
+    "input_A": 4.999999969612645e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.0539558466496925,
+    "max_eVA": 0.11831418402066932,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.135655434817752,
+    "max_eVA": 0.44638588884960234,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.055920585137816066,
+    "max_eVA": 0.11831418402066932,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.05401516665146229,
+    "max_eVA": 0.11831418402066932,
+    "n": 35
+   },
+   "F_dft_eV": -78866.89278639309,
+   "dE_relax_dft_meV": -352.0104381314013,
+   "free_pass": false,
+   "whole_cell_below_thresholds": false,
+   "status": "fail",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.16043149535224668,
+     "max_eVA": 0.3741281595091733,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15714174388940363,
+     "max_eVA": 0.38278287617881807,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.17991636157124616,
+     "max_eVA": 0.3741281595091733,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.17541390233272447,
+     "max_eVA": 0.3741281595091733,
+     "n": 35
+    }
+   }
+  }
+ },
+ "hosts": {
+  "m30": {
+   "about": "relaxation energy F(relaxed) - F(image 0), dopant - undoped (reported, not gating; None unless both rows carry the value)",
+   "wp3b": {
+    "model_meV": {
+     "GA": -7.272913426277228,
+     "Sr": -4.559116889140569
+    },
+    "dft_meV": {
+     "GA": 21.80720493197441,
+     "Sr": -10.209984247921966
+    }
+   },
+   "wp3bu": {
+    "model_meV": {
+     "GA": 43.075211680843495,
+     "Sr": -44.16529649461154
+    },
+    "dft_meV": {
+     "GA": 76.26780125428922,
+     "Sr": -45.421654111123644
+    }
+   }
+  },
+  "m32": {
+   "about": "relaxation energy F(relaxed) - F(image 0), dopant - undoped (reported, not gating; None unless both rows carry the value)",
+   "wp3b": {
+    "model_meV": {
+     "GA": -48.82841203652788,
+     "Sr": 9.648231949540786
+    },
+    "dft_meV": {
+     "GA": 7.150063858716749,
+     "Sr": 16.48982794722542
+    }
+   },
+   "wp3bu": {
+    "model_meV": {
+     "GA": -42.089630573173054,
+     "Sr": 33.59099187946413
+    },
+    "dft_meV": {
+     "GA": -3.883064811816439,
+     "Sr": 34.11586732545402
+    }
+   }
+  }
+ },
+ "unconstrained": {
+  "wp3bu_m30_undoped_img0": {
+   "label": "wp3bu_m30_undoped_img0",
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:20Z",
+     "host": "<NODE_HOST>",
+     "pid": 9231,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5412,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m30_undoped_img0.attempt1",
+     "finished": "2026-11-03T01:37:55Z"
+    }
+   ],
+   "steps": 1288,
+   "converged": true,
+   "fmax_eVA": 0.009998676735564585,
+   "nearest_I_to_vacancy_site_A": 4.007374839077815,
+   "dopant_displacement_A": null,
+   "E_img0_eV": -79751.28553889591,
+   "E_relaxed_eV": -79752.31120349701,
+   "dE_relax_model_meV": -1025.6646010966506,
+   "max_dr_nonfree_A": 1.0953746197962708,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 1.0953746197962708,
+    "max_fa_rot_deg": 43.25767421669594,
+    "within_amendment_c_bounds": false,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "basin_beyond_6A": {
+    "n_far": 159,
+    "max_dr_A": 1.0738010488722605,
+    "max_fa_rot_deg": 43.25767421669594,
+    "within_amendment_c_bounds": false,
+    "about": "amendment c item 1 measure: scripts/29 basin_dev vs image 0 over atoms > 6 A (own distance) from all three fixed points"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m30_undoped_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.516568412315656e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m30_undoped_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.05889883547911279,
+    "max_eVA": 0.1411297396224462,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.05742537613433308,
+    "max_eVA": 0.1411297396224462,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.06342171313527258,
+    "max_eVA": 0.1411297396224462,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.058293380997005546,
+    "max_eVA": 0.1411297396224462,
+    "n": 32
+   },
+   "F_dft_eV": -79752.1702538113,
+   "dE_relax_dft_meV": -842.96752064256,
+   "free_pass": false,
+   "criterion5_whole_cell_pass": false,
+   "flags": [],
+   "status": "complete",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.1534028662705475,
+     "max_eVA": 0.33191021370963014,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15216807374523547,
+     "max_eVA": 0.3543252428746822,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.16050193333565568,
+     "max_eVA": 0.2704983111858035,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.15266488088850846,
+     "max_eVA": 0.2698102913677117,
+     "n": 32
+    }
+   }
+  },
+  "wp3bu_m30_GA_img0": {
+   "label": "wp3bu_m30_GA_img0",
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9398,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5437,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m30_GA_img0.attempt1",
+     "finished": "2026-11-03T01:36:45Z"
+    }
+   ],
+   "steps": 1223,
+   "converged": true,
+   "fmax_eVA": 0.009904221659351238,
+   "nearest_I_to_vacancy_site_A": 3.976570615267327,
+   "dopant_displacement_A": 0.2393356182420568,
+   "E_img0_eV": -80046.3972284509,
+   "E_relaxed_eV": -80047.37981784031,
+   "dE_relax_model_meV": -982.5893894158071,
+   "max_dr_nonfree_A": 1.1008072287234048,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 1.1008072287234048,
+    "max_fa_rot_deg": 42.64605665927428,
+    "within_amendment_c_bounds": false,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "basin_beyond_6A": {
+    "n_far": 159,
+    "max_dr_A": 1.1008072287234048,
+    "max_fa_rot_deg": 42.64605665927428,
+    "within_amendment_c_bounds": false,
+    "about": "amendment c item 1 measure: scripts/29 basin_dev vs image 0 over atoms > 6 A (own distance) from all three fixed points"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m30_GA_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.5611490141847592e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m30_GA_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.0628837378927252,
+    "max_eVA": 0.1396832883525731,
+    "n": 83
+   },
+   "whole_cell": {
+    "rms_eVA": 0.058825075233959245,
+    "max_eVA": 0.1396832883525731,
+    "n": 234
+   },
+   "surface_1A": {
+    "rms_eVA": 0.06376290123002981,
+    "max_eVA": 0.1396832883525731,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.058704218330368624,
+    "max_eVA": 0.1396832883525731,
+    "n": 32
+   },
+   "F_dft_eV": -80047.2219860085,
+   "dE_relax_dft_meV": -766.6997193882708,
+   "free_pass": false,
+   "criterion5_whole_cell_pass": false,
+   "flags": [],
+   "status": "complete",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.14210948254390057,
+     "max_eVA": 0.26995552885679364,
+     "n": 83
+    },
+    "whole_cell": {
+     "rms_eVA": 0.14902059266337217,
+     "max_eVA": 0.36942534474715616,
+     "n": 234
+    },
+    "surface_1A": {
+     "rms_eVA": 0.16019922209891846,
+     "max_eVA": 0.26995552885679364,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.15241830103907084,
+     "max_eVA": 0.26995552885679364,
+     "n": 32
+    }
+   }
+  },
+  "wp3bu_m30_Sr_img0": {
+   "label": "wp3bu_m30_Sr_img0",
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9417,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5462,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m30_Sr_img0.attempt1",
+     "finished": "2026-11-03T01:48:01Z"
+    }
+   ],
+   "steps": 1497,
+   "converged": true,
+   "fmax_eVA": 0.00984994978409338,
+   "nearest_I_to_vacancy_site_A": 3.9602316753202005,
+   "dopant_displacement_A": 0.11958354707063233,
+   "E_img0_eV": -78866.85211062715,
+   "E_relaxed_eV": -78867.92194052474,
+   "dE_relax_model_meV": -1069.8298975912621,
+   "max_dr_nonfree_A": 1.1769294921723714,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 1.1769294921723714,
+    "max_fa_rot_deg": 44.791080823355536,
+    "within_amendment_c_bounds": false,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "basin_beyond_6A": {
+    "n_far": 159,
+    "max_dr_A": 1.1769294921723714,
+    "max_fa_rot_deg": 44.791080823355536,
+    "within_amendment_c_bounds": false,
+    "about": "amendment c item 1 measure: scripts/29 basin_dev vs image 0 over atoms > 6 A (own distance) from all three fixed points"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m30_Sr_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.641324669322546e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m30_Sr_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.06037679277243058,
+    "max_eVA": 0.14480252616592112,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.058228140384729114,
+    "max_eVA": 0.14480252616592112,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.0638583635880868,
+    "max_eVA": 0.14480252616592112,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.05719668856706675,
+    "max_eVA": 0.14480252616592112,
+    "n": 32
+   },
+   "F_dft_eV": -78867.66286386186,
+   "dE_relax_dft_meV": -888.3891747536836,
+   "free_pass": false,
+   "criterion5_whole_cell_pass": false,
+   "flags": [],
+   "status": "complete",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.15977552183217358,
+     "max_eVA": 0.3368829157649614,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15508130538178588,
+     "max_eVA": 0.3544420911930665,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.16957771905344632,
+     "max_eVA": 0.2965642949702317,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.15998255225321933,
+     "max_eVA": 0.2738294643557637,
+     "n": 32
+    }
+   }
+  },
+  "wp3bu_m32_undoped_img0": {
+   "label": "wp3bu_m32_undoped_img0",
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9436,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5486,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m32_undoped_img0.attempt1",
+     "finished": "2026-11-03T02:07:33Z"
+    }
+   ],
+   "steps": 2069,
+   "converged": true,
+   "fmax_eVA": 0.009953248773443094,
+   "nearest_I_to_vacancy_site_A": 4.017852613511823,
+   "dopant_displacement_A": null,
+   "E_img0_eV": -79751.11594102389,
+   "E_relaxed_eV": -79752.40969420866,
+   "dE_relax_model_meV": -1293.7531847710488,
+   "max_dr_nonfree_A": 1.5432353129646927,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 1.5432353129646927,
+    "max_fa_rot_deg": 25.446390121675496,
+    "within_amendment_c_bounds": false,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "basin_beyond_6A": {
+    "n_far": 157,
+    "max_dr_A": 1.5432353129646927,
+    "max_fa_rot_deg": 25.446390121675496,
+    "within_amendment_c_bounds": false,
+    "about": "amendment c item 1 measure: scripts/29 basin_dev vs image 0 over atoms > 6 A (own distance) from all three fixed points"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m32_undoped_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.5878241976858441e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m32_undoped_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.056526383891100256,
+    "max_eVA": 0.12220251445554793,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.05687121042279474,
+    "max_eVA": 0.13298799992986532,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.06037893566612862,
+    "max_eVA": 0.12220251445554793,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.059617200693923816,
+    "max_eVA": 0.12220251445554793,
+    "n": 34
+   },
+   "F_dft_eV": -79752.22624477599,
+   "dE_relax_dft_meV": -1151.069801984704,
+   "free_pass": false,
+   "criterion5_whole_cell_pass": false,
+   "flags": [],
+   "status": "complete",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.15685261326302755,
+     "max_eVA": 0.35960972841751,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.1560470748595829,
+     "max_eVA": 0.3845687888841874,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.17371340134471644,
+     "max_eVA": 0.35960972841751,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.17296211976658535,
+     "max_eVA": 0.35960972841751,
+     "n": 34
+    }
+   }
+  },
+  "wp3bu_m32_GA_img0": {
+   "label": "wp3bu_m32_GA_img0",
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9455,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5511,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m32_GA_img0.attempt1",
+     "finished": "2026-11-03T02:09:45Z"
+    }
+   ],
+   "steps": 2021,
+   "converged": true,
+   "fmax_eVA": 0.009991359807193468,
+   "nearest_I_to_vacancy_site_A": 4.078354485994749,
+   "dopant_displacement_A": 0.2584404196440338,
+   "E_img0_eV": -80046.16918491598,
+   "E_relaxed_eV": -80047.50502773133,
+   "dE_relax_model_meV": -1335.842815344222,
+   "max_dr_nonfree_A": 1.5326271038315353,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 1.5326271038315353,
+    "max_fa_rot_deg": 24.679749564559376,
+    "within_amendment_c_bounds": false,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "basin_beyond_6A": {
+    "n_far": 157,
+    "max_dr_A": 1.5326271038315353,
+    "max_fa_rot_deg": 24.679749564559376,
+    "within_amendment_c_bounds": false,
+    "about": "amendment c item 1 measure: scripts/29 basin_dev vs image 0 over atoms > 6 A (own distance) from all three fixed points"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m32_GA_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.5251939237982721e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m32_GA_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.05822744604179572,
+    "max_eVA": 0.12415138629579862,
+    "n": 83
+   },
+   "whole_cell": {
+    "rms_eVA": 0.05767571428098597,
+    "max_eVA": 0.139195522436897,
+    "n": 234
+   },
+   "surface_1A": {
+    "rms_eVA": 0.05923057178880946,
+    "max_eVA": 0.11982591557927168,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.05925411550115774,
+    "max_eVA": 0.11982591557927168,
+    "n": 34
+   },
+   "F_dft_eV": -80047.30535162774,
+   "dE_relax_dft_meV": -1154.9528667965205,
+   "free_pass": false,
+   "criterion5_whole_cell_pass": false,
+   "flags": [],
+   "status": "complete",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.14811428511101785,
+     "max_eVA": 0.365435161464632,
+     "n": 83
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15321227913077376,
+     "max_eVA": 0.38008105810588083,
+     "n": 234
+    },
+    "surface_1A": {
+     "rms_eVA": 0.17466608598258157,
+     "max_eVA": 0.365435161464632,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.17456468173158557,
+     "max_eVA": 0.365435161464632,
+     "n": 34
+    }
+   }
+  },
+  "wp3bu_m32_Sr_img0": {
+   "label": "wp3bu_m32_Sr_img0",
+   "cannot": [],
+   "notes": [],
+   "qe_reruns": [],
+   "attempts": [
+    {
+     "attempt": 1,
+     "started": "2026-11-03T00:22:24Z",
+     "host": "<NODE_HOST>",
+     "pid": 9474,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     }
+    },
+    {
+     "attempt": 2,
+     "started": "2026-11-03T00:47:12Z",
+     "host": "<NODE_HOST>",
+     "pid": 5537,
+     "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+     "helpers_sha256": {
+      "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+      "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+      "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+      "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+      "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+      "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+      "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+     },
+     "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+     "steps_cap": 10000,
+     "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+     "git": {
+      "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+      "uncommitted": [],
+      "script_equals_head": true
+     },
+     "previous_attempt_stopped_by": "spot-reclaim",
+     "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+     "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m32_Sr_img0.attempt1",
+     "finished": "2026-11-03T02:05:08Z"
+    }
+   ],
+   "steps": 1933,
+   "converged": true,
+   "fmax_eVA": 0.009984671467443317,
+   "nearest_I_to_vacancy_site_A": 3.9286731692089814,
+   "dopant_displacement_A": 0.08841413785406324,
+   "E_img0_eV": -78866.70545366316,
+   "E_relaxed_eV": -78867.96561585605,
+   "dE_relax_model_meV": -1260.1621928915847,
+   "max_dr_nonfree_A": 1.5289861967417206,
+   "basin_nonfree": {
+    "n_far": 151,
+    "max_dr_A": 1.5289861967417206,
+    "max_fa_rot_deg": 23.766938336488096,
+    "within_amendment_c_bounds": false,
+    "about": "the same measures over exactly the non-free atoms (molecules assigned by their C)"
+   },
+   "basin_beyond_6A": {
+    "n_far": 157,
+    "max_dr_A": 1.5289861967417206,
+    "max_fa_rot_deg": 23.766938336488096,
+    "within_amendment_c_bounds": false,
+    "about": "amendment c item 1 measure: scripts/29 basin_dev vs image 0 over atoms > 6 A (own distance) from all three fixed points"
+   },
+   "topology_ok": true,
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "code": {
+    "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+    "helpers_sha256": {
+     "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+     "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+     "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+     "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+     "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+     "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+     "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+    },
+    "git": {
+     "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+     "uncommitted": [],
+     "script_equals_head": true
+    }
+   },
+   "qe_output": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m32_Sr_img0.out.gz",
+   "qe_geometry_check": {
+    "output_A": 1.5217240674266877e-06,
+    "output_cell_A": 8.079554945972234e-06,
+    "input": "results/objective2/dopant_shell/wp3/wp3b/raw/wp3bu_m32_Sr_img0.in.gz",
+    "input_A": 5.000000413701855e-09,
+    "input_text_matches_relax": true
+   },
+   "free": {
+    "rms_eVA": 0.05807734312326583,
+    "max_eVA": 0.12933992768427283,
+    "n": 81
+   },
+   "whole_cell": {
+    "rms_eVA": 0.057493433229641115,
+    "max_eVA": 0.1369284742264619,
+    "n": 232
+   },
+   "surface_1A": {
+    "rms_eVA": 0.059109725663573434,
+    "max_eVA": 0.12933992768427283,
+    "n": 47
+   },
+   "surface_1A_own_distance": {
+    "rms_eVA": 0.05784467763066529,
+    "max_eVA": 0.12933992768427283,
+    "n": 35
+   },
+   "F_dft_eV": -78867.65772988962,
+   "dE_relax_dft_meV": -1116.95393465925,
+   "free_pass": false,
+   "criterion5_whole_cell_pass": false,
+   "flags": [],
+   "status": "complete",
+   "zero_shot_img0": {
+    "free": {
+     "rms_eVA": 0.16043149535224668,
+     "max_eVA": 0.3741281595091733,
+     "n": 81
+    },
+    "whole_cell": {
+     "rms_eVA": 0.15714174388940363,
+     "max_eVA": 0.38278287617881807,
+     "n": 232
+    },
+    "surface_1A": {
+     "rms_eVA": 0.17991636157124616,
+     "max_eVA": 0.3741281595091733,
+     "n": 47
+    },
+    "surface_1A_own_distance": {
+     "rms_eVA": 0.17541390233272447,
+     "max_eVA": 0.3741281595091733,
+     "n": 35
+    }
+   }
+  }
+ },
+ "wp2e_minimum": {
+  "dft_F_min_minus_img0_meV": -977.3089100344805,
+  "dft_plan_value_meV": -977.3,
+  "missing": [],
+  "E_model_img0_eV": -80046.3972284509,
+  "E_model_dftmin_eV": -80047.26554521735,
+  "dE_dftmin_minus_img0_meV": -868.3167664567009,
+  "frms_eVA": 0.05174055385540615,
+  "fmax_eVA": 0.16987409314923974,
+  "component_rms_eVA": 0.029872422696439072,
+  "dE_dftmin_minus_wp3bu_final_meV": 114.27262295910623,
+  "about": "(1) E_model(DFT min) - E_model(image 0) beside DFT -977.3 meV; (2) E_model(DFT min) - E_model(final wp3bu_m30_GA_img0), fine-tuned model only (no zero-shot value; with the foundation file it is a stand-in); (3) whole-cell per-atom-norm RMS / max of the model force at the DFT min (component RMS beside)",
+  "zero_shot": {
+   "source": "/data/work/ps_wp3/results/objective2/dopant_shell/wp2e/relax_m30_GA_img0.out.gz",
+   "E_model_img0_eV": -1077.016191383105,
+   "E_model_dftmin_eV": -1076.7891866977968,
+   "dE_dftmin_minus_img0_meV": 227.00468530820217,
+   "frms_eVA": 0.11537786660645846,
+   "fmax_eVA": 0.26033304486355596,
+   "component_rms_eVA": 0.06661344234376353,
+   "reproduced": {
+    "dE_dftmin_minus_img0_meV": true,
+    "frms_eVA": true,
+    "fmax_eVA": true,
+    "component_rms_eVA": true
+   }
+  }
+ },
+ "zero_shot_comparator": {
+  "wp3b_m30_undoped_img0": {
+   "free": {
+    "rms_eVA": 0.1534028662705475,
+    "max_eVA": 0.33191021370963014,
+    "n": 81
+   },
+   "plan_rms_max_eVA": [
+    0.153,
+    0.332
+   ],
+   "reproduced": true
+  },
+  "wp3b_m30_GA_img0": {
+   "free": {
+    "rms_eVA": 0.14210948254390057,
+    "max_eVA": 0.26995552885679364,
+    "n": 83
+   },
+   "plan_rms_max_eVA": [
+    0.142,
+    0.27
+   ],
+   "reproduced": true
+  },
+  "wp3b_m30_Sr_img0": {
+   "free": {
+    "rms_eVA": 0.15977552183217358,
+    "max_eVA": 0.3368829157649614,
+    "n": 81
+   },
+   "plan_rms_max_eVA": [
+    0.16,
+    0.337
+   ],
+   "reproduced": true
+  },
+  "wp3b_m32_undoped_img0": {
+   "free": {
+    "rms_eVA": 0.15685261326302755,
+    "max_eVA": 0.35960972841751,
+    "n": 81
+   },
+   "plan_rms_max_eVA": [
+    0.157,
+    0.36
+   ],
+   "reproduced": true
+  },
+  "wp3b_m32_GA_img0": {
+   "free": {
+    "rms_eVA": 0.14811428511101785,
+    "max_eVA": 0.365435161464632,
+    "n": 83
+   },
+   "plan_rms_max_eVA": [
+    0.148,
+    0.365
+   ],
+   "reproduced": true
+  },
+  "wp3b_m32_Sr_img0": {
+   "free": {
+    "rms_eVA": 0.16043149535224668,
+    "max_eVA": 0.3741281595091733,
+    "n": 81
+   },
+   "plan_rms_max_eVA": [
+    0.16,
+    0.374
+   ],
+   "reproduced": true
+  }
+ },
+ "reruns": [
+  {
+   "label": "wp3b_m30_undoped_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5562,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m30_undoped_img0.attempt1",
+   "finished": "2026-11-03T01:04:02Z"
+  },
+  {
+   "label": "wp3b_m30_GA_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5586,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m30_GA_img0.attempt1",
+   "finished": "2026-11-03T01:09:23Z"
+  },
+  {
+   "label": "wp3b_m30_Sr_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5612,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m30_Sr_img0.attempt1",
+   "finished": "2026-11-03T01:04:05Z"
+  },
+  {
+   "label": "wp3b_m32_undoped_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5637,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3b_m32_undoped_img0.attempt1",
+   "finished": "2026-11-03T01:07:48Z"
+  },
+  {
+   "label": "wp3bu_m30_undoped_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5412,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m30_undoped_img0.attempt1",
+   "finished": "2026-11-03T01:37:55Z"
+  },
+  {
+   "label": "wp3bu_m30_GA_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5437,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m30_GA_img0.attempt1",
+   "finished": "2026-11-03T01:36:45Z"
+  },
+  {
+   "label": "wp3bu_m30_Sr_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5462,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m30_Sr_img0.attempt1",
+   "finished": "2026-11-03T01:48:01Z"
+  },
+  {
+   "label": "wp3bu_m32_undoped_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5486,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m32_undoped_img0.attempt1",
+   "finished": "2026-11-03T02:07:33Z"
+  },
+  {
+   "label": "wp3bu_m32_GA_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5511,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m32_GA_img0.attempt1",
+   "finished": "2026-11-03T02:09:45Z"
+  },
+  {
+   "label": "wp3bu_m32_Sr_img0",
+   "kind": "relaxation rerun",
+   "time": "2026-11-03T00:47:12Z",
+   "cause": "spot-reclaim",
+   "attempt": 2,
+   "started": "2026-11-03T00:47:12Z",
+   "host": "<NODE_HOST>",
+   "pid": 5537,
+   "script_sha256": "f8936c3ff7f983c6720c69bf134f1f634a4ad57cf8c3623ccd319659683f54a1",
+   "helpers_sha256": {
+    "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+    "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+    "30": "912555ace3fd34914ffe52f915cf5e2340ed3a2aa91124a6dca692151a507ed9",
+    "32": "1522813ee092bad9164ff23ada769c9341c622679a4f8b5b99bd592835960626",
+    "35": "7347d26704a75d23a396752720aad027a5c9d7dd56fbc34b0456337db9e68636",
+    "37": "ce7d4045660d8bab9652ada1c9a16eceff98f0075b070c69f83bfb2b4c2ccdc0",
+    "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+   },
+   "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "steps_cap": 10000,
+   "region_id": "c069486c725a3e053ca67031ae22c15feeeb6d4d42d388a28298faf65d005571",
+   "git": {
+    "head": "5cf6c5f561b79f16bb8fdfff33cd3290b8c7ae96",
+    "uncommitted": [],
+    "script_equals_head": true
+   },
+   "previous_attempt_stopped_by": "spot-reclaim",
+   "note": "node_step7 2026-11-03T00:47:07Z: attempt 1: spot termination notice recorded in boot 06740b92 at 2026-11-03T00:26:23Z (termination-time 2026-11-03T00:31:21Z); the node booted again (boot 81c114d9); that boot's system journal: no system-level shutdown",
+   "discarded_to": "/data/work/wp3/wp3b/relax/discarded/wp3bu_m32_Sr_img0.attempt1",
+   "finished": "2026-11-03T02:05:08Z"
+  }
+ ]
+}

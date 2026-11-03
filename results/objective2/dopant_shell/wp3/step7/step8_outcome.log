@@ -1,0 +1,9 @@
+# Console output of the one step-8 run of scripts/39 --outcome-only (Mac, at 602e487, 2026-11-03), redacted only in the
+# repository-root prefix of the 'written' line; the command was
+# scripts/39_wp3_evaluate.py --outcome-only results/objective2/dopant_shell/wp3/wp3_eval.json \
+#   --wp3b-json results/objective2/dopant_shell/wp3/wp3b_result.json --md-json results/objective2/dopant_shell/wp3/wp3md_result.json   (exit code 0)
+== Outcome (item 4), model 3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca
+  (a) False [No improvement]; (b) not met; (c) not met
+  (d) fail; (e) fail
+  OUTCOME: No improvement
+written results/objective2/dopant_shell/wp3/wp3_outcome.json

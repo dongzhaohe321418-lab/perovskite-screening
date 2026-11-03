@@ -1,0 +1,18 @@
+# Console output of the one runbook-7e run of scripts/40 analyse (Mac, at 602e487, 2026-11-03), unredacted (it holds no
+# local path); the command was
+# scripts/40_wp3b.py analyse --region <MAC_STAGE>/wp3b_work/wp3b_region.json --work <MAC_STAGE>/wp3b_work/relax \
+#   --dft results/objective2/dopant_shell/wp3/wp3b/raw --model-sha256 3f7bf6f5...65d2ca --zeroshot <MAC_STAGE>/wp3b_work/wp3b_zeroshot.json \
+#   --out results/objective2/dopant_shell/wp3/wp3b_result.json   (exit code 0)
+wp3b_m30_undoped_img0    fail                 free 0.054/0.151  (zero-shot img0 0.153/0.332)
+wp3b_m30_GA_img0         fail                 free 0.058/0.148  (zero-shot img0 0.142/0.270)
+wp3b_m30_Sr_img0         fail                 free 0.055/0.154  (zero-shot img0 0.160/0.337)
+wp3b_m32_undoped_img0    fail                 free 0.053/0.121  (zero-shot img0 0.157/0.360)
+wp3b_m32_GA_img0         fail                 free 0.056/0.124  (zero-shot img0 0.148/0.365)
+wp3b_m32_Sr_img0         fail                 free 0.054/0.118  (zero-shot img0 0.160/0.374)
+wp3bu_m30_undoped_img0   complete             whole cell 0.057/0.141
+wp3bu_m30_GA_img0        complete             whole cell 0.059/0.140
+wp3bu_m30_Sr_img0        complete             whole cell 0.058/0.145
+wp3bu_m32_undoped_img0   complete             whole cell 0.057/0.133
+wp3bu_m32_GA_img0        complete             whole cell 0.058/0.139
+wp3bu_m32_Sr_img0        complete             whole cell 0.057/0.137
+(d) WP3b: fail; 6 reason(s) -> results/objective2/dopant_shell/wp3/wp3b_result.json

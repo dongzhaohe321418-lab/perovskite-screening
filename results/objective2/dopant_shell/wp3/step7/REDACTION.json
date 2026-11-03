@@ -1,0 +1,73 @@
+{
+ "substitutions": [
+  "<abs Mac repository root> -> <REPO>",
+  "<abs Mac staging dir> -> <MAC_STAGE>",
+  "node host name -> <NODE_HOST>"
+ ],
+ "files": {
+  "wp3b_result.json": {
+   "original_sha256": "0110a41d742a8f7bc3fd8b0186c5528726e6d17d8b53adc2aea6d1632878270b",
+   "redacted_sha256": "95331f65aac5791f55dfcaef6e69a0fc3e8c34ae8e818933407f7a6d58f75c1b",
+   "n_leaves_changed": 37,
+   "leaf_kinds_changed": [
+    "/cells/wp3b_m30_GA_img0/attempts[]/host",
+    "/cells/wp3b_m30_Sr_img0/attempts[]/host",
+    "/cells/wp3b_m30_undoped_img0/attempts[]/host",
+    "/cells/wp3b_m32_GA_img0/attempts[]/host",
+    "/cells/wp3b_m32_Sr_img0/attempts[]/host",
+    "/cells/wp3b_m32_undoped_img0/attempts[]/host",
+    "/inputs/dft",
+    "/inputs/work",
+    "/inputs/wp2b",
+    "/inputs/wp2e",
+    "/region/path",
+    "/reruns[]/host",
+    "/unconstrained/wp3bu_m30_GA_img0/attempts[]/host",
+    "/unconstrained/wp3bu_m30_Sr_img0/attempts[]/host",
+    "/unconstrained/wp3bu_m30_undoped_img0/attempts[]/host",
+    "/unconstrained/wp3bu_m32_GA_img0/attempts[]/host",
+    "/unconstrained/wp3bu_m32_Sr_img0/attempts[]/host",
+    "/unconstrained/wp3bu_m32_undoped_img0/attempts[]/host"
+   ]
+  },
+  "wp3md_result.json": {
+   "original_sha256": "17f891407fea06c1ab562275f6c0656d0e1c01057cb3187f63f2eeced496feaa",
+   "redacted_sha256": "e8ddfd5c4db4de0dcfc0a0ed2cc6f9293aefd4ef2ce76644bbc9163ac97806f1",
+   "n_leaves_changed": 12,
+   "leaf_kinds_changed": [
+    "/runs[]/record"
+   ]
+  },
+  "wp3_outcome.json": {
+   "original_sha256": "0a4cd1d239928a13dd2fc387f12d1118171c3366bc0f4feb844a395ef2a9ae9d",
+   "redacted_sha256": "28bc54a84a06a43364100a3b48e9d55fc8b459eea596da6c359d796eafa3ec0c",
+   "n_leaves_changed": 3,
+   "leaf_kinds_changed": [
+    "/adoption/d/file",
+    "/adoption/e/file",
+    "/eval_json/path"
+   ]
+  },
+  "wp3b_work.tar.gz": {
+   "n_files": 97,
+   "n_redacted": 24
+  },
+  "wp3md_work.tar.gz": {
+   "n_files": 48,
+   "n_redacted": 12
+  },
+  "step7.log": {
+   "sha256": "99bff21a2f716e9ee1dbf4149a287927f29e017f1d03008fc7efe58be8604daa",
+   "state": "as-is"
+  },
+  "step7_reruns.list": {
+   "sha256": "58412be999d76c8b99333bfbdb99109656022375e22be999c34ed1ec762e68d2",
+   "state": "as-is"
+  },
+  "step7_state.tar.gz": {
+   "n_files": 162,
+   "n_redacted": 0
+  }
+ },
+ "leaf_kinds_note": "leaf paths with array indices collapsed to []"
+}

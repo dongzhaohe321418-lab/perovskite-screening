@@ -1,0 +1,101 @@
+{
+ "script": "scripts/39_wp3_evaluate.py",
+ "plan": "amendment 2026-10-28m item 4, Outcomes",
+ "mode": "outcome-only",
+ "note": "composes the item-4 Outcome from the saved step-6 result; loads no model and reads no QE file, so it is not a second evaluation (item 7, step 6)",
+ "script_sha256": "59232da1d15c12754aa4515470afd41d871f3026b2a3ad1cb670b0e0efaebacf",
+ "git": {
+  "head": "602e4873ca8dab2d34131cecad20bf039737c4a8",
+  "uncommitted": []
+ },
+ "eval_json": {
+  "path": "<REPO>/results/objective2/dopant_shell/wp3/wp3_eval.json",
+  "file_sha256": "dda75f6340237fad042dab1a151f6730197bbb6978177b33b8fc7549105d65c7",
+  "script_sha256": "59232da1d15c12754aa4515470afd41d871f3026b2a3ad1cb670b0e0efaebacf",
+  "script_sha256_equal": true,
+  "model_sha256": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+  "stand_in": false,
+  "cache": null
+ },
+ "criterion6": {
+  "verdict": "No improvement",
+  "verdict_label": "criterion 6 (amendment m item 3)",
+  "verdict_h": "No improvement",
+  "verdict_h_label": "criterion 6 as amended by h",
+  "wording": "fail (sample: 4 pairs, 5 sites, 46 frames; never a reason to adopt, to change a threshold or to re-run)"
+ },
+ "adoption": {
+  "a": {
+   "met": false,
+   "verdict": "No improvement"
+  },
+  "b": {
+   "met": false,
+   "status": "not met",
+   "rms_meV": 30.856055522307244,
+   "class_changes": [
+    "m32_GA",
+    "m10_GA"
+   ],
+   "basis": "Eprime"
+  },
+  "c": {
+   "met": false,
+   "status": "not met",
+   "label": "one host (m30), 5 sites",
+   "max_abs_error_meV": 117.80641619407106
+  },
+  "d": {
+   "file": "<REPO>/results/objective2/dopant_shell/wp3/wp3b_result.json",
+   "file_sha256": "0110a41d742a8f7bc3fd8b0186c5528726e6d17d8b53adc2aea6d1632878270b",
+   "identity": {
+    "item": "PLAN amendment m item 4 (d), WP3b"
+   },
+   "model_sha256_in_file": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "verdict_in_file": "fail",
+   "reasons_in_file": [
+    "wp3b_m30_undoped_img0: free-atom residual RMS 0.0543 / max 0.1513 eV/A (needs < 0.05 / < 0.2)",
+    "wp3b_m30_GA_img0: free-atom residual RMS 0.0579 / max 0.1475 eV/A (needs < 0.05 / < 0.2)",
+    "wp3b_m30_Sr_img0: free-atom residual RMS 0.0551 / max 0.1539 eV/A (needs < 0.05 / < 0.2)",
+    "wp3b_m32_undoped_img0: free-atom residual RMS 0.0526 / max 0.1208 eV/A (needs < 0.05 / < 0.2)",
+    "wp3b_m32_GA_img0: free-atom residual RMS 0.0556 / max 0.1243 eV/A (needs < 0.05 / < 0.2)",
+    "wp3b_m32_Sr_img0: free-atom residual RMS 0.0540 / max 0.1183 eV/A (needs < 0.05 / < 0.2)"
+   ],
+   "status": "fail",
+   "pass": false
+  },
+  "e": {
+   "file": "<REPO>/results/objective2/dopant_shell/wp3/wp3md_result.json",
+   "file_sha256": "17f891407fea06c1ab562275f6c0656d0e1c01057cb3187f63f2eeced496feaa",
+   "identity": {
+    "check": "WP3 adoption (e): MD stability"
+   },
+   "model_sha256_in_file": "3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca",
+   "verdict_in_file": "fail",
+   "reasons_in_file": [
+    "wp3md_m30_undoped_md450: fail: t = 900 fs: sane(): composition or organic bonding pattern changed",
+    "wp3md_m32_undoped_md450: fail: t = 3600 fs: sane(): composition or organic bonding pattern changed"
+   ],
+   "status": "fail",
+   "pass": false
+  }
+ },
+ "outcome": {
+  "outcome": "No improvement",
+  "conditions": {
+   "a": false,
+   "b": false,
+   "c": false,
+   "d": false,
+   "e": false
+  }
+ },
+ "error_budget": {
+  "dEa_rms_meV": 30.856055522307244,
+  "dEa_sigma_ub95_meV": 50.758211334195416,
+  "Eb_rms_meV": 69.37620533366557,
+  "Eb_sigma_ub95_meV": 144.92689294202737,
+  "quoted": false,
+  "note": "item 4: quoted only if Validated; sigma upper bounds RMS*1.645 (n = 9 pairs) and RMS*2.089 (n = 5 sites) assume independent errors (about 1.68 and 2.27 with shared bands / references); single-point part only"
+ }
+}
