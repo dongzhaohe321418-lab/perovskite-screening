@@ -1063,8 +1063,10 @@ items 4, 6 and 22 by the pre-registered rules. Their effect on the model is not 
       in the MD records matches its archived trajectory.
     - **Where the originals are.**
       - **The three JSON files and `wp3_eval.json`.** Their originals (sha256 above, and 88e7db00…
-        for `wp3_eval.json`) are kept off-repository, so far only in the analysis staging
-        directory. A durable copy on the node's data disk is to be made at its next boot.
+        for `wp3_eval.json`) are kept off-repository, in a private record folder on the analysis
+        laptop, outside the session workspace. That folder also holds the operator's log and the
+        two review summaries, with a SHA256SUMS list. A further copy goes to the node's data disk
+        at its next boot.
       - **The unredacted work directories and the driver's state directory.** They remain on the
         node's data disk.
       - **The state directory in the repository.** It is also archived, unredacted, as
