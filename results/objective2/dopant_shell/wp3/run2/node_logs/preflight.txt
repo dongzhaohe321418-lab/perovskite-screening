@@ -1,0 +1,10 @@
+PASS MACE version: 0.3.16
+PASS Using foundation model /home/ericdft/.cache/mace/20231203mace128L1_epoch199model as initial checkpoint.
+PASS Using heads: ['Default']
+PASS filtered elements Z = 1 6 7 38 53 55 82
+PASS Atomic Energies used ... equal to E0s.json
+PASS Using weighted loss function for fine-tuning
+PASS Using Exponential Moving Average with decay: 0.99
+PASS Learning rate: 0.005, weight decay: 5e-07
+PASS WeightedEnergyForcesLoss(energy_weight=70000.000, forces_weight=100.000)
+PASS no line with 'multiheads finetuning'

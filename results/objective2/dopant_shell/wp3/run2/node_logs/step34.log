@@ -1,0 +1,32 @@
+[2026-10-29T20:02:50Z] start; repo c391d61
+[2026-10-29T20:02:50Z] item-1' re-runs and resubmissions: 0 (item1p_rerun.list); every QE input final
+[2026-10-29T20:02:52Z] 3a: ALL INPUT CHECKS PASS
+archived 190 files from /data/jobs/wp3 into /data/work/ps_wp3/results/objective2/dopant_shell/wp3/raw
+archived 100 files from /data/jobs/wp3x into /data/work/ps_wp3/results/objective2/dopant_shell/wp3/test_extra/raw
+archived 16 files from /data/jobs/wp3chk into /data/work/ps_wp3/results/objective2/dopant_shell/wp3/chk/raw
+[2026-10-29T20:02:53Z] 3a: archived; 190 wp3, 100 item-1', 16 chk files
+[2026-10-29T20:02:53Z] 3b: test hosts: m30 m32 m04 m10 m14 m18 m27
+3d: n {'train': 201, 'valid': 31, 'test': 96} | W 95 ok 95 dropped [] | basis Eprime | WP3 vacancy weight0
+3d: (a) -1.1271678522462025 True | (b) {'Sr': (-4.548175114905462, True), 'undoped': (-104.0647808695212, False)}
+3d: loss_weights {'L_F_eVA2': 0.017577052292369763, 'L_E_eVatom2': 2.5016905537617596e-05, 'n_train': 201, 'n_E': 130, 'N_mean': 232.75621890547265, 'w_F': 100.0, 'w_E': 70000.0, 'w_E_unrounded': 70260.6973749786, 'energy_weight_zero': ['m05_GA_md300', 'm05_GA_md450', 'm05_GA_rat05f', 'm05_GA_rat10f', 'm05_Sr_md300', 'm05_Sr_md450', 'm05_Sr_rat05f', 'm05_Sr_rat10f', 'm05_undoped_md300', 'm05_undoped_md450', 'm05_undoped_rat05f', 'm05_undoped_rat10f', 'm06_GA_md300', 'm06_GA_md450', 'm06_GA_rat05f', 'm06_GA_rat10f', 'm06_Sr_md300', 'm06_Sr_rat05f', 'm06_Sr_rat10f', 'm06_undoped_md300', 'm06_undoped_md450', 'm06_undoped_rat05f', 'm06_undoped_rat10f', 'm08_GA_md300', 'm08_GA_md450', 'm08_GA_rat05f', 'm08_GA_rat10f', 'm08_Sr_md300', 'm08_Sr_md450', 'm08_Sr_rat05f', 'm08_Sr_rat10f', 'm08_undoped_md300', 'm08_undoped_md450', 'm08_undoped_rat05f', 'm08_undoped_rat10f', 'm12_GA_md300', 'm12_GA_md450', 'm12_GA_rat05f', 'm12_GA_rat10f', 'm12_Sr_md300', 'm12_Sr_md450', 'm12_Sr_rat05f', 'm12_Sr_rat10f', 'm12_undoped_md300', 'm12_undoped_md450', 'm12_undoped_rat05f', 'm12_undoped_rat10f', 'm15_GA_md300', 'm15_GA_md450', 'm15_GA_rat05f', 'm15_GA_rat10f', 'm15_Sr_md300', 'm15_Sr_md450', 'm15_Sr_rat05f', 'm15_Sr_rat10f', 'm15_undoped_md300', 'm15_undoped_md450', 'm15_undoped_rat05f', 'm15_undoped_rat10f', 'm20_GA_md300', 'm20_GA_md450', 'm20_GA_rat05f', 'm20_GA_rat10f', 'm20_Sr_md300', 'm20_Sr_md450', 'm20_Sr_rat05f', 'm20_Sr_rat10f', 'm20_undoped_md300', 'm20_undoped_md450', 'm20_undoped_rat05f', 'm20_undoped_rat10f']}
+[2026-10-29T20:08:30Z] 3: dataset ready; basis Eprime, w_E 70000.0
+[2026-10-29T20:08:35Z] 4a: pre-flight PASS
+[2026-10-29T20:59:37Z] 4b: timing (threads, s for 2 epochs): 8 1333;16 948;32 781; -> T=32
+[2026-10-29T20:59:37Z] 4c: training started, pid 85250, threads 32, run /data/work/wp3/run1
+[2026-10-29T21:00:07Z] 4d: start check PASS: Initial m21: RMSE_F 79.8190 meV/A (79.819 +/- 0.01: PASS); RMSE_E_per_atom 0.33342 meV/atom (0.3334 +/- 0.001, basis Eprime: PASS)
+[2026-10-30T07:26:03Z] start; repo c391d61
+[2026-10-30T07:26:05Z] 3a: ALL INPUT CHECKS PASS
+[2026-10-30T07:26:05Z] 3a: archived; 190 wp3, 100 item-1', 16 chk files
+[2026-10-30T07:26:05Z] 3b: test hosts: m30 m32 m04 m10 m14 m18 m27
+3d: n {'train': 201, 'valid': 31, 'test': 96} | W 95 ok 95 dropped [] | basis Eprime | WP3 vacancy weight0
+3d: (a) -1.1271678522462025 True | (b) {'Sr': (-4.548175114905462, True), 'undoped': (-104.0647808695212, False)}
+3d: loss_weights {'L_F_eVA2': 0.017577052292369763, 'L_E_eVatom2': 2.5016905537617596e-05, 'n_train': 201, 'n_E': 130, 'N_mean': 232.75621890547265, 'w_F': 100.0, 'w_E': 70000.0, 'w_E_unrounded': 70260.6973749786, 'energy_weight_zero': ['m05_GA_md300', 'm05_GA_md450', 'm05_GA_rat05f', 'm05_GA_rat10f', 'm05_Sr_md300', 'm05_Sr_md450', 'm05_Sr_rat05f', 'm05_Sr_rat10f', 'm05_undoped_md300', 'm05_undoped_md450', 'm05_undoped_rat05f', 'm05_undoped_rat10f', 'm06_GA_md300', 'm06_GA_md450', 'm06_GA_rat05f', 'm06_GA_rat10f', 'm06_Sr_md300', 'm06_Sr_rat05f', 'm06_Sr_rat10f', 'm06_undoped_md300', 'm06_undoped_md450', 'm06_undoped_rat05f', 'm06_undoped_rat10f', 'm08_GA_md300', 'm08_GA_md450', 'm08_GA_rat05f', 'm08_GA_rat10f', 'm08_Sr_md300', 'm08_Sr_md450', 'm08_Sr_rat05f', 'm08_Sr_rat10f', 'm08_undoped_md300', 'm08_undoped_md450', 'm08_undoped_rat05f', 'm08_undoped_rat10f', 'm12_GA_md300', 'm12_GA_md450', 'm12_GA_rat05f', 'm12_GA_rat10f', 'm12_Sr_md300', 'm12_Sr_md450', 'm12_Sr_rat05f', 'm12_Sr_rat10f', 'm12_undoped_md300', 'm12_undoped_md450', 'm12_undoped_rat05f', 'm12_undoped_rat10f', 'm15_GA_md300', 'm15_GA_md450', 'm15_GA_rat05f', 'm15_GA_rat10f', 'm15_Sr_md300', 'm15_Sr_md450', 'm15_Sr_rat05f', 'm15_Sr_rat10f', 'm15_undoped_md300', 'm15_undoped_md450', 'm15_undoped_rat05f', 'm15_undoped_rat10f', 'm20_GA_md300', 'm20_GA_md450', 'm20_GA_rat05f', 'm20_GA_rat10f', 'm20_Sr_md300', 'm20_Sr_md450', 'm20_Sr_rat05f', 'm20_Sr_rat10f', 'm20_undoped_md300', 'm20_undoped_md450', 'm20_undoped_rat05f', 'm20_undoped_rat10f']}
+[2026-10-30T07:26:05Z] 3: dataset ready; basis Eprime, w_E 70000.0
+[2026-10-30T07:26:13Z] 4a: pre-flight PASS
+[2026-10-30T07:26:13Z] 4b: timing (threads, s for 2 epochs): 8 1333;16 948;32 781; -> T=32
+[2026-10-30T07:26:13Z] 4c: run1 discarded unread [node loss] the node booted at 2026-10-30T07:15:00Z, after run1 started at 2026-10-29T20:59:37Z; last results write 2026-10-30T04:51:30Z; the identical command runs in /data/work/wp3/run2
+[2026-10-30T07:26:13Z] 4c: training started, pid 5358, threads 32, run /data/work/wp3/run2
+[2026-10-30T07:26:43Z] 4d: start check PASS: Initial m21: RMSE_F 79.8190 meV/A (79.819 +/- 0.01: PASS); RMSE_E_per_atom 0.33342 meV/atom (0.3334 +/- 0.001, basis Eprime: PASS)
+[2026-10-30T15:05:21Z] 4: training finished in /data/work/wp3/run2; wp3.model sha256 3f7bf6f5aaaadc72d3954b56dfe3b7bcf5878b0f1be0c115e56c8bcaec65d2ca; restarts: 1 (restarts.txt)
+[2026-10-30T15:05:41Z] 5a: no technical failure (items checked here)
+[2026-10-30T15:05:41Z] done

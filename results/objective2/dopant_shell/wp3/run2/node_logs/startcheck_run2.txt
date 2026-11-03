@@ -1,0 +1,1 @@
+Initial m21: RMSE_F 79.8190 meV/A (79.819 +/- 0.01: PASS); RMSE_E_per_atom 0.33342 meV/atom (0.3334 +/- 0.001, basis Eprime: PASS)
