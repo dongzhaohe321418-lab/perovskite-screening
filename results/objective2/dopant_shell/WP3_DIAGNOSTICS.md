@@ -287,9 +287,9 @@ compare with the fall of the m21 force RMSE?**
   - It is **not a Q4 reading and is not interpreted here**.
   - **Its error.** Its error is the difference of two levels' quadrature errors. This holds exactly for the
     closure on the DFT segment, RMS 21.7 meV.
-  - **Against the direct E_a change.** That change also carries the argmax differences in 7 bands. There
-    the summed D2b attribution closes to RMS 21.7 meV (max 49.1 meV), against a mean |direct change| of
-    46.3 meV.
+  - **Against the direct E_a change.** That change also carries the argmax differences in 6 bands (7
+    model–band differences; corrected from "7 bands" on 2026-11-03 with the D3 plan). There the summed D2b
+    attribution closes to RMS 21.7 meV (max 49.1 meV), against a mean |direct change| of 46.3 meV.
 
 **Q4. Is the systematic E_a lowering carried mainly by the hopping I and its first shell, or by the far
 field and the organic sublattice? It cannot be read: no band is resolved.**
