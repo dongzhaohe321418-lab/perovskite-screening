@@ -1,0 +1,9 @@
+statistic,set,status,unit,zeroshot,finetuned,ratio_finetuned_over_zeroshot,strictly_below,json
+(i) Force RMSE,"pooled, 46 m30/m32 frames",pre-registered (decisive),eV/A,0.08680896287711931,0.01494453746093087,0.17215431408949455,True,criterion6.conditions.i
+(i) Force RMSE,"96 test frames, all lower",reported beside criterion 6 (not in its verdict); not gated,eV/A,0.08836677802482781,0.015226471566504187,0.17230990997800225,,reported.i_all_test_frames_eVA
+(ii) Paired ΔE_a RMS,"raw F, 4 m30/m32 pairs",pre-registered (decisive),meV,23.64730379747954,32.75728338646295,1.385243902095697,False,criterion6.conditions.ii_raw
+(ii) Paired ΔE_a RMS,all 9 test pairs,reported beside criterion 6 (not in its verdict); not gated,meV,20.53413538584564,26.654542578200097,1.2980601363217517,,reported.ii_all_9_pairs.raw
+(ii) Paired ΔE_a RMS,"E′, 4 m30/m32 pairs",pre-registered (decisive),meV,38.19099524194828,42.81669917923353,1.1211202773842475,False,criterion6.conditions.ii_Eprime
+(ii) Paired ΔE_a RMS,all 9 test pairs,"reported beside criterion 6 (not in its verdict); also the adoption (b) statistic (decisive for adoption, panel c)",meV,31.022182230639615,30.856055522307244,0.9946449057936262,,reported.ii_all_9_pairs.Eprime
+(iii) Far-ref. E_b RMS,"raw F, 5 m30 sites",pre-registered (decisive),meV,28.41232026213448,69.37620533366557,2.441764864452984,False,criterion6.conditions.iii
+(iii) Far-ref. E_b RMS,E′ basis,reported beside criterion 6 (not in its verdict); not gated,meV,27.81013077629213,70.53552879195514,2.5363249586760666,,criterion6.iii_Eprime_rms_meV_reported
