@@ -50,7 +50,7 @@ Host ehpc
     HostName 139.224.62.26
     Port 22
     User ericdft
-    IdentityFile /Users/ericdong/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_ed25519
     IdentitiesOnly yes
     ServerAliveInterval 60
     ServerAliveCountMax 3

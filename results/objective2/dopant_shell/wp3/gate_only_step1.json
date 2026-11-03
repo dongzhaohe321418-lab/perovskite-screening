@@ -297,7 +297,7 @@
  },
  "arms": {
   "zeroshot": {
-   "model_file": "/Users/ericdong/.cache/mace/20231203mace128L1_epoch199model",
+   "model_file": "~/.cache/mace/20231203mace128L1_epoch199model",
    "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
    "dtype": "float64",
    "device": "cpu",

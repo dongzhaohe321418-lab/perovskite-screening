@@ -17,10 +17,16 @@ Audit F-025 rejected two designs before this one, and both rejections were corre
   auditor supplied a fabricated ledger carrying the current HEAD and manifest hash; every
   predicate passed. Authority that the caller can redirect is not authority.
 
-v3 (this version) therefore takes NO path from the caller: the controller's state
+v3 (this version) therefore takes NO path on its command line: the controller's state
 directory is a module constant, and authorization must be corroborated in TWO files the
 controller writes independently -- `action_ledger.jsonl` and `controller/state.json`'s
 `authorizations` list. A single-file forgery fails on the missing corroboration.
+
+The constant is set once at import from the environment variable AUDIT_LOOP_STATE, or by
+default to `../audit-loop/state` beside this repository, so that no machine-specific path
+is committed. The environment is the caller's as much as the command line is, so (a) below
+does not cover it; a substitute directory must still pass (b). The machine-enforced gate
+was retired on 2026-08-05 (results/objective1/dft/charge_relaxed/CHARGE_STATE_ANCHOR.md).
 
 RESIDUAL TRUST ASSUMPTION, stated because it cannot be closed from inside this script:
 this process runs with the audited party's privileges, so any file it can read it could
@@ -46,7 +52,7 @@ There is deliberately no path argument. Tests exercise both polarities by import
 module and rebinding CONTROLLER_DIR in-process, which the CLI cannot do.
 """
 from __future__ import annotations
-import argparse, gzip, hashlib, json, re, sys
+import argparse, gzip, hashlib, json, os, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,9 +68,9 @@ FP_KEYS = ("conv_thr", "degauss", "path_thr", "num_of_images", "CI_scheme",
            "ecutwfc", "ecutrho", "nspin", "occupations", "smearing")
 
 
-# Controller-owned state. NOT caller-selectable (audit F-025 v2): the CLI exposes no path
-# argument, so an invocation cannot redirect authorization at a substitute file.
-CONTROLLER_DIR = Path("/Users/ericdong/Desktop/perovskite-project/audit-loop/state")
+# Controller-owned state. NOT selectable on the command line (audit F-025 v2): the CLI exposes
+# no path argument. AUDIT_LOOP_STATE overrides the default beside the repository (see docstring).
+CONTROLLER_DIR = Path(os.environ.get("AUDIT_LOOP_STATE") or ROOT.parent / "audit-loop" / "state").expanduser()
 
 
 def _ledger_path() -> Path:
@@ -246,7 +252,8 @@ def main() -> int:
     if diff:
         raise SystemExit(f"FINGERPRINT MISMATCH beyond charge: {sorted(diff)}; refusing.")
 
-    rec = {"authorized_by": {"ledger": str(_ledger_path()), "timestamp": allow_row["timestamp"],
+    rec = {"authorized_by": {"ledger": os.path.relpath(_ledger_path(), ROOT),   # no absolute path in the record
+                             "timestamp": allow_row["timestamp"],
                              "corroborated_by": allow_row.get("corroborated_by"),
                              "action": allow_row["action"], "decision": allow_row["decision"],
                              "science_commit": allow_row["science_commit"],

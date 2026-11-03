@@ -19,6 +19,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "source_data")
+REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 BAND, RMS_GATE, F_GATE = 59.5, 20.0, 0.05
 COL = {"undoped": "#9aa3ad", "GA": "#2f6db5", "Sr": "#c4553a"}
 MRK = {"undoped": "o", "GA": "o", "Sr": "s"}
@@ -51,7 +52,7 @@ def build(val, dft):
             rows.append({"host": h, "dopant": s, "image": img, "EF_undoped_eV": eu, "EF_doped_eV": ed,
                          "dEF_meV": round((ed - eu) * 1000, 1)})
     write_csv("wp2b_fermi.csv", rows)
-    json.dump({"summary": d["summary"], "source": os.path.abspath(val)},
+    json.dump({"summary": d["summary"], "source": os.path.relpath(os.path.abspath(val), REPO)},  # no absolute path
               open(os.path.join(SRC, "wp2b_summary.json"), "w"), indent=1)
     print("source data written")
 
