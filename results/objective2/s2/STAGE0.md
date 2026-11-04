@@ -713,6 +713,15 @@ keys equal to `s2/stage0/preflight_c1.json`, so the record was not rewritten.
    - *The node queue scripts against the committed copies* (R4-C1-2, N-F31; round 5), before C1:
      `cmp /data/setup/qe_queue.sh /data/work/ps_s2/ehpc/node/qe_queue.sh && cmp /data/setup/chain.sh /data/work/ps_s2/ehpc/node/chain.sh`
      prints nothing. Any difference, a comment included, is resolved before the launch: check:nodescripts STOPs C1 on it.
+      *Result on the node, 2026-11-04 (before the first C1 start):* qe_queue.sh equal; chain.sh different. The node copy
+      (last changed 2026-10-26, after the commit of 2026-10-25 that added it here) passes an optional `NP` to the
+      `[np]` argument that the committed qe_queue.sh already documents, `${NP:-}` unquoted, and differs otherwise only in
+      two comment lines; with `NP` unset, as it is in the runner's environment (checked over ssh and in a login shell),
+      the command is identical. Resolved by a dated commit that replaces `ehpc/node/chain.sh` with the node copy byte for
+      byte (sha256 `7d5f0a21…a9402`), so that the repository records the script that runs, and has run every queue on the
+      node since 2026-10-26; the node copy, shared with other work, is unchanged. That commit, which also holds this
+      note, is the C1 campaign commit (C1 had not started, so no `c1/NODE_FIX` is involved); no S2 code, graph or input
+      changed (the pre-flight input digest does not depend on chain.sh; the scripts/50 self-test passes, 60 cases).
    - *The launcher against the node's run_qe.sh* (R4-C1-2, N-F30):
      `diff /usr/local/bin/run_qe.sh /data/work/ps_s2/ehpc/node/s2_run_qe.sh` shows only comments, the `CPUSET`
      branch and the pseudo_dir rewrite through a temporary file. Any other difference, for example in the
