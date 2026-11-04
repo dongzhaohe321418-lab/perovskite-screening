@@ -117,7 +117,8 @@ NOTES = {
     "N-C6": "§14: a + b = 0 (no spread at all) leaves the interval undefined: not computed, 'not resolved'",
     "N-C7": "§14 ranking: intervals carry no allowance (a_far, a_pose); reported only",
     "N-C8": "§17 item 6: a rerun is written beside the first output as s2_eval.rerun<k>.json; s2_eval.json is never "
-            "overwritten",
+            "overwritten; the analysis diff of each output is named after its own JSON (s2_eval.rerun<k>."
+            "analysis_diff.patch) and never overwritten (round 5, the C2-C4 adjudicator's missed item)",
     "N-C9": "§15 plateau-excluded intervals: delta values with a plateau-accepted relaxation (including delta_far) "
             "are dropped and delta_bar, s_delta, df_delta, a_far and every calibrated interval recomputed",
     "N-C10": "§§11, 14: an invalid delta_far fails C5; the reported calibrated interval then carries a_far = 0",
@@ -135,7 +136,10 @@ NOTES = {
              "and the diff itself beside s2_eval.json); a difference is refused unless --amendment names a committed, "
              "clean note outside scripts/ that was added or changed after the campaign commit and carries an ISO date "
              "on or after that commit's; a given amendment is checked alike and recorded also when the code is "
-             "unchanged, and the D3(BJ) row cites it (D-S0-4)",
+             "unchanged; the D3(BJ) row cites only a note given as --d3bj-amendment (D-S0-4; round 5, R5-C24-2: "
+             "committed, clean, outside scripts/, with an ISO date, from any commit up to HEAD); the one evaluation "
+             "runs only after C4 has ended or, when C4 is not planned, after C3 has ended or recorded not_run (round "
+             "5, R5-C24-1)",
     "N-F39": "§§13, 17 item 6 (round-4 R4-C1-6): every commit change during the campaigns (state_end commit_history: "
              "c1/NODE_FIX, c2/STEP0_FIX) is reported in s2_eval.json analysis_identity with the diff stat of "
              "scripts/46-50 and ehpc/node between its two commits; report only, no refusal",
@@ -929,19 +933,26 @@ def reported(table, res, hv, dl, pool, dfar):
 
 
 # ---------------------------------------------------------------- output
-def write_eval(result, path, *, rerun=None, dumper=None):
-    """Write s2-eval-1. Refuses an existing file unless this is a rerun (§17 item 6), which goes beside it as
-    <stem>.rerun<k>.json; the first output is never overwritten (N-C8)."""
-    dumper = dumper or dep("c46").dump_public
+def eval_path(path, rerun=None):
+    """The file write_eval writes: path itself for the one evaluation, <stem>.rerun<k>.json beside it for a rerun
+    (round 5: the analysis diff is named after it)."""
     if os.path.exists(path):
         if not rerun:
             raise FileExistsError(f"{path} exists: the one evaluation has been run (§17 item 6)")
         k = 1
         while os.path.exists(re.sub(r"\.json$", f".rerun{k}.json", path)):
             k += 1
-        path = re.sub(r"\.json$", f".rerun{k}.json", path)
-    elif rerun:
+        return re.sub(r"\.json$", f".rerun{k}.json", path)
+    if rerun:
         raise FileNotFoundError(f"rerun requested but {path} (the first output) does not exist")
+    return path
+
+
+def write_eval(result, path, *, rerun=None, dumper=None):
+    """Write s2-eval-1. Refuses an existing file unless this is a rerun (§17 item 6), which goes beside it as
+    <stem>.rerun<k>.json; the first output is never overwritten (N-C8)."""
+    dumper = dumper or dep("c46").dump_public
+    path = eval_path(path, rerun)
     body = {"schema": EVAL_SCHEMA, **result, "rerun": rerun}
     dumper(body, path)
     return path
@@ -1260,6 +1271,10 @@ def _c4_ended(archive):
         if os.path.exists(sp):
             st = json.load(open(sp))
             if not g49.c4_planned(st):
+                c3 = os.path.join(archive, "c3", "campaign.json")       # round-5 R5-C24-1: C3 ends (or is not run) first
+                if c != "c3" and (json.load(open(c3)) if os.path.exists(c3) else {}).get("status") != "not_run":
+                    return False, (f"{c}/state_end.json: C4 is not planned but C3 has not ended (§17 item 5: C3 runs "
+                                   f"before the one evaluation; a C3 that is not run records status not_run)")
                 return True, f"{c}/state_end.json: C4 not run (cuts {st.get('cuts')}, K2 {st.get('K2')}, " \
                              f"K3 {st.get('K3')}, step-0 {st.get('step0')})"
             return False, f"{c}/state_end.json plans C4 and no c4/campaign.json records its end"
@@ -1357,6 +1372,22 @@ def analysis_guard(campaign_commit, head, amendment=None, root=ROOT, commit_hist
     return True, rec
 
 
+def d3bj_citation(path, root=ROOT):
+    """D-S0-4 (round-5 R5-C24-2): the dated amendment the D3(BJ) row follows (evaluate --d3bj-amendment): a committed,
+    clean note outside scripts/ carrying an ISO date, from any commit up to HEAD. Returns (record, None) or (None, why)."""
+    g = lambda *a: subprocess.run(["git", "-C", root, *a], capture_output=True, text=True)   # noqa: E731
+    rel = os.path.relpath(os.path.abspath(path), root)
+    if rel.startswith("..") or rel.split(os.sep)[0] == "scripts":
+        return None, f"the D3(BJ) amendment {rel} must be a note outside scripts/"
+    if g("ls-files", "--error-unmatch", rel).returncode != 0 or g("status", "--porcelain", "--", rel).stdout.strip():
+        return None, f"the D3(BJ) amendment {rel} is not committed"
+    txt = open(os.path.join(root, rel)).read()
+    dates = re.findall(r"\b20\d\d-\d\d-\d\d\b", txt)
+    if not dates:
+        return None, f"the D3(BJ) amendment {rel} carries no date"
+    return {"path": rel, "sha256": hashlib.sha256(txt.encode()).hexdigest(), "dates": dates[:5]}, None
+
+
 def _old_module(commit):
     """The analysis module at an earlier commit, exported with git archive into a temporary directory."""
     d = tempfile.mkdtemp(prefix="s2_48_first_")
@@ -1385,6 +1416,12 @@ def cmd_evaluate(a):
     if not ok:
         print(f"REFUSED: {ident['reason']} (§17 item 6)", file=sys.stderr)
         return 3
+    d3 = None
+    if getattr(a, "d3bj_amendment", None):
+        d3, why = d3bj_citation(a.d3bj_amendment)
+        if why:
+            print(f"REFUSED: {why} (D-S0-4)", file=sys.stderr)
+            return 3
     rerun = None
     if os.path.exists(a.out):
         if not a.rerun_cause:
@@ -1407,13 +1444,16 @@ def cmd_evaluate(a):
             rerun = {"cause": a.rerun_cause, "first_commit": first["commit"], "first_failure": f"{type(e).__name__}: {e}"}
     table = assemble(a.archive)
     res = evaluate(table)
-    if ident.get("amendment") and "D3BJ" in (res.get("reported") or {}):
-        res["reported"]["D3BJ"]["amendment"] = ident["amendment"]          # D-S0-4: the dated amendment it follows
+    if d3 and "D3BJ" in (res.get("reported") or {}):
+        res["reported"]["D3BJ"]["amendment"] = d3                          # D-S0-4: the dated amendment it follows
     sha = {fn: hashlib.sha256(open(os.path.join(HERE, fn), "rb").read()).hexdigest()
            for fn in ("46_s2_cells.py", "47_s2_qe.py", "48_s2_analysis.py", "49_s2_gates.py")}
     diff_text = ident.pop("diff_text", None)
     if diff_text:                                                           # N-F29: the diff itself, beside s2_eval.json
-        side = os.path.splitext(a.out)[0] + ".analysis_diff.patch"
+        side = os.path.splitext(eval_path(a.out, rerun))[0] + ".analysis_diff.patch"   # its own JSON's name (round 5)
+        if os.path.exists(side):
+            print(f"REFUSED: {side} exists (N-C8: an output is never overwritten)", file=sys.stderr)
+            return 3
         open(side, "w").write(diff_text)
         ident["diff_file"] = os.path.basename(side)
     body = {"commit": commit, "script_sha256": sha, "analysis_identity": ident,
@@ -1432,6 +1472,7 @@ def main(argv=None):
     e.add_argument("--rerun-cause", default=None, help="self-test case that fails on the first code (§17 item 6)")
     e.add_argument("--amendment", default=None, help="committed dated note when scripts/46-49 differ from the campaign "
                                                       "commit (N-F29)")
+    e.add_argument("--d3bj-amendment", default=None, help="committed dated D-S0-4 note the D3(BJ) row cites (round 5)")
     a = ap.parse_args(argv)
     if a.self_test:
         return self_test()
@@ -2594,7 +2635,8 @@ def _this_module():
     import types
     return types.SimpleNamespace(evaluate=evaluate, write_eval=write_eval, assemble=assemble, c2_noise=c2_noise,
                                  required_hosts=required_hosts, analysis_guard=analysis_guard, classify=classify,
-                                 _commit_history=_commit_history, _campaign_commit=_campaign_commit)
+                                 _commit_history=_commit_history, _campaign_commit=_campaign_commit,
+                                 _c4_ended=_c4_ended, d3bj_citation=d3bj_citation, cmd_evaluate=cmd_evaluate)
 
 
 def _a1cond_table():
@@ -2807,6 +2849,92 @@ def case_pilot_rows_r4(m):
             f"value; no Cs record on m05: no crash; a killed_by_gate A2 cell: not parsed, relaxation energy None")
 
 
+def case_c4_ended_r5(m):
+    """Round-5 R5-C24-1 (§17 item 5): with C4 not planned the one evaluation waits for C3 to end, or for a C3 that
+    records status not_run; JSON-only archives."""
+    def arch(states, c3_campaign=None):
+        d = tempfile.mkdtemp(prefix="s2_48_c4end_")
+        for c, st in states.items():
+            os.makedirs(os.path.join(d, c), exist_ok=True)
+            json.dump(st, open(os.path.join(d, c, "state_end.json"), "w"))
+        if c3_campaign:
+            os.makedirs(os.path.join(d, "c3"), exist_ok=True)
+            json.dump({"status": c3_campaign}, open(os.path.join(d, "c3", "campaign.json"), "w"))
+        return d
+    ok_ = {"K2": "pass", "step0": {"outcome": "pass"}, "K3": "pass", "cuts": []}
+    cut8 = [{"cut": 8, "at": "after4", "P_before_h": 600.0, "P_after_h": 500.0}]
+    c1 = {"cuts": []}
+    refused = {"K2 fail": {"c1": c1, "c2": {**ok_, "K2": "fail"}},
+               "step-0 fail_final": {"c1": c1, "c2": {**ok_, "step0": {"outcome": "fail_final"}}},
+               "K3 a1_only": {"c1": c1, "c2": {**ok_, "K3": "a1_only"}},
+               "cut 8 after4": {"c1": c1, "c2": {**ok_, "cuts": cut8}}}
+    for nm, sts in refused.items():
+        r = m._c4_ended(arch(sts))
+        assert r[0] is False and "C3 has not ended" in r[1], (nm, r)
+    r = m._c4_ended(arch(refused["K2 fail"], c3_campaign="running"))
+    assert r[0] is False, ("K2 fail, C3 running", r)
+    r = m._c4_ended(arch({"c1": c1, "c2": {**ok_, "K2": "fail"}, "c3": {**ok_, "K2": "fail"}}))
+    assert r[0] is True and r[1].startswith("c3/state_end.json"), ("K2 fail, C3 ended", r)
+    r = m._c4_ended(arch({"c1": c1, "c2": {**ok_, "K3": "fail_replan"}}, c3_campaign="not_run"))
+    assert r[0] is True, ("K3 fail_replan, C3 not_run", r)
+    r = m._c4_ended(arch({"c1": c1, "c2": ok_, "c3": ok_}))
+    assert r[0] is False and "plans C4" in r[1], ("K3 pass, C3 done, no c4", r)
+    return (f"refused with C3 not ended: {sorted(refused)} and K2 fail with C3 running; allowed: K2 fail after C3 ended, "
+            "K3 fail_replan with C3 not_run; K3 pass with C3 done and no C4 still refused")
+
+
+def case_eval_outputs_r5(m):
+    """Round 5 (R5-C24-2; the C2-C4 adjudicator's missed item): the D3(BJ) row cites only a --d3bj-amendment note
+    (committed, clean, outside scripts/, dated; a note of the campaign commit is accepted), never the code-fix note of
+    --amendment; a rerun writes its analysis diff beside its own s2_eval.rerun1.json and leaves the first one intact.
+    cmd_evaluate runs with its git guards and assemble stubbed (a synthetic table)."""
+    d = tempfile.mkdtemp(prefix="s2_48_d3bj_")
+    g = lambda *a: subprocess.run(["git", "-C", d, "-c", "user.name=s2-selftest", "-c", "user.email=s2-selftest",   # noqa: E731
+                                   "-c", "commit.gpgsign=false", *a], capture_output=True, text=True, check=True)
+    g("init", "-q"); os.makedirs(os.path.join(d, "scripts"))
+    open(os.path.join(d, "d3bj.md"), "w").write("D-S0-4 amendment 2026-11-04: the D3(BJ) row is not reported\n")
+    open(os.path.join(d, "scripts", "note.md"), "w").write("2026-11-04\n")
+    open(os.path.join(d, "undated.md"), "w").write("no date\n")
+    g("add", "-A"); g("commit", "-qm", "campaign commit with the D-S0-4 note")
+    open(os.path.join(d, "loose.md"), "w").write("2026-11-20\n")
+    r0, w0 = m.d3bj_citation(os.path.join(d, "d3bj.md"), root=d)
+    assert r0 and r0["path"] == "d3bj.md" and r0["dates"] == ["2026-11-04"] and w0 is None, (r0, w0)
+    for nm, why in (("scripts/note.md", "outside scripts/"), ("loose.md", "not committed"), ("undated.md", "no date")):
+        r_, w_ = m.d3bj_citation(os.path.join(d, nm), root=d)
+        assert r_ is None and why in w_, (nm, w_)
+    G = m.cmd_evaluate.__globals__
+    out = os.path.join(tempfile.mkdtemp(prefix="s2_48_out_"), "s2_eval.json")
+    cur, tab = {"diff": "diff A\n"}, _planted()
+    sha = lambda s: hashlib.sha256(s.encode()).hexdigest()   # noqa: E731
+
+    def guard(cc, head, amendment=None, root=None, commit_history=None):
+        return True, {"campaign_commit": "c" * 40, "head": "h" * 40, "diff_stat": "1 file", "diff_sha256": sha(cur["diff"]),
+                      "diff_text": cur["diff"], "commit_history": [],
+                      "amendment": {"path": amendment, "sha256": "0" * 64, "dates": ["2026-11-20"]} if amendment else None}
+    stub = {"_c4_ended": lambda a: (True, "stub"), "_clean_and_committed": lambda: ("h" * 40, None),
+            "analysis_guard": guard, "assemble": lambda a: copy.deepcopy(tab), "_old_module": lambda c: object(),
+            "d3bj_citation": lambda p, root=None: m.d3bj_citation(p, root=d)}
+    saved = {k: G[k] for k in (*stub, "CASES")}
+    G.update(stub, CASES={**G["CASES"], "_r5 probe": lambda mm: mm.evaluate})   # fails on the 'first' code (object())
+    try:
+        ns = dict(archive=d, out=out, rerun_cause=None, amendment="FIX_NOTE.md", d3bj_amendment=None)
+        assert m.cmd_evaluate(argparse.Namespace(**ns)) == 0
+        cur["diff"] = "diff B\n"
+        assert m.cmd_evaluate(argparse.Namespace(**{**ns, "rerun_cause": "_r5 probe", "amendment": "FIX2.md",
+                                                     "d3bj_amendment": os.path.join(d, "d3bj.md")})) == 0
+    finally:
+        G.update(saved)
+    od = os.path.dirname(out)
+    e1, e2 = json.load(open(out)), json.load(open(os.path.join(od, "s2_eval.rerun1.json")))
+    assert "amendment" not in e1["reported"]["D3BJ"], e1["reported"]["D3BJ"]
+    assert e2["reported"]["D3BJ"]["amendment"]["path"] == "d3bj.md", e2["reported"]["D3BJ"]
+    for e, nm in ((e1, "s2_eval.analysis_diff.patch"), (e2, "s2_eval.rerun1.analysis_diff.patch")):
+        ai = e["analysis_identity"]
+        assert ai["diff_file"] == nm and sha(open(os.path.join(od, nm)).read()) == ai["diff_sha256"], (nm, ai)
+    return ("a D-S0-4 note of the campaign commit cited; scripts/, uncommitted and undated notes refused; a code-fix "
+            "--amendment not cited by the D3(BJ) row; the rerun's diff beside s2_eval.rerun1.json, the first intact")
+
+
 CASES = {"independent implementation": case_independent, "planted classes": case_planted,
          "heterogeneous shell": case_heterogeneous, "refusals": case_refusals, "delta_bar bound": case_delta_bound,
          "dopant-specific rule": case_dopant_specific, "no class": case_noclass, "edge cases": case_edges,
@@ -2819,7 +2947,9 @@ CASES = {"independent implementation": case_independent, "planted classes": case
          "one-evaluation guard against the campaign commit (round-3 R3C-6)": case_eval_guard,
          "reported rows: path work, determinism, q = 0, WP2c (round-3 R3C-10)": case_reported_rows,
          "calibrated sign rule and strict class bounds (round-4 R4-C24-6)": case_rule_v_r4,
-         "pilot noise rows and killed A2 cells (round-4 R4-C24-4, R4-C24-3)": case_pilot_rows_r4}
+         "pilot noise rows and killed A2 cells (round-4 R4-C24-4, R4-C24-3)": case_pilot_rows_r4,
+         "one evaluation after C3 when C4 is not planned (round-5 R5-C24-1)": case_c4_ended_r5,
+         "D3(BJ) citation and the rerun's analysis diff (round-5 R5-C24-2, missed item)": case_eval_outputs_r5}
 
 
 def self_test():

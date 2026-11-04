@@ -857,7 +857,9 @@ NOTES = {
              "is a STOP (a termination notice could not arrive); the heartbeat is written at every good poll, so its "
              "age is the age of the last good poll (round-4 R4-C1-1); a poller restarted after it ended gets its own "
              "120 s for its first good poll (the dead poller's heartbeat is not judged), and none is restarted once a "
-             "shutdown or a STOP began (round-4 R4-C1-2)",
+             "shutdown or a STOP began (round-4 R4-C1-2); that grace is renewed only when the dead poller had a good "
+             "poll of its own, so pollers that end before answering keep the first one's start and STOP 120 s after "
+             "it (round-5 R5-1)",
     "N-F19": "section 16 / X-4 (round-3 missed item): the smoke test at the chosen layout folds its verdict into "
              "smoke.json (at_layout, restart_possible false if it fails) before smoke2.json is written, and rec:smoke2 "
              "is done only when smoke.json carries at_layout for its label; C2 requires at_layout whenever the A2 "
@@ -902,7 +904,9 @@ NOTES = {
     "N-F31": "section 16, D-S0-8 (round-4 R4-C1-2): check:nodescripts (no node-hours) records the sha256 of the node "
              "scripts behind every pw.x run (run_qe.sh, the QE profile, qe_queue.sh, chain.sh, s2_run_qe.sh) in "
              "c1/nodescripts_check.json and STOPs unless the queue, the chain and the launcher equal the checkout's "
-             "ehpc/node copies byte for byte; C2-C4 STOP on any hash that differs from the C1 record",
+             "ehpc/node copies byte for byte; C2-C4 STOP on any hash that differs from the C1 record; a commit change "
+             "(c1/NODE_FIX, c2/STEP0_FIX) moves that campaign's check records to discarded/commit_<t>/, so the UPF, "
+             "node-script and model checks run again, first, at the new commit (round-5 R5-2)",
     "N-F32": "STAGE0 section 8 item 1, D-S0-8 (round-4 R4-C1-3): a git failure in the checkout (no repository, a copy "
              "without .git, git's ownership refusal) is a STOP in the runner and a refusal in s2_campaign.sh; HEAD must "
              "be 40 hex digits, never an empty commit read as clean",
@@ -917,7 +921,8 @@ NOTES = {
     "N-F35": "section 5, STAGE0 section 8 item 3 (round-4 R4-C1-6): check:mace checks the foundation file's sha256 and "
              "then runs scripts/46 load_mace in a child process (the runner never imports mace): version, float64, "
              "cpu, the resolved file, Z coverage and torch threads before the first MACE job, no structure evaluated; "
-             "a failure STOPs before the smoke tests and costs no MACE attempt",
+             "a failure STOPs before the smoke tests and costs no MACE attempt; the record names the exception also "
+             "when the child qualifies it ('c46.S2Error', round-5 M-1)",
     "N-F36": "sections 11, 16 (round-4 R4-C24-1): the STOP an A2 end rule asks for is durable: the A2 record carries "
              "end_rule.stop_raised false until CAMPAIGN_STOPPED holds the reason; every runner start re-holds such a "
              "STOP before any launch; every STOP's reason includes the held ones, which are then marked raised (an "
@@ -1756,7 +1761,7 @@ class NodeBackend:
                     info = None
         err = None
         if p.returncode != 0:
-            g = re.findall(r"^(\w+(?:Error|Exception)|S2Error)\b", p.stderr, re.M)
+            g = re.findall(r"^(?:\w+\.)*(\w+(?:Error|Exception))\b", p.stderr, re.M)    # 'c46.S2Error' too (R5 M-1)
             err = g[-1] if g else "exit without a traceback"
         keep = ("dtype", "device", "threads", "atomic_numbers_covered", "z_required_ok", "versions", "sha256", "file")
         return {"ok": p.returncode == 0 and info is not None, "exit": p.returncode, "error": err,
@@ -2152,8 +2157,12 @@ class Runner:
         self.heartbeat()
         if self.poller is not None and self.poller.poll() is not None and not (self.shutdown or self.stopping or self.term):
             # round-4 R4-C1-2: the new poller's first good poll is awaited, with spot_first_s of grace from the restart;
-            # the dead poller's heartbeat is not judged by the staleness rule; no restart once a shutdown or STOP began
-            self.poller_t0 = None
+            # the dead poller's heartbeat is not judged by the staleness rule; no restart once a shutdown or STOP began.
+            # Round-5 R5-1: the grace is renewed only if the dead poller had a good poll of its own, so pollers that
+            # never answer keep the first one's start and spot_check STOPs spot_first_s after it
+            t_hb = self.spot_hb_time()
+            if self.poller_t0 is None or (t_hb is not None and t_hb >= self.poller_t0 - 1.0):
+                self.poller_t0 = None
             self.log("WARN: the spot poller had ended: restarted; its first good poll is awaited (N-F18)"); self.start_poller()
         self.note_notice()
         if self.shutdown and not self.stopping:
@@ -2345,6 +2354,7 @@ class Runner:
                 self.state.setdefault("commit_history", []).append({"from": self.state["commit"], "to": gs["head"],
                                                                      "note": " ".join(fx[1:]), "time": utc()})
                 self.state["commit"] = gs["head"]; self.save_state()
+                self.discard_checks("c2")
                 self.log(f"commit change for the step-0 repeat accepted (I-D1): {gs['head'][:12]}")
                 self.step0_repeat(" ".join(fx[1:]))
             elif self.node_fix(gs["head"]):
@@ -2378,8 +2388,18 @@ class Runner:
                                                              "time": utc(), "via": "c1/NODE_FIX"})
         self.state["commit"] = head; self.save_state()
         os.replace(nf, nf + f".used.{int(time.time())}")
+        self.discard_checks("c1")
         self.log(f"commit change after a C1 STOP accepted (N-F17, D-S0-8): {head[:12]}; note: {note[:200]}")
         return True
+
+    def discard_checks(self, c):
+        """Round-5 R5-2 (N-F31): at a commit change (NODE_FIX, STEP0_FIX) the campaign's check records go to
+        <c>/discarded/commit_<t>/, so the UPF, node-script and model checks run again, first, at the new commit."""
+        dst = os.path.join(self.node.c(c), "discarded", f"commit_{int(time.time())}")
+        for w in ("upf", "nodescripts", "mace"):
+            src = os.path.join(self.node.c(c), f"{w}_check.json")
+            if os.path.exists(src):
+                os.makedirs(dst, exist_ok=True); os.replace(src, os.path.join(dst, os.path.basename(src)))
 
     def step0_repeat(self, note):
         """I-D1: after a fix, C2 restarts at relaxation 1 for the one repeat (section 11). Everything A2 made before,
@@ -5969,6 +5989,8 @@ def self_test(work=None):
         assert cj3.get("start_commit") == "0" * 40 and cj3.get("commit") == "1" * 40 and \
             len(cj3.get("commit_history") or []) == 1, {k: cj3.get(k) for k in ("start_commit", "commit", "commit_history")}
         assert glob.glob(os.path.join(cd, "NODE_FIX.used.*")) and not os.path.exists(os.path.join(cd, "NODE_FIX"))
+        assert all(glob.glob(os.path.join(cd, "discarded", "commit_*", f"{w}_check.json")) and   # round-5 R5-2
+                   os.path.exists(os.path.join(cd, f"{w}_check.json")) for w in ("upf", "nodescripts", "mace"))
         assert isinstance(sm["mapping"]["c0"], int) and sm["mapping"]["affine_slope_1"], sm.get("mapping")
         assert os.path.exists(os.path.join(cd, "throughput.json")) and glob.glob(os.path.join(n1d, "discarded",
                                                                                               "resolved_*"))
@@ -6382,7 +6404,8 @@ def self_test(work=None):
         lasts 250 s gives no STOP; one of 305 s STOPs, with a stated age within one poll of the true time since the
         last good poll; (b) an ended poller with a 310-s old heartbeat is restarted with its own first-poll grace: no
         STOP with a healthy endpoint, nothing scheduled before its first good poll, a STOP 120 s (here 1 s) after the
-        restart with an unreachable one, and no restart once a shutdown began."""
+        restart with an unreachable one, and no restart once a shutdown began; (c) round-5 R5-1: pollers that end at
+        once after one good poll keep the first restart's start and STOP spot_first_s after it, nothing run before."""
         import urllib.error, urllib.request
         g = globals()
         real = g["time"]
@@ -6465,6 +6488,28 @@ def self_test(work=None):
                         assert "within 1 s of the poller's start" in str(e), e
                     out.append("unreachable endpoint: nothing scheduled, STOP after the grace from the restart")
                 rn.poller.terminate(); rn.poller.wait(10)
+            # (c) round-5 R5-1: after one good poll every restarted poller ends at once (its interpreter /usr/bin/false);
+            # the first restart comes once the last good poll is 1.8 s old (a heartbeat within 1 s of a poller's start
+            # counts as its own): the grace is not renewed at each restart, a STOP spot_first_s after it, nothing run
+            write_text(f"http://localhost:{sp.port}/latest/meta-data/instance/spot/termination-time\n",
+                       os.path.join(Rm, "setup", "s2_spot_url"))
+            rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "hb-boot"; os.makedirs(rn.cdir, exist_ok=True)
+            rn.be.spot_first_s, rn.be.spot_stale_s = 1.0, 2.0
+            rn.start_poller()
+            wait_for(lambda: rn.spot_check() is True, 20, "the poller's first good poll")
+            rn.poller.terminate(); rn.poller.wait(10); rn.be.python = "/usr/bin/false"; time.sleep(1.8)
+            ran, stop, t1 = [], None, time.time()
+            rn.run_check = lambda j: ran.append(j["id"])
+            rn.G = {"phases": ["check"], "jobs_by_id": {"j": {"id": "j", "kind": "check", "what": "zz", "deps": [],
+                                                              "phase": "check"}}}
+            while time.time() - t1 < 6.0:
+                try:
+                    rn.housekeeping(); rn.schedule({"j": "pending"})
+                except Stop as e:
+                    stop = (time.time() - t1, str(e)); break
+                time.sleep(rn.be.tick)
+            assert stop and "within 1 s of the poller's start" in stop[1] and stop[0] < 2.5 and not ran, (stop, ran)
+            out.append(f"pollers ending at once after one good poll: STOP after {stop[0]:.1f} s, nothing run")
             rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "hb-boot"; rn.poller_t0 = time.time()
             rn.poller = _Fake(alive=False); rn.shutdown = True
             rn.housekeeping()
@@ -6473,7 +6518,8 @@ def self_test(work=None):
             r3_restore(old)
         return (f"fake clock: a 250-s outage 55 s after the old heartbeat write gives no STOP; 305 s STOPs, stated age "
                 f"{long_[1]} s vs {long_[0]:.0f} s since the last good poll; " + "; ".join(out) + "; no restart in a shutdown")
-    case("(z13) spot heartbeat at every good poll; poller restart grace (round-4 R4-C1-1, R4-C1-2)", c_spot_heartbeat)
+    case("(z13) spot heartbeat at every good poll; poller restart grace (round-4 R4-C1-1, R4-C1-2; round-5 R5-1)",
+         c_spot_heartbeat)
 
     def c_notice_in_pass():
         """Round-4 missed item (N-11): a spot notice written while one schedule() pass runs a synchronous scripts/46 job
@@ -6863,8 +6909,8 @@ def self_test(work=None):
         good = os.path.join(sysd, "py_good"); bad = os.path.join(sysd, "py_bad")
         write_text('#!/bin/bash\necho \'S2-MACE-LOAD {"dtype": "float64", "device": "cpu", "threads": 6, '
                    '"z_required_ok": true, "versions": {"mace": "0.3.16"}}\'\n', good)
-        write_text('#!/bin/bash\necho "Traceback (most recent call last):" >&2\necho "S2Error: mace 0.3.17, the '
-                   'plan\'s 0.3.16" >&2\nexit 1\n', bad)
+        write_text('#!/bin/bash\necho "Traceback (most recent call last):" >&2\necho "c46.S2Error: mace 0.3.17, the '
+                   'plan\'s 0.3.16" >&2\nexit 1\n', bad)              # qualified, as the real child prints it (R5 M-1)
         os.chmod(good, 0o755); os.chmod(bad, 0o755)
         be.python = good; r1 = be.mace_load()
         be.python = bad; r2 = be.mace_load()
@@ -6878,7 +6924,7 @@ def self_test(work=None):
             assert "mace check failed" in str(e), e
         assert not glob.glob(os.path.join(rn.cdir, "cells", "*", "attempts.json"))
         return "empty cache: the hash check fails first (no child); a reported load passes; an S2Error STOPs in the check phase"
-    case("(z22) check:mace loads the model before the first MACE job (round-4 R4-C1-6)", c_mace_load)
+    case("(z22) check:mace loads the model before the first MACE job (round-4 R4-C1-6; round-5 M-1)", c_mace_load)
 
     def c_wrappers_r4():
         """Round-4 R4-C1-8, R4-C1-3 (C1 lens) and R4-C1-9: before the first start s2_status.sh says 'not started' and
@@ -7089,6 +7135,58 @@ def self_test(work=None):
             out.append(f"prior '{prior}': gate request (prior kept), killed_by_gate, no restart part, no interruption")
         return "; ".join(out)
     case("(z27) a gate's exit replaces a 'cap' or 'spot' request (round-4 missed item)", c_gate_over_exit)
+
+    # ---------------------------------------------------------------- round-5 cases (2026-11-04, after bfaf321)
+    def c_nodefix_checks():
+        """Round-5 R5-2 (N-F31): a NODE_FIX whose commit changes the committed launcher moves the C1 check records
+        aside, so check:nodescripts is pending again and its new record carries the new sha256; C2 then passes. A
+        NODE_FIX whose commit changes qe_queue.sh while the node copy stays old STOPs C1 in its check phase. A C2
+        STEP0_FIX moves C2's check records alike."""
+        sysd, Rm = mini("nodefix5", boot="nf-boot")
+        _node_scripts(sysd)
+        J = {"id": "check:nodescripts", "kind": "check", "what": "nodescripts", "phase": "check", "deps": []}
+        rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "nf-boot"
+        rn.state = synthetic_state(commit="0" * 40, campaigns={"c1": "running"}); os.makedirs(rn.cdir, exist_ok=True)
+        rn.run_check(J)
+        sha0 = read_json(os.path.join(rn.cdir, "nodescripts_check.json"))["files"]["s2_run_qe.sh"]["sha256"]
+        assert rn.status(J, {}) == "done"
+        exp, new = rn.be.node_script_expected, {}
+        rn.be.node_script_expected = lambda name: new[name].encode() if name in new else exp(name)
+        for head, name in (("1" * 40, "s2_run_qe.sh"), ("2" * 40, "qe_queue.sh")):
+            new[name] = exp(name).decode().replace("#!/bin/bash\n", "#!/bin/bash\n# 2026-11-05 dated fix (self-test)\n", 1)
+            if name == "s2_run_qe.sh":                       # the launcher is the checkout's own file on the node
+                write_text(new[name], rn.node.s2_run_qe)
+            write_json({"git_head": head}, os.path.join(sysd, "mock", "config.json"))
+            write_text("x\n", os.path.join(rn.cdir, "CAMPAIGN_STOPPED"))
+            write_text(f"{head} 2026-11-05 node-script fix (self-test)\n", os.path.join(rn.cdir, "NODE_FIX"))
+            rn.check_commit()
+            assert rn.state["commit"] == head and rn.status(J, {}) == "pending", (rn.state["commit"], rn.status(J, {}))
+            assert glob.glob(os.path.join(rn.cdir, "discarded", "commit_*", "nodescripts_check.json"))
+            if name == "s2_run_qe.sh":
+                rn.run_check(J)
+                sha1 = read_json(os.path.join(rn.cdir, "nodescripts_check.json"))["files"][name]["sha256"]
+                assert sha1 != sha0 and sha1 == hashlib.sha256(new[name].encode()).hexdigest(), (sha0, sha1)
+                rn2 = Runner("c2", Rm, rn.be); rn2.boot = "nf-boot"; rn2.state = synthetic_state()
+                os.makedirs(rn2.cdir, exist_ok=True)
+                rn2.run_check(J)                                 # no STOP: the C1 record is that of the new commit
+            else:
+                try:
+                    rn.run_check(J); raise AssertionError("C1 ran a queue that differs from the new commit's")
+                except Stop as e:
+                    assert "qe_queue.sh differs from the checkout's" in str(e), e
+            os.remove(os.path.join(rn.cdir, "CAMPAIGN_STOPPED"))
+        rn3 = Runner("c2", Rm, rn.be); rn3.boot = "nf-boot"          # the C2 step-0 fix moves C2's records alike
+        rn3.state = synthetic_state(commit="2" * 40, step0={"attempts": 1, "outcome": "fail_pending_fix"})
+        write_json({"git_head": "3" * 40}, os.path.join(sysd, "mock", "config.json"))
+        write_text("3" * 40 + " 2026-11-05 step-0 writer fix (self-test)\n", os.path.join(rn3.cdir, "STEP0_FIX"))
+        rn3.check_commit()
+        assert rn3.status(J, {}) == "pending" and glob.glob(os.path.join(rn3.cdir, "discarded", "commit_*",
+                                                                         "nodescripts_check.json")), rn3.status(J, {})
+        assert PHASES["c1"][0] == PHASES["c2"][0] == "check"     # the checks run again before any further job
+        return ("NODE_FIX changing s2_run_qe.sh: check records moved aside, check pending, new sha256 recorded, C2 "
+                "passes; NODE_FIX changing the committed qe_queue.sh with the node copy old: STOP in the check phase; "
+                "a C2 STEP0_FIX moves C2's check records alike")
+    case("(z28) a NODE_FIX re-runs the C1 checks at the new commit (round-5 R5-2)", c_nodefix_checks)
 
     for p in procs.values():                                   # nothing of the simulated campaign is left running
         if p.poll() is None:
