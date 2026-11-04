@@ -1,0 +1,50 @@
+{
+ "schema": "s2-mace-laptop-1",
+ "plan": "S2_PLAN.md section 5 (Model), section 17 item 3",
+ "file": "20231203mace128L1_epoch199model",
+ "expected_file": "20231203mace128L1_epoch199model",
+ "expected_sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+ "bytes": 44422970,
+ "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+ "passed": true,
+ "versions": {
+  "python": "3.12.14",
+  "ase": "3.29.0",
+  "numpy": "2.5.4",
+  "mace-torch": "0.3.16",
+  "torch": "2.14.1",
+  "e3nn": "0.4.4"
+ },
+ "mace_imported": false,
+ "coverage": "Z = 16, 17, 20, 37 (and 1, 6, 7, 38, 53, 55, 82) read on the laptop on 2026-11-03 (S2_PLAN.md section 0); not re-read here, so mace is never imported",
+ "node": "the node copy is checked in campaign 1 (scripts/46 foundation_check and load_mace)",
+ "notes": [
+  "N-E5"
+ ],
+ "generator": {
+  "script": "scripts/52_s2_stage0_checks.py",
+  "script_sha256": {
+   "42_s2_builders.py": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22_paired_pilot.py": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29_dopant_shell_scan.py": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "07_fa_host_cell.py": "3018a4d273f44f45278e56b7d4b7dd0fc2a905866411d28de048011a391edcb2",
+   "checks.py": "76ecab53d4c6d6eeef022977d87b8c1805343d4dbf4e4e336d660133308abf46",
+   "46_s2_cells.py": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "52_s2_stage0_checks.py": "9e3981c69ce99879f37b82941b23df4f55246395b8408df9ecb56cdf18aad7a2"
+  },
+  "git": {
+   "head": "ae6402ed070f7fe0729cbc43b61de9a762d50240",
+   "scripts_clean": false,
+   "not_committed_or_modified": [
+    "scripts/46_s2_cells.py",
+    "scripts/52_s2_stage0_checks.py"
+   ]
+  },
+  "c46": "real",
+  "builder": {
+   "BUILDER_VERSION": "s2b-2",
+   "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf"
+  }
+ },
+ "written": "2026-11-04T01:49:00Z"
+}

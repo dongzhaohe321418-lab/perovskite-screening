@@ -1,0 +1,5817 @@
+{
+ "schema": "s2-admissibility-1",
+ "plan": "S2_PLAN.md section 3 (Admissibility and the production list), section 4, section 11 (m05 draw, Admissibility on m05), section 17 item 3",
+ "draw": {
+  "seed_prefix": "S2n-host-",
+  "excluded": {
+   "pilots": [
+    "m30",
+    "m05"
+   ],
+   "test_hosts": [
+    "m04",
+    "m10",
+    "m14",
+    "m18",
+    "m27"
+   ],
+   "wp2c": [
+    "m21"
+   ]
+  },
+  "ranks": [
+   {
+    "rank": 1,
+    "member": "m06",
+    "crc32": 18472929
+   },
+   {
+    "rank": 2,
+    "member": "m02",
+    "crc32": 108272632
+   },
+   {
+    "rank": 3,
+    "member": "m16",
+    "crc32": 402845344
+   },
+   {
+    "rank": 4,
+    "member": "m12",
+    "crc32": 527379129
+   },
+   {
+    "rank": 5,
+    "member": "m32",
+    "crc32": 760825915
+   },
+   {
+    "rank": 6,
+    "member": "m26",
+    "crc32": 858766691
+   },
+   {
+    "rank": 7,
+    "member": "m22",
+    "crc32": 876771706
+   },
+   {
+    "rank": 8,
+    "member": "m23",
+    "crc32": 1128614380
+   },
+   {
+    "rank": 9,
+    "member": "m33",
+    "crc32": 1516140717
+   },
+   {
+    "rank": 10,
+    "member": "m13",
+    "crc32": 1751652911
+   },
+   {
+    "rank": 11,
+    "member": "m17",
+    "crc32": 1862655542
+   },
+   {
+    "rank": 12,
+    "member": "m03",
+    "crc32": 1903373166
+   },
+   {
+    "rank": 13,
+    "member": "m07",
+    "crc32": 1981738871
+   },
+   {
+    "rank": 14,
+    "member": "m15",
+    "crc32": 2165030682
+   },
+   {
+    "rank": 15,
+    "member": "m11",
+    "crc32": 2254863107
+   },
+   {
+    "rank": 16,
+    "member": "m19",
+    "crc32": 2294149937
+   },
+   {
+    "rank": 17,
+    "member": "m09",
+    "crc32": 2443625072
+   },
+   {
+    "rank": 18,
+    "member": "m01",
+    "crc32": 2675788354
+   },
+   {
+    "rank": 19,
+    "member": "m29",
+    "crc32": 2744164594
+   },
+   {
+    "rank": 20,
+    "member": "m25",
+    "crc32": 2854677721
+   },
+   {
+    "rank": 21,
+    "member": "m35",
+    "crc32": 3007176088
+   },
+   {
+    "rank": 22,
+    "member": "m31",
+    "crc32": 3025148289
+   },
+   {
+    "rank": 23,
+    "member": "m34",
+    "crc32": 3292196110
+   },
+   {
+    "rank": 24,
+    "member": "m28",
+    "crc32": 3566702692
+   },
+   {
+    "rank": 25,
+    "member": "m20",
+    "crc32": 3662420054
+   },
+   {
+    "rank": 26,
+    "member": "m24",
+    "crc32": 3709983823
+   },
+   {
+    "rank": 27,
+    "member": "m08",
+    "crc32": 3869373158
+   },
+   {
+    "rank": 28,
+    "member": "m00",
+    "crc32": 3900340948
+   }
+  ],
+  "matches_plan": true,
+  "matches_c46": true
+ },
+ "checked_ranks": [
+  1,
+  12
+ ],
+ "build": {
+  "call": "scripts/42 build_paired(host, vac, 127, token, site, 'inherit', vpos=v, mig='allow' at X else 'forbid', partners='unrelaxed') on the unrelaxed pool member",
+  "tokens": {
+   "B": [
+    "Sr",
+    "Ca"
+   ],
+   "A": [
+    "Cs",
+    "GA"
+   ],
+   "X": [
+    "Cl"
+   ]
+  },
+  "default_pose": {
+   "Sr": "swap",
+   "Ca": "swap",
+   "Cs": "centred",
+   "GA": "inherit",
+   "Cl": "centred"
+  }
+ },
+ "hosts": {
+  "m06": {
+   "rank": 1,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      200,
+      164
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 53,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m02": {
+   "rank": 2,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 152,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 152,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 186,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      188,
+      152
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      186
+     ]
+    }
+   },
+   "mig_host": 126,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m16": {
+   "rank": 3,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      164,
+      188
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 138,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m12": {
+   "rank": 4,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      68,
+      200
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 126,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m32": {
+   "rank": 5,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      200,
+      188
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 49,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m26": {
+   "rank": 6,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      68,
+      164
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 126,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m22": {
+   "rank": 7,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 16,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 16,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 4,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 4,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 186,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      16,
+      4
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      186
+     ]
+    }
+   },
+   "mig_host": 53,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m23": {
+   "rank": 8,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 4,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 4,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 186,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      172,
+      76
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      200,
+      4
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      186
+     ]
+    }
+   },
+   "mig_host": 90,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m33": {
+   "rank": 9,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      68,
+      200
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 126,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m13": {
+   "rank": 10,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 164,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      188,
+      164
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 126,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m17": {
+   "rank": 11,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 200,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      200,
+      188
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 138,
+   "n_pairs": 28,
+   "n_legs": 56
+  },
+  "m03": {
+   "rank": 12,
+   "admissible": true,
+   "status": "admissible",
+   "site_check": "passed (section 4 table)",
+   "cells": [
+    {
+     "token": "Sr",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 124,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 136,
+     "sublattice": "B",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 76,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Sr",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Ca",
+     "site": 172,
+     "sublattice": "B",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "swap",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 28,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 92,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 128,
+     "sublattice": "A",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 188,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cs",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      226,
+      225
+     ]
+    },
+    {
+     "token": "GA",
+     "site": 68,
+     "sublattice": "A",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "inherit",
+     "n_atoms": [
+      235,
+      234
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 49,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 53,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 90,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 102,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 125,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 126,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 137,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 138,
+     "sublattice": "X",
+     "role": "first",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 175,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    },
+    {
+     "token": "Cl",
+     "site": 222,
+     "sublattice": "X",
+     "role": "far",
+     "status": "ok",
+     "leg": null,
+     "reason": null,
+     "pose": "centred",
+     "n_atoms": [
+      233,
+      232
+     ]
+    }
+   ],
+   "sites": {
+    "B": {
+     "first": [
+      124,
+      136
+     ],
+     "far": [
+      76,
+      172
+     ]
+    },
+    "A": {
+     "first": [
+      28,
+      92,
+      128
+     ],
+     "far": [
+      188,
+      68
+     ]
+    },
+    "X": {
+     "first": [
+      49,
+      53,
+      90,
+      102,
+      125,
+      126,
+      137,
+      138
+     ],
+     "far": [
+      175,
+      222
+     ]
+    }
+   },
+   "mig_host": 53,
+   "n_pairs": 28,
+   "n_legs": 56
+  }
+ },
+ "candidate_lists": {
+  "n8": [
+   "m06",
+   "m02",
+   "m16",
+   "m12",
+   "m32",
+   "m26",
+   "m22",
+   "m23"
+  ],
+  "reserves_n8": [
+   "m33",
+   "m13"
+  ],
+  "n10": [
+   "m06",
+   "m02",
+   "m16",
+   "m12",
+   "m32",
+   "m26",
+   "m22",
+   "m23",
+   "m33",
+   "m13"
+  ],
+  "reserves_n10": [
+   "m17",
+   "m03"
+  ]
+ },
+ "short": {
+  "n8": false,
+  "n10": false
+ },
+ "production": {
+  "n8": [
+   "m06",
+   "m02",
+   "m16",
+   "m12",
+   "m32",
+   "m26",
+   "m22",
+   "m23"
+  ],
+  "reserves_n8": [
+   "m33",
+   "m13"
+  ],
+  "n10": [
+   "m06",
+   "m02",
+   "m16",
+   "m12",
+   "m32",
+   "m26",
+   "m22",
+   "m23",
+   "m33",
+   "m13"
+  ],
+  "reserves_n10": [
+   "m17",
+   "m03"
+  ]
+ },
+ "matches_plan_lists": true,
+ "m05_calibration": {
+  "draw": {
+   "seed_prefix": "S2n-cal-m05-",
+   "excluded": {
+    "A": "FA128 (nearest FA on both pilots)",
+    "X": "I53 (migrating iodide of m05)"
+   },
+   "A": [
+    {
+     "label": "FA28",
+     "crc32": 684900801
+    },
+    {
+     "label": "FA92",
+     "crc32": 737407252
+    }
+   ],
+   "X": [
+    {
+     "label": "I49",
+     "crc32": 299187232
+    },
+    {
+     "label": "I138",
+     "crc32": 1029408902
+    },
+    {
+     "label": "I125",
+     "crc32": 1525794170
+    },
+    {
+     "label": "I137",
+     "crc32": 2917438743
+    },
+    {
+     "label": "I126",
+     "crc32": 3287848128
+    },
+    {
+     "label": "I90",
+     "crc32": 3718773449
+    },
+    {
+     "label": "I102",
+     "crc32": 4137890395
+    }
+   ],
+   "matches": {
+    "plan": true,
+    "c46": true
+   }
+  },
+  "B": {
+   "chosen": 124,
+   "tried": [
+    {
+     "site": 124,
+     "status": "admissible",
+     "cells": [
+      {
+       "token": "Sr",
+       "site": 124,
+       "sublattice": "B",
+       "role": "cal",
+       "status": "ok",
+       "leg": null,
+       "reason": null,
+       "pose": "swap",
+       "n_atoms": [
+        233,
+        232
+       ]
+      },
+      {
+       "token": "Ca",
+       "site": 124,
+       "sublattice": "B",
+       "role": "cal",
+       "status": "ok",
+       "leg": null,
+       "reason": null,
+       "pose": "swap",
+       "n_atoms": [
+        233,
+        232
+       ]
+      }
+     ]
+    }
+   ],
+   "conflict": false,
+   "error": false,
+   "order": [
+    124
+   ],
+   "drawn": false,
+   "admissible": true,
+   "tokens": [
+    "Sr",
+    "Ca"
+   ],
+   "site": 124
+  },
+  "A": {
+   "chosen": 28,
+   "tried": [
+    {
+     "site": 28,
+     "status": "admissible",
+     "cells": [
+      {
+       "token": "Cs",
+       "site": 28,
+       "sublattice": "A",
+       "role": "cal",
+       "status": "ok",
+       "leg": null,
+       "reason": null,
+       "pose": "centred",
+       "n_atoms": [
+        226,
+        225
+       ]
+      },
+      {
+       "token": "GA",
+       "site": 28,
+       "sublattice": "A",
+       "role": "cal",
+       "status": "ok",
+       "leg": null,
+       "reason": null,
+       "pose": "inherit",
+       "n_atoms": [
+        235,
+        234
+       ]
+      }
+     ]
+    }
+   ],
+   "conflict": false,
+   "error": false,
+   "order": [
+    28,
+    92
+   ],
+   "drawn": true,
+   "admissible": true,
+   "tokens": [
+    "Cs",
+    "GA"
+   ]
+  },
+  "X": {
+   "chosen": 49,
+   "tried": [
+    {
+     "site": 49,
+     "status": "admissible",
+     "cells": [
+      {
+       "token": "Cl",
+       "site": 49,
+       "sublattice": "X",
+       "role": "cal",
+       "status": "ok",
+       "leg": null,
+       "reason": null,
+       "pose": "centred",
+       "n_atoms": [
+        233,
+        232
+       ]
+      }
+     ]
+    }
+   ],
+   "conflict": false,
+   "error": false,
+   "order": [
+    49,
+    138,
+    125,
+    137,
+    126,
+    90,
+    102
+   ],
+   "drawn": true,
+   "admissible": true,
+   "tokens": [
+    "Cl"
+   ]
+  }
+ },
+ "m05_chosen": {
+  "B": 124,
+  "A": 28,
+  "X": 49
+ },
+ "status": "ok",
+ "problems": [],
+ "notes": [
+  "I-39",
+  "I-40",
+  "I-E3",
+  "I-E4",
+  "N-E3",
+  "N-E6",
+  "N-E8"
+ ],
+ "versions": {
+  "python": "3.12.14",
+  "ase": "3.29.0",
+  "numpy": "2.5.4",
+  "mace-torch": "0.3.16",
+  "torch": "2.14.1",
+  "e3nn": "0.4.4"
+ },
+ "generator": {
+  "script": "scripts/52_s2_stage0_checks.py",
+  "script_sha256": {
+   "42_s2_builders.py": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22_paired_pilot.py": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29_dopant_shell_scan.py": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "07_fa_host_cell.py": "3018a4d273f44f45278e56b7d4b7dd0fc2a905866411d28de048011a391edcb2",
+   "checks.py": "76ecab53d4c6d6eeef022977d87b8c1805343d4dbf4e4e336d660133308abf46",
+   "46_s2_cells.py": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "52_s2_stage0_checks.py": "9e3981c69ce99879f37b82941b23df4f55246395b8408df9ecb56cdf18aad7a2"
+  },
+  "git": {
+   "head": "ae6402ed070f7fe0729cbc43b61de9a762d50240",
+   "scripts_clean": false,
+   "not_committed_or_modified": [
+    "scripts/46_s2_cells.py",
+    "scripts/52_s2_stage0_checks.py"
+   ]
+  },
+  "c46": "real",
+  "builder": {
+   "BUILDER_VERSION": "s2b-2",
+   "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf"
+  }
+ },
+ "mace_imported": false,
+ "date": "2026-11-04",
+ "written": "2026-11-04T01:49:00Z"
+}

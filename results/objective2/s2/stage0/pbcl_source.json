@@ -1,0 +1,81 @@
+{
+ "schema": "s2-pbcl-1",
+ "plan": "S2_PLAN.md section 2 (Poses, Cl), section 17 item 3; S2_BUILDERS_DESIGN.md section 4 (Cl row), section 16 answer 4",
+ "source": {
+  "citation": "A. Poglitsch and D. Weber, Dynamic disorder in methylammoniumtrihalogenoplumbates (II) observed by millimeter-wave spectroscopy, J. Chem. Phys. 87, 6373-6378 (1987)",
+  "doi": "10.1063/1.453467",
+  "phase": "cubic CH3NH3PbCl3 (Pm3m, above 178.8 K)",
+  "lattice_parameter_A": "5.675",
+  "stated_digits": 3,
+  "how_verified": "Web search and web pages only, 2026-11-03; nothing downloaded or executed. Primary: the publisher's landing page, reached from the DOI, confirms the title, authors, journal, volume 87, issue 11, pages 6373-6378 and the date (1 December 1987); its abstract says that the temperature-dependent crystal structures of CH3NH3PbX3 (X = Cl, Br, I) were determined by X-ray diffraction, but gives no lattice parameter, and the full text is offered as a PDF only, which was not read. Secondary: the Duke University Hybrid3 materials database, on its reference page for this paper, lists MAPbCl3 cubic Pm3m a = b = c = 5.675 A above 178.8 K (data set 166), tetragonal P4/mmm a = 5.656, c = 5.63 A between 172.9 and 178.8 K (167) and orthorhombic a = 5.673, b = 5.628, c = 11.182 A below 172.9 K (168), and for the same paper MAPbBr3 cubic 5.901 A and MAPbI3 cubic 6.3285 A; no uncertainty is given for the chloride. A search-result snippet of an RSC supplementary table (not opened) shows 5.675 A as the experimental cubic chloride value beside 5.901 A (Br) and 6.328 A (I). In the ideal cubic perovskite Pb-Cl = a/2.",
+  "level": "[S] secondary",
+  "primary": {
+   "read": "publisher landing page (bibliographic record and abstract)",
+   "lattice_parameter_seen": false,
+   "full_text_read": false,
+   "reason": "the full text is a PDF behind the publisher's access control; Stage 0 downloads no files"
+  },
+  "secondary_sources": [
+   {
+    "source": "Duke University Hybrid3 materials database, reference page of Poglitsch & Weber 1987 (data sets 166-168)",
+    "value": "a = 5.675 A, Pm3m, above 178.8 K",
+    "attribution": "Poglitsch & Weber 1987, J. Chem. Phys. 87, 6373-6378",
+    "uncertainty_stated": false,
+    "web_address": "in the off-repository notes"
+   },
+   {
+    "source": "RSC supplementary information table, seen only as a search-result snippet (document not opened)",
+    "value": "5.675 A (experimental, cubic MAPbCl3)",
+    "attribution": "not visible in the snippet"
+   }
+  ]
+ },
+ "d_PbCl_from_source_A": null,
+ "d_PbCl_from_source_decimal": null,
+ "d_PbCl_unverified_A": 2.8375,
+ "d_PbCl_unverified_decimal": "2.8375",
+ "d_PbCl_level": "[S] secondary",
+ "differs_from_2.837_at_stated_digits": true,
+ "decision": "provisional_2.837",
+ "value_used_A": 2.837,
+ "value_used_decimal": "2.837",
+ "tag_for_shifted_starts": "[M] starting point",
+ "allow_provisional_required": true,
+ "start_override_required": false,
+ "rule": "confirmed_2.837 iff the primary source is verified and a/2 equals 2.837 A at its stated digits; use_source_value iff the primary source is verified with another value (X-2: scripts/46 moves the shifted Cl to that distance and records start_override); provisional_2.837 otherwise (shifted starts at 2.837 A with --allow-provisional, labelled [M] starting points); a value read only in a secondary source does not verify (I-E1)",
+ "open_item": "The secondary value a = 5.675 A gives a/2 = 2.8375 A, which differs from 2.837 A at the stated digits. If the primary text (the paper's structure table) is read before any shifted Cl start is built and states 5.675 A, the section 2 rule requires the shifted starts at 2.8375 A (decision use_source_value; X-2 start_override in scripts/46), recorded by rerunning scripts/52 pbcl with level '[S] primary verified'; if it states 5.674 A, 2.837 A is confirmed. Until then the shifted Cl starts are built at 2.837 A with --allow-provisional and labelled [M] starting points.",
+ "notes": [
+  "I-E1",
+  "I-E2",
+  "N-E4",
+  "N-E9"
+ ],
+ "nothing_downloaded_or_executed": true,
+ "generator": {
+  "script": "scripts/52_s2_stage0_checks.py",
+  "script_sha256": {
+   "42_s2_builders.py": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22_paired_pilot.py": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29_dopant_shell_scan.py": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "07_fa_host_cell.py": "3018a4d273f44f45278e56b7d4b7dd0fc2a905866411d28de048011a391edcb2",
+   "checks.py": "76ecab53d4c6d6eeef022977d87b8c1805343d4dbf4e4e336d660133308abf46",
+   "46_s2_cells.py": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "52_s2_stage0_checks.py": "9e3981c69ce99879f37b82941b23df4f55246395b8408df9ecb56cdf18aad7a2"
+  },
+  "git": {
+   "head": "ae6402ed070f7fe0729cbc43b61de9a762d50240",
+   "scripts_clean": false,
+   "not_committed_or_modified": [
+    "scripts/46_s2_cells.py",
+    "scripts/52_s2_stage0_checks.py"
+   ]
+  },
+  "c46": "real",
+  "builder": {
+   "BUILDER_VERSION": "s2b-2",
+   "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf"
+  }
+ },
+ "date": "2026-11-03",
+ "written": "2026-11-04T01:49:00Z"
+}

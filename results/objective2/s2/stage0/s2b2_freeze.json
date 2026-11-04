@@ -1,0 +1,392 @@
+{
+ "schema": "s2-freeze-1",
+ "builder_version": "s2b-2",
+ "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+ "GEOM_SHA_recomputed": true,
+ "statement": "s2b-2 frozen (S2_BUILDERS_DESIGN.md section 6 'Freeze', section 16 answer 3; S2_PLAN.md section 17 item 3) after the T4 admissibility report was regenerated and archived, before any S2 energy existed: f, f_w, the class map with the H(N)/H(C) split, the class-Y rule and the threshold table enter GEOM_SHA and may not change",
+ "f": 0.9,
+ "f_w": 0.8,
+ "floor_A": 0.65,
+ "vac_excl_A": 1.2,
+ "class_map": {
+  "H": "H",
+  "C": "O",
+  "N": "O",
+  "Cs": "A",
+  "Rb": "A",
+  "I": "X",
+  "Cl": "X",
+  "Pb": "B",
+  "Sr": "B",
+  "Ca": "B",
+  "S": "Y"
+ },
+ "h_split": "H-X only: HN (H bonded to N, donor) and HC (H bonded to C); other H pairs pooled",
+ "y_rule": {
+  "acceptor_H": "f_w",
+  "other": "f",
+  "acceptors": [
+   "S",
+   "N"
+  ]
+ },
+ "bondi_A": {
+  "H": 1.2,
+  "C": 1.7,
+  "N": 1.55,
+  "S": 1.8,
+  "I": 1.98
+ },
+ "host_min_A": {
+  "HN-X": 2.571,
+  "HC-X": 2.876,
+  "H-H": 2.818,
+  "H-O": 3.339,
+  "H-B": 3.544,
+  "H-A": 4.534,
+  "O-X": 3.548,
+  "O-O": 3.995,
+  "O-B": 4.362,
+  "O-A": 5.198,
+  "A-X": 4.0,
+  "A-B": 5.342,
+  "X-X": 4.045
+ },
+ "thresholds_A": {
+  "HN-X": 2.3139000000000003,
+  "HC-X": 2.5884,
+  "H-H": 2.5362,
+  "H-O": 3.0051,
+  "H-B": 3.1896,
+  "H-A": 4.0806,
+  "O-X": 3.1932,
+  "O-O": 3.5955000000000004,
+  "O-B": 3.9258,
+  "O-A": 4.6782,
+  "A-X": 3.6,
+  "A-B": 4.807799999999999,
+  "X-X": 3.6405
+ },
+ "exempt": [
+  "GA"
+ ],
+ "untested": [
+  "X-B",
+  "A-A",
+  "B-B"
+ ],
+ "bond_cut_A": {
+  "C-N": 1.6,
+  "C-H": 1.25,
+  "H-N": 1.25,
+  "C-C": 1.7,
+  "C-S": 2.0
+ },
+ "geom": {
+  "GA": {
+   "d_CN": 1.33,
+   "d_NH": 1.01,
+   "u": 0.34,
+   "w": 0.95
+  },
+  "DMA": {
+   "d_CN": 1.49,
+   "a_CNC": 114.0,
+   "d_NH": 1.02,
+   "a_HNH": 109.47,
+   "d_CH": 1.094,
+   "a_NCH": 109.47
+  },
+  "AA": {
+   "d_C1N": 1.307,
+   "d_C1C2": 1.477,
+   "a_NCN": 121.0,
+   "a_NCC": 119.5,
+   "d_NH": 1.02,
+   "a_CNH": 120.0,
+   "a_HNH": 120.0,
+   "d_CH": 1.094,
+   "a_CCH": 109.47,
+   "methyl_dihedral": 90.0
+  },
+  "A_ion": {
+   "offset": 0.3,
+   "displaced_rule": "nearest A-X >= min(host_min A-X, centred nearest A-X)"
+  },
+  "Cl": {
+   "d_PbCl": 2.837
+  },
+  "SCN": {
+   "d_SC": 1.639,
+   "d_CN": 1.172,
+   "a_SCN": 180.0,
+   "r_ref_S": 3.066,
+   "r_ref_N": 2.734,
+   "window": 0.15,
+   "a_min": 90.0,
+   "c_min": 3.066,
+   "bound_rule": "distance window; in-window end with Pb-E-C < a_min rejects the pose",
+   "grid_s": [
+    -1.2,
+    1.2,
+    0.3
+   ],
+   "grid_l": [
+    0.0,
+    0.25,
+    0.5,
+    1.0,
+    1.5,
+    2.0
+   ],
+   "step_psi": 15,
+   "step_phi": 15,
+   "step_theta": 10,
+   "tie_A": 1e-06
+  },
+  "frames": {
+   "x_third_b_min": 5.0,
+   "tie_rad": 1e-09
+  },
+  "redundancy_deg": 20.0,
+  "pairing": {
+   "relaxed_inorganic_max_A": 2.0
+  }
+ },
+ "provisional": {
+  "DMA": "[U] C-N, C-N-C (cation geometry unverified)",
+  "AA": "[S] Cannon et al. 1976 (secondary)",
+  "Cl:shift": "[S] Pb-Cl 2.837 A (Poglitsch & Weber 1987, secondary)",
+  "SCN": "[V] values without an archived CIF (design section 4: treat as [S]); Bondi radii [S]"
+ },
+ "t4_report": "results/objective2/s2/stage0/t4_admissibility.json",
+ "t4_report_sha256": "e13ac56793486e5feebc82e919218552d1e8fafa51a30b99c5cc087fa2eb107d",
+ "t4_raw_sha256": "0a77d73e0339b1609b5a2d9a4693cf9c75586378e3378bb7fd903b6b0c9d2841",
+ "t4_raw_location": "off-repository record folder (with the full scripts/42 self-test log)",
+ "t4_kept_poses": {
+  "GA@128": [
+   "inherit"
+  ],
+  "GA@188": [
+   "inherit"
+  ],
+  "DMA@128": [
+   "inherit",
+   "inherit_flip",
+   "c100f",
+   "c100d",
+   "c110a",
+   "c110b",
+   "c111m",
+   "c111n",
+   "r0",
+   "r1"
+  ],
+  "DMA@188": [
+   "inherit",
+   "inherit_flip",
+   "c100f",
+   "c100d",
+   "c110a",
+   "c110b",
+   "c111m",
+   "c111n",
+   "r0",
+   "r1"
+  ],
+  "AA@128": [
+   "c100f",
+   "c100d",
+   "c110b",
+   "c111m",
+   "c111n",
+   "r0",
+   "r1"
+  ],
+  "AA@188": [
+   "c100f",
+   "c100d",
+   "c110a",
+   "c110b",
+   "c111m",
+   "c111n",
+   "r0",
+   "r1"
+  ],
+  "Cs@128": [
+   "centred",
+   "q0+",
+   "q0-",
+   "q1+",
+   "q1-",
+   "q2+",
+   "q2-"
+  ],
+  "Cs@188": [
+   "centred",
+   "q0+",
+   "q0-",
+   "q1+",
+   "q1-",
+   "q2+",
+   "q2-"
+  ],
+  "Rb@128": [
+   "centred",
+   "q0+",
+   "q0-",
+   "q1+",
+   "q1-",
+   "q2+",
+   "q2-"
+  ],
+  "Rb@188": [
+   "centred",
+   "q0+",
+   "q0-",
+   "q1+",
+   "q1-",
+   "q2+",
+   "q2-"
+  ],
+  "Sr@124": [
+   "swap"
+  ],
+  "Sr@136": [
+   "swap"
+  ],
+  "Sr@76": [
+   "swap"
+  ],
+  "Ca@124": [
+   "swap"
+  ],
+  "Ca@136": [
+   "swap"
+  ],
+  "Ca@76": [
+   "swap"
+  ],
+  "Cl@49": [
+   "centred",
+   "shift_a",
+   "shift_b"
+  ],
+  "Cl@138": [
+   "centred",
+   "shift_a",
+   "shift_b"
+  ],
+  "Cl@175": [
+   "centred",
+   "shift_a",
+   "shift_b"
+  ],
+  "SCN@49": [],
+  "SCN@138": [],
+  "SCN@175": [
+   "S:a",
+   "S:b",
+   "N:b"
+  ]
+ },
+ "t4_kept_equal_pinned": true,
+ "self_test_summary": {
+  "line": "SELF-TEST PASS (13 cases, 0 failed, 90 s)",
+  "n_cases": 13,
+  "cases": [
+   {
+    "name": "T1 templates",
+    "status": "PASS"
+   },
+   {
+    "name": "T2 GA regression",
+    "status": "PASS"
+   },
+   {
+    "name": "T3 Sr regression",
+    "status": "PASS"
+   },
+   {
+    "name": "T4 tokens on m30",
+    "status": "PASS"
+   },
+   {
+    "name": "T5 pairing",
+    "status": "PASS"
+   },
+   {
+    "name": "T6 refusals",
+    "status": "PASS"
+   },
+   {
+    "name": "T7 PBC",
+    "status": "PASS"
+   },
+   {
+    "name": "T8 determinism",
+    "status": "PASS"
+   },
+   {
+    "name": "T9 pool minima",
+    "status": "PASS"
+   },
+   {
+    "name": "T10 parity",
+    "status": "PASS"
+   },
+   {
+    "name": "T11 relaxed partners",
+    "status": "PASS"
+   },
+   {
+    "name": "T12 non-template geometry",
+    "status": "PASS"
+   },
+   {
+    "name": "no-model",
+    "status": "PASS"
+   }
+  ]
+ },
+ "versions": {
+  "python": "3.12.14",
+  "ase": "3.29.0",
+  "numpy": "2.5.4",
+  "mace-torch": "0.3.16",
+  "torch": "2.14.1",
+  "e3nn": "0.4.4"
+ },
+ "generator": {
+  "script": "scripts/52_s2_stage0_checks.py",
+  "script_sha256": {
+   "42_s2_builders.py": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22_paired_pilot.py": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29_dopant_shell_scan.py": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "07_fa_host_cell.py": "3018a4d273f44f45278e56b7d4b7dd0fc2a905866411d28de048011a391edcb2",
+   "checks.py": "76ecab53d4c6d6eeef022977d87b8c1805343d4dbf4e4e336d660133308abf46",
+   "46_s2_cells.py": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "52_s2_stage0_checks.py": "9e3981c69ce99879f37b82941b23df4f55246395b8408df9ecb56cdf18aad7a2"
+  },
+  "git": {
+   "head": "ae6402ed070f7fe0729cbc43b61de9a762d50240",
+   "scripts_clean": false,
+   "not_committed_or_modified": [
+    "scripts/46_s2_cells.py",
+    "scripts/52_s2_stage0_checks.py"
+   ]
+  },
+  "c46": "real",
+  "builder": {
+   "BUILDER_VERSION": "s2b-2",
+   "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf"
+  }
+ },
+ "notes": [
+  "I-E5",
+  "N-E2",
+  "N-E7"
+ ],
+ "date": "2026-11-04",
+ "written": "2026-11-04T01:48:35Z"
+}
