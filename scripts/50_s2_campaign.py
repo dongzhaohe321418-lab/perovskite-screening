@@ -859,7 +859,8 @@ NOTES = {
              "120 s for its first good poll (the dead poller's heartbeat is not judged), and none is restarted once a "
              "shutdown or a STOP began (round-4 R4-C1-2); that grace is renewed only when the dead poller had a good "
              "poll of its own, so pollers that end before answering keep the first one's start and STOP 120 s after "
-             "it (round-5 R5-1)",
+             "it (round-5 R5-1); the third such renewal within 300 s is a STOP, so pollers that each answer once "
+             "and end cannot hold the scheduler (round-6 R6-C1-2)",
     "N-F19": "section 16 / X-4 (round-3 missed item): the smoke test at the chosen layout folds its verdict into "
              "smoke.json (at_layout, restart_possible false if it fails) before smoke2.json is written, and rec:smoke2 "
              "is done only when smoke.json carries at_layout for its label; C2 requires at_layout whenever the A2 "
@@ -906,7 +907,9 @@ NOTES = {
              "c1/nodescripts_check.json and STOPs unless the queue, the chain and the launcher equal the checkout's "
              "ehpc/node copies byte for byte; C2-C4 STOP on any hash that differs from the C1 record; a commit change "
              "(c1/NODE_FIX, c2/STEP0_FIX) moves that campaign's check records to discarded/commit_<t>/, so the UPF, "
-             "node-script and model checks run again, first, at the new commit (round-5 R5-2)",
+             "node-script and model checks run again, first, at the new commit (round-5 R5-2); until the UPF check "
+             "has passed again, md5_extra is the newest passed moved C1 record, and a re-check with other Cl/Ca MD5 "
+             "is a STOP (round-6 R6-C1-1, N-B9)",
     "N-F32": "STAGE0 section 8 item 1, D-S0-8 (round-4 R4-C1-3): a git failure in the checkout (no repository, a copy "
              "without .git, git's ownership refusal) is a STOP in the runner and a refusal in s2_campaign.sh; HEAD must "
              "be 40 hex digits, never an empty commit read as clean",
@@ -1973,6 +1976,7 @@ class Runner:
         self.pending_stop, self.stop_written, self.poller_t0, self.was_stopped = [], False, None, False
         self.held_labels, self.slots_cache = {}, None                       # round 4: N-F36 (held STOP -> A2 label); N-F30
         self.resolve_wait, self.tree_full = set(), set()                    # round 4: log-once keys; N-F34
+        self.poller_renewals = []                                           # round 6: R6-C1-2 (N-F18)
 
     # ---- logging and records
     def log(self, msg):
@@ -2003,6 +2007,9 @@ class Runner:
         None before (the S1 identities are checked from the start). N-B9, round-2 R2-QE-3."""
         if getattr(self, "_md5x", None) is None:
             rec = read_json(os.path.join(self.node.c("c1"), "upf_check.json"))
+            if not (rec and rec.get("passed")):     # round-6 R6-C1-1: after a commit change, until check:upf passes
+                old = sorted(glob.glob(os.path.join(self.node.c("c1"), "discarded", "commit_*", "upf_check.json")))
+                rec = next((r for r in map(read_json, reversed(old)) if r and r.get("passed")), rec)
             if rec and rec.get("passed"):
                 try:
                     self._md5x = q47.upf_md5_extra(rec)
@@ -2162,6 +2169,13 @@ class Runner:
             # never answer keep the first one's start and spot_check STOPs spot_first_s after it
             t_hb = self.spot_hb_time()
             if self.poller_t0 is None or (t_hb is not None and t_hb >= self.poller_t0 - 1.0):
+                # round-6 R6-C1-2: pollers that each answer once and end would renew the grace at every restart, so
+                # nothing would start and nothing STOP; the third renewal within spot_stale_s is a STOP (no restart)
+                now = time.time()
+                self.poller_renewals = [x for x in self.poller_renewals if now - x <= self.be.spot_stale_s] + [now]
+                if len(self.poller_renewals) >= 3:
+                    raise Stop(f"the spot poller keeps ending after a good poll (3 times within "
+                               f"{self.be.spot_stale_s:.0f} s; N-F18): see spot/poller.log")
                 self.poller_t0 = None
             self.log("WARN: the spot poller had ended: restarted; its first good poll is awaited (N-F18)"); self.start_poller()
         self.note_notice()
@@ -2677,6 +2691,10 @@ class Runner:
         else:
             r = self.be.foundation_check()
         c46.dump_public(r, os.path.join(self.cdir, f"{j['what']}_check.json"))
+        if (j["what"] == "upf" and self.c == "c1" and r.get("passed") and getattr(self, "_md5x", None) is not None
+                and q47.upf_md5_extra(r) != self._md5x):              # round-6 R6-C1-1: after a NODE_FIX
+            raise Stop("the C1 UPF check at the new commit gives other Cl/Ca MD5 than the record the existing outputs "
+                       "were read with (N-B9)")
         self.log(f"check {j['what']}: {'passed' if r.get('passed') else 'FAILED'}"
                  + (f" ({'; '.join(r.get('problems') or [])[:300]})" if r.get("problems") else ""))
         if not r.get("passed"):
@@ -6404,8 +6422,10 @@ def self_test(work=None):
         lasts 250 s gives no STOP; one of 305 s STOPs, with a stated age within one poll of the true time since the
         last good poll; (b) an ended poller with a 310-s old heartbeat is restarted with its own first-poll grace: no
         STOP with a healthy endpoint, nothing scheduled before its first good poll, a STOP 120 s (here 1 s) after the
-        restart with an unreachable one, and no restart once a shutdown began; (c) round-5 R5-1: pollers that end at
-        once after one good poll keep the first restart's start and STOP spot_first_s after it, nothing run before."""
+        restart with an unreachable one, and no restart once a shutdown began; (c) round-5 R5-1: after one good poll of
+        the first poller, restarted pollers that never answer keep the first restart's start and STOP spot_first_s
+        after it, nothing run before; (d) round-6 R6-C1-2: pollers that each answer once and end STOP at the third
+        renewal of the grace, nothing run."""
         import urllib.error, urllib.request
         g = globals()
         real = g["time"]
@@ -6509,7 +6529,29 @@ def self_test(work=None):
                     stop = (time.time() - t1, str(e)); break
                 time.sleep(rn.be.tick)
             assert stop and "within 1 s of the poller's start" in stop[1] and stop[0] < 2.5 and not ran, (stop, ran)
-            out.append(f"pollers ending at once after one good poll: STOP after {stop[0]:.1f} s, nothing run")
+            out.append(f"after one good poll, restarts that never answer: STOP after {stop[0]:.1f} s, nothing run")
+            # (d) round-6 R6-C1-2: every poller answers once and ends (a stand-in whose one good poll, 0.1 s after its
+            # start, is seen as it ends), real limits (120 s, 300 s): the third renewal is a STOP, nothing run
+            rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "hb-boot"; os.makedirs(rn.cdir, exist_ok=True)
+
+            class _Once(_Fake):
+                def poll(self):
+                    write_text(f"{rn.poller_t0 + 0.1:.3f} x ok=1 err=0\n", os.path.join(rn.node.spot, "heartbeat.hb-boot"))
+                    return 0
+            rn.start_poller = lambda: (setattr(rn, "poller_t0", rn.poller_t0 or time.time()), setattr(rn, "poller", _Once()))
+            rn.start_poller()
+            ran, stop, t1 = [], None, time.time()
+            rn.run_check = lambda j: ran.append(j["id"])
+            rn.G = {"phases": ["check"], "jobs_by_id": {"j": {"id": "j", "kind": "check", "what": "zz", "deps": [],
+                                                              "phase": "check"}}}
+            while time.time() - t1 < 8.0:
+                time.sleep(1.5)
+                try:
+                    rn.housekeeping(); rn.schedule({"j": "pending"})
+                except Stop as e:
+                    stop = (time.time() - t1, str(e)); break
+            assert stop and "keeps ending after a good poll" in stop[1] and not ran, (stop, ran)
+            out.append(f"pollers answering once and ending: STOP at the third renewal ({stop[0]:.1f} s), nothing run")
             rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "hb-boot"; rn.poller_t0 = time.time()
             rn.poller = _Fake(alive=False); rn.shutdown = True
             rn.housekeeping()
@@ -6518,8 +6560,8 @@ def self_test(work=None):
             r3_restore(old)
         return (f"fake clock: a 250-s outage 55 s after the old heartbeat write gives no STOP; 305 s STOPs, stated age "
                 f"{long_[1]} s vs {long_[0]:.0f} s since the last good poll; " + "; ".join(out) + "; no restart in a shutdown")
-    case("(z13) spot heartbeat at every good poll; poller restart grace (round-4 R4-C1-1, R4-C1-2; round-5 R5-1)",
-         c_spot_heartbeat)
+    case("(z13) spot heartbeat at every good poll; poller restart grace (round-4 R4-C1-1, R4-C1-2; round-5 R5-1; "
+         "round-6 R6-C1-2)", c_spot_heartbeat)
 
     def c_notice_in_pass():
         """Round-4 missed item (N-11): a spot notice written while one schedule() pass runs a synchronous scripts/46 job
@@ -7141,7 +7183,8 @@ def self_test(work=None):
         """Round-5 R5-2 (N-F31): a NODE_FIX whose commit changes the committed launcher moves the C1 check records
         aside, so check:nodescripts is pending again and its new record carries the new sha256; C2 then passes. A
         NODE_FIX whose commit changes qe_queue.sh while the node copy stays old STOPs C1 in its check phase. A C2
-        STEP0_FIX moves C2's check records alike."""
+        STEP0_FIX moves C2's check records alike. Round-6 R6-C1-1 (N-B9): until check:upf passes again, the outputs
+        are read with the Cl/Ca MD5 of the moved record, and a re-check giving other MD5 is a STOP."""
         sysd, Rm = mini("nodefix5", boot="nf-boot")
         _node_scripts(sysd)
         J = {"id": "check:nodescripts", "kind": "check", "what": "nodescripts", "phase": "check", "deps": []}
@@ -7150,6 +7193,9 @@ def self_test(work=None):
         rn.run_check(J)
         sha0 = read_json(os.path.join(rn.cdir, "nodescripts_check.json"))["files"]["s2_run_qe.sh"]["sha256"]
         assert rn.status(J, {}) == "done"
+        md5o = {"Cl": "a" * 32, "Ca": "b" * 32}                      # round-6 R6-C1-1: a passed C1 UPF record
+        write_json({"schema": "s2-upf-1", "passed": True, "files": {e: {"md5": v} for e, v in md5o.items()}},
+                   os.path.join(rn.cdir, "upf_check.json"))
         exp, new = rn.be.node_script_expected, {}
         rn.be.node_script_expected = lambda name: new[name].encode() if name in new else exp(name)
         for head, name in (("1" * 40, "s2_run_qe.sh"), ("2" * 40, "qe_queue.sh")):
@@ -7169,6 +7215,12 @@ def self_test(work=None):
                 rn2 = Runner("c2", Rm, rn.be); rn2.boot = "nf-boot"; rn2.state = synthetic_state()
                 os.makedirs(rn2.cdir, exist_ok=True)
                 rn2.run_check(J)                                 # no STOP: the C1 record is that of the new commit
+                rx = Runner("c1", Rm, rn.be); rx.boot = "nf-boot"    # round-6 R6-C1-1: the relaunch's first reads
+                assert rx.md5_extra() == md5o, rx.md5_extra()          # use the moved record until check:upf passes
+                try:
+                    rx.run_check(dict(J, id="check:upf", what="upf")); raise AssertionError("other Cl/Ca MD5 accepted")
+                except Stop as e:
+                    assert "N-B9" in str(e), e
             else:
                 try:
                     rn.run_check(J); raise AssertionError("C1 ran a queue that differs from the new commit's")
@@ -7185,8 +7237,9 @@ def self_test(work=None):
         assert PHASES["c1"][0] == PHASES["c2"][0] == "check"     # the checks run again before any further job
         return ("NODE_FIX changing s2_run_qe.sh: check records moved aside, check pending, new sha256 recorded, C2 "
                 "passes; NODE_FIX changing the committed qe_queue.sh with the node copy old: STOP in the check phase; "
-                "a C2 STEP0_FIX moves C2's check records alike")
-    case("(z28) a NODE_FIX re-runs the C1 checks at the new commit (round-5 R5-2)", c_nodefix_checks)
+                "a C2 STEP0_FIX moves C2's check records alike; until check:upf passes the moved record's Cl/Ca MD5 "
+                "are used, a re-check with other MD5 STOPs")
+    case("(z28) a NODE_FIX re-runs the C1 checks at the new commit (round-5 R5-2; round-6 R6-C1-1)", c_nodefix_checks)
 
     for p in procs.values():                                   # nothing of the simulated campaign is left running
         if p.poll() is None:
