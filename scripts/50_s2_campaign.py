@@ -32,8 +32,9 @@ keeps the evidence of every attempt and applies the decisions the gate outputs r
             Single points (sections 12, 13): staged by scripts/47, published at most two ahead (I-D2) into
             /data/jobs/s2c<k>/<label>/ and run by the committed queue rules (chain.sh -> qe_queue.sh: one
             resubmission, then .gaveup); completeness from scripts/47 sp_status (a JOB DONE output with an
-            unconverged SCF is missing and never resubmitted). A2 relaxations (sections 11, 13): run_qe.sh under the
-            global chain lock (N-6), in the fixed order with one or two copies; the exit file stops a part once
+            unconverged SCF is missing and never resubmitted). A2 relaxations (sections 11, 13): the committed
+            ehpc/node/s2_run_qe.sh under the global chain lock (N-6; two copies on the two halves of the cores, N-F30),
+            in the fixed order with one or two copies; the exit file stops a part once
             configuration k = 200 has completed; after a soft exit with usable restart data the next part is the
             part-1 input with only restart_mode='restart' and the reduced nstep of the smoke-test mapping, else the
             relaxation is rerun from k = 0 with the identical input at most twice; every interruption is logged.
@@ -580,6 +581,60 @@ def utc(t=None):
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() if t is None else t))
 
 
+def parse_cpulist(s):
+    """A Linux CPU list ('0-31,40,42-43') as a set of ints (N-F30)."""
+    out = set()
+    for part in str(s).strip().split(","):
+        part = part.strip()
+        if not part:
+            continue
+        a, _, b = part.partition("-")
+        out.update(range(int(a), int(b or a) + 1))
+    return out
+
+
+def pair_check(a, b, overlap_min=None):
+    """N-F30 (round-4 R4-C1-1 and missed item): two 32-rank copies count as the section 16 layout 'two concurrent
+    32-rank copies' only if each recorded a core set, the two sets are disjoint, the CPUs their pw.x ranks were allowed
+    (when recorded) are disjoint and inside their sets, and their walls overlap for >= overlap_min of the shorter one.
+    a, b: {"cpuset", "affinity", "interval": [start, end]}. Returns {"valid", "reasons", "overlap"}."""
+    why, ov = [], None
+    overlap_min = PAIR_OVERLAP_MIN if overlap_min is None else overlap_min
+    sa, sb = (parse_cpulist(x["cpuset"]) if x.get("cpuset") else None for x in (a, b))
+    if not sa or not sb:
+        why.append("a copy without a recorded core set")
+    elif sa & sb:
+        why.append("the two core sets overlap")
+    fa, fb = (parse_cpulist(x["affinity"]) if x.get("affinity") else None for x in (a, b))
+    if fa is not None and fb is not None and fa & fb:
+        why.append("the pw.x ranks of the two copies shared CPUs")
+    for f_, s_ in ((fa, sa), (fb, sb)):
+        if f_ is not None and s_ and not f_ <= s_:
+            why.append("pw.x ranks outside their core set")
+    ia, ib = a.get("interval"), b.get("interval")
+    if not (ia and ib and all(v is not None for v in (*ia, *ib))):
+        why.append("a copy without a recorded interval")
+    else:
+        short = min(ia[1] - ia[0], ib[1] - ib[0])
+        ov = min(ia[1], ib[1]) - max(ia[0], ib[0])
+        if short <= 0 or ov < overlap_min * short:
+            why.append(f"the walls overlap {ov:.0f} s, < {overlap_min:.0%} of the shorter wall {short:.0f} s")
+    return {"valid": not why, "reasons": why, "overlap_s": ov}
+
+
+def cpulist(cpus):
+    """The compact Linux CPU list of an iterable of ints (N-F30)."""
+    xs, out = sorted(set(int(c) for c in cpus)), []
+    i = 0
+    while i < len(xs):
+        k = i
+        while k + 1 < len(xs) and xs[k + 1] == xs[k] + 1:
+            k += 1
+        out.append(f"{xs[i]}-{xs[k]}" if k > i else f"{xs[i]}")
+        i = k + 1
+    return ",".join(out)
+
+
 c46 = _load_or_mock("c46", "46_s2_cells.py", _mock46)
 q47 = _load_or_mock("q47", "47_s2_qe.py", _mock47)
 g49 = _load_or_mock("g49", "49_s2_gates.py", _mock49)
@@ -593,6 +648,11 @@ WORK = "/data/work/s2"
 JOBS = "/data/jobs"
 KEEP_ALIVE = "/data/KEEP_ALIVE"                              # dopant_shell/WP3_RUNBOOK.md step 4
 RUN_QE, QUEUE, CHAIN = "/usr/local/bin/run_qe.sh", "/data/setup/qe_queue.sh", "/data/setup/chain.sh"
+QE_PROFILE = "/etc/profile.d/qe.sh"                           # sourced by run_qe.sh and s2_run_qe.sh (node only)
+S2_RUN_QE = "ehpc/node/s2_run_qe.sh"                          # the committed launcher of every pw.x run outside the
+                                                              # queue, used from the checkout (round 4, N-F30)
+TP_PAIR = ("s2tp_ref232_np32a", "s2tp_ref232_np32b")          # the throughput row's two concurrent copies (section 16)
+PAIR_OVERLAP_MIN = (getattr(g49, "RULES", None) or {}).get("TP_PAIR_OVERLAP", 0.9)   # >= 90% of the shorter wall (I-C13)
 CHAIN_LOCK = "/" + "tmp/qe_chain.global.lock"                 # as ehpc/node/chain.sh (assembled: no literal temporary
                                                               # path in a repository file; never serialised)
 PY_NODE = "/data/miniforge3/envs/mace/bin/python"
@@ -702,11 +762,14 @@ NOTES = {
     "I-31": "cells whose every dopant was removed (G1 failure, cuts) are not run, region cells included",
     "I-48": "a part that ends by nstep before k = 200 is unconverged early and STOPs the campaign (mapping wrong)",
     "N-5": "single points are published one input at a time (meta first, then <label>.in.part renamed to .in)",
-    "N-6": "A2 relaxations, smoke tests and the throughput row run through run_qe.sh under the global chain lock",
+    "N-6": "A2 relaxations, smoke tests and the throughput row run through the committed ehpc/node/s2_run_qe.sh (the "
+           "node's run_qe.sh with an optional core set, round 4, N-F30) under the global chain lock",
     "N-7": "MACE work never runs beside pw.x: phases are strictly ordered within a campaign",
     "N-9": "a MACE attempt that ended with a Python exception (or a refusal) is a STOP for a human, not an interruption",
     "N-10": "the hard-cap check of a single point uses twice its expected duration (one automatic resubmission)",
-    "N-11": "after a spot notice nothing new starts for 1800 s; running children continue",
+    "N-11": "after a spot notice nothing new starts for 1800 s; running children continue; held() reads the notice "
+            "itself, so a notice written while one scheduler pass runs its synchronous jobs holds every later launch of "
+            "that pass (round-4 missed item)",
     "N-12": "KEEP_ALIVE is removed at the end of a campaign, at every STOP (first, before any write: round-2 F1), at a "
             "shutdown signal, whenever the runner exits, and by the spot poller when the runner died without "
             "CAMPAIGN_DONE (SIGKILL, OOM; the poller removes only the file that runner wrote)",
@@ -780,15 +843,21 @@ NOTES = {
              "pw.x reference run (smoke, smoke2, throughput) is resolved by <run dir>/RESOLVE 'rerun <dated note>' "
              "(its parts, outputs and tmp/ and the record built on them, smoke.json, smoke2.json or throughput.json "
              "with the throughput gate markers, moved to discarded/resolved_<t>/, logged in interruptions.jsonl) or "
-             "'missing <note>'",
+             "'missing <note>'; RESOLVE is read only once no part of the run lives, never into a running run (round-4 "
+             "R4-C1-4)",
     "N-F17": "D-S0-8 (round-3 R3-C1-3): a C1 STOP that needs a code fix resumes at the fixed commit with "
              "c1/NODE_FIX ('<new commit> <dated note>'), accepted only while C1 is stopped (CAMPAIGN_STOPPED present, "
              "C1 not done) and when its commit is the checkout HEAD; the change goes to state commit_history and "
-             "NODE_FIX is renamed NODE_FIX.used.<t>; a NODE_FIX in another campaign or with C1 not stopped is refused",
+             "NODE_FIX is renamed NODE_FIX.used.<t>; a NODE_FIX in another campaign or with C1 not stopped is refused; "
+             "campaign.json keeps the campaign's start_commit beside the commit in force and the commit_history, and "
+             "scripts/48 reports the history with the diff of scripts/46-50 of each step (round-4 R4-C1-6)",
     "N-F18": "sections 13, 16 and D-S0-8 (round-3 R3-C1-7): the spot-endpoint check is a reachability check: no job "
              "of a campaign runs until the poller has had a good poll (200 or 404, spot/heartbeat.<boot> newer than "
              "the poller's start); none within 120 s, or a last good poll older than 5 min while the campaign runs, "
-             "is a STOP (a termination notice could not arrive)",
+             "is a STOP (a termination notice could not arrive); the heartbeat is written at every good poll, so its "
+             "age is the age of the last good poll (round-4 R4-C1-1); a poller restarted after it ended gets its own "
+             "120 s for its first good poll (the dead poller's heartbeat is not judged), and none is restarted once a "
+             "shutdown or a STOP began (round-4 R4-C1-2)",
     "N-F19": "section 16 / X-4 (round-3 missed item): the smoke test at the chosen layout folds its verdict into "
              "smoke.json (at_layout, restart_possible false if it fails) before smoke2.json is written, and rec:smoke2 "
              "is done only when smoke.json carries at_layout for its label; C2 requires at_layout whenever the A2 "
@@ -811,11 +880,56 @@ NOTES = {
              "(descendants of its wrapper, node /proc) in its launch record and in a2_pids.json (kept across reruns); "
              "an OOM kill in this boot is the part's interruption only for one of its own pids; without a recorded "
              "tree the pw.x task test of I-D7 applies, excluding every pid recorded for another A2 part (the other "
-             "copy) in this boot",
+             "copy) in this boot; revised in round 4 (N-F34): 'a recorded tree' is one that holds pw.x ranks",
     "N-F24": "section 3 (round-3 R3-C1-4): the production list needs a recorded n of 8 or 10 (the n rule), else "
              "S2Error; C3 requires the C1 gates_applied marker of gate:nrule",
     "N-F25": "section 16 keep-alive (round-3 R3-C1-9): s2_relaunch.sh, when it refuses, removes a /data/KEEP_ALIVE "
-             "older than the current boot (left by a runner killed with its node), so the idle self-stop applies",
+             "older than the current boot (left by a runner killed with its node), so the idle self-stop applies; a "
+             "refusal of s2_campaign.sh itself inside a relaunch is such a refusal, and without /data/work/s2 (before "
+             "the first start) the relaunch refuses and s2_status.sh says 'not started' (round-4 R4-C1-3, R4-C1-8)",
+    "N-F30": "section 16 throughput row and the 2x32 layout (round-4 R4-C1-1, error, and the node lens' missed items): "
+             "every pw.x run outside the queue goes through the committed ehpc/node/s2_run_qe.sh (the node's run_qe.sh "
+             "with an optional core set, used from the checkout); two concurrent 32-rank copies (np32a/np32b and every "
+             "A2 part at 2x32) each run on one half of the physical cores (lscpu), 'taskset -c <half> mpirun --bind-to "
+             "none', the recipe confirmed on the node (two separate 'mpirun --bind-to core' both bind from core 0); a "
+             "part takes the half no running copy uses; every other run is bound as run_qe.sh binds; the core set, the "
+             "CPUs the pw.x ranks were allowed (node /proc) and the interval are recorded; the two throughput copies "
+             "always start together (a copy that completed without the other is moved aside, its measurement not "
+             "used, discarded/paired_<t>, not one of its reruns; one whose partner is missing is skipped), and the "
+             "2x32 rate is "
+             "computed only for two copies on disjoint cores whose walls overlap for >= 90% of the shorter one "
+             "(scripts/49 I-C13)",
+    "N-F31": "section 16, D-S0-8 (round-4 R4-C1-2): check:nodescripts (no node-hours) records the sha256 of the node "
+             "scripts behind every pw.x run (run_qe.sh, the QE profile, qe_queue.sh, chain.sh, s2_run_qe.sh) in "
+             "c1/nodescripts_check.json and STOPs unless the queue, the chain and the launcher equal the checkout's "
+             "ehpc/node copies byte for byte; C2-C4 STOP on any hash that differs from the C1 record",
+    "N-F32": "STAGE0 section 8 item 1, D-S0-8 (round-4 R4-C1-3): a git failure in the checkout (no repository, a copy "
+             "without .git, git's ownership refusal) is a STOP in the runner and a refusal in s2_campaign.sh; HEAD must "
+             "be 40 hex digits, never an empty commit read as clean",
+    "N-F33": "section 13, N-D10 (round-4 R4-C1-4): RESOLVE 'rerun' of a smoke or throughput run moves the attempts "
+             "before it (discarded/p<n>_*) aside with the resolution, so the rerun has the two reruns of N-D10; an "
+             "operator's MACE rerun after a STOP for a human (an exception, N-9) is marked counts false and is not one "
+             "of the two reruns section 13 allows after a reclaim, node loss, OOM or wall time",
+    "N-F34": "section 13 causes (round-4 R4-C1-5, R4-C24-2): a running pw.x part (A2, smoke, throughput) records its "
+             "process tree with the pw.x ranks among it at every tick until all its ranks are in it, then every 30 s; "
+             "an OOM kill is the part's only for one of its own recorded pids once pw.x ranks are recorded, else the "
+             "pw.x task test after its start applies, excluding the pids recorded for another part in that boot",
+    "N-F35": "section 5, STAGE0 section 8 item 3 (round-4 R4-C1-6): check:mace checks the foundation file's sha256 and "
+             "then runs scripts/46 load_mace in a child process (the runner never imports mace): version, float64, "
+             "cpu, the resolved file, Z coverage and torch threads before the first MACE job, no structure evaluated; "
+             "a failure STOPs before the smoke tests and costs no MACE attempt",
+    "N-F36": "sections 11, 16 (round-4 R4-C24-1): the STOP an A2 end rule asks for is durable: the A2 record carries "
+             "end_rule.stop_raised false until CAMPAIGN_STOPPED holds the reason; every runner start re-holds such a "
+             "STOP before any launch; every STOP's reason includes the held ones, which are then marked raised (an "
+             "operator's relaunch after that STOP does not raise them again)",
+    "N-F37": "section 16 'killed and its output discarded unread' (round-4 R4-C24-3 and the C2-C4 lens' missed item): a "
+             "stopping gate's exit request replaces an earlier 'cap' or 'spot' one of a running part (the prior reason "
+             "kept), so the part is killed_by_gate whatever its end; a relaxation waiting for its restart part when a "
+             "gate stops A2 is killed_by_gate with its outputs and restart data moved aside unread",
+    "N-F38": "section 16, X-3, D-S0-6, D-S0-8 (round-4 R4-C1-5): smoke tests n1 and n3 that both end with JOB DONE but "
+             "do not differ by two configurations (no affine nstep mapping of slope 1) STOP C1 before the exit/restart "
+             "test and the throughput row, naming the smoke tests and the NODE_FIX / RESOLVE path, so they can be "
+             "repeated while C1 is open",
     "I-D9": "section 16 hard cap (round-3 R3C-7; a reading, confirmed by the analyst as D-S0-10): 'No job "
             "starts if H_spent plus the job's expected duration would exceed 520 h ... Whatever is then "
             "incomplete is missing' is read as: after the "
@@ -841,6 +955,10 @@ class Node:
         self.checkout = j(self.root, "work", "ps_s2") if sysroot == "" else ROOT
         self.queue, self.chain = j(self.setup, "qe_queue.sh"), j(self.setup, "chain.sh")
         self.run_qe, self.chain_lock = sysroot + RUN_QE, sysroot + CHAIN_LOCK
+        self.qe_profile = sysroot + QE_PROFILE
+        # N-F30: the committed launcher in the checkout on the node; in the self-test a copy with its node paths
+        # rewritten under <sysroot> (as qe_queue.sh and chain.sh, _node_scripts)
+        self.s2_run_qe = j(self.checkout, S2_RUN_QE) if sysroot == "" else sysroot + "/usr/local/bin/s2_run_qe.sh"
         self.lock, self.state = j(self.work, "s2.lock"), j(self.work, "state.json")
         self.ledger, self.spot = j(self.work, "ledger"), j(self.work, "spot")
         self.spot_url_file = j(self.setup, "s2_spot_url")
@@ -1065,6 +1183,7 @@ def pbcl_provisional(state):
 def graph_c1(state, sites=site_sets):
     G = Graph("c1", PHASES["c1"])
     G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")             # N-F31 (round 4)
     G.add("check:mace", "check", "check", what="mace")
     _ref_block(G, state)
     prov = pbcl_provisional(state)
@@ -1154,6 +1273,7 @@ def c2_labels(state):
 def graph_c2(state, sites=site_sets):
     G = Graph("c2", PHASES["c2"])
     G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")             # N-F31 (round 4)
     labs = c2_labels(state)
     _a2_jobs(G, labs)
     # in-line gates (section 11): step-0 at k = 0 of relaxations 1 and 4, K2 at the end of 1, projection after 1-4,
@@ -1192,6 +1312,7 @@ def c4_labels(state):
 def graph_c4(state, sites=site_sets):
     G = Graph("c4", PHASES["c4"])
     G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")             # N-F31 (round 4)
     G.add("gate:projection@c4", "gate", "pre", [], gate="projection", point="c4", cat="gate")
     if 8 not in cut_ids(state):
         _a2_jobs(G, c4_labels(state))
@@ -1220,6 +1341,7 @@ def c3_multi(state, T):
 def graph_c3(state, sites=site_sets):
     G = Graph("c3", PHASES["c3"])
     G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")             # N-F31 (round 4)
     G.add("check:mace", "check", "check", what="mace")
     G.add("gate:projection@c3", "gate", "pre", [], gate="projection", point="c3", cat="gate")
     g1 = state.get("G1") or {}
@@ -1368,14 +1490,16 @@ def spot_url(checkout=CHECKOUT, root=NODE_ROOT):
 def poller_main(url, d, boot, ppid, poll, keep_alive=None, done=None):
     """Spot poller (child of the runner): polls the metadata endpoint every `poll` s; a termination notice (HTTP 200)
     is written at once, fsynced, to notice.<boot>; a heartbeat with the time of the last good poll (200 or 404)
-    goes to heartbeat.<boot> every 60 s. Exits when its parent is gone (as node_step7's poller). If the runner died
+    goes to heartbeat.<boot> at every good poll (round-4 R4-C1-1: with a 60-s cadence the file lagged the last good
+    poll by up to a minute, so an outage of 4-5 min looked like one of 5 min, N-F18). Exits when its parent is gone (as
+    node_step7's poller). If the runner died
     without ending its campaign (SIGKILL, OOM: no CAMPAIGN_DONE), the poller removes the KEEP_ALIVE the runner wrote
     before it started (not a newer one), so the idle self-stop applies once the orphaned jobs end (round-2 F1)."""
     import urllib.error, urllib.request
     os.makedirs(d, exist_ok=True)
     notice, hbf = os.path.join(d, f"notice.{boot}"), os.path.join(d, f"heartbeat.{boot}")
     op = urllib.request.build_opener(urllib.request.ProxyHandler({}))
-    last_hb = last_err = 0.0; ok = err = 0
+    last_err = 0.0; ok = err = 0
     print(f"{utc()} poller start, boot {boot[:8]}", flush=True)
     t_start = time.time()
     while os.getppid() == ppid:
@@ -1393,8 +1517,7 @@ def poller_main(url, d, boot, ppid, poll, keep_alive=None, done=None):
                 if code == 200 and not os.path.exists(notice):
                     write_text(f"{utc(t)} {t:.0f} {' '.join(body.split())[:120]}\n", notice)
                     print(f"{utc(t)} spot termination notice", flush=True)
-                if t - last_hb >= 60:
-                    write_text(f"{t:.0f} {utc(t)} ok={ok} err={err}\n", hbf); last_hb = t
+                write_text(f"{t:.0f} {utc(t)} ok={ok} err={err}\n", hbf)        # every good poll (R4-C1-1)
             else:
                 err += 1
                 if t - last_err >= 600:
@@ -1495,18 +1618,20 @@ class NodeBackend:
                 return True
         return False
 
-    def descendants(self, pid):
-        """The pids of the process tree rooted at pid (node /proc; N-F23); an empty set if it cannot be read."""
+    def proc_tree(self, pid):
+        """{pid: command name} of the process tree rooted at pid (node /proc; N-F23, N-F34); {} if it cannot be read."""
         try:
-            par = {}
+            par, comm = {}, {}
             for e in os.listdir("/proc"):
                 if e.isdigit():
                     try:
-                        par[int(e)] = int(open(f"/proc/{e}/stat").read().rsplit(")", 1)[1].split()[1])
+                        s = open(f"/proc/{e}/stat").read()
+                        par[int(e)] = int(s.rsplit(")", 1)[1].split()[1])
+                        comm[int(e)] = s[s.index("(") + 1:s.rindex(")")]
                     except (OSError, ValueError, IndexError):
                         pass
         except OSError:
-            return set()
+            return {}
         out, todo = set(), [int(pid)]
         while todo:
             p = todo.pop()
@@ -1514,13 +1639,55 @@ class NodeBackend:
                 continue
             out.add(p)
             todo += [c for c, pp in par.items() if pp == p]
-        return out if len(out) > 1 or int(pid) in par else set()
+        return {p: comm.get(p, "?") for p in out} if len(out) > 1 or int(pid) in par else {}
+
+    def descendants(self, pid):
+        """The pids of the process tree rooted at pid (node /proc; N-F23); an empty set if it cannot be read."""
+        return set(self.proc_tree(pid))
+
+    def cpus_allowed(self, pid):
+        """The CPUs a process may run on (/proc/<pid>/status Cpus_allowed_list), or None (N-F30)."""
+        try:
+            for x in open(f"/proc/{int(pid)}/status"):
+                if x.startswith("Cpus_allowed_list:"):
+                    return parse_cpulist(x.split(":", 1)[1])
+        except (OSError, ValueError):
+            return None
+        return None
+
+    def core_sets(self):
+        """N-F30: two disjoint CPU lists, the first and the second half of the physical cores (lscpu -p=CPU,CORE), for
+        two concurrent 32-rank copies; a STOP if lscpu cannot be read (two copies cannot then be confined)."""
+        try:
+            r = subprocess.run(["lscpu", "-p=CPU,CORE"], capture_output=True, text=True, timeout=60)
+            pairs = [tuple(int(v) for v in x.split(",")[:2]) for x in r.stdout.splitlines()
+                     if x.strip() and not x.startswith("#")]
+        except (OSError, subprocess.SubprocessError, ValueError) as e:
+            raise Stop(f"lscpu failed ({type(e).__name__}): two concurrent copies cannot be given disjoint cores (N-F30)")
+        cores = sorted({c for _, c in pairs})
+        if r.returncode != 0 or len(cores) < 2:
+            raise Stop(f"lscpu gave {len(cores)} physical cores (exit {r.returncode}): no two disjoint core sets (N-F30)")
+        h = len(cores) // 2
+        return [cpulist(sorted(cpu for cpu, c in pairs if c in set(cores[:h]))),
+                cpulist(sorted(cpu for cpu, c in pairs if c in set(cores[h:2 * h])))]
 
     def git_state(self):
+        """N-F32 (round-4 R4-C1-3, D-S0-8): HEAD and cleanliness of the checkout; any git failure (no repository, a
+        copy without .git, git's ownership refusal, no git) is a STOP, never an empty commit read as clean."""
         co = self.node.checkout
-        head = subprocess.run(["git", "-C", co, "rev-parse", "HEAD"], stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
-        dirty = subprocess.run(["git", "-C", co, "status", "--porcelain"], stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
-        return {"head": head, "clean": dirty == ""}
+        try:
+            h = subprocess.run(["git", "-C", co, "rev-parse", "--verify", "HEAD"], stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, universal_newlines=True, timeout=120)
+            s = subprocess.run(["git", "-C", co, "status", "--porcelain"], stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, universal_newlines=True, timeout=600)
+        except (OSError, subprocess.SubprocessError) as e:
+            raise Stop(f"git failed in the checkout ({type(e).__name__}): nothing started (STAGE0 section 8 item 1, N-F32)")
+        head = h.stdout.strip()
+        if h.returncode != 0 or s.returncode != 0 or not re.fullmatch(r"[0-9a-f]{40}", head):
+            raise Stop(f"git failed in the checkout (rev-parse exit {h.returncode}, status exit {s.returncode}, HEAD "
+                       f"{head[:12]!r}): nothing started; the checkout must be a clean git checkout of the S2 commit "
+                       f"(STAGE0 section 8 item 1, N-F32)")
+        return {"head": head, "clean": s.stdout.strip() == ""}
 
     def spawn(self, cmd, *, cwd, log, rc, env=None, pass_fds=()):
         e = dict(os.environ); e.update(env or {})
@@ -1547,7 +1714,92 @@ class NodeBackend:
         return q47.upf_check(self.node.pseudo, reference=reference)
 
     def foundation_check(self):
-        return c46.foundation_check()
+        """Section 5 / STAGE0 section 8 item 3 (round-4 R4-C1-6, N-F35): the foundation file's sha256 (scripts/46
+        foundation_check), then scripts/46 load_mace in a child process (the runner never imports mace): mace-torch
+        0.3.16, float64 parameters on cpu, the resolved file, Z coverage and torch threads are asserted before the first
+        MACE job; no structure is passed to the calculator and nothing is evaluated. A failure is a STOP before the
+        smoke tests and costs no MACE attempt."""
+        rec = c46.foundation_check()
+        if not rec.get("passed"):
+            return rec
+        rec["load"] = self.mace_load()
+        rec["passed"] = bool(rec["load"].get("ok"))
+        return rec
+
+    MACE_LOAD_CODE = ("import importlib.util, json, sys\n"
+                      "s = importlib.util.spec_from_file_location('c46', sys.argv[1])\n"
+                      "m = importlib.util.module_from_spec(s); s.loader.exec_module(m)\n"
+                      "calc, info = m.load_mace(int(sys.argv[2]))\n"
+                      "print('S2-MACE-LOAD ' + json.dumps(info, sort_keys=True, default=str), flush=True)\n")
+
+    def mace_load(self, log=None):
+        """N-F35: scripts/46 load_mace(THREADS) in a child process; its output goes to a log (it may name paths), the
+        record keeps the exit status, the exception name and the path-free info dict of load_mace."""
+        env = dict(os.environ, OMP_NUM_THREADS=str(c46.THREADS), MKL_NUM_THREADS=str(c46.THREADS), OPENBLAS_NUM_THREADS="1")
+        try:
+            p = subprocess.run([self.python, "-c", self.MACE_LOAD_CODE, os.path.join(HERE, "46_s2_cells.py"),
+                                str(c46.THREADS)], cwd=self.node.checkout, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                               universal_newlines=True, timeout=1800, env=env)
+        except (OSError, subprocess.SubprocessError) as e:
+            return {"ok": False, "exit": None, "error": type(e).__name__}
+        if log:
+            try:
+                write_text(p.stdout + p.stderr, log)
+            except OSError:
+                pass
+        info = None
+        for x in p.stdout.splitlines():
+            if x.startswith("S2-MACE-LOAD "):
+                try:
+                    info = json.loads(x[len("S2-MACE-LOAD "):])
+                except ValueError:
+                    info = None
+        err = None
+        if p.returncode != 0:
+            g = re.findall(r"^(\w+(?:Error|Exception)|S2Error)\b", p.stderr, re.M)
+            err = g[-1] if g else "exit without a traceback"
+        keep = ("dtype", "device", "threads", "atomic_numbers_covered", "z_required_ok", "versions", "sha256", "file")
+        return {"ok": p.returncode == 0 and info is not None, "exit": p.returncode, "error": err,
+                "info": {k: info.get(k) for k in keep} if info else None}
+
+    def nodescripts(self):
+        """N-F31: the node-only scripts every pw.x run depends on, by name: the single-point queue and chain (they must
+        equal the checkout's ehpc/node copies), run_qe.sh and the QE profile (recorded in C1, compared in C2-C4), and
+        the committed launcher s2_run_qe.sh used from the checkout."""
+        n = self.node
+        return {"run_qe.sh": n.run_qe, "qe.sh": n.qe_profile, "qe_queue.sh": n.queue, "chain.sh": n.chain,
+                "s2_run_qe.sh": n.s2_run_qe}
+
+    def node_script_expected(self, name):
+        """The bytes a node copy of a committed script must have (the self-test rewrites its paths, _node_scripts)."""
+        return open(os.path.join(self.node.checkout, "ehpc", "node", name), "rb").read()
+
+    def nodescripts_check(self, campaign, reference):
+        """N-F31 (round-4 R4-C1-2): sha256 of every script of nodescripts(); the queue, the chain and the launcher must
+        equal the checkout's ehpc/node copies byte for byte; in C2-C4 every hash must equal the C1 record. Names only,
+        no path, are recorded."""
+        files, problems = {}, []
+        for name, path in self.nodescripts().items():
+            try:
+                raw = open(path, "rb").read()
+            except OSError as e:
+                files[name] = None; problems.append(f"{name} unreadable ({type(e).__name__})"); continue
+            files[name] = {"sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}
+            if name in ("qe_queue.sh", "chain.sh", "s2_run_qe.sh"):
+                try:
+                    exp = self.node_script_expected(name)
+                except OSError:
+                    exp = None
+                files[name]["equal_to_checkout"] = raw == exp
+                if raw != exp:
+                    problems.append(f"{name} differs from the checkout's ehpc/node/{name}")
+        if reference is not None:
+            ref = reference.get("files") or {}
+            for name, v in files.items():
+                if v is None or (ref.get(name) or {}).get("sha256") != v["sha256"]:
+                    problems.append(f"{name} changed since the C1 record")
+        return {"schema": "s2-nodescripts-1", "campaign": campaign, "files": files,
+                "compared_with_c1": reference is not None, "problems": problems, "passed": not problems}
 
     def spot_url(self):
         return spot_url(self.node.checkout, self.node.root)
@@ -1714,6 +1966,8 @@ class Runner:
         # round 3: STOPs held until the free jobs of the phase have run (N-F20); whether CAMPAIGN_STOPPED was written
         # (N-F21); the poller's start (N-F18); a relaunch after a STOP (N-F17)
         self.pending_stop, self.stop_written, self.poller_t0, self.was_stopped = [], False, None, False
+        self.held_labels, self.slots_cache = {}, None                       # round 4: N-F36 (held STOP -> A2 label); N-F30
+        self.resolve_wait, self.tree_full = set(), set()                    # round 4: log-once keys; N-F34
 
     # ---- logging and records
     def log(self, msg):
@@ -1769,6 +2023,11 @@ class Runner:
         r.update({"status": status, "updated": utc(), "commit": self.state.get("commit") if self.state else None,
                   "phases": r.get("phases", {}),
                   "mocked": list(MOCKED), "notes": sorted(NOTES), **kw})
+        if self.state is not None:
+            # round-4 R4-C1-6: the commit this campaign started at, and every later commit change (NODE_FIX, STEP0_FIX)
+            if r.get("start_commit") is None:
+                r["start_commit"] = r.get("commit")
+            r["commit_history"] = list(self.state.get("commit_history") or [])
         c46.dump_public(r, p)
         if self.state is not None:
             self.state.setdefault("campaigns", {})[self.c] = status
@@ -1891,21 +2150,12 @@ class Runner:
 
     def housekeeping(self):
         self.heartbeat()
-        if self.poller is not None and self.poller.poll() is not None:
-            self.log("WARN: the spot poller had ended: restarted"); self.start_poller()
-        nf = os.path.join(self.node.spot, f"notice.{self.boot}")
-        if not self.notice_done and os.path.exists(nf):
-            self.notice_done = True
-            try:
-                nt = float(open(nf).read().split()[1])
-            except (IndexError, ValueError):
-                nt = time.time()
-            self.hold_until = nt + self.be.notice_hold_s
-            self.log(f"spot termination notice recorded: nothing new starts for {self.be.notice_hold_s:.0f} s (N-11); "
-                     f"exit files for every running A2 part")
-            for lab, h in list(self.procs.items()):
-                if h["kind"] == "a2" and h["p"].poll() is None:
-                    self.request_exit(lab, h["dir"], "spot")
+        if self.poller is not None and self.poller.poll() is not None and not (self.shutdown or self.stopping or self.term):
+            # round-4 R4-C1-2: the new poller's first good poll is awaited, with spot_first_s of grace from the restart;
+            # the dead poller's heartbeat is not judged by the staleness rule; no restart once a shutdown or STOP began
+            self.poller_t0 = None
+            self.log("WARN: the spot poller had ended: restarted; its first good poll is awaited (N-F18)"); self.start_poller()
+        self.note_notice()
         if self.shutdown and not self.stopping:
             self.begin_shutdown()
         if self.term and not self.stopping:
@@ -1913,7 +2163,29 @@ class Runner:
         if not self.stopping:
             self.spot_check()                                               # N-F18: a STOP if the endpoint is gone
 
+    def note_notice(self):
+        """N-11: once spot/notice.<boot> exists, nothing new starts for notice_hold_s and every running A2 part gets the
+        'spot' exit file. Called by housekeeping and by held(), so a notice written while one schedule() pass runs its
+        synchronous jobs holds every later launch of that pass (round-4 missed item)."""
+        if self.notice_done or getattr(self, "boot", None) is None:
+            return
+        nf = os.path.join(self.node.spot, f"notice.{self.boot}")
+        if not os.path.exists(nf):
+            return
+        self.notice_done = True
+        try:
+            nt = float(open(nf).read().split()[1])
+        except (OSError, IndexError, ValueError):
+            nt = time.time()
+        self.hold_until = nt + self.be.notice_hold_s
+        self.log(f"spot termination notice recorded: nothing new starts for {self.be.notice_hold_s:.0f} s (N-11); "
+                 f"exit files for every running A2 part")
+        for lab, h in list(self.procs.items()):
+            if h["kind"] == "a2" and h["p"].poll() is None:
+                self.request_exit(lab, h["dir"], "spot")
+
     def held(self):
+        self.note_notice()                                                  # round-4 missed item: within a pass too
         return time.time() < self.hold_until
 
     # ---- STOP (N-D4) and the end
@@ -1942,10 +2214,29 @@ class Runner:
             return
         self.stopping = self.stop_written = True
         self.drop_keep_alive()
+        # N-F36 (round-4 R4-C24-1): every STOP held by the A2 end rule and not yet raised is part of this STOP's reason
+        held = [w for w in self.pending_stop if w not in reason]
+        if held:
+            reason = "; ".join([reason] + held)
         self._guard(self.log, f"STOP: {reason}")
-        self._guard(write_text, f"{utc()} {reason}\n", os.path.join(self.cdir, "CAMPAIGN_STOPPED"))
+        sf = os.path.join(self.cdir, "CAMPAIGN_STOPPED")
+        self._guard(write_text, f"{utc()} {reason}\n", sf)
         if self.state is not None:
             self._guard(self.set_campaign, "stopped", stop_reason=public_text(reason))
+        if os.path.exists(sf):
+            for why in list(self.pending_stop):
+                self._guard(self.mark_stop_raised, why)
+
+    def mark_stop_raised(self, why):
+        """N-F36: the A2 record whose end rule asked for this STOP records it as raised (CAMPAIGN_STOPPED holds it), so
+        an operator's relaunch after that STOP does not raise it again."""
+        lab = self.held_labels.get(why)
+        if not lab:
+            return
+        r = read_json(self.a2_path(lab))
+        if r and (r.get("end_rule") or {}).get("stop") and not r["end_rule"].get("stop_raised"):
+            r["end_rule"]["stop_raised"] = True
+            write_json(r, self.a2_path(lab))
 
     def begin_shutdown(self):
         """N-F10 (round-2 M1): SIGTERM is what the system sends at a reboot or a stop of the node (section 13: a spot
@@ -2357,12 +2648,20 @@ class Runner:
         if j["what"] == "upf":
             ref = read_json(os.path.join(self.node.c("c1"), "upf_check.json")) if self.c != "c1" else None
             r = self.be.upf_check(self.c, ref)
+        elif j["what"] == "nodescripts":
+            # N-F31 (round-4 R4-C1-2): the node-only scripts behind every pw.x run, recorded in C1, compared after
+            ref = read_json(os.path.join(self.node.c("c1"), "nodescripts_check.json")) if self.c != "c1" else None
+            if self.c != "c1" and not (ref or {}).get("passed"):
+                raise Stop("no passed c1/nodescripts_check.json to compare the node scripts with (N-F31)")
+            r = self.be.nodescripts_check(self.c, ref)
         else:
             r = self.be.foundation_check()
         c46.dump_public(r, os.path.join(self.cdir, f"{j['what']}_check.json"))
-        self.log(f"check {j['what']}: {'passed' if r.get('passed') else 'FAILED'}")
+        self.log(f"check {j['what']}: {'passed' if r.get('passed') else 'FAILED'}"
+                 + (f" ({'; '.join(r.get('problems') or [])[:300]})" if r.get("problems") else ""))
         if not r.get("passed"):
-            raise Stop(f"the {j['what']} check failed: the campaign stops (sections 5, 6)")
+            raise Stop(f"the {j['what']} check failed: the campaign stops (sections 5, 6, 16; N-F31, N-F35)"
+                       + (f": {'; '.join(r.get('problems') or [])[:300]}" if r.get("problems") else ""))
 
     def gate_marker(self, j):
         """The runner's record that a graph gate job was applied (outside gates/, which holds only scripts/49 files)."""
@@ -2554,7 +2853,7 @@ class Runner:
             return "skipped" if ds == "blocked" else "pending"
         a = att[-1]
         if a.get("ended"):
-            return "missing" if len(att) > MACE_RERUNS else "pending"
+            return "missing" if self.mace_counted(att) > MACE_RERUNS else "pending"
         h = self.procs.get(wid)
         if h is not None and h["p"].poll() is None:
             self.mace_watch(j, a)
@@ -2599,10 +2898,10 @@ class Runner:
             raise Stop(f"{what}: {os.path.basename(out)} not written for {idle / 3600.0:.1f} h while its pw.x lives "
                        f"(a hung run, N-F13): end it, then resolve")
 
-    def cause_of(self, boot, pid, task=None, since=None):
+    def cause_of(self, boot, pid, task=None, since=None, pids=None, exclude=None):
         if boot != self.boot and os.path.exists(os.path.join(self.node.spot, f"notice.{boot}")):
             return "spot-notice"
-        if self.be.oom(boot, pid, task=task, since=since):
+        if self.be.oom(boot, pid, task=task, since=since, pids=pids, exclude=exclude):
             return "oom"
         return "node-loss" if boot != self.boot else "unknown"
 
@@ -2623,10 +2922,17 @@ class Runner:
             write_text(f"{utc()} {note}\n", os.path.join(self.L.cell_dir(self.c, wid), "MISSING"))
             return "missing"
         if word == "rerun":
-            return self.mace_interrupted(wid, att, f"operator: {note}"[:120])
+            # N-F33 (round-4 R4-C1-4): the operator's rerun after a STOP for a human and a committed fix (an exception,
+            # N-9) is not one of the two reruns that section 13 allows after a reclaim, node loss, OOM or wall time
+            return self.mace_interrupted(wid, att, f"operator: {note}"[:120], counts=False)
         raise Stop(f"{wid}: RESOLVE must hold 'rerun <note>' or 'missing <note>'")
 
-    def mace_interrupted(self, wid, att, cause):
+    @staticmethod
+    def mace_counted(att):
+        """N-F33: the ended attempts that count against MACE_RERUNS (every interruption; not an operator's rerun)."""
+        return sum(1 for a in att if a.get("ended") and a.get("counts", True))
+
+    def mace_interrupted(self, wid, att, cause, counts=True):
         d = self.L.cell_dir(self.c, wid)
         a = att[-1]
         dst = os.path.join(d, "discarded", f"att{a['n']}")
@@ -2637,11 +2943,12 @@ class Runner:
         for f in os.listdir(d):
             if f not in keep and not f.startswith("RESOLVE"):
                 shutil.move(os.path.join(d, f), os.path.join(dst, f))
-        a.update({"ended": utc(), "cause": cause})
+        a.update({"ended": utc(), "cause": cause, "counts": bool(counts)})
         write_json(att, self.attempts_path(wid))
         append_jsonl(os.path.join(self.cdir, "interruptions.jsonl"),
-                     {"label": wid, "kind": "mace", "attempt": a["n"], "time": utc(), "boot": a["boot"], "cause": cause})
-        left = len(att) <= MACE_RERUNS
+                     {"label": wid, "kind": "mace", "attempt": a["n"], "time": utc(), "boot": a["boot"], "cause": cause,
+                      "counts": bool(counts)})
+        left = self.mace_counted(att) <= MACE_RERUNS
         self.log(f"{wid}: attempt {a['n']} interrupted ({cause}); " + ("rerun from the start" if left else "no rerun left: missing"))
         return "pending" if left else "missing"
 
@@ -2871,6 +3178,11 @@ class Runner:
         for x in os.listdir(d):
             if x != "discarded" and not x.startswith("RESOLVE"):
                 shutil.move(os.path.join(d, x), os.path.join(dst, x))
+        # N-F33 (round-4 R4-C1-4): the attempts before the resolution go aside with it, so the rerun has the two
+        # reruns after an interruption that N-D10 gives (the count reads discarded/p<n>_* only)
+        for x in os.listdir(os.path.join(d, "discarded")):
+            if not x.startswith("resolved_"):
+                shutil.move(os.path.join(d, "discarded", x), os.path.join(dst, x))
         recs = {"smoke": ("smoke.json", "smoke2.json"), "smoke2": ("smoke2.json", "smoke.json"),
                 "tp": ("throughput.json", "gates_applied/gate_throughput.json", "gates_applied/gate_throughput.gate.json",
                        "gates_applied/gate_throughput.inputs.json")}[j["phase"]]
@@ -2884,11 +3196,29 @@ class Runner:
                  f"{os.path.relpath(dst, self.cdir)} (N-F16)")
         return "pending"
 
+    def pw_live(self, d, label):
+        """True while a part of this pw.x reference run is alive: a handle of this runner, or a launch of this boot
+        without an exit status whose pid lives (round-4 R4-C1-4)."""
+        if any(h["kind"] == "pw" and h["dir"] == d and h["p"].poll() is None for h in self.procs.values()):
+            return True
+        for lf in glob.glob(os.path.join(d, f"{label}.p*.launch.json")):
+            L = read_json(lf) or {}
+            if not os.path.exists(lf[:-len(".launch.json")] + ".rc") and L.get("boot") == self.boot and \
+                    self.be.alive(L.get("pid")):
+                return True
+        return False
+
     def pw_status(self, j, ds):
         d = self.pw_dir(j)
         f = self.part_files(d, j["label"], j["part"])
         if os.path.exists(os.path.join(d, "RESOLVE")):
-            return self.pw_resolve(j, d)
+            # round-4 R4-C1-4: a RESOLVE is read only once no part of the run lives (it is written after a STOP); a run
+            # that is alive keeps 'running', its files stay where they are and RESOLVE waits for its end
+            if not self.pw_live(d, j["label"]):
+                return self.pw_resolve(j, d)
+            if d not in self.resolve_wait:
+                self.resolve_wait.add(d)
+                self.log(f"{j['label']}: RESOLVE waits for the running part to end (R4-C1-4)")
         if os.path.exists(f["done"]):
             r = read_json(f["done"])
             return "done" if r.get("ok") else r.get("status", "missing")
@@ -2902,6 +3232,7 @@ class Runner:
         if (h is not None and h["p"].poll() is None) or (h is None and not rc_exists and L["boot"] == self.boot
                                                           and self.be.alive(L.get("pid"))):
             self.out_watch(j["label"], f["out"])                            # N-F13
+            self.watch_tree(j["id"], f["launch"], j["label"], int(j["ranks"]))      # N-F34
             if j.get("exit_after") and not os.path.exists(os.path.join(d, "exit_request.json")) and os.path.exists(f["out"]):
                 r = self.read_out("parse_counts", j["label"], "counts", q47.parse_counts, f["out"], ranks=j["ranks"])
                 if (r.get("n_config") or 0) >= j["exit_after"]:
@@ -2918,7 +3249,10 @@ class Runner:
             r = self.read_out("parse_counts", j["label"], "counts", q47.parse_counts, f["out"], ranks=j["ranks"])
         t0 = L.get("started_epoch"); t1 = os.path.getmtime(f["rc"]) if rc_exists else None
         rec = {"label": j["label"], "part": j["part"], "ranks": j["ranks"], "counts": r,
-               "wall_s": (t1 - t0) if (t0 and t1) else None, "energies_read": False}
+               "wall_s": (t1 - t0) if (t0 and t1) else None, "energies_read": False,
+               # N-F30: the core set asked for, the CPUs its pw.x ranks were allowed (node /proc) and the interval, so
+               # that the 2x32 rate is computed only for two copies that ran together on disjoint cores
+               "cpuset": L.get("cpuset"), "affinity": L.get("affinity"), "interval": [t0, t1] if (t0 and t1) else None}
         if r.get("job_done"):
             if j.get("exit_after"):
                 tmp = os.path.join(d, "tmp")
@@ -2937,14 +3271,18 @@ class Runner:
         n = len(glob.glob(os.path.join(d, "discarded", f"p{j['part']}_*"))) + 1
         dst = os.path.join(d, "discarded", f"p{j['part']}_{n}")
         os.makedirs(dst, exist_ok=True)
+        cause = self.cause_of(L["boot"], child_pid(f["rc"]) or L.get("pid"), since=t0,
+                              **self.oom_args(L, j["label"], L["boot"]))           # N-F34 (round-4 R4-C1-5)
         for k in ("out", "launch", "rc", "log"):
             if os.path.exists(f[k]):
                 shutil.move(f[k], dst)
+        if os.path.exists(f["rc"] + ".pid"):
+            shutil.move(f["rc"] + ".pid", dst)
         if os.path.isdir(os.path.join(d, "tmp")) and j["part"] == 1:
             shutil.move(os.path.join(d, "tmp"), os.path.join(dst, "tmp"))
         append_jsonl(os.path.join(self.cdir, "interruptions.jsonl"),
                      {"label": f"{j['label']}.p{j['part']}", "kind": "pw", "time": utc(), "boot": L["boot"],
-                      "cause": self.cause_of(L["boot"], L.get("pid"))})
+                      "cause": cause})
         if n > PW_RERUNS:
             rec.update({"ok": False, "status": "missing"})
             write_json(rec, f["done"])
@@ -2966,67 +3304,208 @@ class Runner:
                         "usable": True, "repeats_last": rep}
         return {"usable": False, "job_done": None, "reason": "the restart part does not continue part 1 either way"}
 
-    def launch_pw(self, j):
-        if self.held() or not self.chain_lock_ok() or \
-                not self.cap_ok(j, "smoke" if j["phase"].startswith("smoke") else "throughput"):
-            return
+    def smoke_pair_check(self, before):
+        """Round-4 R4-C1-5 (X-3, D-S0-6, D-S0-8): the smoke tests n1 and n3 must both have JOB DONE and differ by two
+        configurations (an affine nstep mapping of slope 1) before the exit/restart test and the throughput row run;
+        otherwise a STOP naming the smoke tests, while C1 can still be resumed (NODE_FIX, RESOLVE)."""
+        rd = lambda lab: read_json(self.part_files(os.path.join(self.cdir, "smoke", lab), lab, 1)["done"]) or {}  # noqa: E731
+        n1, n3 = (rd(x).get("counts") or {} for x in ("s2smoke_ref232_n1", "s2smoke_ref232_n3"))
+        fix = ("after a dated, committed fix if one is needed (c1/NODE_FIX, N-F17) write smoke/<run>/RESOLVE 'rerun "
+               "<dated note>' for each run to repeat and relaunch (N-F16)")
+        if not (n1.get("job_done") and n3.get("job_done")):
+            raise Stop(f"pw.x smoke tests n1/n3 incomplete: no nstep mapping (section 16, D-S0-8) before {before}: see "
+                       f"smoke/ and smoke.json; {fix}")
+        if int(n3.get("n_config") or 0) - int(n1.get("n_config") or 0) != 2:
+            raise Stop(f"pw.x smoke tests n1/n3 not affine with slope 1 (n1 {n1.get('n_config')}, n3 {n3.get('n_config')} "
+                       f"configurations; X-3, D-S0-6) before {before}: see smoke/; {fix}")
+
+    def pw_prepare(self, j):
+        """The input of one pw.x reference part, written once (False when the part is recorded skipped instead)."""
         d = self.pw_dir(j)
         os.makedirs(d, exist_ok=True)
         f = self.part_files(d, j["label"], j["part"])
-        if not os.path.exists(f["in"]):
-            if j.get("restart_of"):
-                p1 = self.part_files(d, j["label"], j["restart_of"])
-                d1 = read_json(p1["done"]) or {}
-                n3 = read_json(self.part_files(os.path.join(self.cdir, "smoke", "s2smoke_ref232_n3"),
-                                               "s2smoke_ref232_n3", 1)["done"]) or {}
-                n1 = read_json(self.part_files(os.path.join(self.cdir, "smoke", "s2smoke_ref232_n1"),
-                                               "s2smoke_ref232_n1", 1)["done"]) or {}
-                if (d1.get("counts") or {}).get("end") != "exit_stop":
-                    write_json({"ok": False, "status": "skipped", "reason": "part 1 did not stop by the exit file"}, f["done"])
-                    return
-                c0 = n1["counts"]["n_config"] - 1
-                nst = n3["counts"]["n_config"] - d1["counts"]["n_config"] - c0
-                q47.restart_input(p1["in"], f["in"], max(1, nst))
-            else:
-                vac, free = self.ref_cells()
-                nstep = j.get("nstep")
-                if nstep is None:
-                    sm = read_json(os.path.join(self.cdir, "smoke.json")) or {}
-                    c0 = (sm.get("mapping") or {}).get("c0")
-                    if c0 is None:
-                        raise Stop("pw.x smoke tests n1/n3 incomplete: no nstep mapping (section 16, D-S0-8): see "
-                                   "smoke/ and smoke.json; after a dated, committed fix (c1/NODE_FIX, N-F17) write "
-                                   "smoke/<run>/RESOLVE 'rerun <dated note>' for each failed run and relaunch (N-F16)")
-                    nstep = max(1, j["n_config"] - int(c0))
-                q47.write_input(vac, j["label"], d, kind="relax", free=free, nstep=nstep, ranks=j["ranks"], campaign=self.c,
-                                cell={"work_id": None, "reference": "ref232", "region": "Pb136-like"})
-                os.replace(os.path.join(d, f"{j['label']}.in"), f["in"])
-        self._spawn_part(j["id"], d, j["label"], j["part"], j["ranks"], "pw")
+        if j["phase"] == "smoke" and j.get("exit_after") and j["part"] == 1:
+            self.smoke_pair_check("the exit/restart test")                  # R4-C1-5
+        if os.path.exists(f["in"]):
+            return True
+        if j.get("restart_of"):
+            p1 = self.part_files(d, j["label"], j["restart_of"])
+            d1 = read_json(p1["done"]) or {}
+            n3 = read_json(self.part_files(os.path.join(self.cdir, "smoke", "s2smoke_ref232_n3"),
+                                           "s2smoke_ref232_n3", 1)["done"]) or {}
+            n1 = read_json(self.part_files(os.path.join(self.cdir, "smoke", "s2smoke_ref232_n1"),
+                                           "s2smoke_ref232_n1", 1)["done"]) or {}
+            if (d1.get("counts") or {}).get("end") != "exit_stop":
+                write_json({"ok": False, "status": "skipped", "reason": "part 1 did not stop by the exit file"}, f["done"])
+                return False
+            c0 = n1["counts"]["n_config"] - 1
+            nst = n3["counts"]["n_config"] - d1["counts"]["n_config"] - c0
+            q47.restart_input(p1["in"], f["in"], max(1, nst))
+            return True
+        vac, free = self.ref_cells()
+        nstep = j.get("nstep")
+        if nstep is None:
+            sm = read_json(os.path.join(self.cdir, "smoke.json")) or {}
+            mp = sm.get("mapping") or {}
+            if mp.get("c0") is None:
+                raise Stop("pw.x smoke tests n1/n3 incomplete: no nstep mapping (section 16, D-S0-8): see "
+                           "smoke/ and smoke.json; after a dated, committed fix (c1/NODE_FIX, N-F17) write "
+                           "smoke/<run>/RESOLVE 'rerun <dated note>' for each failed run and relaunch (N-F16)")
+            if not mp.get("affine_slope_1"):
+                raise Stop("the smoke-test mapping in smoke.json is not affine with slope 1 (X-3, D-S0-6; R4-C1-5): see "
+                           "smoke/ and smoke.json; write smoke/<run>/RESOLVE 'rerun <dated note>' for each run to repeat "
+                           "(after a dated, committed fix if one is needed, c1/NODE_FIX) and relaunch (N-F16)")
+            nstep = max(1, j["n_config"] - int(mp["c0"]))
+        q47.write_input(vac, j["label"], d, kind="relax", free=free, nstep=nstep, ranks=j["ranks"], campaign=self.c,
+                        cell={"work_id": None, "reference": "ref232", "region": "Pb136-like"})
+        os.replace(os.path.join(d, f"{j['label']}.in"), f["in"])
+        return True
 
-    def _spawn_part(self, key, d, label, n, ranks, kind):
+    def launch_pw(self, j):
+        h = self.procs.get(j["id"])
+        if h is not None and h["p"].poll() is None:
+            return                                                          # started with its pair in this pass (N-F30)
+        if self.held() or not self.chain_lock_ok() or \
+                not self.cap_ok(j, "smoke" if j["phase"].startswith("smoke") else "throughput"):
+            return
+        if j["label"] in TP_PAIR:
+            return self.launch_tp_pair(j)
+        if self.pw_prepare(j):
+            self._spawn_part(j["id"], self.pw_dir(j), j["label"], j["part"], j["ranks"], "pw")
+
+    def launch_tp_pair(self, j):
+        """N-F30 (round-4 missed item): the two 32-rank copies of the throughput row always start together, each on its
+        own half of the cores. A copy left alone after an interruption of the other waits while the other lives; a
+        copy that completed without the other beside it is moved aside, its measurement not used (discarded/
+        paired_<t>, not one of its reruns), and both run again; with the other copy missing no pair can be measured and
+        this one is skipped."""
+        other = TP_PAIR[1 - TP_PAIR.index(j["label"])]
+        jo = self.G["jobs_by_id"]["pw:" + other]
+        do = self.pw_dir(jo)
+        fo = self.part_files(do, other, 1)
+        if self.pw_live(do, other):
+            if ("pair", j["id"]) not in self.resolve_wait:
+                self.resolve_wait.add(("pair", j["id"]))
+                self.log(f"{j['label']}: waits for {other} to end, so that the two copies run together (N-F30)")
+            return
+        ro = read_json(fo["done"]) if os.path.exists(fo["done"]) else None
+        if ro is not None and not ro.get("ok"):
+            f = self.part_files(self.pw_dir(j), j["label"], 1)
+            os.makedirs(self.pw_dir(j), exist_ok=True)
+            write_json({"label": j["label"], "part": 1, "ok": False, "status": "skipped", "energies_read": False,
+                        "reason": f"{other} is {ro.get('status', 'missing')}: no concurrent pair (section 16, N-F30)"},
+                       f["done"])
+            self.log(f"{j['label']}: skipped ({other} {ro.get('status', 'missing')}; N-F30)")
+            return
+        if ro is not None:
+            dst = os.path.join(do, "discarded", f"paired_{int(time.time())}")
+            os.makedirs(dst, exist_ok=True)
+            for k in ("out", "launch", "rc", "log", "done"):
+                if os.path.exists(fo[k]):
+                    shutil.move(fo[k], dst)
+            if os.path.exists(fo["rc"] + ".pid"):
+                shutil.move(fo["rc"] + ".pid", dst)
+            if os.path.isdir(os.path.join(do, "tmp")):
+                shutil.move(os.path.join(do, "tmp"), os.path.join(dst, "tmp"))
+            self.cache.pop(jo["id"], None)
+            self.log(f"{other}: completed without {j['label']} beside it: moved aside, its measurement not used "
+                     f"({os.path.relpath(dst, self.cdir)}); both copies run again together (N-F30)")
+        elif os.path.exists(fo["launch"]):
+            return                                                          # its end is judged by pw_status first
+        if not self.cap_ok(jo, "throughput"):
+            return
+        for jj in (j, jo):
+            if self.pw_prepare(jj):
+                self._spawn_part(jj["id"], self.pw_dir(jj), jj["label"], jj["part"], jj["ranks"], "pw",
+                                 cpuset=self.free_core_set())
+
+    def free_core_set(self):
+        """N-F30: (slot, CPU list) of a half of the cores that no running pw.x copy of this runner uses. A runner
+        never inherits running copies from another (the S2 lock), so its own handles are the whole truth."""
+        if self.slots_cache is None:
+            self.slots_cache = self.be.core_sets()
+        busy = {h.get("slot") for h in self.procs.values() if h["kind"] in ("pw", "a2") and h["p"].poll() is None}
+        for i, cs in enumerate(self.slots_cache):
+            if i not in busy:
+                return i, cs
+        raise Stop("no free core set for another concurrent pw.x copy (N-F30)")
+
+    def _spawn_part(self, key, d, label, n, ranks, kind, cpuset=None):
+        """Every pw.x part outside the queue runs through the committed launcher ehpc/node/s2_run_qe.sh (N-F30): with
+        cpuset (slot, CPU list) the copy is confined to those cores (two concurrent copies), else bound as run_qe.sh."""
         f = self.part_files(d, label, n)
         ex = os.path.join(d, "tmp", f"{label}.EXIT")
         if os.path.exists(ex):
             os.remove(ex)                                                   # a restart must not stop at once
         if os.path.exists(os.path.join(d, "exit_request.json")):
             os.replace(os.path.join(d, "exit_request.json"), os.path.join(d, f"exit_request.p{n - 1}.json"))
-        write_json({"boot": self.boot, "started": utc(), "started_epoch": time.time(), "ranks": ranks, "pid": None}, f["launch"])
+        slot, cs = cpuset if cpuset else (None, None)
+        write_json({"boot": self.boot, "started": utc(), "started_epoch": time.time(), "ranks": ranks, "pid": None,
+                    "cpuset": cs, "slot": slot}, f["launch"])
         if self.chainfd is None:
             raise Stop(f"{label}: pw.x outside the queue without the global chain lock (N-6)")
-        p = self.be.spawn([self.node.run_qe, os.path.basename(f["in"]), str(ranks), "pw.x"], cwd=d, log=f["log"], rc=f["rc"],
-                          pass_fds=(self.lockfd, self.chainfd))
+        p = self.be.spawn([self.node.s2_run_qe, os.path.basename(f["in"]), str(ranks), "pw.x"], cwd=d, log=f["log"],
+                          rc=f["rc"], env={"CPUSET": cs or ""}, pass_fds=(self.lockfd, self.chainfd))
         L = read_json(f["launch"]); L["pid"] = p.pid; write_json(L, f["launch"])
-        self.procs[key] = {"p": p, "kind": kind, "dir": d}
-        self.log(f"pw.x {label}.p{n} started at {ranks} ranks (pid {p.pid})")
+        self.procs[key] = {"p": p, "kind": kind, "dir": d, "slot": slot}
+        self.log(f"pw.x {label}.p{n} started at {ranks} ranks (pid {p.pid})" + (f" on cores {cs}" if cs else ""))
 
     def request_exit(self, label, d, reason):
-        """Sections 13, 16: the reason is recorded (fsynced) before <prefix>.EXIT is created in the outdir."""
-        if os.path.exists(os.path.join(d, "exit_request.json")):
-            return
-        write_json({"reason": reason, "time": utc()}, os.path.join(d, "exit_request.json"))
+        """Sections 13, 16: the reason is recorded (fsynced) before <prefix>.EXIT is created in the outdir. A gate's
+        request replaces an earlier 'cap' or 'spot' one (round-4 missed item, N-F37): a running partner that a stopping
+        gate stops is killed and its output discarded unread, whatever exit it was already asked for."""
+        rq = os.path.join(d, "exit_request.json")
+        if os.path.exists(rq):
+            old = read_json(rq) or {}
+            if reason != "gate" or old.get("reason") == "gate":
+                return
+            write_json({"reason": "gate", "prior": old.get("reason"), "time": utc()}, rq)
+        else:
+            write_json({"reason": reason, "time": utc()}, rq)
         os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
-        write_text(f"{reason}\n", os.path.join(d, "tmp", f"{label}.EXIT"))
+        ex = os.path.join(d, "tmp", f"{label}.EXIT")
+        if not os.path.exists(ex):
+            write_text(f"{reason}\n", ex)
         self.log(f"{label}: exit file created ({reason})")
+
+    # ---- process trees and OOM evidence (N-F23, N-F34)
+    def watch_tree(self, key, launch_file, lab, ranks):
+        """N-F34 (round-4 R4-C24-2, R4-C1-5): the running part's process tree is recorded at every tick until its
+        pw.x ranks are all in it, then every counts_every_s."""
+        if key in self.tree_full and time.time() - self.last_counts.get(("tree", key), 0) < self.be.counts_every_s:
+            return
+        self.last_counts[("tree", key)] = time.time()
+        if self.record_tree(lab, launch_file) >= ranks:
+            self.tree_full.add(key)
+
+    def record_tree(self, lab, launch_file):
+        """N-F23, N-F34: the pids of a running part's process tree (descendants of its wrapper, node /proc), the pw.x
+        ranks among them and the CPUs those ranks may use, added to its launch record and to a2_pids.json. Returns the
+        number of pw.x ranks recorded."""
+        L = read_json(launch_file)
+        if not L or not L.get("pid"):
+            return 0
+        tree = self.be.proc_tree(L["pid"])
+        pw = {p for p, c in tree.items() if c == "pw.x"}
+        if tree and (not set(tree) <= set(L.get("pids") or []) or not pw <= set(L.get("pw_pids") or [])):
+            L["pids"] = sorted(set(L.get("pids") or []) | set(tree))
+            L["pw_pids"] = sorted(set(L.get("pw_pids") or []) | pw)
+            aff = set()
+            for p in pw:
+                aff |= self.be.cpus_allowed(p) or set()
+            if aff:
+                L["affinity"] = cpulist(aff | parse_cpulist(L.get("affinity") or ""))
+            write_json(L, launch_file)
+            self.a2_note_pids(lab, tree)
+        return len(L.get("pw_pids") or [])
+
+    def oom_args(self, L, lab, boot):
+        """N-F23 as revised in round 4 (R4-C24-2): with pw.x ranks in the recorded tree, an OOM kill is the part's only
+        for one of its own recorded pids; without them (no tree, or only the wrapper, run_qe.sh and mpirun recorded) the
+        pw.x task test applies after the part's start, excluding every pid recorded for another part in that boot."""
+        if L.get("pw_pids"):
+            return {"pids": set(L.get("pids") or [])}
+        return {"task": "pw.x", "exclude": self.a2_other_pids(lab, boot)}
 
     def smoke_record(self, label="s2smoke_ref232_rst", base=None):
         sd = os.path.join(self.cdir, "smoke")
@@ -3071,15 +3550,18 @@ class Runner:
         for x in ("np48", "np64", "np32a", "np32b"):
             lab = f"s2tp_ref232_{x}"
             r = read_json(self.part_files(os.path.join(td, lab), lab, 1)["done"]) or {}
-            runs[x] = {"n_config": (r.get("counts") or {}).get("n_config"), "wall_s": r.get("wall_s"), "ok": bool(r.get("ok"))}
+            runs[x] = {"n_config": (r.get("counts") or {}).get("n_config"), "wall_s": r.get("wall_s"), "ok": bool(r.get("ok")),
+                       "cpuset": r.get("cpuset"), "affinity": r.get("affinity"), "interval": r.get("interval")}
         rate = {}
         for k, x in (("48", "np48"), ("64", "np64")):
             rate[k] = runs[x]["n_config"] / (runs[x]["wall_s"] / 3600.0) if runs[x]["ok"] and runs[x]["wall_s"] else None
         a, b = runs["np32a"], runs["np32b"]
+        pair = pair_check(a, b)
         rate["2x32"] = ((a["n_config"] + b["n_config"]) / (max(a["wall_s"], b["wall_s"]) / 3600.0)
-                        if a["ok"] and b["ok"] and a["wall_s"] and b["wall_s"] else None)
-        return {"schema": "s2-throughput-1", "runs": runs, "rate_config_per_node_h": rate,
-                "rule": ">= 1.15 x rate(48), else 48 (the choice is the throughput gate's, scripts/49)", "energies_read": False}
+                        if a["ok"] and b["ok"] and a["wall_s"] and b["wall_s"] and pair["valid"] else None)
+        return {"schema": "s2-throughput-1", "runs": runs, "rate_config_per_node_h": rate, "pair": pair,
+                "rule": ">= 1.15 x rate(48), else 48 (the choice is the throughput gate's, scripts/49); the 2x32 rate "
+                        "only for two copies that ran together on disjoint cores (N-F30)", "energies_read": False}
 
     # ---- A2 relaxations (sections 11, 13; I-D1 ... I-D6)
     def a2_checks(self, d, label):
@@ -3120,6 +3602,8 @@ class Runner:
         st = r.get("status")
         m = {"complete": "done", "missing": "missing", "killed_by_gate": "killed_by_gate",
              "not_run_gate": "not_run", "not_started_cap": "not_started_cap"}
+        if st == "complete":
+            self.hold_from_record(r)                                        # N-F36: a STOP not yet raised
         if st in m:
             return m[st]
         h = self.procs.get(j["label"])
@@ -3146,12 +3630,14 @@ class Runner:
     def a2_monitor(self, j):
         """While a part runs: configuration counts only; the exit file once k = 200 has completed (section 13)."""
         lab = j["label"]
+        r = read_json(self.a2_path(lab))
+        if r and r.get("parts"):                                            # N-F23, N-F34: every tick until complete
+            self.watch_tree(j["id"], self.part_files(self.L.a2_dir(self.c, lab), lab, r["parts"][-1]["n"])["launch"], lab,
+                            int((r.get("layout") or {}).get("ranks") or 1))
         t = time.time()
         if t - self.last_counts.get(lab, 0) < self.be.counts_every_s:
             return
         self.last_counts[lab] = t
-        r = read_json(self.a2_path(lab))
-        self.a2_record_pids(lab, r)                                         # N-F23
         outs = self.a2_outputs(lab, r)
         if not outs:
             return
@@ -3167,18 +3653,10 @@ class Runner:
             self.request_exit(lab, self.L.a2_dir(self.c, lab), "cap")
 
     def a2_record_pids(self, lab, r):
-        """N-F23: the pids of a running part's process tree, added to its launch record."""
+        """N-F23: the pids of a running part's process tree (with its pw.x ranks, N-F34), added to its launch record."""
         if not r or not r.get("parts"):
-            return
-        f = self.part_files(self.L.a2_dir(self.c, lab), lab, r["parts"][-1]["n"])["launch"]
-        L = read_json(f)
-        if not L or not L.get("pid"):
-            return
-        got = self.be.descendants(L["pid"])
-        if got and not got <= set(L.get("pids") or []):
-            L["pids"] = sorted(set(L.get("pids") or []) | got)
-            write_json(L, f)
-            self.a2_note_pids(lab, got)
+            return 0
+        return self.record_tree(lab, self.part_files(self.L.a2_dir(self.c, lab), lab, r["parts"][-1]["n"])["launch"])
 
     def a2_note_pids(self, lab, pids):
         """N-F23: the campaign's map label -> boot -> recorded pids (a2_pids.json; it survives a rerun's moves)."""
@@ -3189,10 +3667,10 @@ class Runner:
             m.setdefault(lab, {})[self.boot] = sorted(cur | {int(x) for x in pids})
             write_json(m, p)
 
-    def a2_other_pids(self, lab):
-        """N-F23: the pids recorded in this boot for every other A2 relaxation (the other copy's tree)."""
+    def a2_other_pids(self, lab, boot=None):
+        """N-F23: the pids recorded in that boot (default this one) for every other part (the other copy's tree)."""
         m = read_json(os.path.join(self.cdir, "a2_pids.json"), {}) or {}
-        return {int(x) for k, v in m.items() if k != lab for x in (v.get(self.boot) or [])}
+        return {int(x) for k, v in m.items() if k != lab for x in (v.get(boot or self.boot) or [])}
 
     def a2_ended(self, j, r, p, L):
         lab = j["label"]
@@ -3225,9 +3703,7 @@ class Runner:
             # reclaim nor a node loss; only an OOM kill of the part's pw.x is an interruption (section 13). Anything
             # else (a QE error on a rank whose output is not written, a crash) may be an 'other end without QE
             # convergence' (section 11: not rerun): a human decides; nothing is rerun automatically
-            mine = set(L.get("pids") or [])
-            hit = self.be.oom(self.boot, None, pids=mine, since=since) if mine else \
-                self.be.oom(self.boot, None, task="pw.x", since=since, exclude=self.a2_other_pids(lab))   # N-F23
+            hit = self.be.oom(self.boot, None, since=since, **self.oom_args(L, lab, self.boot))   # N-F23 (round 4)
             if not hit:
                 rcf = self.part_files(d, lab, p["n"])["rc"]
                 rcv = open(rcf).read().split()[0] if os.path.exists(rcf) else None
@@ -3239,7 +3715,7 @@ class Runner:
             cause = "oom"
         else:
             cause = "spot-notice" if (req and req["reason"] == "spot") else \
-                self.cause_of(L["boot"], None, task="pw.x", since=since)
+                self.cause_of(L["boot"], None, since=since, **self.oom_args(L, lab, L["boot"]))
         r["interruptions"].append({"k": k_last, "time": utc(), "boot": L["boot"], "cause": cause, "part": p["n"]})
         append_jsonl(os.path.join(self.cdir, "interruptions.jsonl"),
                      {"label": lab, "kind": "a2", "k": k_last, "time": utc(), "boot": L["boot"], "cause": cause})
@@ -3330,7 +3806,8 @@ class Runner:
         r.update({"status": "complete", "n_config": int(rel.get("n_config") or 0), "k_last": rel.get("k_last"),
                   "qe_converged": er["outcome"] == "accepted_converged", "converged_at_k": rel.get("converged_at_k"),
                   "end_rule": {"outcome": er["outcome"], "dF_200_180_meV": er.get("dF_200_180_meV"),
-                               "end": er.get("end"), "stop": bool(er.get("stop")), "reason": er.get("reason")},
+                               "end": er.get("end"), "stop": bool(er.get("stop")), "reason": er.get("reason"),
+                               **({"stop_raised": False} if er.get("stop") else {})},       # N-F36
                   "wall_h": sum(walls) / 3600.0,
                   "min_per_config": (sum(walls) / 60.0 / max(1, int(rel.get("n_config") or 1)))})
         if rel.get("usable") is not False and rel.get("k_last") is not None:
@@ -3342,12 +3819,26 @@ class Runner:
         self.log(f"{lab}: complete, {r['n_config']} configurations, end rule {er['outcome']}")
         if er.get("stop"):
             # N-F20 (round-3 R3-1): the STOP is held until the gates on ended relaxations have applied (a gate that
-            # stops A2 puts the exit file on a running partner at once); nothing costly starts meanwhile
-            why = f"{lab}: {er.get('reason') or 'the end rule stops the campaign'} (I-48)"
-            if why not in self.pending_stop:
-                self.pending_stop.append(why)
-                self.log(f"STOP held (N-F20): {why}; the gates and checks ready now run first")
+            # stops A2 puts the exit file on a running partner at once); nothing costly starts meanwhile. N-F36 (round
+            # 4): the record says stop_raised false until CAMPAIGN_STOPPED holds it, so a shutdown or another STOP in
+            # the hold cannot lose it
+            self.hold_from_record(r)
         return "done"
+
+    def held_reason(self, r):
+        er = r.get("end_rule") or {}
+        return f"{r['label']}: {er.get('reason') or 'the end rule stops the campaign'} (I-48)"
+
+    def hold_from_record(self, r):
+        """N-F20, N-F36: a complete A2 record whose end rule asked for a STOP not yet raised holds that STOP."""
+        er = r.get("end_rule") or {}
+        if not (er.get("stop") and er.get("stop_raised") is False):
+            return
+        why = self.held_reason(r)
+        self.held_labels[why] = r["label"]
+        if why not in self.pending_stop:
+            self.pending_stop.append(why)
+            self.log(f"STOP held (N-F20): {why}; the gates and checks ready now run first")
 
     def a2_start_atoms(self, j):
         """The A2 start: the S2-relaxed host for host_R, else the A1 relaxed cell (section 11); the reference vacancy
@@ -3476,14 +3967,19 @@ class Runner:
         if self.a2_stopped():
             for j in a2:
                 if st[j["id"]] == "running":
-                    d = self.L.a2_dir(self.c, j["label"])
-                    if not os.path.exists(os.path.join(d, "exit_request.json")):
-                        self.request_exit(j["label"], d, "gate")
+                    # a 'cap' or 'spot' request is replaced by the gate's (round-4 missed item, N-F37)
+                    self.request_exit(j["label"], self.L.a2_dir(self.c, j["label"]), "gate")
                 elif st[j["id"]] == "pending":
                     r = self.a2_rec(j)
-                    r["status"] = "killed_by_gate" if r["parts"] else "not_run_gate"
-                    r["status_reason"] = "A2 stopped by a gate decision"
-                    write_json(r, self.a2_path(j["label"]))
+                    if r["parts"]:
+                        # a relaxation between parts (a spot restart prepared) is killed: its outputs and restart data
+                        # go aside unread like those of a running partner (section 16; round-4 R4-C24-3, N-F37)
+                        self.a2_discard(j, r, "killed_by_gate", "A2 stopped by a gate decision (output not read, "
+                                                                "section 16)")
+                    else:
+                        r["status"] = "not_run_gate"
+                        r["status_reason"] = "A2 stopped by a gate decision"
+                        write_json(r, self.a2_path(j["label"]))
             return
         if self.held() or self.stopping or self.pending_stop:
             return
@@ -3541,7 +4037,9 @@ class Runner:
                       "parts": [{"n": 1, "input": f"{lab}.p1.in", "restart_mode": None, "nstep": nst}]})
             write_json(r, self.a2_path(lab))
         n = r["parts"][-1]["n"]
-        self._spawn_part(lab, d, lab, n, ranks, "a2")
+        # N-F30: at 2x32 every part gets the half of the cores no running copy uses (a relaxation that replaces a
+        # finished copy takes its half); a single copy is bound as run_qe.sh binds
+        self._spawn_part(lab, d, lab, n, ranks, "a2", cpuset=self.free_core_set() if lay == "2x32" else None)
         r["parts"][-1]["started"] = utc()
         write_json(r, self.a2_path(lab))
 
@@ -3717,8 +4215,8 @@ def archive(stage, campaign, out):
     def pub(obj, rel):
         c46.dump_public(obj, os.path.join(out, rel)); n["json"] += 1
 
-    for f in ("campaign.json", "graph.json", "upf_check.json", "mace_check.json", "smoke.json", "smoke2.json",
-              "throughput.json", "completeness.json", "state_end.json", "ledger.json", "HARD_CAP.json"):
+    for f in ("campaign.json", "graph.json", "upf_check.json", "mace_check.json", "nodescripts_check.json", "smoke.json",
+              "smoke2.json", "throughput.json", "completeness.json", "state_end.json", "ledger.json", "HARD_CAP.json"):
         if os.path.exists(os.path.join(cw, f)):
             pub(read_json(os.path.join(cw, f)), f)
     for f, rel in (("interruptions.jsonl", "interruptions.json"), ("runner_reads.jsonl", "runner_reads.json")):
@@ -4071,8 +4569,17 @@ class MockBackend(NodeBackend):
     def foreign_pw(self, own):
         return False
 
-    def descendants(self, pid):
-        return set()                                       # no /proc on the laptop: the task test of I-D7 applies
+    def proc_tree(self, pid):
+        return {}                                          # no /proc on the laptop: the task test of I-D7 applies
+
+    def cpus_allowed(self, pid):
+        return None
+
+    def core_sets(self):
+        return list(self.cfg.get("core_sets") or ["0-31", "32-63"])
+
+    def node_script_expected(self, name):
+        return _node_script_text(name, self.sys).encode()
 
     def git_state(self):
         return {"head": _mock_cfg(self.sys).get("git_head") or "0" * 40, "clean": True}
@@ -4115,6 +4622,7 @@ def graph_ref(state):
     outcomes, three A2 relaxations (spot notice and restart; the k = 200 cap; no restart data) and one gate."""
     G = Graph("c1", PHASES["t"])
     G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")             # N-F31 (round 4)
     G.add("check:mace", "check", "check", what="mace")
     _ref_block(G, state)
     G.add("mace:" + wid_of("ref233", "host"), "mace", "mace", [], action="relax-host", member="ref233",
@@ -4162,22 +4670,43 @@ sys.exit(subprocess.call(a[1:]))
 '''
 
 
-def _node_scripts(sysroot):
-    """The committed ehpc/node/qe_queue.sh and chain.sh with only their paths rewritten (as the WP3 laptop harness),
-    a mock run_qe.sh and a Python flock shim on PATH (macOS has no flock)."""
+def _node_script_text(name, sysroot):
+    """A committed ehpc/node script with only its node paths rewritten under <sysroot> (the self-test's node copy)."""
     R = os.path.join(sysroot, "data")
     tq = "/" + "tmp/qe_queue_"
     rep = [(RUN_QE, sysroot + RUN_QE), (QUEUE, R + "/setup/qe_queue.sh"), ("/data/jobs", R + "/jobs"), (tq, sysroot + tq),
-           (CHAIN_LOCK, sysroot + CHAIN_LOCK)]
-    for f in ("qe_queue.sh", "chain.sh"):
-        t = open(os.path.join(ROOT, "ehpc", "node", f)).read()
-        for a, b in rep:
-            t = t.replace(a, b)
-        p = os.path.join(R, "setup", f); write_text(t, p); os.chmod(p, 0o755)
+           (CHAIN_LOCK, sysroot + CHAIN_LOCK), (QE_PROFILE, sysroot + QE_PROFILE)]
+    t = open(os.path.join(ROOT, "ehpc", "node", name)).read()
+    for a, b in rep:
+        t = t.replace(a, b)
+    return t
+
+
+def _node_scripts(sysroot):
+    """The committed ehpc/node/qe_queue.sh, chain.sh and s2_run_qe.sh with only their paths rewritten (as the WP3 laptop
+    harness), a mock run_qe.sh for the queue, a mock QE profile, mpirun, taskset and lscpu for s2_run_qe.sh (mpirun
+    records its arguments and core set in mock/mpirun_calls.log and runs the mock pw.x), and a Python flock shim on PATH
+    (macOS has no flock)."""
+    R = os.path.join(sysroot, "data")
+    for f, dst in (("qe_queue.sh", os.path.join(R, "setup", "qe_queue.sh")), ("chain.sh", os.path.join(R, "setup", "chain.sh")),
+                   ("s2_run_qe.sh", sysroot + "/usr/local/bin/s2_run_qe.sh")):
+        write_text(_node_script_text(f, sysroot), dst); os.chmod(dst, 0o755)
     py, me = sys.executable, os.path.abspath(__file__)
     rq = (f'#!/bin/bash\ninp=${{1}}; np=${{2:-64}}\ncd "$(dirname "$inp")" || exit 1\nb=$(basename "$inp" .in)\n'
           f'"{py}" "{me}" _mockpw --input "$b.in" --ranks "$np" --sys "{sysroot}" > "$b.out" 2> "$b.err"\n')
     p = os.path.join(sysroot, "usr", "local", "bin", "run_qe.sh"); write_text(rq, p); os.chmod(p, 0o755)
+    write_text(f"export QE_ENV={sysroot}/qe ESPRESSO_PSEUDO={getattr(q47, 'PSEUDO_DIR', '/data/pseudo')}\n",
+               sysroot + QE_PROFILE)
+    mp = (f'#!/bin/bash\necho "$(date +%s) cpuset=${{S2_MOCK_TASKSET:-none}} mpirun $*" >> "{sysroot}/mock/mpirun_calls.log"\n'
+          'np=""\nwhile [ "$#" -gt 0 ]; do case "${1}" in -np) np=${2}; shift 2;; --bind-to) shift 2;; '
+          '--use-hwthread-cpus) shift;; *) break;; esac; done\n'
+          f'shift\nexec "{py}" "{me}" _mockpw --input "${{2}}" --ranks "$np" --sys "{sysroot}"\n')
+    p = os.path.join(sysroot, "qe", "bin", "mpirun"); write_text(mp, p); os.chmod(p, 0o755)
+    ts = '#!/bin/bash\n[ "${1}" = "-c" ] || exit 2\nexport S2_MOCK_TASKSET="${2}"\nshift 2\nexec "$@"\n'
+    p = os.path.join(sysroot, "bin", "taskset"); write_text(ts, p); os.chmod(p, 0o755)
+    lc = ('#!/bin/bash\ncase "${1}" in -p=CPU,CORE) echo "# CPU,Core"; for i in $(seq 0 63); do echo "$i,$i"; done;; '
+          '*) echo "# Core"; seq 0 63;; esac\n')
+    p = os.path.join(sysroot, "bin", "lscpu"); write_text(lc, p); os.chmod(p, 0o755)
     write_text(FLOCK_SHIM, os.path.join(sysroot, "bin", "flock.py"))
     p = os.path.join(sysroot, "bin", "flock"); write_text(f'#!/bin/bash\nexec "{py}" "{sysroot}/bin/flock.py" "$@"\n', p)
     os.chmod(p, 0o755)
@@ -4694,6 +5223,7 @@ def self_test(work=None):
         assert os.path.exists(os.path.join(out, "raw", "s2_m30_VB136.out.gz"))
         assert os.path.exists(os.path.join(out, "raw", "s2r_m30_VB136.p2.out.gz"))
         assert os.path.exists(os.path.join(out, "records", "s2_ref233_host.json"))
+        assert (read_json(os.path.join(out, "nodescripts_check.json")) or {}).get("passed")      # round 4 (N-F31)
         for f in glob.glob(os.path.join(out, "**", "*.json"), recursive=True) + [os.path.join(out, "logs", "campaign.log")]:
             assert not c46.hygiene_violations(open(f).read()), f
         try:
@@ -4722,7 +5252,7 @@ def self_test(work=None):
 
     def c_hyg():
         files = [os.path.abspath(__file__)] + [os.path.join(ROOT, "ehpc", "node", f) for f in
-                                               ("s2_campaign.sh", "s2_relaunch.sh", "s2_status.sh")]
+                                               ("s2_campaign.sh", "s2_relaunch.sh", "s2_status.sh", "s2_run_qe.sh")]
         f51 = os.path.join(HERE, "51_s2_preflight.py")
         files += [f51] if os.path.exists(f51) else []
         bad = {}
@@ -4736,7 +5266,7 @@ def self_test(work=None):
             if v:
                 bad[os.path.basename(f)] = v
         assert not bad, bad
-        for f in files[1:4]:
+        for f in files[1:5]:
             r = subprocess.run(["bash", "-n", f], stderr=subprocess.PIPE, universal_newlines=True)
             assert r.returncode == 0, (f, r.stderr)
         for t in ("/Us" + "ers/x", "10.0.0." + "1", "a@b." + "com", "i-" + "abcdef0123456", "/t" + "mp/x", "US" + "D 3"):
@@ -4820,6 +5350,7 @@ def self_test(work=None):
         rn = c2_runner(Rm)
         os.makedirs(rn.cdir, exist_ok=True)
         c46.dump_public({"schema": "s2-upf-1", "passed": True}, os.path.join(rn.cdir, "upf_check.json"))
+        c46.dump_public({"schema": "s2-nodescripts-1", "passed": True}, os.path.join(rn.cdir, "nodescripts_check.json"))
         lab = "s2r_m30_VB136"
         put_part(rn, lab, q47.synthetic_pw_output(n_config=0, end="scf_failed", ranks=48, label=f"{lab}.p1"),
                  boot="m-boot", rc=0)
@@ -4887,6 +5418,7 @@ def self_test(work=None):
         rn.graph_now()
         os.makedirs(rn.cdir, exist_ok=True)
         c46.dump_public({"schema": "s2-upf-1", "passed": True}, os.path.join(rn.cdir, "upf_check.json"))
+        c46.dump_public({"schema": "s2-nodescripts-1", "passed": True}, os.path.join(rn.cdir, "nodescripts_check.json"))
         os.makedirs(os.path.dirname(rn.node.chain_lock), exist_ok=True)
         vac = rn.ref_cells()[0]
 
@@ -4937,6 +5469,7 @@ def self_test(work=None):
         rn = c2_runner(Rm, a2_layout="48")
         os.makedirs(rn.cdir, exist_ok=True)
         c46.dump_public({"schema": "s2-upf-1", "passed": True}, os.path.join(rn.cdir, "upf_check.json"))
+        c46.dump_public({"schema": "s2-nodescripts-1", "passed": True}, os.path.join(rn.cdir, "nodescripts_check.json"))
         os.makedirs(os.path.dirname(rn.node.chain_lock), exist_ok=True)
         fg = {"file": "x.final.extxyz", "k": 40, "sha256": "0" * 64}
         for lab in C2_ORDER[:4]:                                            # relaxations 1-4 and their checks done
@@ -5232,11 +5765,14 @@ def self_test(work=None):
     case("(x) hung child watchdog (round-2 S2, N-F13)", c_watchdog)
 
     # ---------------------------------------------------------------- round-3 cases
-    def r3_relaunch(sysd, Rm, btime=None):
-        """The relaunch decision of the committed s2_relaunch.sh with its paths rewritten (as case t)."""
+    def r3_relaunch(sysd, Rm, btime=None, campaign_sh=False):
+        """The relaunch decision of the committed s2_relaunch.sh with its paths rewritten (as case t); with campaign_sh
+        it starts the s2_campaign.sh of <Rm>/work/ps_s2 (a path-rewritten copy the case puts there, round 4)."""
         t = open(os.path.join(ROOT, "ehpc", "node", "s2_relaunch.sh")).read()
-        for a_, b_ in (("W=/data/work/s2; R=/data/work/ps_s2", f"W={Rm}/work/s2; R={Rm}"),
-                       ('bash "$R/ehpc/node/s2_campaign.sh" "$c"', 'echo "WOULD RELAUNCH $c"; exit 0')):
+        reps = [("W=/data/work/s2; R=/data/work/ps_s2", f"W={Rm}/work/s2; R={Rm}" + ("/work/ps_s2" if campaign_sh else ""))]
+        if not campaign_sh:
+            reps.append(('bash "$R/ehpc/node/s2_campaign.sh" "$c"', 'echo "WOULD RELAUNCH $c"; exit 0'))
+        for a_, b_ in reps:
             assert a_ in t, a_
             t = t.replace(a_, b_)
         t = re.sub(r"pgrep -f '[^']*'", "echo $$ $PPID", t)
@@ -5287,6 +5823,7 @@ def self_test(work=None):
         rn = c2_runner(Rm, **over)
         os.makedirs(rn.cdir, exist_ok=True)
         c46.dump_public({"schema": "s2-upf-1", "passed": True}, os.path.join(rn.cdir, "upf_check.json"))
+        c46.dump_public({"schema": "s2-nodescripts-1", "passed": True}, os.path.join(rn.cdir, "nodescripts_check.json"))
         os.makedirs(os.path.dirname(rn.node.chain_lock), exist_ok=True)
         rn.h_spent = lambda: 100.0
 
@@ -5428,6 +5965,9 @@ def self_test(work=None):
         sm = read_json(os.path.join(cd, "smoke.json")) or {}
         assert rc3 is None and reached(), (rc3, open(os.path.join(base, "runner_smk_3.log")).read()[-800:])
         assert st["commit"] == "1" * 40 and st["commit_history"][-1]["via"] == "c1/NODE_FIX", st.get("commit_history")
+        cj3 = read_json(os.path.join(cd, "campaign.json")) or {}
+        assert cj3.get("start_commit") == "0" * 40 and cj3.get("commit") == "1" * 40 and \
+            len(cj3.get("commit_history") or []) == 1, {k: cj3.get(k) for k in ("start_commit", "commit", "commit_history")}
         assert glob.glob(os.path.join(cd, "NODE_FIX.used.*")) and not os.path.exists(os.path.join(cd, "NODE_FIX"))
         assert isinstance(sm["mapping"]["c0"], int) and sm["mapping"]["affine_slope_1"], sm.get("mapping")
         assert os.path.exists(os.path.join(cd, "throughput.json")) and glob.glob(os.path.join(n1d, "discarded",
@@ -5445,7 +5985,7 @@ def self_test(work=None):
                 assert "NODE_FIX refused" in str(e), e
                 msgs.append(str(e).split(": ", 1)[1][:40])
         return (f"n1 pw.x error: one attempt, missing, no interruption; throughput STOP names the smoke tests; new HEAD "
-                f"refused; NODE_FIX + RESOLVE rerun: commit_history, c0 {sm['mapping']['c0']}, throughput row, MACE "
+                f"refused; NODE_FIX + RESOLVE rerun: commit_history (also in campaign.json beside start_commit, round-4 R4-C1-6), c0 {sm['mapping']['c0']}, throughput row, MACE "
                 f"phase reached; NODE_FIX refused: {msgs}")
     case("(z2) smoke-test failure: STOP, NODE_FIX and RESOLVE (round-3 R3-C1-2, -3, -5)", c_smoke_stop)
 
@@ -5740,7 +6280,8 @@ def self_test(work=None):
             except Stop as e:
                 assert "without an OOM kill" in str(e), e
                 msgs.append("tree" if with_tree else "no tree")
-        rn.be.descendants = lambda pid: {int(pid), int(pid) + 1}
+        rn.be.proc_tree = lambda pid: {int(pid): "bash", int(pid) + 1: "pw.x"}
+        rn.be.descendants = lambda pid: {int(pid), int(pid) + 1}          # the same tree for the round-3 code
         lab = C2_ORDER[2]
         r3_part(rn, lab, "", pid=6000, t0=time.time())
         rn.a2_record_pids(lab, read_json(rn.a2_path(lab)))
@@ -5825,6 +6366,729 @@ def self_test(work=None):
             out.append("kept" if kept else "removed")
         return f"no '{tok[:10]}...' status left in scripts/49 and 50; refusing relaunch: an old KEEP_ALIVE {out[0]}, a new one {out[1]}"
     case("(z12) dead status removed; stale KEEP_ALIVE at a refused relaunch (round-3 R3-7, R3-C1-9)", c_misc_r3)
+
+    # ---------------------------------------------------------------- round-4 cases (2026-11-04, after e257cdf)
+    class _Fake:
+        """A child-process stand-in: alive until ended (poll None), its pid a number nothing uses."""
+        def __init__(self, pid=2 ** 22 + 101, alive=True):
+            self.pid, self.rc = pid, (None if alive else 0)
+
+        def poll(self):
+            return self.rc
+
+    def c_spot_heartbeat():
+        """Round-4 R4-C1-1 and R4-C1-2 (N-F18): (a) the committed poller_main and spot_check on a fake clock with the
+        real limits (120 s, 300 s, polls every 5 s): an outage that starts 55 s after the old 60-s heartbeat write and
+        lasts 250 s gives no STOP; one of 305 s STOPs, with a stated age within one poll of the true time since the
+        last good poll; (b) an ended poller with a 310-s old heartbeat is restarted with its own first-poll grace: no
+        STOP with a healthy endpoint, nothing scheduled before its first good poll, a STOP 120 s (here 1 s) after the
+        restart with an unreachable one, and no restart once a shutdown began."""
+        import urllib.error, urllib.request
+        g = globals()
+        real = g["time"]
+
+        class _End(BaseException):
+            pass
+
+        T0 = 1.8e9
+        sysd, Rm = mini("spothb", boot="hb-boot")
+
+        def run(t_out, outage):
+            d = os.path.join(sysd, "spot", f"{t_out:.0f}_{outage}"); os.makedirs(d, exist_ok=True)
+            rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "hb-boot"; rn.node.spot = d; rn.poller_t0 = T0
+            clk, ev = {"now": T0}, {"stop": None, "last_good": None}
+
+            class FT:
+                def __getattr__(self, k):
+                    return getattr(real, k)
+
+                def time(self):
+                    return clk["now"]
+
+                def sleep(self, dt):
+                    clk["now"] += dt
+                    if ev["stop"] is None and clk["now"] > t_out:
+                        try:
+                            rn.spot_check()
+                        except Stop as e:
+                            ev["stop"] = (clk["now"] - ev["last_good"], int(re.search(r"was (\d+) s ago", str(e)).group(1)))
+                    if clk["now"] > t_out + outage + 120:
+                        raise _End()
+
+            class Op:
+                def open(self, url, timeout=3):
+                    if t_out <= clk["now"] < t_out + outage:
+                        raise urllib.error.HTTPError(url, 503, "x", {}, None)
+                    ev["last_good"] = clk["now"]
+                    raise urllib.error.HTTPError(url, 404, "x", {}, None)
+            ob = urllib.request.build_opener
+            g["time"] = FT(); urllib.request.build_opener = lambda *a, **k: Op()
+            try:
+                poller_main("http://x/termination-time", d, "hb-boot", os.getppid(), SPOT_POLL_S)
+            except _End:
+                pass
+            finally:
+                g["time"] = real; urllib.request.build_opener = ob
+            return ev["stop"]
+        short = run(T0 + 175, 250)                    # 55 s after the old code's heartbeat write at T0 + 120
+        assert short is None, f"a 250-s outage STOPped: {short}"
+        long_ = run(T0 + 175, 305)
+        assert long_ is not None and abs(long_[1] - long_[0]) <= SPOT_POLL_S, long_
+        # (b) the poller restart
+        old = r3_signals()
+        try:
+            sp = _Spot()
+            out = []
+            for tag, url in (("ok", f"http://localhost:{sp.port}/latest/meta-data/instance/spot/termination-time"),
+                             ("down", "http://localhost:9/latest/meta-data/instance/spot/termination-time")):
+                write_text(url + "\n", os.path.join(Rm, "setup", "s2_spot_url"))
+                rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "hb-boot"; os.makedirs(rn.cdir, exist_ok=True)
+                rn.be.spot_first_s = 1.0 if tag == "down" else 120.0
+                rn.poller_t0 = time.time() - 400
+                write_text(f"{time.time() - 310:.0f} x ok=1 err=0\n", os.path.join(rn.node.spot, "heartbeat.hb-boot"))
+                rn.poller = _Fake(alive=False)
+                rn.housekeeping()                                            # no STOP (was: 'the last good poll ... 310 s')
+                assert rn.poller.poll() is None and rn.poller_t0 > time.time() - 5, "the poller was not restarted"
+                if tag == "ok":
+                    wait_for(lambda: rn.spot_check() is True, 20, "the restarted poller's first good poll")
+                    out.append("healthy endpoint: no STOP, the new poller's first good poll accepted")
+                else:
+                    launched = []
+                    rn.launch_pw = lambda j: launched.append(j)
+                    rn.G = {"phases": ["smoke"], "jobs_by_id": {}}
+                    rn.schedule({})
+                    assert rn.spot_check() is False and not launched
+                    time.sleep(1.2)
+                    try:
+                        rn.housekeeping(); raise AssertionError("no STOP after the restart's grace")
+                    except Stop as e:
+                        assert "within 1 s of the poller's start" in str(e), e
+                    out.append("unreachable endpoint: nothing scheduled, STOP after the grace from the restart")
+                rn.poller.terminate(); rn.poller.wait(10)
+            rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "hb-boot"; rn.poller_t0 = time.time()
+            rn.poller = _Fake(alive=False); rn.shutdown = True
+            rn.housekeeping()
+            assert isinstance(rn.poller, _Fake), "a poller restarted during a shutdown"
+        finally:
+            r3_restore(old)
+        return (f"fake clock: a 250-s outage 55 s after the old heartbeat write gives no STOP; 305 s STOPs, stated age "
+                f"{long_[1]} s vs {long_[0]:.0f} s since the last good poll; " + "; ".join(out) + "; no restart in a shutdown")
+    case("(z13) spot heartbeat at every good poll; poller restart grace (round-4 R4-C1-1, R4-C1-2)", c_spot_heartbeat)
+
+    def c_notice_in_pass():
+        """Round-4 missed item (N-11): a spot notice written while one schedule() pass runs a synchronous scripts/46 job
+        holds the MACE launch later in the same pass (the real C1 graph; the g46 job and the launch are stand-ins)."""
+        sysd, Rm = mini("noticepass", boot="np-boot")
+        rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "np-boot"; rn.state = synthetic_state()
+        rn.be.graph = lambda c, s: graph("c1", s, sites=lambda m: S2[m])
+        rn.graph_now(); os.makedirs(rn.cdir, exist_ok=True)
+        ph = [j for j in rn.G["jobs_by_id"].values() if j["phase"] == "mace"]
+        ig = next(i for i, j in enumerate(ph) if j["kind"] == "g46")
+        jg = ph[ig]
+        jm = next(j for j in ph[ig + 1:] if j["kind"] == "mace" and jg["id"] not in j["deps"]
+                  and not any(d.startswith("k0:") for d in j["deps"]))
+        st = {jid: "done" for jid in rn.G["jobs_by_id"]}
+        st[jg["id"]] = st[jm["id"]] = "pending"
+        nf = os.path.join(rn.node.spot, f"notice.{rn.boot}")
+        seen = []
+
+        def g46(j):
+            t = time.time(); write_text(f"{utc(t)} {t:.0f} 2026-11-04T12:00:00Z\n", nf)   # the poller, meanwhile
+        rn.run_g46 = g46
+        rn.launch_mace = lambda j: seen.append(rn.held())
+        rn.schedule(st)
+        assert seen == [True], seen
+        return f"notice written during {jg['id']}: held() true at the launch of {jm['id']} in the same pass"
+    case("(z14) a spot notice inside one schedule pass holds its later launches (round-4 missed item)", c_notice_in_pass)
+
+    def c_resolve_live():
+        """Round-4 R4-C1-4: a RESOLVE written into a live throughput run is not read: 'running', no file moved, RESOLVE
+        kept; once the run has ended the next status consumes it ('pending', parts in discarded/resolved_<t>)."""
+        sysd, Rm = mini("reslive", boot="rl-boot")
+        rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "rl-boot"; rn.state = synthetic_state()
+        rn.be.graph = lambda c, s: graph("c1", s, sites=lambda m: S2[m]); rn.graph_now()
+        j = rn.G["jobs_by_id"]["pw:s2tp_ref232_np48"]
+        d = rn.pw_dir(j); os.makedirs(d, exist_ok=True)
+        f = rn.part_files(d, j["label"], 1)
+        sl = subprocess.Popen(["sleep", "60"])
+        write_text("&CONTROL\n/\n", f["in"]); write_text("partial\n", f["out"])
+        write_json({"boot": "rl-boot", "started_epoch": time.time() - 30, "ranks": 48, "pid": sl.pid}, f["launch"])
+        write_text("rerun 2026-11-04 self-test\n", os.path.join(d, "RESOLVE"))
+        s1 = rn.pw_status(j, "ok")
+        kept = all(os.path.exists(f[k]) for k in ("in", "out", "launch")) and os.path.exists(os.path.join(d, "RESOLVE"))
+        sl.terminate(); sl.wait(); write_text(f"143 {utc()}\n", f["rc"])
+        s2 = rn.pw_status(j, "ok")
+        assert s1 == "running" and kept, (s1, kept)
+        assert s2 == "pending" and glob.glob(os.path.join(d, "discarded", "resolved_*")) and not os.path.exists(f["out"]), s2
+        return "live run: 'running', files and RESOLVE kept; ended: RESOLVE consumed, 'pending'"
+    case("(z15) RESOLVE waits for a live pw.x reference run (round-4 R4-C1-4)", c_resolve_live)
+
+    def c_smoke_slope():
+        """Round-4 R4-C1-5 (X-3, D-S0-6, D-S0-8): n1 and n3 both end with JOB DONE but n3 - n1 is 1 configuration (n3
+        converges at k = 1): a STOP naming the smoke tests before the exit/restart test and any throughput run, C1 not
+        done; RESOLVE 'rerun' of n3 (scenario removed) and a relaunch give an affine mapping of slope 1, nstep_first
+        201 - c0, and the throughput row."""
+        sysd = os.path.join(base, "slope"); Rx = os.path.join(sysd, "data")
+        for dd in ("data/work/s2", "data/jobs", "data/setup", "data/pseudo", "mock", "bin"):
+            os.makedirs(os.path.join(sysd, dd), exist_ok=True)
+        _node_scripts(sysd)
+        sp3 = _Spot()
+        write_text(f"http://localhost:{sp3.port}/latest/meta-data/instance/spot/termination-time\n",
+                   os.path.join(Rx, "setup", "s2_spot_url"))
+        bt = "p" * 8 + "-boot-p"
+        write_text(bt, os.path.join(sysd, "mock", "boot_id"))
+        write_text(f"{time.time() - 60:.0f}", os.path.join(sysd, "mock", f"btime.{bt}"))
+        write_json({"gates": {"throughput": {"a2_layout": "48"}, "N": {"n": 8, "gateN": {t: True for t in c46.TOKENS}}}},
+                   os.path.join(sysd, "mock", "config.json"))
+        write_json({"s2smoke_ref232_n3": {"converge_at": 1}}, os.path.join(sysd, "mock", "pw_scenarios.json"))
+        write_json(synthetic_state(a2_layout=None, commit=None), os.path.join(Rx, "work", "s2", "state.json"))
+        envx = dict(os.environ, PATH=os.path.join(sysd, "bin") + os.pathsep + os.environ.get("PATH", ""))
+        envx.pop("S2_LOCK_FD", None)
+        cd = c46.Layout(kind="node", root=Rx).campaign_dir("c1")
+
+        def go(tag, until=None):
+            lf = open(os.path.join(base, f"runner_slope_{tag}.log"), "w")
+            p = subprocess.Popen([sys.executable, me, "run", "--campaign", "c1", "--root", Rx, "--mock"], env=envx,
+                                 stdout=lf, stderr=subprocess.STDOUT, start_new_session=True)
+            procs[f"slope_{tag}"] = p
+            t = time.time()
+            while p.poll() is None and time.time() - t < 150:
+                if until is not None and until():
+                    os.killpg(p.pid, signal.SIGKILL); p.wait(); return None
+                time.sleep(0.1)
+            assert p.poll() is not None, f"run {tag} did not end"
+            return p.returncode
+        rc1 = go("1")
+        cj = read_json(os.path.join(cd, "campaign.json")) or {}
+        assert rc1 == 3 and "not affine with slope 1" in (cj.get("stop_reason") or ""), (rc1, cj.get("stop_reason"))
+        assert not glob.glob(os.path.join(cd, "tp", "*", "*.launch.json")), "a throughput run started"
+        assert not glob.glob(os.path.join(cd, "smoke", "s2smoke_ref232_rst", "*.launch.json")), "the restart test started"
+        assert not os.path.exists(os.path.join(cd, "CAMPAIGN_DONE"))
+        write_json({}, os.path.join(sysd, "mock", "pw_scenarios.json"))
+        write_text("rerun 2026-11-04 n3 repeated (self-test)\n", os.path.join(cd, "smoke", "s2smoke_ref232_n3", "RESOLVE"))
+        reached = lambda: os.path.exists(os.path.join(cd, "throughput.json"))   # noqa: E731
+        rc2 = go("2", until=reached)
+        sm = (read_json(os.path.join(cd, "smoke.json")) or {}).get("mapping") or {}
+        assert rc2 is None and reached(), (rc2, open(os.path.join(base, "runner_slope_2.log")).read()[-800:])
+        assert sm.get("affine_slope_1") and sm.get("nstep_first") == K_TOTAL - sm["c0"], sm
+        return (f"n1 1 and n3 2 configurations: STOP before the restart test and the throughput row ('not affine with "
+                f"slope 1'); RESOLVE rerun of n3: c0 {sm['c0']}, nstep_first {sm['nstep_first']}, throughput row run")
+    case("(z16) smoke tests not affine with slope 1: STOP inside C1 (round-4 R4-C1-5)", c_smoke_slope)
+
+    def c_core_sets():
+        """Round-4 R4-C1-1 (error) and the missed items of the node lens (N-F30): (a) in the simulated campaign every
+        pw.x outside the queue ran through the committed s2_run_qe.sh: np32a and np32b on the two halves of the cores
+        ('taskset -c 0-31' / '32-63', --bind-to none), every other run (smoke tests, 48 and 64 ranks, A2 at 48) bound as
+        run_qe.sh binds, and the 2x32 rate computed for the pair; (b) a copy rerun alone after the other completed: the
+        completed one is moved aside unread and both start together on disjoint cores; a copy whose partner runs waits;
+        a partner missing: skipped; (c) tp_record gives no 2x32 rate for a solo rerun, a missing or shared core set or
+        shared CPUs; (d) at 2x32 a new part takes the half no running copy uses."""
+        calls = [x for x in open(os.path.join(sysroot, "mock", "mpirun_calls.log")).read().splitlines() if x.strip()]
+        np32 = [x for x in calls if "-np 32 " in x]
+        others = [x for x in calls if "-np 32 " not in x]
+        assert sorted(x.split()[1] for x in np32) == ["cpuset=0-31", "cpuset=32-63"] and \
+            all("--bind-to none" in x for x in np32), np32
+        assert others and all("cpuset=none" in x and "--bind-to core" in x for x in others), others[:3]
+        tp = read_json(os.path.join(cdir, "throughput.json"))
+        assert tp["pair"]["valid"] and tp["rate_config_per_node_h"]["2x32"], tp.get("pair")
+        # (b) the pair rule
+        sysd, Rm = mini("pair", boot="pr-boot")
+        os.makedirs(os.path.join(sysd, "tmp"), exist_ok=True)
+        rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "pr-boot"; rn.state = synthetic_state()
+        rn.be.graph = lambda c, s: graph("c1", s, sites=lambda m: S2[m]); rn.graph_now()
+        os.makedirs(rn.cdir, exist_ok=True)
+        write_json({"mapping": {"c0": 0, "affine_slope_1": True, "nstep_first": 201}}, os.path.join(rn.cdir, "smoke.json"))
+        rn.h_spent = lambda: 10.0
+        spawned = []
+
+        def spawn(cmd, *, cwd, log, rc, env=None, pass_fds=()):
+            spawned.append((os.path.basename(cwd), (env or {}).get("CPUSET"), os.path.basename(cmd[0])))
+            return _Fake(pid=2 ** 22 + 200 + len(spawned))
+        rn.be.spawn = spawn
+        J = lambda x: rn.G["jobs_by_id"]["pw:" + x]                          # noqa: E731
+        A, B = TP_PAIR
+        dA = rn.pw_dir(J(A)); os.makedirs(dA, exist_ok=True)
+        fA = rn.part_files(dA, A, 1)
+        write_text("&CONTROL\n/\n", fA["in"]); write_text("x\n", fA["out"])
+        write_json({"label": A, "part": 1, "ok": True, "counts": {"n_config": 5, "job_done": True}, "wall_s": 3000.0,
+                    "cpuset": "0-31", "interval": [100.0, 3100.0]}, fA["done"])
+        os.makedirs(os.path.join(rn.pw_dir(J(B)), "discarded", "p1_1"), exist_ok=True)   # B's first attempt was cut
+        rn.launch_pw(J(B))
+        assert sorted((x[0], x[1]) for x in spawned) == [(A, "32-63"), (B, "0-31")] and \
+            all(x[2] == "s2_run_qe.sh" for x in spawned), spawned
+        assert not os.path.exists(fA["done"]) and glob.glob(os.path.join(dA, "discarded", "paired_*", f"{A}.p1.done.json"))
+        LA = read_json(rn.part_files(dA, A, 1)["launch"])
+        assert LA["cpuset"] == "32-63" and LA["slot"] == 1, LA
+        rn.launch_pw(J(A))                                                   # started with its pair: nothing more
+        assert len(spawned) == 2, spawned
+        rn.procs = {"pw:" + B: {"p": _Fake(), "kind": "pw", "dir": rn.pw_dir(J(B)), "slot": 0}}
+        os.remove(rn.part_files(dA, A, 1)["launch"])
+        rn.launch_pw(J(A))
+        assert len(spawned) == 2, "a copy started while the other ran alone"
+        rn.procs = {}
+        fB = rn.part_files(rn.pw_dir(J(B)), B, 1)
+        write_json({"label": B, "part": 1, "ok": False, "status": "missing"}, fB["done"])
+        rn.launch_pw(J(A))
+        assert (read_json(fA["done"]) or {}).get("status") == "skipped" and len(spawned) == 2
+        # (c) the 2x32 rate needs a concurrent pair on disjoint cores
+        T0 = 1.8e9
+        base_runs = {"np48": (None, T0, T0 + 4.0 * 3600), "np64": (None, T0 + 4.1 * 3600, T0 + 7.1 * 3600),
+                     "np32a": ("0-31", T0 + 7.2 * 3600, T0 + 12.2 * 3600), "np32b": ("32-63", T0 + 7.2 * 3600 + 5, T0 + 11.8 * 3600)}
+        rows = {"concurrent": {}, "solo rerun": {"np32b": ("32-63", T0 + 12.3 * 3600, T0 + 16.9 * 3600)},
+                "no core set": {"np32b": (None, T0 + 7.2 * 3600 + 5, T0 + 11.8 * 3600)},
+                "shared core set": {"np32b": ("0-31", T0 + 7.2 * 3600 + 5, T0 + 11.8 * 3600)},
+                "shared CPUs": {"np32b": ("32-63", T0 + 7.2 * 3600 + 5, T0 + 11.8 * 3600, "0-31")}}
+        got = {}
+        for name, over in rows.items():
+            sysd, Rt = mini("tprate_" + name.replace(" ", "_"))
+            rt = Runner("c1", Rt, MockBackend(Rt)); rt.boot = "m-boot"
+            for k, v in {**base_runs, **over}.items():
+                lab = f"s2tp_ref232_{k}"; d = os.path.join(rt.cdir, "tp", lab); os.makedirs(d, exist_ok=True)
+                write_json({"label": lab, "part": 1, "ok": True, "counts": {"n_config": 5, "job_done": True},
+                            "wall_s": v[2] - v[1], "cpuset": v[0], "interval": [v[1], v[2]],
+                            "affinity": v[3] if len(v) > 3 else None}, rt.part_files(d, lab, 1)["done"])
+            got[name] = rt.tp_record()["rate_config_per_node_h"]["2x32"]
+        assert got["concurrent"] and all(got[k] is None for k in rows if k != "concurrent"), got
+        # (d) slots at 2x32
+        rn.procs = {"a2:x": {"p": _Fake(), "kind": "a2", "dir": "", "slot": 0}}
+        assert rn.free_core_set() == (1, "32-63")
+        rn.procs["a2:y"] = {"p": _Fake(), "kind": "a2", "dir": "", "slot": 1}
+        try:
+            rn.free_core_set(); raise AssertionError("a third copy got a core set")
+        except Stop:
+            pass
+        rn.procs = {"a2:y": {"p": _Fake(), "kind": "a2", "dir": "", "slot": 1}}
+        assert rn.free_core_set() == (0, "0-31")
+        # A2 at 2x32 through a2_launch: the third relaxation takes the half the ended second copy used
+        sysd, Ra = mini("a2slots", boot="as-boot")
+        os.makedirs(os.path.join(sysd, "tmp"), exist_ok=True)
+        ra = Runner("c1", Ra, MockBackend(Ra)); ra.boot = "as-boot"; ra.state = synthetic_state(a2_layout="2x32")
+        ra.graph_now(); os.makedirs(ra.cdir, exist_ok=True)
+        write_json({"mapping": {"c0": 0, "affine_slope_1": True, "nstep_first": 201}}, os.path.join(ra.cdir, "smoke.json"))
+        got, fakes = [], {}
+
+        def spawn2(cmd, *, cwd, log, rc, env=None, pass_fds=()):
+            got.append((os.path.basename(cwd), (env or {}).get("CPUSET")))
+            fakes[os.path.basename(cwd)] = _Fake(pid=2 ** 22 + 300 + len(got))
+            return fakes[os.path.basename(cwd)]
+        ra.be.spawn = spawn2
+        assert ra.chain_lock_ok()
+        a2rows = [ra.G["jobs_by_id"]["a2:" + x] for x in ("s2r_m30_VB136", "s2r_m30_VB76", "s2r_m30_VX138")]
+        ra.a2_launch(a2rows[0], ra.a2_rec(a2rows[0]), 32, "2x32")
+        ra.a2_launch(a2rows[1], ra.a2_rec(a2rows[1]), 32, "2x32")
+        fakes["s2r_m30_VB76"].rc = 0                                       # the copy on 32-63 ends
+        ra.a2_launch(a2rows[2], ra.a2_rec(a2rows[2]), 32, "2x32")
+        assert [x[1] for x in got] == ["0-31", "32-63", "32-63"], got
+        return (f"campaign: np32a/np32b on cores 0-31 and 32-63 (--bind-to none), {len(others)} other pw.x runs bound "
+                f"as run_qe.sh; 2x32 rate computed; a solo rerun: the completed copy moved aside and both started "
+                f"together; partner running: waits; partner missing: skipped; 2x32 rate None for "
+                f"{[k for k in rows if k != 'concurrent']}; at 2x32 a new part takes the free half (A2: 0-31, 32-63, "
+                f"then 32-63 after the second copy ended)")
+    case("(z17) two concurrent copies on disjoint cores, run together (round-4 R4-C1-1 node, missed items)", c_core_sets)
+
+    def c_nodescripts():
+        """Round-4 R4-C1-2 (N-F31): the node-only scripts are hashed in C1 and the queue, the chain and the launcher must
+        equal the checkout's copies: a queue differing by one byte STOPs C1 in its check phase (nothing else runs);
+        equal copies give five hashes; C2 with a changed run_qe.sh STOPs."""
+        old = r3_signals()
+        try:
+            sysd, Rm = mini("nodescr", boot="ns-boot")
+            _node_scripts(sysd)
+            sp4 = _Spot()
+            write_text(f"http://localhost:{sp4.port}/latest/meta-data/instance/spot/termination-time\n",
+                       os.path.join(Rm, "setup", "s2_spot_url"))
+            write_json(synthetic_state(a2_layout=None, commit=None), os.path.join(Rm, "work", "s2", "state.json"))
+            q = os.path.join(Rm, "setup", "qe_queue.sh")
+            good = open(q).read()
+            write_text(good.replace("retried once", "retried twice", 1), q)
+            rn = Runner("c1", Rm, MockBackend(Rm))
+            ticks = {"n": 0}
+
+            def sl(s):                                     # the STOP comes in the check phase; never run a campaign here
+                ticks["n"] += 1
+                if ticks["n"] > 600:
+                    raise RuntimeError("no STOP in the check phase")
+                time.sleep(min(s, 0.05))
+            rn.be.sleep = sl
+            rc = rn.run()
+            if rn.lockfd is not None:
+                os.close(rn.lockfd)
+        finally:
+            r3_restore(old)
+        cj = read_json(os.path.join(rn.cdir, "campaign.json")) or {}
+        assert rc == 3 and "qe_queue.sh differs" in (cj.get("stop_reason") or ""), (rc, cj.get("stop_reason"))
+        assert not os.path.isdir(os.path.join(rn.cdir, "smoke")), "a pw.x run started"
+        write_text(good, q)
+        be = MockBackend(Rm)
+        rec = be.nodescripts_check("c1", None)
+        assert rec["passed"] and len(rec["files"]) == 5 and all(v and v.get("sha256") for v in rec["files"].values()), rec
+        rq = os.path.join(sysd, "usr", "local", "bin", "run_qe.sh")
+        write_text(open(rq).read() + "# changed\n", rq)
+        r2 = be.nodescripts_check("c2", rec)
+        assert not r2["passed"] and any("run_qe.sh changed" in x for x in r2["problems"]), r2
+        rn2 = Runner("c2", Rm, be); rn2.boot = "ns-boot"; rn2.state = synthetic_state()
+        c46.dump_public(rec, os.path.join(rn2.node.c("c1"), "nodescripts_check.json"))
+        try:
+            rn2.run_check({"what": "nodescripts"}); raise AssertionError("C2 accepted a changed run_qe.sh")
+        except Stop as e:
+            assert "run_qe.sh changed since the C1 record" in str(e), e
+        return ("a one-byte change of qe_queue.sh: STOP in the check phase, no pw.x; equal copies: 5 hashes recorded; C2 "
+                "with a changed run_qe.sh: STOP")
+    case("(z18) node scripts hashed in C1 and compared (round-4 R4-C1-2)", c_nodescripts)
+
+    def c_git_state():
+        """Round-4 R4-C1-3 (N-F32): git failing in the checkout is a STOP, never an empty commit read as clean; a git
+        checkout gives a 40-hex HEAD and its cleanliness; s2_campaign.sh refuses a directory where git fails."""
+        sysd, Rm = mini("gitst")
+        be = NodeBackend(Rm)
+        nog = os.path.join(sysd, "notgit"); os.makedirs(nog, exist_ok=True)
+        be.node.checkout = nog
+        try:
+            be.git_state(); raise AssertionError("git_state passed on a directory without .git")
+        except Stop as e:
+            assert "git failed in the checkout" in str(e), e
+        rp = os.path.join(sysd, "repo"); os.makedirs(rp, exist_ok=True)
+        ge = dict(os.environ, GIT_AUTHOR_NAME="s2", GIT_AUTHOR_EMAIL="s2-selftest", GIT_COMMITTER_NAME="s2",
+                  GIT_COMMITTER_EMAIL="s2-selftest", GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+        for cmd in (["init", "-q"], ["add", "-A"], ["commit", "-q", "--allow-empty", "-m", "s2 self-test"]):
+            subprocess.run(["git", "-C", rp] + cmd, check=True, env=ge, capture_output=True)
+        be.node.checkout = rp
+        g1 = be.git_state()
+        write_text("x\n", os.path.join(rp, "stray.txt"))
+        g2 = be.git_state()
+        assert re.fullmatch(r"[0-9a-f]{40}", g1["head"]) and g1["clean"] and not g2["clean"], (g1, g2)
+        camp = open(os.path.join(ROOT, "ehpc", "node", "s2_campaign.sh")).read()
+        W = os.path.join(Rm, "work", "s2")
+        a_ = "R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2"
+        assert a_ in camp
+        camp = camp.replace(a_, f"R={nog}; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup")
+        write_text(camp, os.path.join(sysd, "camp.sh"))
+        _node_scripts(sysd)
+        pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), "c1"], capture_output=True, text=True,
+                            env=dict(os.environ, PATH=os.path.join(sysd, "bin") + os.pathsep + os.environ.get("PATH", "")))
+        assert pr.returncode == 1 and "git failed" in pr.stderr and not os.path.exists(os.path.join(W, "c1", "driver.out")), \
+            (pr.returncode, pr.stderr[-300:])
+        return "no .git: STOP; a git checkout: 40-hex HEAD, clean, then dirty; s2_campaign.sh in a non-repository: exit 1, nothing started"
+    case("(z19) git failures are a STOP (round-4 R4-C1-3 node)", c_git_state)
+
+    def c_resolve_budget():
+        """Round-4 R4-C1-4 (N-F33): after RESOLVE 'rerun' a smoke or throughput run has the two reruns of N-D10 again
+        (the attempts before go aside with the resolution), and an operator's MACE rerun after an exception does not
+        count against the two reruns of section 13."""
+        sysd, Rm = mini("resbud", boot="rb-boot")
+        rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "rb-boot"; rn.state = synthetic_state()
+        rn.be.graph = lambda c, s: graph("c1", s, sites=lambda m: S2[m]); rn.graph_now()
+        j = rn.G["jobs_by_id"]["pw:s2tp_ref232_np48"]
+        d = rn.pw_dir(j); os.makedirs(d, exist_ok=True)
+        f = rn.part_files(d, j["label"], 1)
+
+        def cut():                                                         # a launch of an earlier boot, no output
+            write_json({"boot": "old-boot", "started_epoch": time.time() - 600, "ranks": 48, "pid": 2 ** 22 + 9}, f["launch"])
+            return rn.pw_status(j, "ok")
+        s1 = [cut() for _ in range(3)]
+        write_text("rerun 2026-11-04 after a fix (self-test)\n", os.path.join(d, "RESOLVE"))
+        s2 = rn.pw_status(j, "ok")
+        s3 = [cut() for _ in range(3)]
+        assert s1 == ["pending", "pending", "missing"] and s2 == "pending" and s3 == ["pending", "pending", "missing"], (s1, s2, s3)
+        wid = wid_of("ref233", "host")
+        dm = rn.L.cell_dir("c1", wid); os.makedirs(dm, exist_ok=True)
+        jm = {"work_id": wid, "xkind": "host"}
+        write_json([{"n": 1, "boot": "rb-boot", "started": utc(), "started_epoch": time.time() - 60, "pid": None}],
+                   rn.attempts_path(wid))
+        write_text(f"1 {utc()}\n", os.path.join(dm, "attempt1.rc"))
+        try:
+            rn.mace_status(jm, "ok"); raise AssertionError("an exception attempt was not a STOP")
+        except Stop:
+            pass
+        write_text("rerun 2026-11-04 after the committed fix (self-test)\n", os.path.join(dm, "RESOLVE"))
+        m = [rn.mace_status(jm, "ok")]
+        for n in (2, 3, 4):
+            att = read_json(rn.attempts_path(wid))
+            att.append({"n": n, "boot": "old-boot", "started": utc(), "started_epoch": time.time() - 60, "pid": None})
+            write_json(att, rn.attempts_path(wid))
+            m.append(rn.mace_status(jm, "ok"))
+        assert m == ["pending", "pending", "pending", "missing"], m
+        return f"pw: {s1}, RESOLVE rerun -> {s2}, then {s3}; MACE: exception STOP, RESOLVE rerun, then {m[1:]}"
+    case("(z20) RESOLVE 'rerun' gives the reruns back (round-4 R4-C1-4)", c_resolve_budget)
+
+    def c_pw_oom_tree():
+        """Round-4 R4-C1-5 and R4-C24-2 (N-F34): a smoke or throughput run records its process tree with its pw.x ranks
+        and their CPUs; an OOM kill of one of its pw.x ranks after its start is cause 'oom'; one of a pid in the other
+        copy's tree, or one dated before its start, is not ('unknown')."""
+        sysd, Rm = mini("pwoom", boot="po-boot")
+        rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "po-boot"; rn.state = synthetic_state()
+        rn.be.graph = lambda c, s: graph("c1", s, sites=lambda m: S2[m]); rn.graph_now()
+        J = lambda x: rn.G["jobs_by_id"]["pw:" + x]                          # noqa: E731
+        A, B = TP_PAIR
+        rn.be.proc_tree = lambda pid: {int(pid): "bash", int(pid) + 1: "mpirun", int(pid) + 7: "pw.x"}
+        rn.be.cpus_allowed = lambda pid: set(range(32, 64)) if int(pid) == 31007 else set(range(32))
+        rn.a2_note_pids(A, {32000, 32001, 32007})
+        causes = []
+        for tag, victim, dt in (("own rank", 31007, 20), ("other copy's rank", 32007, 20), ("before its start", 31007, -30)):
+            d = rn.pw_dir(J(B)); shutil.rmtree(d, ignore_errors=True); os.makedirs(d)
+            f = rn.part_files(d, B, 1)
+            t0 = time.time() - 300
+            write_json({"boot": "po-boot", "started_epoch": t0, "ranks": 32, "pid": 31000, "cpuset": "32-63"}, f["launch"])
+            if tag == "own rank":
+                rn.record_tree(B, f["launch"])
+                L = read_json(f["launch"])
+                assert L["pw_pids"] == [31007] and L["affinity"] == "32-63", L
+            write_text(f"137 {utc()}\n", f["rc"])
+            p = os.path.join(sysd, "mock", "oom_events.jsonl")
+            write_text(json.dumps({"boot": "po-boot", "t": t0 + dt, "task": "pw.x", "pid": victim}) + "\n", p)
+            assert rn.pw_status(J(B), "ok") == "pending"
+            causes.append([json.loads(x) for x in open(os.path.join(rn.cdir, "interruptions.jsonl"))][-1]["cause"])
+        assert causes == ["oom", "unknown", "unknown"], causes
+        return f"own pw.x rank after the start: {causes[0]}; the other copy's rank: {causes[1]}; before the start: {causes[2]}"
+    case("(z21) OOM evidence for smoke and throughput runs by their process tree (round-4 R4-C1-5)", c_pw_oom_tree)
+
+    def c_mace_load():
+        """Round-4 R4-C1-6 (N-F35): check:mace loads the model in a child process after the hash check (the runner
+        never imports mace): on this laptop with an empty cache the hash check fails before any child runs; a child
+        that reports the load gives a passed record with its info; one that raises gives a failed record and a STOP in
+        the check phase, before any MACE attempt."""
+        sysd, Rm = mini("maceload")
+        cache = os.path.join(sysd, "cache"); os.makedirs(cache, exist_ok=True)
+        old = os.environ.get("XDG_CACHE_HOME")
+        os.environ["XDG_CACHE_HOME"] = cache
+        try:
+            r0 = NodeBackend(Rm).foundation_check()
+        finally:
+            if old is None:
+                os.environ.pop("XDG_CACHE_HOME", None)
+            else:
+                os.environ["XDG_CACHE_HOME"] = old
+        assert r0["passed"] is False and "load" not in r0, r0
+        be = NodeBackend(Rm)
+        good = os.path.join(sysd, "py_good"); bad = os.path.join(sysd, "py_bad")
+        write_text('#!/bin/bash\necho \'S2-MACE-LOAD {"dtype": "float64", "device": "cpu", "threads": 6, '
+                   '"z_required_ok": true, "versions": {"mace": "0.3.16"}}\'\n', good)
+        write_text('#!/bin/bash\necho "Traceback (most recent call last):" >&2\necho "S2Error: mace 0.3.17, the '
+                   'plan\'s 0.3.16" >&2\nexit 1\n', bad)
+        os.chmod(good, 0o755); os.chmod(bad, 0o755)
+        be.python = good; r1 = be.mace_load()
+        be.python = bad; r2 = be.mace_load()
+        assert r1["ok"] and r1["info"]["dtype"] == "float64" and not r2["ok"] and r2["error"] == "S2Error", (r1, r2)
+        rn = Runner("c1", Rm, MockBackend(Rm)); rn.boot = "m-boot"; rn.state = synthetic_state()
+        os.makedirs(rn.cdir, exist_ok=True)
+        rn.be.foundation_check = lambda: {"schema": "s2-mace-1", "passed": False, "load": r2}
+        try:
+            rn.run_check({"what": "mace"}); raise AssertionError("a failed MACE load passed")
+        except Stop as e:
+            assert "mace check failed" in str(e), e
+        assert not glob.glob(os.path.join(rn.cdir, "cells", "*", "attempts.json"))
+        return "empty cache: the hash check fails first (no child); a reported load passes; an S2Error STOPs in the check phase"
+    case("(z22) check:mace loads the model before the first MACE job (round-4 R4-C1-6)", c_mace_load)
+
+    def c_wrappers_r4():
+        """Round-4 R4-C1-8, R4-C1-3 (C1 lens) and R4-C1-9: before the first start s2_status.sh says 'not started' and
+        s2_relaunch.sh refuses with 'no S2 work tree'; a relaunch whose s2_campaign.sh refuses (a checkout that is not
+        clean) removes a KEEP_ALIVE older than the boot; a ledger entry of the operator without a boot id counts."""
+        sysd = os.path.join(base, "wrap4"); Rm = os.path.join(sysd, "data")
+        os.makedirs(os.path.join(sysd, "bin"), exist_ok=True); os.makedirs(os.path.join(sysd, "mock"), exist_ok=True)
+        _node_scripts(sysd)
+        envw = dict(os.environ, PATH=os.path.join(sysd, "bin") + os.pathsep + os.environ.get("PATH", ""))
+        stt = open(os.path.join(ROOT, "ehpc", "node", "s2_status.sh")).read()
+        stt = stt.replace("cd /data/work/ps_s2", f'cd "{ROOT}"').replace("/data/work/s2", os.path.join(Rm, "work", "s2")) \
+            .replace("/data/KEEP_ALIVE", os.path.join(Rm, "KEEP_ALIVE"))
+        stt = re.sub(r"^exec .*$", "exit 0", stt, flags=re.M)
+        write_text(stt, os.path.join(sysd, "status.sh"))
+        ps = subprocess.run(["bash", os.path.join(sysd, "status.sh")], capture_output=True, text=True, env=envw)
+        assert ps.returncode == 0 and "runner: not started" in ps.stdout, (ps.returncode, ps.stdout, ps.stderr)
+        rr, so = r3_relaunch(sysd, Rm)
+        assert rr == 1 and "no S2 work tree" in so, (rr, so)
+        # a refusal of s2_campaign.sh itself (the checkout is not clean): the stale KEEP_ALIVE goes
+        W = os.path.join(Rm, "work", "s2"); co = os.path.join(Rm, "work", "ps_s2")
+        os.makedirs(os.path.join(W, "c1"), exist_ok=True); os.makedirs(os.path.join(co, "ehpc", "node"), exist_ok=True)
+        camp = open(os.path.join(ROOT, "ehpc", "node", "s2_campaign.sh")).read()
+        camp = camp.replace("R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2",
+                            f"R={co}; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup")
+        write_text(camp, os.path.join(co, "ehpc", "node", "s2_campaign.sh"))
+        ge = dict(os.environ, GIT_AUTHOR_NAME="s2", GIT_AUTHOR_EMAIL="s2-selftest", GIT_COMMITTER_NAME="s2",
+                  GIT_COMMITTER_EMAIL="s2-selftest", GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+        for cmd in (["init", "-q"], ["add", "-A"], ["commit", "-q", "-m", "s2 self-test"]):
+            subprocess.run(["git", "-C", co] + cmd, check=True, env=ge, capture_output=True)
+        write_text("x\n", os.path.join(co, "stray.txt"))
+        write_json({"status": "running"}, os.path.join(W, "c1", "campaign.json"))
+        ka_ = os.path.join(Rm, "KEEP_ALIVE"); write_text("S2 c1\n", ka_)
+        bt_ = time.time() - 600
+        os.utime(ka_, (bt_ - 3600, bt_ - 3600))
+        rr2, so2 = r3_relaunch(sysd, Rm, btime=bt_, campaign_sh=True)
+        assert rr2 == 1 and "is not clean" in so2 and not os.path.exists(ka_), (rr2, so2, os.path.exists(ka_))
+        led = os.path.join(W, "ledger"); os.makedirs(led, exist_ok=True)
+        write_json([{"btime": 1.80e9, "end": 1.80e9 + 5400.0, "note": "deploy-only boot (self-test)"}],
+                   os.path.join(led, "manual.json"))
+        lg = ledger(Rm, now=1.81e9, backend=MockBackend(Rm))
+        assert lg["complete"] and abs(lg["H_spent_h"] - 1.5) < 1e-9, lg
+        return ("before the first start: status 'not started', relaunch refuses (no work tree); s2_campaign.sh refusing "
+                "inside a relaunch: exit 1, stale KEEP_ALIVE removed; a manual ledger entry without a boot id: 1.5 h, complete")
+    case("(z23) wrappers before the first start and on a refused start; manual ledger entries (round-4 R4-C1-8, -3, -9)",
+         c_wrappers_r4)
+
+    def c_held_durable():
+        """Round-4 R4-C24-1 (N-F36): the STOP an A2 end rule asks for survives the hold: (i) relaxation 3 ends with QE's
+        error banner and SIGTERM arrives while its validate-a2 runs: rc 4, no CAMPAIGN_STOPPED; the relaunch in a new
+        boot STOPs with that reason before any A2 launch; (ii) validate-a2 exits 1 in the hold: CAMPAIGN_STOPPED holds
+        both reasons; (iii) after (ii) the operator's relaunch does not raise it again and launches relaxation 4; (iv) the
+        nstep-before-200 end (I-48) as (i)."""
+        LAB = C2_ORDER[2]
+        ok46 = lambda a, jf, log: (c46.dump_public({"validity": {"valid": True, "failed": []}}, read_json(jf)["out"]), 0)[1]  # noqa: E731
+
+        def setup(tag, end):
+            sysd, Rm, rn = r3_c2(tag, {}, a2_layout="48")
+            rn.state.update({"K2": "pass", "step0": {"attempts": 1, "outcome": "pass"}})
+            r3_markers(rn, ("gate:step0@1", "gate:K2"))
+            for lab in C2_ORDER[:2]:
+                r3_done(rn, lab)
+            n = 41 if end == "pw_error" else 121
+            r3_part(rn, LAB, q47.synthetic_pw_output(n_config=n, end=end, ranks=48, label=f"{LAB}.p1"), pid=2 ** 22 + 9,
+                    rc=1 if end == "pw_error" else 0, ranks=48, lay="48")
+
+            def final(j, r_, outs, rn=rn):
+                ff = os.path.join(rn.L.a2_dir(rn.c, j["label"]), j["label"] + ".final.extxyz"); write_text("synthetic\n", ff)
+                return {"file": os.path.basename(ff), "k": int(r_.get("k_last") or 0), "sha256": sha256_file(ff)}
+            rn.a2_write_final = final
+            rn.a2v_files = lambda j: {"final": os.path.join(rn.L.a2_dir(rn.c, j["label"]), j["label"] + ".final.extxyz"),
+                                      "parent_final": "x"}
+            return sysd, Rm, rn
+
+        def relaunch(sysd, Rm, rn, boot):
+            sf = os.path.join(rn.cdir, "CAMPAIGN_STOPPED")
+            if os.path.exists(sf):
+                os.replace(sf, sf + ".prev")                              # what run() does at a relaunch after a STOP
+            write_text(boot, os.path.join(sysd, "mock", "boot_id"))
+            write_text(f"{time.time() - 60:.0f}", os.path.join(sysd, "mock", f"btime.{boot}"))
+            rn2 = c2_runner(Rm, boot=boot); rn2.state = rn.state; rn2.graph_now()
+            rn2.h_spent = lambda: 100.0; rn2.a2v_files = rn.a2v_files; rn2.be.run46 = ok46
+            rn2.be.sleep = lambda s: time.sleep(0.01)
+            ev = []
+
+            def launch(j, r, ranks, lay):
+                ev.append(j["label"]); raise SystemExit("a2_launch")
+            rn2.a2_launch = launch
+            try:
+                rc2 = rn2.loop()
+            except SystemExit:
+                rc2 = "launched"
+            txt = open(os.path.join(rn2.cdir, "CAMPAIGN_STOPPED")).read() if os.path.exists(os.path.join(rn2.cdir, "CAMPAIGN_STOPPED")) else ""
+            return rc2, ev, txt
+        out = []
+        for tag, end in (("i", "pw_error"), ("iv", "nstep")):
+            sysd, Rm, rn = setup("hd_" + tag, end)
+
+            def term(a, jf, log, rn=rn):
+                rn.shutdown = True; return -15
+            rn.be.run46 = term
+            rn.set_campaign("running")
+            rc = rn.loop()
+            r = read_json(rn.a2_path(LAB))
+            assert rc == 4 and not os.path.exists(os.path.join(rn.cdir, "CAMPAIGN_STOPPED")) and \
+                r["end_rule"]["stop"] and r["end_rule"].get("stop_raised") is False, (tag, rc, r.get("end_rule"))
+            rc2, ev, txt = relaunch(sysd, Rm, rn, f"n-boot-{tag}")
+            assert rc2 == 3 and not ev and LAB in txt, (tag, rc2, ev, txt[:200])
+            assert read_json(rn.a2_path(LAB))["end_rule"]["stop_raised"] is True
+            out.append(f"({tag}) {end}: SIGTERM in the hold rc 4; relaunch STOPs with it, no launch")
+        sysd, Rm, rn = setup("hd_ii", "pw_error")
+        rn.be.run46 = lambda a, jf, log: 1
+        rn.set_campaign("running")
+        rc = rn.loop()
+        txt = open(os.path.join(rn.cdir, "CAMPAIGN_STOPPED")).read()
+        assert rc == 3 and "validate-a2" in txt and "pw.x error routine" in txt, (rc, txt[:300])
+        rc3, ev3, _ = relaunch(sysd, Rm, rn, "n-boot-iii")
+        assert rc3 == "launched" and ev3 == [C2_ORDER[3]], (rc3, ev3)
+        out.append("(ii) a second STOP in the hold: CAMPAIGN_STOPPED holds both; (iii) the operator's relaunch launches "
+                   "relaxation 4")
+        return "; ".join(out)
+    case("(z24) a held STOP survives a shutdown or a second STOP in the hold (round-4 R4-C24-1)", c_held_durable)
+
+    def c_tree_partial():
+        """Round-4 R4-C24-2 (N-F34): the tree is recorded at every tick until it holds the part's pw.x ranks; a first
+        record of only the wrapper, run_qe.sh and mpirun is not a pw.x tree, so an OOM kill of a rank not yet recorded
+        is the part's interruption ('oom', rerun), not a STOP for a human."""
+        sysd, Rm, rn = r3_c2("treepart", {}, a2_layout="48")
+        lab = C2_ORDER[0]
+        t0 = time.time() - 60
+        r3_part(rn, lab, q47.synthetic_pw_output(n_config=1, end="killed", ranks=48, label=f"{lab}.p1"), pid=7000,
+                ranks=48, lay="48", t0=t0)
+        early = {7000: "bash", 7001: "s2_run_qe.sh", 7002: "mpirun"}
+        rn.be.proc_tree = lambda pid: dict(early)
+        rn.be.descendants = lambda pid: set(early)                       # the same tree for the round-3 code
+        rn.a2_record_pids(lab, read_json(rn.a2_path(lab)))
+        write_text(f"137 {utc()}\n", rn.part_files(rn.L.a2_dir(rn.c, lab), lab, 1)["rc"])
+        append_jsonl(os.path.join(sysd, "mock", "oom_events.jsonl"), {"boot": "m-boot", "t": t0 + 20, "task": "pw.x",
+                                                                      "pid": 7010})
+        s = rn.a2_status(rn.G["jobs_by_id"]["a2:" + lab])
+        r = read_json(rn.a2_path(lab))
+        assert s == "pending" and r["interruptions"][-1]["cause"] == "oom" and r["reruns_from_zero"] == 1, (s, r)
+        full = {**early, **{7010 + i: "pw.x" for i in range(48)}}
+        sysd2, Rm2, rn2 = r3_c2("treefull", {}, a2_layout="48")
+        r3_part(rn2, lab, "", pid=7000, ranks=48, lay="48", t0=time.time())
+        rn2.be.proc_tree = lambda pid: dict(early)
+        jj = rn2.G["jobs_by_id"]["a2:" + lab]
+        lf = rn2.part_files(rn2.L.a2_dir(rn2.c, lab), lab, 1)["launch"]
+        rn2.watch_tree(jj["id"], lf, lab, 48)
+        rn2.be.proc_tree = lambda pid: dict(full)
+        rn2.watch_tree(jj["id"], lf, lab, 48)                             # the next tick, not 30 s later
+        L = read_json(lf)
+        assert len(L["pw_pids"]) == 48 and jj["id"] in rn2.tree_full, (len(L.get("pw_pids") or []), rn2.tree_full)
+        return "first record without pw.x: an OOM of rank 7010 -> 'oom', rerun; the tree refreshed at the next tick holds 48 ranks"
+    case("(z25) OOM of a rank before the tree holds the pw.x ranks (round-4 R4-C24-2)", c_tree_partial)
+
+    def c_killed_between_parts():
+        """Round-4 R4-C24-3 (N-F37): at 2x32 a relaxation waiting for its restart part when K3 = fail_replan stops A2 is
+        killed_by_gate with its part-1 output and restart data moved aside unread (archive() then copies no output)."""
+        sysd, Rm, rn = r3_c2("killparts", {}, a2_layout="2x32")
+        for lab in C2_ORDER[:8]:
+            r3_done(rn, lab)
+        lab = C2_ORDER[8]
+        d = r3_part(rn, lab, q47.synthetic_pw_output(n_config=60, end="exit", ranks=32, label=f"{lab}.p1"),
+                    pid=2 ** 22 + 31, rc=0, ranks=32, lay="2x32")
+        os.makedirs(os.path.join(d, "tmp", f"{lab}.save"), exist_ok=True)
+        write_text("restart\n", os.path.join(d, "tmp", f"{lab}.save", "data-file-schema.xml"))
+        r = read_json(rn.a2_path(lab))
+        r["parts"].append({"n": 2, "input": f"{lab}.p2.in", "restart_mode": "restart", "nstep": 141})
+        write_text("&CONTROL\n/\n", rn.part_files(d, lab, 2)["in"])
+        write_json(r, rn.a2_path(lab))
+        rn.state["K3"] = "fail_replan"
+        jobs = [j for j in rn.G["jobs_by_id"].values() if j["phase"] == "a2"]
+        st = rn.statuses()
+        assert st["a2:" + lab] == "pending", st["a2:" + lab]
+        rn.a2_phase(jobs, st)
+        r = read_json(rn.a2_path(lab))
+        kd = os.path.join(d, "discarded", "killed_by_gate")
+        assert r["status"] == "killed_by_gate" and os.path.exists(os.path.join(kd, f"{lab}.p1.out")) and \
+            os.path.isdir(os.path.join(kd, "tmp")) and not os.path.exists(rn.part_files(d, lab, 1)["out"]), r.get("status")
+        return "relaxation 9 between parts: killed_by_gate, p1.out and tmp/ in discarded/killed_by_gate (none left for the archive)"
+    case("(z26) a relaxation between parts when a gate stops A2 (round-4 R4-C24-3)", c_killed_between_parts)
+
+    def c_gate_over_exit():
+        """Round-4 missed item of the C2-C4 lens (N-F37): a stopping gate replaces an earlier 'cap' or 'spot' exit request
+        of a running partner, so the partner is killed_by_gate after the drain (outputs moved aside unread), with no
+        restart part and no interruption logged."""
+        out = []
+        lab = C2_ORDER[1]
+        for prior, end in (("cap", "exit"), ("spot", "exit")):
+            sysd, Rm, rn = r3_c2("gx_" + prior, {}, a2_layout="2x32")
+            d = r3_part(rn, lab, q47.synthetic_pw_output(n_config=150, end="killed", ranks=32, label=f"{lab}.p1"),
+                        pid=2 ** 22 + 77, ranks=32, lay="2x32")
+            rn.request_exit(lab, d, prior)
+            p = _Fake(pid=2 ** 22 + 77); rn.procs[lab] = {"p": p, "kind": "a2", "dir": d}
+            rn.state["K2"] = "fail"
+            rn.a2_stop_all("gate gate:K2")
+            req = read_json(os.path.join(d, "exit_request.json"))
+            f = rn.part_files(d, lab, 1)
+            write_text(q47.synthetic_pw_output(n_config=201 if prior == "cap" else 151, end=end, ranks=32,
+                                               label=f"{lab}.p1"), f["out"])
+            write_text(f"0 {utc()}\n", f["rc"]); p.rc = 0
+            rn.settle_gate_kill(lab, d)
+            r = read_json(rn.a2_path(lab))
+            intr = os.path.join(rn.cdir, "interruptions.jsonl")
+            assert req["reason"] == "gate" and req.get("prior") == prior and r["status"] == "killed_by_gate" and \
+                os.path.exists(os.path.join(d, "discarded", "killed_by_gate", f"{lab}.p1.out")) and \
+                len(r["parts"]) == 1 and not os.path.exists(intr), (prior, req, r.get("status"))
+            out.append(f"prior '{prior}': gate request (prior kept), killed_by_gate, no restart part, no interruption")
+        return "; ".join(out)
+    case("(z27) a gate's exit replaces a 'cap' or 'spot' request (round-4 missed item)", c_gate_over_exit)
 
     for p in procs.values():                                   # nothing of the simulated campaign is left running
         if p.poll() is None:

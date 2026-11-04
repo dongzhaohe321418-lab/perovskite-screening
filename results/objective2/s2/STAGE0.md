@@ -1,10 +1,12 @@
 # S2 Stage 0: code, laptop checks and pre-flight (record of 2026-11-04)
 
-**Status: Stage 0 of `S2_PLAN.md` §17 (items 2–4) is written, self-tested and checked on the laptop, has been
-through three review rounds (§7; the round-3 fixes on 2026-11-04), and is committed, with this record and the
-`s2/stage0/` records, on top of the plan commit ae6402e as the S2 campaign code (§17 item 2); the analyst's decisions
+**Status: Stage 0 of `S2_PLAN.md` §17 (items 2–4) is written, self-tested and checked on the laptop, and has been
+through four review rounds (§7). After the third (the round-3 fixes on 2026-11-04) it was committed as e257cdf, with
+this record and the `s2/stage0/` records, on top of the plan commit ae6402e (§17 item 2). The round-4 changes of
+2026-11-04 (§7, round 4) are a dated follow-up to e257cdf, made before any S2 calculation and committed on top of it
+with this record; the commit that holds them is the S2 campaign code. The analyst's decisions
 on the open Stage-0 items are in §9 (D-S0-2 revised and D-S0-9 added after round 2, D-S0-10 on the round-3 reading
-I-D9, all 2026-11-04, and implemented as recorded in §7). Any later change before or during the campaigns is a
+I-D9 and D-S0-11 on the round-4 readings, all 2026-11-04, and implemented as recorded in §7). Any later change before or during the campaigns is a
 dated commit recorded in this file; the commit in force is the one each campaign records at its start. **No
 S2 cell, pilot or production, of any host has been evaluated by any calculator (MACE, DFT or a mock), and no S2
 energy exists.** Calculators were attached only to synthetic cells and to the reference cells
@@ -31,12 +33,12 @@ the module's `--self-test` and listed in Appendix A, generated from the code.
 |---|---|---|---|
 | `scripts/46_s2_cells.py` (module A) | 2 823 | sites, far pairs and the four farthest sites asserted against the §4 tables; regions R_j (6.0 Å, molecules whole by carbon), `region_id`, index transfer host → V → doped; host relaxation (`scripts/29 relax_staged`, 0.02/0.01/0.005 eV/Å, 10 000 steps); V⁺_Rj (I127, 1.2 Å); D_j and D_j+V by `scripts/42 build_paired`; frozen FIRE relaxation (fmax 0.01 eV/Å over the free atoms, 10 000 steps, `FixAtoms` outside R_j); validity checks 1–5; the §11 final-geometry checks 2–5 (`validate-a2`, refused without the partner's final geometry); distinct minima; pose starts of Cs and Cl with the §2 Pb–Cl rule; labels and work ids; records; node and archive layout; public hygiene; the MACE loader (foundation-file sha256, float64, CPU, threads; never called by a test) | §§2, 4, 5, 9, 11, 17; design §§3, 11, 16 |
 | `scripts/47_s2_qe.py` (module B) | 2 278 | the S2 pw.x writer (the `scripts/30` fingerprint unchanged plus the Cl and Ca UPFs; 50/400 and 60/480 Ry; R point; degauss 0.005; `nosym`; conv_thr 10⁻⁸; mixing 0.3; electron_maxstep 200; relax: BFGS, 7.8 × 10⁻⁴ Ry/bohr, 10⁻⁵ Ry, nstep as a parameter, `if_pos 0 0 0` outside R_j, `disk_io 'low'`); X-unit vacancy detection, tot_charge and the `_q0` exception; the valence-electron assertion; the §7 spin seed; UPF identities; single-point and relaxation parsers with read modes (QE's error banner a final end, the queue's transient file states read again); the §11 end rule; the step-0 equivalence; the free atoms' per-atom force norms | §§6, 7, 10–13, 15 |
-| `scripts/48_s2_analysis.py` (module C) | 2 653 | rule V at both tiers (δ valid by the §11 rule), the §12 validity and dopant-specific rules, controls C1–C5, ranking, the §15 reported items (with the A1-start sensitivity row of D-S0-2, the count terms of multi-pose legs and the pilot section of the MACE ledger), `assemble` (the only full read of C3/C4 and MACE energies) and the one evaluation with its guards, including the analysis code against the campaign commit (`s2/s2_eval.json`) | §§11, 12, 14, 15, 17 |
-| `scripts/49_s2_gates.py` (module C) | 2 240 | every decision constant (`RULES`); gates G1, N and the n rule (gate `nrule`), the pose rule, step-0, K2, K3, separability; the §16 projection, cut order, hard-cap rule and throughput choice; the blinded `Reader` and its allow-lists; `verify` | §§7–9, 11, 14, 16, 17 |
-| `scripts/50_s2_campaign.py` (module D) | 5 917 | job graphs of C1–C4 with counts asserted against the plan; the resumable node runner (flock, keep-alive, spot watcher with a reachability check, MACE and A2 reruns, queue rules, A2 parts with exit files and restarts, the section 11 check jobs, hard cap on pw.x and MACE jobs only, gates, guarded STOP and exit paths, STOPs held until the gates on ended cells have applied, shutdown as an interruption, RESOLVE for A2 and for the pw.x reference runs, `c1/NODE_FIX`, a hung-child watchdog); node-hour ledger; laptop archive (refusing names that differ only in case) | §§7–13, 16, 17 |
+| `scripts/48_s2_analysis.py` (module C) | 2 869 | rule V at both tiers (δ valid by the §11 rule), the §12 validity and dopant-specific rules, controls C1–C5, ranking, the §15 reported items (with the A1-start sensitivity row of D-S0-2, the count terms of multi-pose legs and the pilot section of the MACE ledger), `assemble` (the only full read of C3/C4 and MACE energies) and the one evaluation with its guards, including the analysis code against the campaign commit (`s2/s2_eval.json`; round 4: the amendment rules, the commit history, complete A2 cells only, the pilots' default-pose Cs and Cl rows) | §§11, 12, 14, 15, 17 |
+| `scripts/49_s2_gates.py` (module C) | 2 312 | every decision constant (`RULES`); gates G1, N and the n rule (gate `nrule`), the pose rule, step-0, K2, K3, separability; the §16 projection, cut order, hard-cap rule and throughput choice; the blinded `Reader` and its allow-lists; `verify`; round 4: the 2x32 rate only for a concurrent pair on disjoint cores (I-C13) | §§7–9, 11, 14, 16, 17 |
+| `scripts/50_s2_campaign.py` (module D) | 7 181 | job graphs of C1–C4 with counts asserted against the plan; the resumable node runner (flock, keep-alive, spot watcher with a reachability check, MACE and A2 reruns, queue rules, A2 parts with exit files and restarts, the section 11 check jobs, hard cap on pw.x and MACE jobs only, gates, guarded STOP and exit paths, STOPs held until the gates on ended cells have applied, shutdown as an interruption, RESOLVE for A2 and for the pw.x reference runs, `c1/NODE_FIX`, a hung-child watchdog; round 4: every pw.x run outside the queue through the committed launcher, two concurrent copies on disjoint halves of the cores and the throughput pair run together, the node-script hashes, a strict git check, the model load at check:mace, durable held STOPs); node-hour ledger; laptop archive (refusing names that differ only in case) | §§7–13, 16, 17 |
 | `scripts/51_s2_preflight.py` (module D) | 528 | §17 item 4: dry-run builds of every C1 cell and of the C2/C4 start set on the unrelaxed pilots, every C1 single-point and A2 input, the smoke-test and throughput inputs, all checked | §§5–11, 16, 17 |
 | `scripts/52_s2_stage0_checks.py` (module E) | 1 295 | §17 item 3: the T4 report and the `s2b-2` freeze, the admissibility check of ranks 1–12 and of the m05 calibration cells, the Pb–Cl record, the laptop MACE hash | §§2, 3, 5, 11, 17 |
-| `ehpc/node/s2_campaign.sh`, `s2_relaunch.sh`, `s2_status.sh` | 22, 51, 11 | start (lock on fd 8, clean checkout), relaunch after a reboot (refuses while the S2 lock is held, any S2 process lives, its own shell and parent excepted, or a campaign is stopped; a refusal removes a KEEP_ALIVE older than the boot), status from the lock (never an energy) | §§13, 16, 17 |
+| `ehpc/node/s2_campaign.sh`, `s2_relaunch.sh`, `s2_status.sh`, `s2_run_qe.sh` | 25, 54, 13, 36 | start (lock on fd 8, a clean git checkout; a git failure refused), relaunch after a reboot (refuses while the S2 lock is held, any S2 process lives, its own shell and parent excepted, or a campaign is stopped; a refusal, its own or one of `s2_campaign.sh`, removes a KEEP_ALIVE older than the boot; before the first start it refuses with 'no S2 work tree'), status from the lock ('not started' before the first start; never an energy), and the pw.x launcher of every run outside the queue (the node's run_qe.sh with an optional core set for each of two concurrent copies, round 4) | §§13, 16, 17 |
 | `s2/stage0/` | 6 records | `t4_admissibility.json`, `s2b2_freeze.json`, `admissibility.json`, `pbcl_source.json`, `mace_laptop.json`, `preflight_c1.json` (§§3, 4 below) | §17 items 3, 4 |
 
 `scripts/22`, 29, 30, 33, 34, 35 and 42 are unchanged (`git diff` is empty) and are loaded through importlib, as
@@ -54,7 +56,7 @@ pose modes.
 
 ## 2. Self-tests
 
-Run from the repository root with the project's Python environment on 2026-11-04, after every fix of §7 (all three
+Run from the repository root with the project's Python environment on 2026-11-04, after every fix of §7 (all four
 rounds) and the implementation of the post-round-2 decisions D-S0-2 (revised) and D-S0-9 (§§7, 9), all files
 present (no module mocked). Each prints its cases, the I/N/X entries it implements and ends with the case
 "no-model: 'mace' not in sys.modules". Full logs (they contain local paths) are in the private record folder.
@@ -63,12 +65,12 @@ present (no module mocked). Each prints its cases, the I/N/X entries it implemen
 |---|---|---|
 | `scripts/46` | PASS, 14 cases, 9 s | the §3 and §11 draws; site lists of the 14 hosts of the §4 table and the four farthest sites of m30 and m05; the m05 census of §11 (Pb124 3.27, FA28 5.03, I49 4.63 Å; regions 70/58/59 host atoms on the unrelaxed member) and the m30 cross-check (69/49/58/107); region and index-transfer invariants for every token and leg; 161 C1 labels, 36 A2 and 9 reference labels, 164 work ids, 30 refused labels, none matching `scripts/33`; every validity check with a passing and a failing synthetic case at its boundary; distinct-minima cases; FixAtoms honoured by a mock relaxation; pose starts (Cs 7 + 7, Cl 3 + 3, the Pb–Cl override); the job pipeline on the reference cell including `validate-a2` (pass, a far atom moved 0.30 Å failing check 5, V⁺, D and D+V without the partner's final geometry refused with no record, a foreign geometry refused); hygiene; the MACE path computed without importing mace |
 | `scripts/47` | PASS, 15 cases, 4 s | inputs and electron counts for the reference cells and every token and leg (host 1070, V 1062, `_q0` 1063; Sr/Ca 1066/1058, Cl 1070/1062, Cs 1060/1052, GA 1076/1068) with 20 refusals; the fingerprint against `scripts/30` (7 single points byte-identical) and line by line against four archived S1 inputs, the deliberate S2 differences listed; the spin seed (Cl 1/7, Ca 1/10, 0.1 elsewhere); the WP2e relaxation (283 configurations, F(120) − F(100) = −58.296 meV, F(200) − F(180) = −16.320 meV, equal to the trajectory CSV within 0.6 µeV; 201 configurations at k_cap 200, end rule unconverged_cap); read modes capturing no value; end-rule boundary cases (3.000 / 3.001 meV); restart concatenation; single-point completeness, with the queue's states between its `mv` and `touch` and a file moved during a read; QE's error banner in the SCF of WP2e configuration 120 (pw_error, unconverged early, STOP) and after k = 200 (cap rule); another input name refused; UPF identities over 376 archived S1 outputs; step-0 at 0.5000 / 0.5001 meV; round 3: the free atoms' per-atom force norms of a single point (N-B18) |
-| `scripts/48` | PASS, 18 cases, 2 s | an independent second implementation of every §14 statistic and control decision (1 810 statistics and decisions on five tables: Y_h, Δ_h with SD(Δ_h)/√2 and mean(Δ_h), the per-site t intervals at both tiers, both tiers' intervals and classes, C1–C5, n_d, the validated and the shown A1 class, δ, pooling, ranking; worst difference 3.4 × 10⁻¹³ meV at F ≈ −8 × 10⁴ eV; changing the √2 of C2 or its strict < makes the self-test fail); planted classes (Sr repels, Ca −75 meV binds, null dopants, GA repels); the −100 meV X site flagged and the −80 meV site neither flagged nor "no interaction"; refusals (no repelling control, df_δ = 2, \|δ̄\| 50.001 meV, the dopant-specific rule, now including multi-pose rejected starts); G1, gate-N and pose-cut no-class cases; edge cases; the `assemble` round trip from a synthetic archive written as scripts/46 and 50 write it (`o<k>` labels through the distinct-minima records); round 2: the multi-pose 10% rule over cells (5/336 no trip, 28/160 trip), the heterogeneity flag at its rounding threshold; after round 2 (D-S0-2 revised): an A1-invalid start of an A2 cell, where the §11 rule decides (Ca m_d 2 and every decisive number unchanged; δ_far valid where K3 passes on the same records), and the reported-only A1-start sensitivity row equals the decisive result with that δ dropped; round 3: the boundaries of C2 (24.999975 / 25.000025 meV, \|mean\| 14.999 / 15.001 meV, exactly 25 and 15 meV failing), C4 (7 / 6 of 8), the valid-host thresholds, the sign rule at n = 10 (7/10 not resolved, 8/10 repels), C1 through Sr's C2, C4 and C5, the required hosts against an independent loop; the count term beside an aggregated E_b (3 and 2 kept minima: 10.4205 meV) and the MACE ledger's pilot section; the assemble round trip with the G1, N, nrule and pose files side by side, the pose gate's count term and the force norms reaching `s2_eval.json`; the path-work, determinism, q = 0 and WP2c rows; the analysis-code guard against the campaign commit in a temporary git repository |
-| `scripts/49` | PASS, 16 cases, 1 s | the 22 plan pins, the unit costs and the §12 per-host list; every gate with passing, failing and boundary cases (G1 5.000/5.001, 3.000/3.001, M 0.09/0.10; σ 25.000/25.001, df = 2; n rule at 20.000/20.001; pose 10.000/10.001 and the (+10, −10) case; step-0 and its repeat; K2; K3 at 25.7000/25.7001 with the A2 checks, host_R missing with its children's checks skipped (a1_only), the I-C1 text; separability; projection and cut order at after4/c3/c4 with spec §4.9 cut records; hard cap 520.000/520.001; throughput 1.15×/1.1499×); the blinded Reader; gate runners and `verify` on a synthetic archive (round 3: the gate names unique after lower-casing, the old name `n` refused); the real scripts/47 parsers through the Reader |
-| `scripts/50` | PASS, 44 cases, 44 s | a simulated campaign over two boots on the reference cells with a mock MACE, a mock pw.x and the committed `qe_queue.sh` and `chain.sh` (paths rewritten): (a)–(c) single-point completeness; (d) spot notice, exit file and restart (part 2 differs only in `restart_mode` and `nstep`, counters continue, no launch during the hold); (e) the k = 200 stop and the end rule, and the section 11 check failing check 5 on a far atom moved 0.30 Å; (f) an OOM kill without restart data: two reruns, missing, check skipped; (g) a MACE interruption; (h) keep-alive; (j) resume; (l) runner reads; (m) every A2 relaxation scheduled with its check job, K3 waiting for the checks, a K2 stop; (n) the step-0 repeat; (o) scripts/49 K3 on runner-written A2 records; (p) measured walls carried across campaigns, the restart-part cap, the ledger bound, the chain lock; (i) hard cap (after a refusal only pw.x and MACE jobs are swept; a check, a gate and a geometry job stay pending); (k) C1–C4 graph counts; archive; spot URL; hygiene; round 2: (q) checks without a configuration or a partner (K2 fail, C2 CAMPAIGN_DONE, C3 precondition, K3 a1_only), (r) the check after a cap refusal with two copies, (s) A2 ends (pw.x error, unexplained end, RESOLVE, OOM, node loss), (t) STOP and exit paths (full disk, a reason naming a temporary path, SIGTERM and the relaunch decision of `s2_relaunch.sh`), (u) projection inputs, (v) OOM by the command's own pid, (w) the queue state between `mv` and `touch` with the committed queue, N-B9 at every A2 read, (x) the hung-child watchdog; after round 2 (D-S0-9): (y) gates after a hard-cap refusal (relaxation 5 refused, every gate evaluated, K3 a1_only applied, CAMPAIGN_DONE); round 3: (z1) no case-fold collision among the job ids, gate names, gate files, markers, labels and work ids of seven C1–C4 graphs, and archive refusals; (z2) a smoke test ending with QE's error banner (one attempt, missing, the throughput row STOPs naming the smoke tests, a new HEAD refused, then `c1/NODE_FIX` and RESOLVE 'rerun' reach the MACE phase); (z3) an unreachable spot endpoint STOPs before any job; (z4) the smoke test at the A2 layout folded before `smoke2.json`; (z5) a held STOP at 2x32 (K2 cell and K3 cell with the error banner: the running copy gets the exit file and is killed_by_gate within 0.1 s; the bfgs_failed control); (z6) SIGTERM while the K3 gate, validate-a2 or a geometry job runs; (z7) SIGTERM inside the statuses (A2 part and MACE attempt judged at the relaunch as node-loss); (z8) K3 before relaxation 9 at 48 ranks; (z9) OOM evidence by the part's process tree; (z10) the cap refusal persisting across a relaunch (I-D9); (z11) the precondition matrix and the n rule; (z12) the dead status removed and a stale KEEP_ALIVE at a refused relaunch |
-| `scripts/51` | PASS, 8 cases, 14 s | the pre-flight checks on a subset and five planted errors, each caught (electron count, duplicated label, region id, degauss, shifted Cl without the Pb–Cl record) |
+| `scripts/48` | PASS, 20 cases, 2 s | an independent second implementation of every §14 statistic and control decision (1 810 statistics and decisions on five tables: Y_h, Δ_h with SD(Δ_h)/√2 and mean(Δ_h), the per-site t intervals at both tiers, both tiers' intervals and classes, C1–C5, n_d, the validated and the shown A1 class, δ, pooling, ranking; worst difference 3.4 × 10⁻¹³ meV at F ≈ −8 × 10⁴ eV; changing the √2 of C2 or its strict < makes the self-test fail); planted classes (Sr repels, Ca −75 meV binds, null dopants, GA repels); the −100 meV X site flagged and the −80 meV site neither flagged nor "no interaction"; refusals (no repelling control, df_δ = 2, \|δ̄\| 50.001 meV, the dopant-specific rule, now including multi-pose rejected starts); G1, gate-N and pose-cut no-class cases; edge cases; the `assemble` round trip from a synthetic archive written as scripts/46 and 50 write it (`o<k>` labels through the distinct-minima records); round 2: the multi-pose 10% rule over cells (5/336 no trip, 28/160 trip), the heterogeneity flag at its rounding threshold; after round 2 (D-S0-2 revised): an A1-invalid start of an A2 cell, where the §11 rule decides (Ca m_d 2 and every decisive number unchanged; δ_far valid where K3 passes on the same records), and the reported-only A1-start sensitivity row equals the decisive result with that δ dropped; round 3: the boundaries of C2 (24.999975 / 25.000025 meV, \|mean\| 14.999 / 15.001 meV, exactly 25 and 15 meV failing), C4 (7 / 6 of 8), the valid-host thresholds, the sign rule at n = 10 (7/10 not resolved, 8/10 repels), C1 through Sr's C2, C4 and C5, the required hosts against an independent loop; the count term beside an aggregated E_b (3 and 2 kept minima: 10.4205 meV) and the MACE ledger's pilot section; the assemble round trip with the G1, N, nrule and pose files side by side, the pose gate's count term and the force norms reaching `s2_eval.json`; the path-work, determinism, q = 0 and WP2c rows; the analysis-code guard against the campaign commit in a temporary git repository; round 4: the calibrated sign rule on Y_h + δ̄ and the strict class bounds at ±25.7 meV (each of three mutations of rule V makes this case fail), the pilots' Cs and Cl noise rows equal to gate N's E_b with their MACE values, a killed_by_gate A2 cell neither parsed nor given a relaxation energy, the guard's amendment rules (a note outside scripts/, added after the campaign commit, dated on or after it), an amendment recorded with unchanged code, the diff's sha256 and the commit history with the diff stat of each NODE_FIX step |
+| `scripts/49` | PASS, 16 cases, 1 s | the 22 plan pins, the unit costs and the §12 per-host list; every gate with passing, failing and boundary cases (G1 5.000/5.001, 3.000/3.001, M 0.09/0.10; σ 25.000/25.001, df = 2; n rule at 20.000/20.001; pose 10.000/10.001 and the (+10, −10) case; step-0 and its repeat; K2; K3 at 25.7000/25.7001 with the A2 checks, host_R missing with its children's checks skipped (a1_only), the I-C1 text; separability; projection and cut order at after4/c3/c4 with spec §4.9 cut records; hard cap 520.000/520.001; throughput 1.15×/1.1499×); the blinded Reader; gate runners and `verify` on a synthetic archive (round 3: the gate names unique after lower-casing, the old name `n` refused); the real scripts/47 parsers through the Reader; round 4: the 2x32 rate only for two concurrent copies on disjoint cores (I-C13: 90.0% / 89.97% overlap, a solo rerun, shared or missing core sets, shared CPUs, CPUs outside the set) |
+| `scripts/50` | PASS, 59 cases, 52 s | a simulated campaign over two boots on the reference cells with a mock MACE, a mock pw.x and the committed `qe_queue.sh` and `chain.sh` (paths rewritten): (a)–(c) single-point completeness; (d) spot notice, exit file and restart (part 2 differs only in `restart_mode` and `nstep`, counters continue, no launch during the hold); (e) the k = 200 stop and the end rule, and the section 11 check failing check 5 on a far atom moved 0.30 Å; (f) an OOM kill without restart data: two reruns, missing, check skipped; (g) a MACE interruption; (h) keep-alive; (j) resume; (l) runner reads; (m) every A2 relaxation scheduled with its check job, K3 waiting for the checks, a K2 stop; (n) the step-0 repeat; (o) scripts/49 K3 on runner-written A2 records; (p) measured walls carried across campaigns, the restart-part cap, the ledger bound, the chain lock; (i) hard cap (after a refusal only pw.x and MACE jobs are swept; a check, a gate and a geometry job stay pending); (k) C1–C4 graph counts; archive; spot URL; hygiene; round 2: (q) checks without a configuration or a partner (K2 fail, C2 CAMPAIGN_DONE, C3 precondition, K3 a1_only), (r) the check after a cap refusal with two copies, (s) A2 ends (pw.x error, unexplained end, RESOLVE, OOM, node loss), (t) STOP and exit paths (full disk, a reason naming a temporary path, SIGTERM and the relaunch decision of `s2_relaunch.sh`), (u) projection inputs, (v) OOM by the command's own pid, (w) the queue state between `mv` and `touch` with the committed queue, N-B9 at every A2 read, (x) the hung-child watchdog; after round 2 (D-S0-9): (y) gates after a hard-cap refusal (relaxation 5 refused, every gate evaluated, K3 a1_only applied, CAMPAIGN_DONE); round 3: (z1) no case-fold collision among the job ids, gate names, gate files, markers, labels and work ids of seven C1–C4 graphs, and archive refusals; (z2) a smoke test ending with QE's error banner (one attempt, missing, the throughput row STOPs naming the smoke tests, a new HEAD refused, then `c1/NODE_FIX` and RESOLVE 'rerun' reach the MACE phase); (z3) an unreachable spot endpoint STOPs before any job; (z4) the smoke test at the A2 layout folded before `smoke2.json`; (z5) a held STOP at 2x32 (K2 cell and K3 cell with the error banner: the running copy gets the exit file and is killed_by_gate within 0.1 s; the bfgs_failed control); (z6) SIGTERM while the K3 gate, validate-a2 or a geometry job runs; (z7) SIGTERM inside the statuses (A2 part and MACE attempt judged at the relaunch as node-loss); (z8) K3 before relaxation 9 at 48 ranks; (z9) OOM evidence by the part's process tree; (z10) the cap refusal persisting across a relaunch (I-D9); (z11) the precondition matrix and the n rule; (z12) the dead status removed and a stale KEEP_ALIVE at a refused relaunch; round 4: (z13) the spot heartbeat at every good poll (a fake clock with the real limits) and a restarted poller's grace; (z14) a spot notice inside one scheduler pass; (z15) RESOLVE into a live run; (z16) smoke tests not affine with slope 1; (z17) two concurrent copies on disjoint halves of the cores through the committed launcher, the throughput pair run together and the 2x32 rate only for such a pair; (z18) the node-script hashes; (z19) git failures; (z20) the rerun budgets after RESOLVE; (z21) OOM evidence for smoke and throughput runs; (z22) the model load at check:mace; (z23) the wrappers before the first start and on a refused start, a manual ledger entry; (z24) a held STOP that survives a shutdown or a second STOP; (z25) a tree recorded before the pw.x ranks; (z26) a relaxation between parts when a gate stops A2; (z27) a gate's exit replacing a 'cap' or 'spot' request; (z2) also `start_commit` and `commit_history` in campaign.json |
+| `scripts/51` | PASS, 8 cases, 13 s | the pre-flight checks on a subset and five planted errors, each caught (electron count, duplicated label, region id, degauss, shifted Cl without the Pb–Cl record) |
 | `scripts/52` | PASS, 11 cases, 3 s | pins, the §3 and §11 draws, admissibility on m30 (one token per sublattice), exception classes, the production-list and m05 fallback logic, the Pb–Cl decision rule (5.674 → confirmed; 5.675 → 2.8375; secondary only → provisional; web addresses kept out of the record), path stripping, the T4 archive and freeze, the laptop MACE check |
-| `scripts/42` (unchanged, `s2b-2`) | PASS, 13 cases, 92 s | its own self-test, run again after the round-3 fixes (and inside `scripts/52 t4` in round 2, 90 s); it loads none of scripts/47–50, the only Stage-0 scripts changed in round 3 |
+| `scripts/42` (unchanged, `s2b-2`) | PASS, 13 cases, 89 s | its own self-test, run again after the round-4 fixes (and inside `scripts/52 t4` in round 2, 90 s); it loads none of scripts/47–50, the only Stage-0 scripts changed in round 3 |
 
 The round-1 reviewers' integration checks were rerun on the round-1 code (§7): the cut-format reproducer now builds the C3
 and C4 graphs; the label check finds 241 labels and no disagreement between scripts/46, 49 and 50; the
@@ -87,6 +89,14 @@ code before round 3, the twelve new scripts/50 cases (z1)–(z12) and the revise
 scripts/48 cases on the defects (assemble round trip, count term and ledger, the evaluation guard); the scripts/48
 cases that only add coverage (the extended independent implementation, the boundaries, the reported rows) pass there,
 as they should: the code they test was right.
+The round-4 cases were spliced into the e257cdf files of scripts/48, 49 and 50 and run there (logs in the private
+record folder, round 4): every new scripts/50 case ((z13)–(z27)) and the extended (z2) fail, as do the guard and pilot-row
+cases of scripts/48 and the throughput case of scripts/49; (z17), (z21) and (z22) fail on e257cdf because the API they
+test is new. The scripts/48 coverage case of R4-C24-6 passes on e257cdf, whose rule was right, and fails on each of the
+three mutations it guards against (the calibrated sign rule on Y_h, 'repels' at lo ≥ 25.7 meV, 'binds' at hi ≤ −25.7
+meV). The round-3 C1 end-to-end simulation (three boots) was rerun on the final files with the same counts and
+decisions as in round 3 (§7, round 3), its archive (161 labels, 330 structures) and `scripts/49 verify` (5 gate files, 0
+differ) pass, and the fault scenarios behave as recorded.
 
 ## 3. Laptop checks of §17 item 3
 
@@ -152,8 +162,8 @@ item (§8).
 
 ## 4. Pre-flight (§17 item 4) [R, geometry only]
 
-`scripts/51_s2_preflight.py run --allow-provisional` (run again on 2026-11-04 after the round-2 fixes; summary equal
-to the earlier one except its wall time and date) built, on the unrelaxed m30 and m05 members with
+`scripts/51_s2_preflight.py run --allow-provisional` (run again on 2026-11-04 after the round-2, round-3 and round-4
+fixes; summary equal to the earlier one except its wall time and date) built, on the unrelaxed m30 and m05 members with
 `partners="unrelaxed"` (the unrelaxed member standing in for the S2-relaxed host and the `pp.build_pair` vacancy
 cell for V⁺_R), every C1 cell of §§7–10 and the C1 start set of §11, both legs: **164 cells and 66 pairs, all
 admissible** (all 12 displaced Cs starts at FA128 and FA188 and the 4 shifted Cl starts at I138 and I175 included;
@@ -224,9 +234,19 @@ The path-free summary is `s2/stage0/preflight_c1.json`; the dry-run outputs are 
   alternative; it would let short jobs run after a long one is refused. Jobs without node-hours are never swept
   either way (N-F14, D-S0-9).
 
+- **Readings added in round 4 (§§13, 16; confirmed by the analyst, D-S0-11, §9).** (a) *Two concurrent 32-rank copies* (§16, I-C13, N-F30):
+  the two copies are measured only together, each on one half of the physical cores; a copy that ran without the
+  other beside it is run again with it (the first measurement moved aside, not used), and the 2x32 rate is computed only when
+  both recorded disjoint core sets and their walls overlap for at least 90% of the shorter one ([M]); otherwise the
+  rate is None and the layout is not chosen (48 or 64 ranks), never chosen on evidence that is not the plan's layout.
+  (b) *Reruns after an operator's resolution* (§13, N-F33): an operator's 'rerun' after a STOP for a human (a MACE
+  exception, a smoke or throughput run resolved after a fix) is not one of the two reruns §13 allows after a reclaim,
+  node loss, OOM or wall time, and the attempts before the resolution go aside with it; each such rerun needs a human
+  and, for a code cause, a dated commit (D-S0-8). An A2 'rerun' stays counted (I-D6, N-D5: an infrastructure cause).
+
 ## 6. Interpretations and implementation notes
 
-All 198 entries, each with its plan section, are in Appendix A (generated from the `NOTES` of the seven scripts).
+All 211 entries, each with its plan section, are in Appendix A (generated from the `NOTES` of the seven scripts).
 The ones that carry most weight:
 
 - **Sites and regions (§4).** Gaps asserted at the plan's rounded pool figures widened by half a last digit
@@ -294,13 +314,23 @@ The ones that carry most weight:
   kills a running copy at once (N-F20); a shutdown that kills a synchronous child, or finds a child ended, classifies
   nothing (N-F21); a section 11 check ends the scheduler tick, so K3 precedes relaxation 9 (N-F22); OOM evidence by the
   part's own process tree (N-F23); the production list needs a recorded n and C3 the C1 `gate:nrule` marker (N-F24);
-  a refused relaunch removes a KEEP_ALIVE older than the boot (N-F25); the hard-cap reading I-D9 (§5).
+  a refused relaunch removes a KEEP_ALIVE older than the boot (N-F25); the hard-cap reading I-D9 (§5). Round 4: every
+  pw.x run outside the queue goes through the committed launcher, two concurrent copies run on disjoint halves of the
+  cores, the throughput pair always runs together and the 2x32 rate counts only for such a pair (N-F30, I-C13); the
+  node-script hashes (N-F31); a git failure is a STOP (N-F32); the rerun budgets after RESOLVE (N-F33); OOM evidence by
+  trees that hold the pw.x ranks (N-F34); the model load at check:mace (N-F35); durable held STOPs (N-F36); a gate's exit
+  replaces a 'cap' or 'spot' one and a relaxation between parts is discarded unread (N-F37); smoke tests not affine with
+  slope 1 STOP inside C1 (N-F38); the heartbeat at every good poll and the restarted poller's grace (N-F18); RESOLVE never
+  into a live run (N-F16); a notice inside a scheduler pass holds its later launches (N-11).
 - **Analysis additions (§§9, 15, 17; round 3).** N_D, N_D+V and the count term beside every aggregated E_b and
   Δ_pose (N-F26); the MACE ledger's pilot section (N-F27); the free atoms' per-atom force norms (N-B18, N-F28); the
   one evaluation records the campaign commit beside HEAD and refuses a change of scripts/46–49 without a committed
-  dated amendment (N-F29); N-C11 cites §15.
+  dated amendment (N-F29); N-C11 cites §15. Round 4: the amendment must be a note outside scripts/, added after the
+  campaign commit and dated on or after it, and is recorded also with unchanged code (N-F29 revised); the commit history
+  with the diff of each step (N-F39); only complete A2 cells are read (N-F40); the pilots' Cs and Cl cells are
+  default-pose cells (N-F41).
 
-## 7. Review record (2026-11-03/04, before any commit)
+## 7. Review record (2026-11-03/04; rounds 1–3 before the Stage-0 commit, round 4 after it)
 
 Two reviews of the module code against the plan (one per module set and one of the cross-module hand-offs), each
 with its own reproducers; no calculator, no S2 cell. Every finding was reproduced by the fixer before it was
@@ -456,36 +486,129 @@ depends on scripts/47 and the graph builders of scripts/50, which changed: `scri
 run again; its summary equals the earlier one except the wall time (6.6 s) and the time of writing (164 cells, 66
 pairs, 161 + 36 + 7 inputs, the same graph counts, failures none).
 
+### Round 4 (2026-11-04, after the Stage-0 commit e257cdf)
+
+A dated follow-up to the committed Stage-0 code, made before any S2 calculation. Three lenses (the C1 path of the
+round-3 diff, the node runbook, the C2–C4 and analysis path of the round-3 diff), each followed by an adjudicator who
+reproduced every finding. The four items the adjudicators added as missed were reproduced by the fixer on e257cdf
+before acting: the spot notice inside one scheduler pass, the 2x32 rate from two walls that never overlapped, and the
+gate exit that did not replace an earlier 'cap' or 'spot' request, by running their reproducers; the binding recipe
+that works on this node (`taskset` with `--bind-to none`; OpenMPI 5.0.11 refused `--cpu-set` and `--map-by pe-list`), from
+the node records of 2026-10-27 (read, not rerun: no node access). No calculator, no S2 cell, no node access. Every fix
+has a self-test case that fails on e257cdf: the round-4 cases of scripts/50 ((z13)–(z27) and the extended (z2)), 48 and
+49 were spliced into the e257cdf files and fail there, each on its defect, or because the API they test is new: (z17),
+(z21) and (z22). The scripts/48 coverage case of R4-C24-6 passes on e257cdf, whose rule was right, and fails on each of
+the three mutations it guards against. The reviewers' and adjudicators' reproducers were rerun against e257cdf and the
+final files (logs in the private record folder, round 4). Each shows the defect on the former and not on the latter.
+The reproducers that start an outage 55 s after a 60-s heartbeat write cannot start one on the final code, whose
+heartbeat is never more than one poll old; (z13) uses a fixed clock instead.
+
+(A) Items that affect what C1 runs or decides:
+
+| finding | severity | verdict | what was done | cases |
+|---|---|---|---|---|
+| R4-C1-1 (node lens): the two concurrent 32-rank throughput copies each ran `mpirun --bind-to core -np 32` through the node's run_qe.sh with no core set, so both were bound from core 0 to the same 32 cores and 32 cores stayed idle; the 2x32 rate (and the layout of every A2 relaxation chosen from it) was biased against 2x32, and at 2x32 every A2 pair would have been time-shared | error | applied | N-F30: every pw.x run outside the queue goes through the committed `ehpc/node/s2_run_qe.sh` (the node's run_qe.sh with an optional core set, used from the checkout); each of two concurrent copies (np32a/np32b, every A2 part at 2x32) runs on one half of the physical cores (lscpu) with `taskset -c <half> mpirun --bind-to none`, a part taking the half no running copy uses; every other run keeps `--bind-to core`; the core set, the CPUs the pw.x ranks were allowed (node /proc) and the interval are recorded | 50 (z17): the simulated campaign's np32a/np32b on 0-31 and 32-63, 12 other runs bound as run_qe.sh; a free half at 2x32 |
+| node lens, missed: a copy cut alone (an OOM of one copy, say) was rerun alone after the other had finished, and the 2x32 rate combined two walls that never overlapped | minor (reproduced) | applied | N-F30, I-C13: the two copies always start together (a copy that completed without the other is moved aside to `discarded/paired_<t>`, its measurement not used and not one of its reruns; with the other missing it is skipped); the 2x32 rate is computed by scripts/50 and by scripts/49 only for two copies with recorded, disjoint core sets (and disjoint recorded CPUs) whose walls overlap for at least 90% of the shorter one ([M], `TP_PAIR_OVERLAP`), else it is None and 2x32 is not chosen | 50 (z17): solo rerun, missing or shared core set, shared CPUs give no 2x32 rate; 49 throughput: the same and 90.0% / 89.97% overlap |
+| R4-C1-1 (C1 lens): the 5-min staleness rule was measured on a heartbeat written every 60 s, so a 4-min metadata outage STOPped a healthy C1 and the reason misstated the age | minor | applied | N-F18: the poller writes its heartbeat at every good poll | 50 (z13): fake clock with the real limits: a 250-s outage 55 s after the old write, no STOP; 305 s, a STOP stating the true age |
+| R4-C1-5 (C1 lens): smoke tests n1 and n3 with JOB DONE but not two configurations apart let C1 run to CAMPAIGN_DONE; C2 then STOPped and neither RESOLVE nor NODE_FIX could act | minor | applied (earlier than proposed: before the exit/restart test, whose restart nstep is derived from n1 and n3, as well as before the throughput row) | N-F38: a STOP naming the smoke tests and the NODE_FIX / RESOLVE path while C1 is open | 50 (z16): n3 converging at k = 1: STOP before the restart test and any throughput run; RESOLVE 'rerun' of n3 then gives slope 1, nstep_first 201 − c0 and the throughput row |
+| R4-C1-2 (node lens): the node-only run_qe.sh, qe_queue.sh and chain.sh behind every pw.x run were never compared with the committed copies nor hashed | minor | applied | N-F31: check:nodescripts (no node-hours) records the sha256 of run_qe.sh, the QE profile, qe_queue.sh, chain.sh and s2_run_qe.sh in C1 and STOPs unless the queue, the chain and the launcher equal the checkout's copies; C2–C4 STOP on any hash that differs from the C1 record | 50 (z18): a queue one byte off STOPs C1 in its check phase with no pw.x run; C2 with a changed run_qe.sh STOPs |
+| R4-C1-3 (node lens): a git failure in the checkout (a copy without .git, an ownership refusal) was read as a clean checkout with commit '' | minor | applied | N-F32: a STOP in the runner (HEAD must be 40 hex digits), a refusal in `s2_campaign.sh` | 50 (z19) |
+| R4-C1-4 (node lens): after RESOLVE 'rerun' a smoke or throughput run had no interruption rerun left; an operator's MACE rerun after an exception used one of the two | minor | applied | N-F33: the attempts before a resolution go aside with it; an operator's MACE rerun is marked `counts: false` | 50 (z20) |
+| R4-C1-5 (node lens): the OOM kill of a smoke or throughput rank was logged 'unknown' | suggestion (adjudicated) | applied | N-F34: those runs record their process tree like A2 parts; the A2 rule applies | 50 (z21) |
+| R4-C1-6 (node lens): load_mace runs for the first time inside the two host relaxations, about 2.5 h into C1 | suggestion (adjudicated) | applied (the optional runner check) | N-F35: check:mace runs scripts/46 load_mace in a child process after the hash check (the runner never imports mace; no structure is evaluated); a failure STOPs before the smoke tests; §8 item 3 reworded | 50 (z22): on this laptop the empty-cache hash check fails before any child; reported and failing loads |
+| R4-C1-7 (node lens): the memory headroom of two 232-atom copies (about 80 GB estimated each, 247 GB on the node) is unestablished | suggestion (plausible) | node check only (as adjudicated: no code; the row is not skipped by a note, since an OOM is already handled fail-closed and the concurrent-pair rule now keeps an OOM of one copy from becoming a solo measurement) | §8 item 9 | — |
+| R4-C1-8 (node lens): before the first start `s2_status.sh` said 'running' and `s2_relaunch.sh` 'lock held' | suggestion | applied | 'not started (no /data/work/s2)'; the relaunch refuses with 'no S2 work tree' | 50 (z23) |
+| R4-C1-9 (node lens): a boot used only to deploy or to pull has no heartbeat and is not counted | suggestion | applied as a runbook rule | §8 item 10; the ledger already counts manual.json entries | 50 (z23): an entry without a boot id counts and the ledger stays complete |
+| R4-C1-2 (C1 lens): a poller restarted after it ended was judged at once against the dead poller's heartbeat | suggestion | applied | N-F18: the restart resets the poller's start, so its first good poll gets 120 s; no restart once a shutdown or STOP began | 50 (z13) |
+| R4-C1-3 (C1 lens): a refusal of `s2_campaign.sh` itself inside a relaunch left a stale KEEP_ALIVE | suggestion | applied | N-F25: `s2_relaunch.sh` treats it as its own refusal | 50 (z23): the committed relaunch and campaign wrappers, paths rewritten, a checkout that is not clean |
+| R4-C1-4 (C1 lens): a RESOLVE written into a live smoke or throughput run moved the live run's files and a second pw.x could start beside it | suggestion | applied | N-F16: RESOLVE is read only once no part of the run lives | 50 (z15) |
+| R4-C1-6 (C1 lens): a commit change through NODE_FIX was not surfaced by campaign.json or scripts/48 | suggestion | applied (report only; the reviewer's refusal of scripts/46–49 changes inside a campaign is not adopted: it goes beyond D-S0-8) | N-F17, N-F39: campaign.json keeps `start_commit` and `commit_history`; scripts/48 reports the history with the diff stat of scripts/46–50 and ehpc/node of each step | 50 (z2); 48 evaluation guard |
+| C1 lens, missed: a spot notice written during one scheduler pass did not hold the MACE launches later in the same pass | suggestion (reproduced) | applied | N-11: held() reads the notice itself | 50 (z14): the real C1 graph |
+
+(B) Items that affect only C2–C4 or the analysis:
+
+| finding | severity | verdict | what was done | cases |
+|---|---|---|---|---|
+| R4-C24-1: the STOP held by the A2 end rule (N-F20) lived in memory only; a SIGTERM or a second STOP within the hold lost it, and the relaunch launched the next relaxation with the mapping the end rule had flagged | error (adjudicated, from minor) | applied | N-F36: the A2 record carries `end_rule.stop_raised: false` until CAMPAIGN_STOPPED holds the reason; every runner start holds it again before any launch; every STOP's reason includes the held ones, which are then marked raised, so an operator's relaunch after that STOP does not raise them again | 50 (z24): (i) pw_error and (iv) nstep before k = 200 with SIGTERM in the hold: the relaunch STOPs with the reason, no launch; (ii) validate-a2 exiting 1 in the hold: both reasons; (iii) the operator's relaunch launches relaxation 4 |
+| R4-C24-2: a process tree recorded before the pw.x ranks started made an OOM kill of a rank a false STOP for a human | minor (plausible) | applied | N-F34: the tree is recorded at every tick until it holds the part's pw.x ranks; a tree without pw.x ranks counts as not recorded (the task test, the other copy's pids excluded) | 50 (z25); (z9) unchanged |
+| R4-C24-3: a relaxation waiting for its restart part when a gate stopped A2 became killed_by_gate with its output left, archived and parsed | minor | applied | N-F37: discarded unread like a running partner; N-F40: scripts/48 parses only complete A2 relaxations and gives a relaxation energy for complete cells only | 50 (z26); 48 pilot rows and killed A2 cells |
+| R4-C24-4: the pilot hosts' Cs and Cl noise-pilot rows fell into the fail-closed multi-pose default and were always invalid; no Cs record on a pilot crashed the evaluation | minor | applied | N-F41: the pilot hosts' Cs and Cl cells are default-pose cells | 48: 40 noise rows equal gate N's E_b, 16 of them Cs and Cl, each with its MACE value |
+| R4-C24-5: the amendment guard accepted any committed file with an ISO date (the plan, the changed script itself), dropped an amendment given with unchanged code, and stored only the diff stat | minor | applied | N-F29 revised: a committed, clean note outside scripts/, added or changed after the campaign commit, dated on or after it; recorded also with unchanged code and cited by the D3(BJ) row; the diff's sha256 in s2_eval.json and the diff beside it | 48 evaluation guard |
+| R4-C24-6: two mutations of rule V (the calibrated sign rule on Y_h, 'repels' at lo ≥ 25.7) passed the scripts/48 self-test | suggestion | applied (coverage; the code was right) | a calibrated-tier table where the shift by δ̄ decides the class, and the strict class bounds at ±25.7 meV | 48: the case fails on each of three mutations (also hi ≤ −25.7 for 'binds') |
+| C2–C4 lens, missed: a stopping gate kept an earlier 'cap' or 'spot' exit request of the running partner, whose output was then read and recorded complete | minor (reproduced) | applied | N-F37: the gate's request replaces it (the prior reason kept) | 50 (z27) |
+
+Nothing was rejected. Not exercised on the laptop, besides the paths listed above (round 1): the launcher's `taskset` and
+mpirun recipe with real ranks, the node /proc reads of the process tree and of `Cpus_allowed_list`, lscpu, and
+load_mace inside check:mace (its failure path and its record are tested; §8 item 9 gives the node checks).
+
+The records of §§3–4: scripts/52 and the records it writes depend on scripts/42, 22, 29, 07, `checks.py`, 46 and 52,
+none of which changed in round 4, so they were not regenerated (decisions unchanged by construction). The pre-flight
+depends on scripts/47 and the graph builders of scripts/50; the builders changed (one check job per campaign, which
+counts no cell), so `scripts/51 run --allow-provisional` was run again (§4).
+
 ## 8. What remains for C1 (node items; not Stage 0)
 
-1. **Commit** the Stage-0 code, this record and `s2/stage0/` (§17 item 2); check out that commit cleanly at
-   `/data/work/ps_s2` (the first C1 start records it, later starts must match).
+1. **Commit** the Stage-0 code, this record and `s2/stage0/` (§17 item 2), with the round-4 changes as a dated
+   follow-up commit (§7, round 4); check out that commit cleanly as a git checkout at `/data/work/ps_s2` (the first C1
+   start records it, later starts must match; a copy without `.git` or any git failure is refused, N-F32).
 2. **Pseudopotentials.** Copy `Cl.pbe-n-rrkjus_psl.1.0.0.UPF` and `Ca.pbe-spn-rrkjus_psl.1.0.0.UPF` from the
    private record folder to `/data/pseudo`; `scripts/47 upf-check` checks their sha256 against
    `PSEUDOPOTENTIALS_S2.md`, the S1 files by their MD5 and every z_valence, and records the node sha256 of all nine
    files for C2–C4, before the first pw.x job.
 3. **MACE.** The node foundation file must have sha256 `01bfe221…5845` with mace-torch 0.3.16, float64, CPU and
-   coverage of Z = 1, 6, 7, 17, 20, 38, 53, 55, 82 (`scripts/46 load_mace`, checked before the first MACE job).
+   coverage of Z = 1, 6, 7, 17, 20, 38, 53, 55, 82: check:mace checks the hash and then runs `scripts/46 load_mace` in a
+   child process, before the smoke tests (N-F35; no structure is evaluated); load_mace runs again at the start of every
+   MACE job.
 4. **Spot endpoint.** `/data/setup/s2_spot_url` or the committed `node_step7.sh` in the checkout (X-5); the runner
-   starts no job until the endpoint has answered (200 or 404) and STOPs if it has not within 120 s, or stops
-   answering for 5 min (N-F18).
+   starts no job until the endpoint has answered (200 or 404) and STOPs if it has not within 120 s, or if its last good
+   poll is more than 5 min old (the heartbeat is written at every good poll, N-F18).
 5. **pw.x smoke tests** on the 232-atom reference cell at 48 ranks, before any S2 cell (§16): nstep 1 and 3, the
    exit-file stop and the restart with `disk_io = 'low'`; they fix the nstep mapping and whether restarts are
-   possible (X-3). Only counts, files and wall times are read.
-6. **Throughput row** (§16): 5 configurations at 48 and 64 ranks and as two 32-rank copies; the A2 layout is the
-   fastest if it beats 48 ranks by at least 15% (I-22), and the exit and restart test is repeated at it if it is
-   not 48 (X-4).
+   possible (X-3); n1 and n3 that are not two configurations apart STOP C1 before the restart test (N-F38). Only
+   counts, files and wall times are read.
+6. **Throughput row** (§16): 5 configurations at 48 and 64 ranks and as two 32-rank copies, started together, each on
+   one half of the cores (`ehpc/node/s2_run_qe.sh`, N-F30); the A2 layout is the fastest if it beats 48 ranks by at least
+   15% (I-22), the 2x32 rate counting only for two copies on disjoint cores that ran together (I-C13), and the exit and
+   restart test is repeated at the chosen layout if it is not 48 (X-4).
 7. Then the C1 job graph of §1 (host relaxations, MACE phase, single points, gates G1, N, nrule and pose), with the
    keep-alive file present for the whole campaign; the node is stopped after the campaign (§17 item 5).
 
 8. **A C1 STOP that needs a code fix** (D-S0-8; N-F16, N-F17). Commit the fix with a dated note and check it out
    cleanly; write `c1/NODE_FIX` holding '<new commit> <dated note>'; resolve the failed job: a smoke-test or
    throughput run with `smoke/<run>/RESOLVE` or `tp/<run>/RESOLVE` 'rerun <dated note>' (its parts, outputs and
-   `tmp/`, and `smoke.json` and `smoke2.json`, or `throughput.json` and the throughput gate's markers, go to
-   `discarded/resolved_<t>/`), a MACE attempt with `cells/<work id>/RESOLVE` 'rerun <note>' or 'missing <note>'; a
-   failed UPF or foundation check needs nothing (its record is written again at the relaunch); then start
-   `s2_campaign.sh c1`. The runner accepts the new commit only while C1 is stopped and records it in
-   `commit_history`.
+   `tmp/`, its earlier attempts, and `smoke.json` and `smoke2.json`, or `throughput.json` and the throughput gate's
+   markers, go to `discarded/resolved_<t>/`; a RESOLVE written while the run lives waits for its end), a MACE attempt
+   with `cells/<work id>/RESOLVE` 'rerun <note>' (not one of the two reruns after interruptions, N-F33) or
+   'missing <note>'; a failed UPF, node-scripts or foundation check needs nothing (its record is written again at the
+   relaunch); then start `s2_campaign.sh c1`. The runner accepts the new commit only while C1 is stopped and records it
+   in `commit_history` (also in `campaign.json`, beside `start_commit`).
+
+9. **Node checks before and during C1** (round 4; each settles a point the laptop cannot, D-S0-8). Run on the node, in
+   the S2 checkout, and keep the output in the private record folder.
+   - *Pre-launch status* (R4-C1-8): `bash /data/work/ps_s2/ehpc/node/s2_status.sh` prints
+     `runner: not started (no /data/work/s2)` before the first start.
+   - *The launcher against the node's run_qe.sh* (R4-C1-2, N-F30):
+     `diff /usr/local/bin/run_qe.sh /data/work/ps_s2/ehpc/node/s2_run_qe.sh` shows only comments, the `CPUSET`
+     branch and the pseudo_dir rewrite through a temporary file. Any other difference, for example in the
+     binding, the rank default or the profile, is resolved in a dated, committed change before C1. check:nodescripts then
+     records the hashes and compares the queue and the chain (N-F31).
+   - *The two-copy recipe* (R4-C1-1, the node lens' missed item), before C1:
+     `source /etc/profile.d/qe.sh; for c in 0-31 32-63; do taskset -c $c $QE_ENV/bin/mpirun --bind-to none -np 32 bash -c 'taskset -cp $$' & done; wait`
+     must print 32 lines ending `0-31` and 32 ending `32-63` (count them with `| awk '{print $NF}' | sort | uniq -c`).
+     If it does not, C1 is not started; the launcher is fixed in a dated, committed change first.
+   - *During np32a/np32b* (R4-C1-1; psr counts are not meaningful with `--bind-to none`):
+     `for p in $(pgrep -x pw.x); do taskset -cp $p; done | awk '{print $NF}' | sort | uniq -c` shows 32 ranks on
+     `0-31` and 32 on `32-63`; the runner records the same as `affinity` in the launch records, and the 2x32 rate is not
+     counted if the two overlap (I-C13).
+   - *Memory of the pair* (R4-C1-7): during np32a/np32b, `free -g | sed -n 2p` and
+     `ps -C pw.x -o rss= | awk '{s+=$NF} END {printf "pw.x RSS %.1f GB\n", s/1048576}'`, recorded with the throughput
+     row. Nothing is skipped on this evidence: an OOM is handled by the reruns of N-D10, and a copy is never measured
+     alone (N-F30).
+10. **Node-hours of boots without a runner** (R4-C1-9, §16 "boot to stop"). Deploy and launch in one boot, and pull
+    within 60 min of CAMPAIGN_DONE (the idle self-stop). Any other S2 boot (one used only to deploy or only to pull)
+    gets an entry `{"btime": <epoch>, "end": <epoch>, "note": "<what it was for>"}` in
+    `/data/work/s2/ledger/manual.json` at the next boot, from `last -x reboot` or `journalctl --list-boots`; the
+    ledger counts it.
 
 ## 9. Analyst decisions on the open Stage-0 items (2026-11-04, before any S2 calculation)
 
@@ -549,17 +672,31 @@ set out the round-2 conflict, and both are implemented as recorded in §7 ("Afte
   graph order and never an energy, and jobs without node-hours still run (D-S0-9). The cut order of §16 is designed
   to keep P at or below 520 node-h, so the cap binds only if the projection was wrong; C1 (about 29 node-h) cannot
   reach it.
+- **D-S0-11 (2026-11-04, the round-4 readings of §5) Two concurrent copies and reruns after a resolution:
+  confirmed.** (a) The 2x32 rate of the throughput row counts only for two copies that ran on disjoint halves of the
+  physical cores and whose walls overlap for at least 90% of the shorter one [M]; otherwise the rate is None and 2x32
+  is not chosen. Reason: §16 asks for "two concurrent 32-rank copies", and only a pair that ran together measures the
+  contention and memory of the layout that A2 would use; with both copies started in the same tick the overlap is
+  the shorter wall, so the 90% bound only absorbs launch jitter and a copy rerun alone can never pass it. The
+  failure direction is the planned default (48 ranks, or 64 if faster), never a layout chosen on evidence the plan
+  does not describe. (b) An operator's 'rerun' after a STOP for a human (a MACE exception, or a smoke or throughput
+  run resolved after a fix) is not one of the two reruns that §13 allows after a reclaim, node loss, OOM or wall
+  time. Reason: those two reruns bound infrastructure interruptions; a resolution follows a diagnosed cause, needs a
+  human and, for a code cause, a dated commit (D-S0-8), and is made before any output of the job is read (MACE
+  energies are not read by the runner, and the smoke and throughput runs yield only counts and wall times), so it
+  cannot select on a value. An A2 'rerun' stays counted (I-D6, N-D5).
 
 Cross-references: D-S0-1 settles §3.4 and I-E1; D-S0-2 the "Revised readings" bullet of §5, the §11 bullet and the
 "Gates and statistics" bullet of §6, I-10/I-11, the R1-F5 and S2R2-STAT-1 rows of §7 and its "After round 2" table;
 D-S0-3 X-6; D-S0-4 X-1; D-S0-5 the spot-hold and hard-cap bullets of §5 (N-D6, I-D2); D-S0-6 X-3, X-4; D-S0-7 the
 R1-F9 row of §7; D-S0-8 §7 "Not exercised on the laptop" and §8; D-S0-9 N-F14, N-F8, N-D3 and N-C7, the
 "Campaign operation" and §11 bullets of §6, the R2V-3 row of §7 and its "After round 2" table, and the round-3
-reading I-D9 (§5) with D-S0-10; D-S0-8 also N-F16 to N-F18 and §8 item 8.
+reading I-D9 (§5) with D-S0-10; D-S0-11 the round-4 readings of §5 (I-C13, N-F30, N-F33); D-S0-8 also N-F16 to N-F18 and §8 item 8, and (round 4) N-F30 to N-F38 and §8
+items 9 and 10.
 
 ## Appendix A. Every interpretation, implementation note and conflict in the code
 
-Generated from the `NOTES` dictionaries of the seven scripts as they stand in this record (198 entries); each script prints its own with `--self-test`. Ids I-1 to I-48, N-1 to N-13 and X-1 to X-6 are those of the interface specification; I-A/N-A (module A), I-B/N-B/X-B1 (B), I-C/N-C (C), I-D/N-D (D), N-P (pre-flight), I-E/N-E (E) were added by the modules; I-F/N-F by the fixes of the three review rounds (§7; N-F15 to N-F29 and N-B18 in round 3), N-F14 by the post-round-2 decision D-S0-9 (§9), I-D9 by round 3 as a reading, confirmed by the analyst as D-S0-10 (§§5, 9). A bar inside a text is shown as '/'.
+Generated from the `NOTES` dictionaries of the seven scripts as they stand in this record (211 entries); each script prints its own with `--self-test`. Ids I-1 to I-48, N-1 to N-13 and X-1 to X-6 are those of the interface specification; I-A/N-A (module A), I-B/N-B/X-B1 (B), I-C/N-C (C), I-D/N-D (D), N-P (pre-flight), I-E/N-E (E) were added by the modules; I-F/N-F by the fixes of the four review rounds (§7; N-F15 to N-F29 and N-B18 in round 3, N-F30 to N-F41 and I-C13 in round 4), N-F14 by the post-round-2 decision D-S0-9 (§9), I-D9 by round 3 as a reading, confirmed by the analyst as D-S0-10 (§§5, 9). A bar inside a text is shown as '/'.
 
 ### `scripts/46_s2_cells.py` (module A, cells; 35 entries)
 
@@ -632,7 +769,7 @@ Generated from the `NOTES` dictionaries of the seven scripts as they stand in th
 | I-B3 | §6 | section 6: the MD5 that pw.x prints is the md5 of the UPF file bytes (QE md5_from_file); upf_check uses hashlib md5 [I]; every output's printed MD5 is also checked by the runner (N-B9) |
 | I-B4 | §11 | section 11: a relaxation whose configuration 200 is complete is judged by the cap rule whatever ended the part (the driver's exit file at k = 200) |
 
-### `scripts/48_s2_analysis.py` (module C, analysis; 28 entries)
+### `scripts/48_s2_analysis.py` (module C, analysis; 31 entries)
 
 | id | plan section | reading or note |
 |---|---|---|
@@ -661,11 +798,14 @@ Generated from the `NOTES` dictionaries of the seven scripts as they stand in th
 | N-F26 | §9 | §9 (round-3 R3C-3 and missed item): N_D, N_D+V and the count term k_BT ln(N_D/N_D+V) are reported beside every aggregated (multi-pose) E_b of the per-site rows and beside Delta_pose (the pose gate's near and far records kept by assemble, the pose pilot and pose_note) |
 | N-F27 | §15 | §15 (round-3 R3C-4): the zero-shot MACE ledger covers every cell with MACE energies: the production quartets, the noise pilot, and (pilot section) the m30 and m05 calibration start-set quartets beside the A1 DFT E_b from k = 0 of their A2 cells and the m30 pose-pilot sites (default and kept-minima aggregate); all labelled zero-shot MACE, not re-admitted |
 | N-F28 | §15 | §15 (round-3 R3C-5): the residual forces of every A1 cell carry the per-atom norms of the free atoms (scripts/47 parse_sp 'free': norms_eVA with their indices) beside RMS and max |
-| N-F29 | §17 item 6 | §17 item 6 (round-3 R3C-6): the one evaluation records the campaign commit (the latest state_end.json) beside HEAD with the git diff of scripts/46-49 between them; a difference is refused unless --amendment names a committed, dated note (D-S0-4 foresees such an amendment), which is recorded |
+| N-F29 | §17 item 6 | §17 item 6 (round-3 R3C-6; revised in round 4, R4-C24-5): the one evaluation records the campaign commit (the latest state_end.json) beside HEAD with the git diff of scripts/46-49 between them (stat, sha256, and the diff itself beside s2_eval.json); a difference is refused unless --amendment names a committed, clean note outside scripts/ that was added or changed after the campaign commit and carries an ISO date on or after that commit's; a given amendment is checked alike and recorded also when the code is unchanged, and the D3(BJ) row cites it (D-S0-4) |
+| N-F39 | §§13, 17 item 6 | §§13, 17 item 6 (round-4 R4-C1-6): every commit change during the campaigns (state_end commit_history: c1/NODE_FIX, c2/STEP0_FIX) is reported in s2_eval.json analysis_identity with the diff stat of scripts/46-50 and ehpc/node between its two commits; report only, no refusal |
+| N-F40 | §16 | §16 'output discarded unread' (round-4 R4-C24-3): only a complete A2 relaxation is parsed; a killed, missing or not-run one has no energies read (its outputs were moved aside unread), and the reported A2 rows give a relaxation energy for complete cells only |
+| N-F41 | §§8, 11 | §§8, 11 (round-4 R4-C24-4): the Cs and Cl cells of the pilot hosts (noise pilot, start set) are default-pose cells: their pose mode is 'default', so their reported rows and MACE values use the o0 cells, as gate N does (the m30 pose pilot is reported apart); a pilot host without a Cs or Cl record cannot crash the evaluation |
 | N-C11 | §15 | §15 required hosts: the smallest n in 2..1000 with t_{n-1}(q*) s_Y/sqrt(n) below k_BT (and k_BT/2); null when s_Y is undefined or no n <= 1000 suffices |
 | N-C12 | §17 | §17: evaluate is a pure function of the table; assemble is the only reader of C3/C4 energies and of the MACE energies (records with blind=False) |
 
-### `scripts/49_s2_gates.py` (module C, gates; 28 entries)
+### `scripts/49_s2_gates.py` (module C, gates; 29 entries)
 
 | id | plan section | reading or note |
 |---|---|---|
@@ -677,7 +817,7 @@ Generated from the `NOTES` dictionaries of the seven scripts as they stand in th
 | I-13 | §§8, 17 | §§8, 17: gate N computes DFT values only; the zero-shot MACE values are reported by the one evaluation |
 | I-14 | §9 | §9: a missing SP of a default or kept minimum at either pilot site makes the pose rule 'not met' (multi) |
 | I-21 | §16 | §16 hard cap: the expected duration is the mean wall of completed jobs of the same kind in S2, else the §16 unit cost (A2 relaxation at the cap value 20.6 h) |
-| I-22 | §16 | §16 throughput: rate = configurations per node-hour (two copies: 10 configurations over the longer wall); chosen iff >= 1.15 x the 48-rank rate; a failed run -> 48 |
+| I-22 | §16 | §16 throughput: rate = configurations per node-hour (two copies: 10 configurations over the longer wall, counted only as I-C13); chosen iff >= 1.15 x the 48-rank rate; a failed run -> 48 |
 | I-24 | §16 | §16 projection: H_MACE = remaining frozen relaxations x the C1 MACE node time per frozen relaxation plus one host-relaxation wave while host relaxations remain, both as I-C7b (derived here from the blinded C1 records; scripts/50 passes no phase wall, round-2 F3); tau_SP = mean C1 SP wall |
 | I-25b | §16 | §16 cuts: an inapplicable cut (5 at n = 8; 6, 7 without multi-pose) or one unavailable at that projection (5-7 at C4) is skipped and the next cut is tried |
 | I-31 | §§7, 16 | §§7, 16: cells whose every dopant was removed (G1 failure, cuts) are not run, region cells included |
@@ -686,6 +826,7 @@ Generated from the `NOTES` dictionaries of the seven scripts as they stand in th
 | I-C3 | §16 | §16 projection: multi-pose production enters at its upper bound (Cs 60, Cl 40 extra relaxations and SPs per host); a running A2 relaxation counts in full; with no completed A2 relaxation each planned one costs the cap value 20.6 h |
 | I-C4 | §11 | §11 step-0: a missing standalone SP or k = 0 value counts as a failed check; attempt 2 requires a fix note; 'no error found' after attempt 1 gives fail_final; no attempt 3 |
 | I-C5 | §16 | §16 throughput: of equal rates 64 ranks precedes two 32-rank copies; a failed 48-rank run gives 48 |
+| I-C13 | §16 | §16 throughput (round-4 R4-C1-1 and the node lens' missed item): 'two concurrent 32-rank copies' is measured only by two runs that each recorded a core set, on disjoint cores (and, when recorded, with their pw.x ranks' CPUs disjoint and inside the sets), whose walls overlap for >= 90% of the shorter one ([M], TP_PAIR_OVERLAP); otherwise the 2x32 rate is None and the layout is not chosen (fail-closed: 48 or 64); scripts/50 starts the two copies together on the two halves of the cores (N-F30) |
 | I-C6 | §16 | §16 cuts: cuts 1-4 are inapplicable once C4 will not run, and cut 7 once Cl has left the family (G1) |
 | N-C1 | §§16, 17 | gate output: inputs_digest = sha256 over (label, content sha256 of the decompressed file, mode), without file paths, so the node and the archive give the same digest |
 | N-C2 | §17 | Reader: energy read modes (full, k0, final) never open a production-host (C3) or A2-II (C4) label outside the one evaluation, whatever the allow-list; end_rule mode on C4 labels is allowed (§17) |
@@ -698,7 +839,7 @@ Generated from the `NOTES` dictionaries of the seven scripts as they stand in th
 | N-F15 | §§8, 17 | §§8, 17 (round-3 R3-C1-1): the n rule is the gate 'nrule' (output gates/nrule.json, decision {n}); it was 'n', whose output gates/n.json and markers are the same files as gate N's on a case-insensitive volume (the laptop's APFS, where the pull, verify and the one evaluation run); no two names of GATE_NAMES fold to the same lower-case string (asserted) |
 | I-C7b | §16 | §16 projection: the C1 MACE time per frozen relaxation is its mean wall / 10 concurrent relaxations (the §16 unit-cost reading, '17-27 min at 6 threads with 10 concurrent' = about 2 min of node time); a host-relaxation wave costs the longest C1 host wall (both hosts run concurrently) |
 
-### `scripts/50_s2_campaign.py` (module D, campaign; 60 entries)
+### `scripts/50_s2_campaign.py` (module D, campaign; 69 entries)
 
 | id | plan section | reading or note |
 |---|---|---|
@@ -725,11 +866,11 @@ Generated from the `NOTES` dictionaries of the seven scripts as they stand in th
 | I-31 | §§7, 16 | cells whose every dopant was removed (G1 failure, cuts) are not run, region cells included |
 | I-48 | §11 | a part that ends by nstep before k = 200 is unconverged early and STOPs the campaign (mapping wrong) |
 | N-5 | §12 | single points are published one input at a time (meta first, then &lt;label>.in.part renamed to .in) |
-| N-6 | §§6, 16 | A2 relaxations, smoke tests and the throughput row run through run_qe.sh under the global chain lock |
+| N-6 | §§6, 16 | A2 relaxations, smoke tests and the throughput row run through the committed ehpc/node/s2_run_qe.sh (the node's run_qe.sh with an optional core set, round 4, N-F30) under the global chain lock |
 | N-7 | §§5, 16 | MACE work never runs beside pw.x: phases are strictly ordered within a campaign |
 | N-9 | §13 | a MACE attempt that ended with a Python exception (or a refusal) is a STOP for a human, not an interruption |
 | N-10 | §§12, 16 | the hard-cap check of a single point uses twice its expected duration (one automatic resubmission) |
-| N-11 | §13 | after a spot notice nothing new starts for 1800 s; running children continue |
+| N-11 | §13 | after a spot notice nothing new starts for 1800 s; running children continue; held() reads the notice itself, so a notice written while one scheduler pass runs its synchronous jobs holds every later launch of that pass (round-4 missed item) |
 | N-12 | §16 | KEEP_ALIVE is removed at the end of a campaign, at every STOP (first, before any write: round-2 F1), at a shutdown signal, whenever the runner exits, and by the spot poller when the runner died without CAMPAIGN_DONE (SIGKILL, OOM; the poller removes only the file that runner wrote) |
 | I-D1 | §11 | section 11 step-0: evaluated as soon as configuration k = 0 of the relaxation is complete; a failure stops A2 at once: the checked relaxation and any running partner are stopped by their exit files and marked killed_by_gate (outputs not read), nothing further starts; fail_pending_fix is a STOP for a human, resumed either with c2/STEP0_FIX ('&lt;new commit> &lt;dated note>'), after which C2 restarts at relaxation 1 for the one repeat (state 'repeat_pending', both cells checked as attempt 2; the attempt-1 A2 files and gate files moved to discarded/step0_attempt1_&lt;t>/; the gate files are archived, the attempt-1 A2 records and outputs stay on the node, round-2 R2V-4), or with c2/STEP0_NO_ERROR (no error found: fail_final, A2 stops, A1 tier only) |
 | I-D2 | §16 | section 16 hard cap with queued single points: at most two published single points are incomplete at a time, and a publication is allowed iff H_spent + 2 x expected (each outstanding and the new one) <= 520, which is never below the check at the job's actual start |
@@ -750,16 +891,25 @@ Generated from the `NOTES` dictionaries of the seven scripts as they stand in th
 | N-D9 | §12 | C3 G1 failure of Ca removes 8 relaxations and 8 single points per host (the interface spec says 16; the plan's section 12 counts give Ca 8 cells per host); Cl removes 20 dopant and 10 V+ relaxations and 30 single points |
 | N-D10 | §§13, 16 | smoke-test and throughput runs cut by an interruption are rerun at most twice (the plan gives no rule); one that ends with QE's error banner (scripts/47 pw_error) is not an interruption: missing at once, not rerun (round-3 R3-C1-5, as I-D6 for A2) |
 | N-F15 | §§8, 17 | sections 8, 17 (round-3 R3-C1-1): the n-rule gate is 'nrule' (gate:nrule, gates/nrule.json); with 'n' beside 'N' the gate outputs and gates_applied markers were one file on a case-insensitive volume (the laptop's APFS: pull, archive, verify, the one evaluation); no two job ids, gate names, marker names, labels or work ids of C1-C4 fold to the same lower-case string (asserted), and archive() refuses source names that differ only in case, a gate file whose 'gate' field differs from its name and a marker whose 'id' differs from its file name |
-| N-F16 | §16, D-S0-8 | section 16 smoke tests (round-3 R3-C1-2, D-S0-8): the throughput row and A2 need the smoke mapping c0 from n1 and n3; without it the campaign STOPs naming the smoke tests (never an unexpected error); a pw.x reference run (smoke, smoke2, throughput) is resolved by &lt;run dir>/RESOLVE 'rerun &lt;dated note>' (its parts, outputs and tmp/ and the record built on them, smoke.json, smoke2.json or throughput.json with the throughput gate markers, moved to discarded/resolved_&lt;t>/, logged in interruptions.jsonl) or 'missing &lt;note>' |
-| N-F17 | §16, D-S0-8 | D-S0-8 (round-3 R3-C1-3): a C1 STOP that needs a code fix resumes at the fixed commit with c1/NODE_FIX ('&lt;new commit> &lt;dated note>'), accepted only while C1 is stopped (CAMPAIGN_STOPPED present, C1 not done) and when its commit is the checkout HEAD; the change goes to state commit_history and NODE_FIX is renamed NODE_FIX.used.&lt;t>; a NODE_FIX in another campaign or with C1 not stopped is refused |
-| N-F18 | §§13, 16, D-S0-8 | sections 13, 16 and D-S0-8 (round-3 R3-C1-7): the spot-endpoint check is a reachability check: no job of a campaign runs until the poller has had a good poll (200 or 404, spot/heartbeat.&lt;boot> newer than the poller's start); none within 120 s, or a last good poll older than 5 min while the campaign runs, is a STOP (a termination notice could not arrive) |
+| N-F16 | §16, D-S0-8 | section 16 smoke tests (round-3 R3-C1-2, D-S0-8): the throughput row and A2 need the smoke mapping c0 from n1 and n3; without it the campaign STOPs naming the smoke tests (never an unexpected error); a pw.x reference run (smoke, smoke2, throughput) is resolved by &lt;run dir>/RESOLVE 'rerun &lt;dated note>' (its parts, outputs and tmp/ and the record built on them, smoke.json, smoke2.json or throughput.json with the throughput gate markers, moved to discarded/resolved_&lt;t>/, logged in interruptions.jsonl) or 'missing &lt;note>'; RESOLVE is read only once no part of the run lives, never into a running run (round-4 R4-C1-4) |
+| N-F17 | §16, D-S0-8 | D-S0-8 (round-3 R3-C1-3): a C1 STOP that needs a code fix resumes at the fixed commit with c1/NODE_FIX ('&lt;new commit> &lt;dated note>'), accepted only while C1 is stopped (CAMPAIGN_STOPPED present, C1 not done) and when its commit is the checkout HEAD; the change goes to state commit_history and NODE_FIX is renamed NODE_FIX.used.&lt;t>; a NODE_FIX in another campaign or with C1 not stopped is refused; campaign.json keeps the campaign's start_commit beside the commit in force and the commit_history, and scripts/48 reports the history with the diff of scripts/46-50 of each step (round-4 R4-C1-6) |
+| N-F18 | §§13, 16, D-S0-8 | sections 13, 16 and D-S0-8 (round-3 R3-C1-7): the spot-endpoint check is a reachability check: no job of a campaign runs until the poller has had a good poll (200 or 404, spot/heartbeat.&lt;boot> newer than the poller's start); none within 120 s, or a last good poll older than 5 min while the campaign runs, is a STOP (a termination notice could not arrive); the heartbeat is written at every good poll, so its age is the age of the last good poll (round-4 R4-C1-1); a poller restarted after it ended gets its own 120 s for its first good poll (the dead poller's heartbeat is not judged), and none is restarted once a shutdown or a STOP began (round-4 R4-C1-2) |
 | N-F19 | §16 (X-4) | section 16 / X-4 (round-3 missed item): the smoke test at the chosen layout folds its verdict into smoke.json (at_layout, restart_possible false if it fails) before smoke2.json is written, and rec:smoke2 is done only when smoke.json carries at_layout for its label; C2 requires at_layout whenever the A2 layout is not 48 ranks |
 | N-F20 | §§11, 16 | sections 11, 16 (round-3 R3-1): an A2 end whose end rule asks for a STOP (pw_error, nstep before k = 200, other_end) is recorded and the STOP is held until no gate, section 11 check or other job without node-hours of the active phase is ready, so step-0, K2, the projection and K3 apply to the ended cell first; no node-hour job starts meanwhile; a gate decision that stops A2 puts the 'gate' exit file on every running A2 part at once (I-D3), and the drain records a part that ends after it as killed_by_gate (outputs moved aside unread) |
 | N-F21 | §13 | section 13 / N-F10 (round-3 R3-3 and missed item): a shutdown (SIGTERM) that kills a synchronous child (a scripts/49 gate, a scripts/46 geometry job or validate-a2) leaves that job pending (no marker, no STOP); a child found ended while the shutdown flag is set is not classified (A2 part, MACE attempt, reference pw.x run), so the relaunch judges it as an interruption of an earlier boot; a real STOP followed by SIGTERM still exits as stopped (return 3) |
 | N-F22 | §§11, 16 | sections 11, 16 (round-3 R3C-1): a section 11 check ends the scheduler tick like a gate, so the statuses are rebuilt and K3 is applied before the next A2 relaxation can start (at 48 ranks relaxation 9 never starts before K3) |
-| N-F23 | §13 | section 13 causes (round-3 R3-8): the runner records the process tree of every running A2 part (descendants of its wrapper, node /proc) in its launch record and in a2_pids.json (kept across reruns); an OOM kill in this boot is the part's interruption only for one of its own pids; without a recorded tree the pw.x task test of I-D7 applies, excluding every pid recorded for another A2 part (the other copy) in this boot |
+| N-F23 | §13 | section 13 causes (round-3 R3-8): the runner records the process tree of every running A2 part (descendants of its wrapper, node /proc) in its launch record and in a2_pids.json (kept across reruns); an OOM kill in this boot is the part's interruption only for one of its own pids; without a recorded tree the pw.x task test of I-D7 applies, excluding every pid recorded for another A2 part (the other copy) in this boot; revised in round 4 (N-F34): 'a recorded tree' is one that holds pw.x ranks |
 | N-F24 | §3 | section 3 (round-3 R3-C1-4): the production list needs a recorded n of 8 or 10 (the n rule), else S2Error; C3 requires the C1 gates_applied marker of gate:nrule |
-| N-F25 | §16 | section 16 keep-alive (round-3 R3-C1-9): s2_relaunch.sh, when it refuses, removes a /data/KEEP_ALIVE older than the current boot (left by a runner killed with its node), so the idle self-stop applies |
+| N-F25 | §16 | section 16 keep-alive (round-3 R3-C1-9): s2_relaunch.sh, when it refuses, removes a /data/KEEP_ALIVE older than the current boot (left by a runner killed with its node), so the idle self-stop applies; a refusal of s2_campaign.sh itself inside a relaunch is such a refusal, and without /data/work/s2 (before the first start) the relaunch refuses and s2_status.sh says 'not started' (round-4 R4-C1-3, R4-C1-8) |
+| N-F30 | §16 | section 16 throughput row and the 2x32 layout (round-4 R4-C1-1, error, and the node lens' missed items): every pw.x run outside the queue goes through the committed ehpc/node/s2_run_qe.sh (the node's run_qe.sh with an optional core set, used from the checkout); two concurrent 32-rank copies (np32a/np32b and every A2 part at 2x32) each run on one half of the physical cores (lscpu), 'taskset -c &lt;half> mpirun --bind-to none', the recipe confirmed on the node (two separate 'mpirun --bind-to core' both bind from core 0); a part takes the half no running copy uses; every other run is bound as run_qe.sh binds; the core set, the CPUs the pw.x ranks were allowed (node /proc) and the interval are recorded; the two throughput copies always start together (a copy that completed without the other is moved aside, its measurement not used, discarded/paired_&lt;t>, not one of its reruns; one whose partner is missing is skipped), and the 2x32 rate is computed only for two copies on disjoint cores whose walls overlap for >= 90% of the shorter one (scripts/49 I-C13) |
+| N-F31 | §16, D-S0-8 | section 16, D-S0-8 (round-4 R4-C1-2): check:nodescripts (no node-hours) records the sha256 of the node scripts behind every pw.x run (run_qe.sh, the QE profile, qe_queue.sh, chain.sh, s2_run_qe.sh) in c1/nodescripts_check.json and STOPs unless the queue, the chain and the launcher equal the checkout's ehpc/node copies byte for byte; C2-C4 STOP on any hash that differs from the C1 record |
+| N-F32 | §17 item 2, D-S0-8 | STAGE0 section 8 item 1, D-S0-8 (round-4 R4-C1-3): a git failure in the checkout (no repository, a copy without .git, git's ownership refusal) is a STOP in the runner and a refusal in s2_campaign.sh; HEAD must be 40 hex digits, never an empty commit read as clean |
+| N-F33 | §13 | section 13, N-D10 (round-4 R4-C1-4): RESOLVE 'rerun' of a smoke or throughput run moves the attempts before it (discarded/p&lt;n>_*) aside with the resolution, so the rerun has the two reruns of N-D10; an operator's MACE rerun after a STOP for a human (an exception, N-9) is marked counts false and is not one of the two reruns section 13 allows after a reclaim, node loss, OOM or wall time |
+| N-F34 | §13 | section 13 causes (round-4 R4-C1-5, R4-C24-2): a running pw.x part (A2, smoke, throughput) records its process tree with the pw.x ranks among it at every tick until all its ranks are in it, then every 30 s; an OOM kill is the part's only for one of its own recorded pids once pw.x ranks are recorded, else the pw.x task test after its start applies, excluding the pids recorded for another part in that boot |
+| N-F35 | §5 | section 5, STAGE0 section 8 item 3 (round-4 R4-C1-6): check:mace checks the foundation file's sha256 and then runs scripts/46 load_mace in a child process (the runner never imports mace): version, float64, cpu, the resolved file, Z coverage and torch threads before the first MACE job, no structure evaluated; a failure STOPs before the smoke tests and costs no MACE attempt |
+| N-F36 | §§11, 16 | sections 11, 16 (round-4 R4-C24-1): the STOP an A2 end rule asks for is durable: the A2 record carries end_rule.stop_raised false until CAMPAIGN_STOPPED holds the reason; every runner start re-holds such a STOP before any launch; every STOP's reason includes the held ones, which are then marked raised (an operator's relaunch after that STOP does not raise them again) |
+| N-F37 | §16 | section 16 'killed and its output discarded unread' (round-4 R4-C24-3 and the C2-C4 lens' missed item): a stopping gate's exit request replaces an earlier 'cap' or 'spot' one of a running part (the prior reason kept), so the part is killed_by_gate whatever its end; a relaxation waiting for its restart part when a gate stops A2 is killed_by_gate with its outputs and restart data moved aside unread |
+| N-F38 | §16, X-3, D-S0-6 | section 16, X-3, D-S0-6, D-S0-8 (round-4 R4-C1-5): smoke tests n1 and n3 that both end with JOB DONE but do not differ by two configurations (no affine nstep mapping of slope 1) STOP C1 before the exit/restart test and the throughput row, naming the smoke tests and the NODE_FIX / RESOLVE path, so they can be repeated while C1 is open |
 | I-D9 | §16 | section 16 hard cap (round-3 R3C-7; a reading, confirmed by the analyst as D-S0-10): 'No job starts if H_spent plus the job's expected duration would exceed 520 h ... Whatever is then incomplete is missing' is read as: after the first refusal in a campaign no further pw.x or MACE job of that campaign starts (each is not_started_cap); the refusal is persisted in HARD_CAP.json and read back at every runner start, so a relaunch gives the same decision; jobs without node-hours are never swept (N-F14) |
 | N-D11 | §§8, 11 | a campaign whose preconditions are refused by recorded decisions (e.g. K3 a1_only for C4) is recorded as not_run without booting work; missing evidence for a precondition is a STOP |
 

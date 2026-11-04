@@ -13,7 +13,10 @@ C=${1:-}
 case "$C" in c1|c2|c3|c4) ;; *) echo "usage: s2_campaign.sh c1|c2|c3|c4" >&2; exit 2;; esac
 R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2
 cd "$R"
-[ -z "$(git status --porcelain)" ] || { echo "the checkout $R is not clean: nothing started" >&2; exit 1; }
+# a git failure (no repository, a copy without .git, git's ownership refusal) is a refusal, never 'clean' (round 4)
+st=$(git status --porcelain) || { echo "git failed in $R: nothing started" >&2; exit 1; }
+[ -z "$st" ] || { echo "the checkout $R is not clean: nothing started" >&2; exit 1; }
+git rev-parse --verify -q HEAD >/dev/null || { echo "no HEAD in $R (git failed): nothing started" >&2; exit 1; }
 mkdir -p "$W/$C"
 exec 8>>"$W/s2.lock"
 flock -n 8 || { echo "another S2 runner, or a process it started, holds $W/s2.lock: nothing started" >&2; exit 1; }

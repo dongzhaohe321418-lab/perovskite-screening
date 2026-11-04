@@ -10,7 +10,9 @@
 # (campaign.json status "running" and no CAMPAIGN_DONE). The runner re-derives every job's state from its files.
 # A shutdown (SIGTERM) leaves the campaign running for this relaunch; a STOP for a human is SIGINT to the runner.
 # When it refuses, a /data/KEEP_ALIVE older than this boot (left by a runner that died with its node) is removed, so
-# the idle self-stop applies (round-3 R3-C1-9, N-F25); one written in this boot is kept.
+# the idle self-stop applies (round-3 R3-C1-9, N-F25); one written in this boot is kept. A refusal of s2_campaign.sh
+# itself (a checkout that is not clean, git failing, the lock taken meanwhile) is such a refusal, and before the first
+# start (no /data/work/s2) it refuses with that reason (round 4).
 set -euo pipefail
 W=/data/work/s2; R=/data/work/ps_s2
 KA=${W%/work/s2}/KEEP_ALIVE
@@ -25,6 +27,7 @@ stale_ka(){
   return 0
 }
 refuse(){ echo "$*"; stale_ka; exit 1; }
+[ -d "$W" ] || refuse "no S2 work tree $W: nothing to relaunch (start s2_campaign.sh)"
 flock -n "$W/s2.lock" true || refuse "the S2 lock $W/s2.lock is held (a runner or a process it started): nothing started"
 busy=""
 for p in $(pgrep -f '50_s2_campaign\.py|46_s2_cells\.py|49_s2_gates\.py|s2-spot-poller|qe_queue\.sh|chain\.sh|run_qe\.sh|pw\.x' || true); do
@@ -47,5 +50,5 @@ done
 set -- $run
 [ "$#" = 1 ] || refuse "running campaigns:${run:- none}: nothing started (exactly one is needed)"
 c=${run# }
-bash "$R/ehpc/node/s2_campaign.sh" "$c"
+bash "$R/ehpc/node/s2_campaign.sh" "$c" || refuse "s2_campaign.sh refused to start $c: nothing started"
 echo "[$(date -u +%FT%TZ)] relaunch of $c after boot at $(date -u -d @$(awk '/^btime/{print $NF}' /proc/stat) +%FT%TZ)" >> $W/relaunch.log

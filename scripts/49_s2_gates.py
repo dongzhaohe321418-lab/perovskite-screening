@@ -100,6 +100,8 @@ RULES = {
     "DOPANT_SPECIFIC": {"checks": (2, 3, 5), "site_host_fraction": (1, 4), "cell_fraction": 0.10},   # §12
     "HARD_CAP_H": 520.0,                    # §16: a job may start iff H_spent + expected <= 520
     "TP_GAIN_MIN": 0.15,                    # §16: choose iff rate >= (1 + 0.15) x rate(48)
+    "TP_PAIR_OVERLAP": 0.9,                 # [M] round 4 (I-C13): the two 32-rank copies count as concurrent iff their
+                                            # walls overlap for >= 90% of the shorter one (on disjoint cores)
     "PLATEAU_MEV": 3.0,                     # §11 end rule (owner scripts/47; repeated here only in PLAN_PINS)
     "END_ACCEPTED": ("accepted_converged", "accepted_plateau"),   # §11 end-rule outcomes that accept a cell
     # §16 unit costs, the fallback expected durations of the hard-cap rule before a measured mean exists (I-21)
@@ -175,7 +177,7 @@ NOTES = {
     "I-21": "§16 hard cap: the expected duration is the mean wall of completed jobs of the same kind in S2, else the "
             "§16 unit cost (A2 relaxation at the cap value 20.6 h)",
     "I-22": "§16 throughput: rate = configurations per node-hour (two copies: 10 configurations over the longer "
-            "wall); chosen iff >= 1.15 x the 48-rank rate; a failed run -> 48",
+            "wall, counted only as I-C13); chosen iff >= 1.15 x the 48-rank rate; a failed run -> 48",
     "I-24": "§16 projection: H_MACE = remaining frozen relaxations x the C1 MACE node time per frozen relaxation plus "
             "one host-relaxation wave while host relaxations remain, both as I-C7b (derived here from the blinded C1 "
             "records; scripts/50 passes no phase wall, round-2 F3); tau_SP = mean C1 SP wall",
@@ -194,6 +196,11 @@ NOTES = {
     "I-C4": "§11 step-0: a missing standalone SP or k = 0 value counts as a failed check; attempt 2 requires a fix "
             "note; 'no error found' after attempt 1 gives fail_final; no attempt 3",
     "I-C5": "§16 throughput: of equal rates 64 ranks precedes two 32-rank copies; a failed 48-rank run gives 48",
+    "I-C13": "§16 throughput (round-4 R4-C1-1 and the node lens' missed item): 'two concurrent 32-rank copies' is "
+             "measured only by two runs that each recorded a core set, on disjoint cores (and, when recorded, with "
+             "their pw.x ranks' CPUs disjoint and inside the sets), whose walls overlap for >= 90% of the shorter one "
+             "([M], TP_PAIR_OVERLAP); otherwise the 2x32 rate is None and the layout is not chosen (fail-closed: 48 "
+             "or 64); scripts/50 starts the two copies together on the two halves of the cores (N-F30)",
     "I-C6": "§16 cuts: cuts 1-4 are inapplicable once C4 will not run, and cut 7 once Cl has left the family (G1)",
     "N-C1": "gate output: inputs_digest = sha256 over (label, content sha256 of the decompressed file, mode), "
             "without file paths, so the node and the archive give the same digest",
@@ -813,9 +820,45 @@ def tp_decide(rates):
     return "48", "no layout beats 48 ranks by >= 15%"
 
 
+def _cpus(s):
+    out = set()
+    for part in str(s or "").replace(" ", "").split(","):
+        if part:
+            a, _, b = part.partition("-")
+            out.update(range(int(a), int(b or a) + 1))
+    return out
+
+
+def tp_pair_reasons(a, b):
+    """I-C13 (round-4 R4-C1-1 and the node lens' missed item): the reasons why two 32-rank runs are not the §16 layout
+    'two concurrent 32-rank copies' (empty: they are): each must record its core set ('cpuset'), the two sets must be
+    disjoint, the CPUs their pw.x ranks were allowed ('affinity', when recorded) disjoint and inside the sets, and the
+    two walls ('interval' [start, end]) must overlap for at least 90% of the shorter one."""
+    why = []
+    sa, sb = _cpus(a.get("cpuset")), _cpus(b.get("cpuset"))
+    if not sa or not sb:
+        why.append("a copy without a recorded core set")
+    elif sa & sb:
+        why.append("the two core sets overlap")
+    fa, fb = _cpus(a.get("affinity")), _cpus(b.get("affinity"))
+    if fa and fb and fa & fb:
+        why.append("the pw.x ranks of the two copies shared CPUs")
+    if (fa and sa and not fa <= sa) or (fb and sb and not fb <= sb):
+        why.append("pw.x ranks outside their core set")
+    ia, ib = a.get("interval"), b.get("interval")
+    if not (ia and ib and None not in (*ia, *ib)):
+        why.append("a copy without a recorded interval")
+    else:
+        short = min(float(ia[1]) - float(ia[0]), float(ib[1]) - float(ib[0]))
+        ov = min(float(ia[1]), float(ib[1])) - max(float(ia[0]), float(ib[0]))
+        if short <= 0 or ov < RULES["TP_PAIR_OVERLAP"] * short:
+            why.append(f"the walls overlap {ov:.0f} s, < {RULES['TP_PAIR_OVERLAP']:.0%} of the shorter wall")
+    return why
+
+
 def throughput_choice(t):
     """t: the s2-throughput-1 record, {"runs": {"np48" | "np64" | "np32a" | "np32b": {"n_config": int, "wall_s": float,
-    optional "ok" / "failed"}}} (§16, I-22)."""
+    optional "ok" / "failed"; for np32a/np32b "cpuset", "interval" and optionally "affinity"}}} (§16, I-22, I-C13)."""
     runs = t.get("runs", {})
 
     def rate(*names):
@@ -826,10 +869,12 @@ def throughput_choice(t):
             return None
         return sum(int(r["n_config"]) for r in rs) / (max(float(r["wall_s"]) for r in rs) / 3600.0)
 
-    rates = {"48": rate("np48"), "64": rate("np64"), "2x32": rate("np32a", "np32b")}
+    pair_why = tp_pair_reasons(runs.get("np32a") or {}, runs.get("np32b") or {})
+    rates = {"48": rate("np48"), "64": rate("np64"), "2x32": None if pair_why else rate("np32a", "np32b")}
     choice, why = tp_decide(rates)
-    return {"rate_config_per_node_h": rates, "choice": choice, "why": why,
-            "rule": ">= 1.15 x rate(48), else 48", "energies_read": False}
+    return {"rate_config_per_node_h": rates, "choice": choice, "why": why, "pair_not_counted": pair_why,
+            "rule": ">= 1.15 x rate(48), else 48; 2x32 only for two concurrent copies on disjoint cores (I-C13)",
+            "energies_read": False}
 
 
 # ---------------------------------------------------------------- blinded reader (§17; interface spec §12)
@@ -1932,17 +1977,44 @@ def self_test():
         assert tp_decide({"48": 1.0, "64": 1.3, "2x32": 1.3})[0] == "64"
         assert tp_decide({"48": None, "64": 2.0, "2x32": 2.0})[0] == "48"
         runs = {"np48": {"ok": True, "n_config": 5, "wall_s": 3600.0}, "np64": {"ok": False, "n_config": 5, "wall_s": 1.0},
-                "np32a": {"ok": True, "n_config": 5, "wall_s": 3000.0}, "np32b": {"ok": True, "n_config": 5, "wall_s": 3200.0}}
+                "np32a": {"ok": True, "n_config": 5, "wall_s": 3000.0, "cpuset": "0-31", "interval": [0.0, 3000.0]},
+                "np32b": {"ok": True, "n_config": 5, "wall_s": 3200.0, "cpuset": "32-63", "interval": [1.0, 3201.0]}}
         r = throughput_choice({"runs": runs})
         assert r["rate_config_per_node_h"]["64"] is None and abs(r["rate_config_per_node_h"]["2x32"] - 10 / (3200 / 3600)) < 1e-9
         assert r["choice"] == "2x32"
         runs["np32b"]["ok"] = False
         assert throughput_choice({"runs": runs})["choice"] == "48"
         plain = {k: {"n_config": v["n_config"], "wall_s": v["wall_s"]} for k, v in runs.items()}   # spec 4.6 shape
+        assert throughput_choice({"runs": plain})["rate_config_per_node_h"]["2x32"] is None   # no core sets (I-C13)
         assert throughput_choice({"runs": plain})["choice"] == "64"
         plain["np64"]["failed"] = True
-        assert throughput_choice({"runs": plain})["choice"] == "2x32"
-        return "1.15 x -> chosen, 1.1499 x -> 48, failed run -> 48, two copies: 10 configurations over the longer wall"
+        assert throughput_choice({"runs": plain})["choice"] == "48"                 # no core sets: no 2x32 (I-C13)
+        plain["np32a"]["wall_s"], plain["np32b"]["wall_s"] = 3000.0, 3200.0
+        # I-C13 (round 4): the 2x32 rate only for two concurrent copies on disjoint cores
+        T0 = 1.8e9
+        pair = {"np32a": {"cpuset": "0-31", "interval": [T0, T0 + 3000.0]},
+                "np32b": {"cpuset": "32-63", "interval": [T0 + 5.0, T0 + 3205.0]}}
+        for k in ("np32a", "np32b"):
+            plain[k].update(pair[k])
+        r2 = throughput_choice({"runs": plain})
+        assert r2["choice"] == "2x32" and not r2["pair_not_counted"], r2
+        bad = {"shared core set": {"np32b": {"cpuset": "0-31"}}, "no core set": {"np32b": {"cpuset": None}},
+               "solo rerun": {"np32b": {"interval": [T0 + 3100.0, T0 + 6300.0]}},
+               "60% overlap": {"np32b": {"interval": [T0 + 1200.0, T0 + 4400.0]}},
+               "shared CPUs": {"np32a": {"affinity": "0-40"}, "np32b": {"affinity": "32-63"}},
+               "outside its set": {"np32b": {"affinity": "16-47"}}}
+        for name, over in bad.items():
+            rr = copy.deepcopy(plain)
+            for k, v in over.items():
+                rr[k].update(v)
+            res = throughput_choice({"runs": rr})
+            assert res["rate_config_per_node_h"]["2x32"] is None and res["pair_not_counted"] and res["choice"] == "48", (name, res)
+        ok89 = copy.deepcopy(plain); ok89["np32b"]["interval"] = [T0 + 300.0, T0 + 3300.0]      # 90.0% of 3000 s
+        assert throughput_choice({"runs": ok89})["choice"] == "2x32"
+        ok89["np32b"]["interval"] = [T0 + 301.0, T0 + 3301.0]                               # 89.97%
+        assert throughput_choice({"runs": ok89})["choice"] == "48"
+        return ("1.15 x -> chosen, 1.1499 x -> 48, failed run -> 48, two copies: 10 configurations over the longer wall; "
+                f"2x32 not counted for {list(bad)} or 89.97% overlap, counted at 90.0% (I-C13)")
 
     # -------- Reader and gate runners on a temporary archive (fake parsed outputs as JSON; no S2 cell exists)
     def fake_sp(path, read="full"):

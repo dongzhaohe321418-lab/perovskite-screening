@@ -130,9 +130,22 @@ NOTES = {
              "aggregate); all labelled zero-shot MACE, not re-admitted",
     "N-F28": "§15 (round-3 R3C-5): the residual forces of every A1 cell carry the per-atom norms of the free atoms "
              "(scripts/47 parse_sp 'free': norms_eVA with their indices) beside RMS and max",
-    "N-F29": "§17 item 6 (round-3 R3C-6): the one evaluation records the campaign commit (the latest state_end.json) "
-             "beside HEAD with the git diff of scripts/46-49 between them; a difference is refused unless "
-             "--amendment names a committed, dated note (D-S0-4 foresees such an amendment), which is recorded",
+    "N-F29": "§17 item 6 (round-3 R3C-6; revised in round 4, R4-C24-5): the one evaluation records the campaign commit "
+             "(the latest state_end.json) beside HEAD with the git diff of scripts/46-49 between them (stat, sha256, "
+             "and the diff itself beside s2_eval.json); a difference is refused unless --amendment names a committed, "
+             "clean note outside scripts/ that was added or changed after the campaign commit and carries an ISO date "
+             "on or after that commit's; a given amendment is checked alike and recorded also when the code is "
+             "unchanged, and the D3(BJ) row cites it (D-S0-4)",
+    "N-F39": "§§13, 17 item 6 (round-4 R4-C1-6): every commit change during the campaigns (state_end commit_history: "
+             "c1/NODE_FIX, c2/STEP0_FIX) is reported in s2_eval.json analysis_identity with the diff stat of "
+             "scripts/46-50 and ehpc/node between its two commits; report only, no refusal",
+    "N-F40": "§16 'output discarded unread' (round-4 R4-C24-3): only a complete A2 relaxation is parsed; a killed, "
+             "missing or not-run one has no energies read (its outputs were moved aside unread), and the reported A2 "
+             "rows give a relaxation energy for complete cells only",
+    "N-F41": "§§8, 11 (round-4 R4-C24-4): the Cs and Cl cells of the pilot hosts (noise pilot, start set) are "
+             "default-pose cells: their pose mode is 'default', so their reported rows and MACE values use the o0 "
+             "cells, as gate N does (the m30 pose pilot is reported apart); a pilot host without a Cs or Cl record "
+             "cannot crash the evaluation",
     "N-C11": "§15 required hosts: the smallest n in 2..1000 with t_{n-1}(q*) s_Y/sqrt(n) below k_BT (and k_BT/2); "
              "null when s_Y is undefined or no n <= 1000 suffices",
     "N-C12": "§17: evaluate is a pure function of the table; assemble is the only reader of C3/C4 energies and of the "
@@ -181,7 +194,7 @@ def leg_F(table, h, d, j, leg):
     the per-leg Boltzmann aggregate over the kept minima (I-38)."""
     H = table["hosts"][h]
     if _pose_mode(H, d) == "multi":
-        mins = (((H["pose"][d].get("minima") or {}).get(str(j)) or {}).get(leg)) or []
+        mins = (((((H.get("pose") or {}).get(d) or {}).get("minima") or {}).get(str(j)) or {}).get(leg)) or []
         labs = [g49.lab_dop(h, d, j, leg, int(o[1:])) for o in mins]
         if not labs:
             return None, [f"{d}{j} {leg}: no valid start (I-38)"], labs
@@ -877,7 +890,7 @@ def reported(table, res, hv, dl, pool, dfar):
     for p, A in sorted((table.get("a2") or {}).items()):
         for lab, c in sorted(A.items()):
             dE = (c["Ffin_eV"] - c["F0_eV"]) * 1000.0 if c.get("F0_eV") is not None and c.get("Ffin_eV") is not None \
-                else None
+                and c.get("status", "complete") == "complete" else None                # R4-C24-3: complete cells only
             a2r[lab] = {"relaxation_energy_meV": dE, "n_config": c.get("n_config"), "restarts": c.get("restarts"),
                         "end_rule": c.get("end_rule"), "attribution": c.get("attribution")}
     rep["a2_cells"] = a2r
@@ -1054,6 +1067,11 @@ def assemble(archive_root="results/objective2/s2", *, layout=None, sp_parser=Non
             hosts[h]["F"][lab] = full["F_eV"]
             if full.get("forces") is not None:
                 hosts[h]["forces"][lab] = full["forces"]
+    # the pilot hosts' Cs and Cl cells (noise pilot, start set) are default-pose cells (§§8, 11; the m30 pose pilot is
+    # kept apart in pose_pilot): mode 'default', so their rows use o0 as gate N does (round-4 R4-C24-4)
+    for h in PILOTS:
+        for tok in ("Cs", "Cl"):
+            hosts[h]["pose"].setdefault(tok, {"start_failed": {}})["mode"] = "default"
     # pose modes of production (the pose gate, unless cut 6/7) and kept minima of multi-pose legs
     mp_cut = state.get("multi_pose_cut") or {}
     for tok in ("Cs", "Cl"):
@@ -1081,12 +1099,15 @@ def assemble(archive_root="results/objective2/s2", *, layout=None, sp_parser=Non
             if not os.path.exists(rp):
                 continue
             rec = json.load(open(rp))
-            parts = layout.a2_parts(c, lab)
+            # only a complete relaxation is read: a killed, missing or not-run one had its outputs moved aside unread
+            # (section 16), and none is parsed here even if a part output were left (round-4 R4-C24-3)
+            parts = layout.a2_parts(c, lab) if rec.get("status") == "complete" else []
             if len(parts) > 1 and mapping is None:
                 raise ValueError(f"{lab}: {len(parts)} parts but no c1/smoke.json mapping to join them (review-2 F8)")
             # the same C1 smoke-test mapping as the runner and the gates (exit marker, restart counters; X-3)
             rel = relax_parser(parts, read="full", mapping=mapping) if parts else None
-            er = end_rule_fn(rel) if rel is not None else {"outcome": "missing"}
+            er = end_rule_fn(rel) if rel is not None else {"outcome": rec.get("status") if rec.get("status") not in
+                                                           (None, "complete") else "missing"}
             F = (rel or {}).get("F_eV") or {}
             kl = (rel or {}).get("k_last")
             vf = rec.get("validity_final")
@@ -1259,40 +1280,80 @@ def _clean_and_committed():
 ANALYSIS_FILES = ("scripts/46_s2_cells.py", "scripts/47_s2_qe.py", "scripts/48_s2_analysis.py", "scripts/49_s2_gates.py")
 
 
-def _campaign_commit(archive):
-    """The S2 campaign commit recorded in the latest state_end.json (C4, then C3, C2, C1), or None."""
+def _campaign_state(archive):
+    """The latest state_end.json (C4, then C3, C2, C1), or {}."""
     for c in ("c4", "c3", "c2", "c1"):
         p = os.path.join(archive, c, "state_end.json")
         if os.path.exists(p):
-            return json.load(open(p)).get("commit")
-    return None
+            return json.load(open(p))
+    return {}
 
 
-def analysis_guard(campaign_commit, head, amendment=None, root=ROOT):
-    """§17 item 6 (round-3 R3C-6, N-F29): the analysis code of scripts/46-49 at HEAD against the campaign commit.
-    Returns (ok, record): equal code passes; a difference passes only with amendment, the path of a committed note that
-    carries a date (D-S0-4 foresees a dated amendment before the one evaluation); the record goes into s2_eval.json."""
+def _campaign_commit(archive):
+    """The S2 campaign commit recorded in the latest state_end.json (C4, then C3, C2, C1), or None."""
+    return _campaign_state(archive).get("commit")
+
+
+def _commit_history(archive):
+    """Every commit change during the campaigns (c1/NODE_FIX, c2/STEP0_FIX) from the latest state_end.json."""
+    return list(_campaign_state(archive).get("commit_history") or [])
+
+
+HISTORY_FILES = ANALYSIS_FILES + ("scripts/50_s2_campaign.py", "ehpc/node")
+
+
+def analysis_guard(campaign_commit, head, amendment=None, root=ROOT, commit_history=None):
+    """§17 item 6 (round-3 R3C-6, N-F29; round-4 R4-C24-5, R4-C1-6): the analysis code of scripts/46-49 at HEAD against
+    the campaign commit. Returns (ok, record) for s2_eval.json analysis_identity: the diff's stat, its sha256 and its
+    text (written beside s2_eval.json by cmd_evaluate). Equal code passes. A difference passes only with --amendment, a
+    committed, clean note outside scripts/ that was added or changed after the campaign commit and carries an ISO date
+    not earlier than that commit's date (D-S0-4 foresees such a dated amendment). A given amendment is checked by the
+    same rules and recorded (path, sha256) also when the code is unchanged. Every commit change during the campaigns
+    (commit_history: NODE_FIX, STEP0_FIX) is reported with the diff stat of scripts/46-50 and ehpc/node between its two
+    commits (report only, no refusal)."""
     g = lambda *a: subprocess.run(["git", "-C", root, *a], capture_output=True, text=True)   # noqa: E731
     rec = {"campaign_commit": campaign_commit, "head": head, "files": list(ANALYSIS_FILES), "diff_stat": None,
-           "amendment": None}
+           "diff_sha256": None, "diff_text": None, "amendment": None, "commit_history": []}
+    for e in commit_history or []:
+        a_, b_ = (e or {}).get("from"), (e or {}).get("to")
+        st = g("diff", "--stat", str(a_), str(b_), "--", *HISTORY_FILES) if a_ and b_ else None
+        rec["commit_history"].append({**{k: v for k, v in (e or {}).items() if k in ("from", "to", "note", "time", "via")},
+                                      "diff_stat_46_50": st.stdout.strip() if st is not None and st.returncode == 0
+                                      else "unavailable (a commit is not in this checkout)"})
     if not campaign_commit:
         return False, {**rec, "reason": "no campaign commit in state_end.json"}
     d = g("diff", "--stat", campaign_commit, head, "--", *ANALYSIS_FILES)
-    if d.returncode != 0:
+    full = g("diff", campaign_commit, head, "--", *ANALYSIS_FILES)
+    if d.returncode != 0 or full.returncode != 0:
         return False, {**rec, "reason": f"git diff {campaign_commit[:12]} {head[:12]} failed: {d.stderr.strip()[:200]}"}
     rec["diff_stat"] = d.stdout.strip()
-    if not rec["diff_stat"]:
-        return True, rec
-    if not amendment:
+    if rec["diff_stat"]:
+        rec["diff_sha256"] = hashlib.sha256(full.stdout.encode()).hexdigest()
+        rec["diff_text"] = full.stdout
+    if amendment:
+        rel = os.path.relpath(os.path.abspath(amendment), root)
+        why = None
+        if rel.startswith("..") or rel.split(os.sep)[0] == "scripts":
+            why = f"the amendment {rel} must be a note outside scripts/ (R4-C24-5)"
+        elif g("ls-files", "--error-unmatch", rel).returncode != 0 or g("status", "--porcelain", "--", rel).stdout.strip():
+            why = f"the amendment {rel} is not committed"
+        elif rel not in g("diff", "--name-only", "--diff-filter=AM", campaign_commit, head).stdout.split("\n"):
+            why = f"the amendment {rel} was not added or changed after the campaign commit {campaign_commit[:12]}"
+        else:
+            txt = open(os.path.join(root, rel)).read()
+            day = g("show", "-s", "--format=%cs", campaign_commit).stdout.strip()
+            dates = re.findall(r"\b20\d\d-\d\d-\d\d\b", txt)
+            if not dates:
+                why = f"the amendment {rel} carries no date"
+            elif not any(x >= day for x in dates):
+                why = f"the amendment {rel} carries no date on or after the campaign commit's ({day})"
+            else:
+                rec["amendment"] = {"path": rel, "sha256": hashlib.sha256(txt.encode()).hexdigest(), "dates": dates[:5]}
+        if why:
+            return False, {**rec, "reason": why}
+    if rec["diff_stat"] and not rec["amendment"]:
         return False, {**rec, "reason": "scripts/46-49 differ from the campaign commit: --amendment <committed dated "
                                         "note> is required (N-F29)"}
-    rel = os.path.relpath(os.path.abspath(amendment), root)
-    if g("ls-files", "--error-unmatch", rel).returncode != 0 or g("status", "--porcelain", "--", rel).stdout.strip():
-        return False, {**rec, "reason": f"the amendment {rel} is not committed"}
-    txt = open(os.path.join(root, rel)).read()
-    if not re.search(r"\b20\d\d-\d\d-\d\d\b", txt):
-        return False, {**rec, "reason": f"the amendment {rel} carries no date"}
-    rec["amendment"] = {"path": rel, "sha256": hashlib.sha256(txt.encode()).hexdigest()}
     return True, rec
 
 
@@ -1319,7 +1380,8 @@ def cmd_evaluate(a):
     if err:
         print(f"REFUSED: {err} (the evaluation is run at a recorded commit)", file=sys.stderr)
         return 3
-    ok, ident = analysis_guard(_campaign_commit(a.archive), commit, getattr(a, "amendment", None))
+    ok, ident = analysis_guard(_campaign_commit(a.archive), commit, getattr(a, "amendment", None),
+                               commit_history=_commit_history(a.archive))
     if not ok:
         print(f"REFUSED: {ident['reason']} (§17 item 6)", file=sys.stderr)
         return 3
@@ -1345,8 +1407,15 @@ def cmd_evaluate(a):
             rerun = {"cause": a.rerun_cause, "first_commit": first["commit"], "first_failure": f"{type(e).__name__}: {e}"}
     table = assemble(a.archive)
     res = evaluate(table)
+    if ident.get("amendment") and "D3BJ" in (res.get("reported") or {}):
+        res["reported"]["D3BJ"]["amendment"] = ident["amendment"]          # D-S0-4: the dated amendment it follows
     sha = {fn: hashlib.sha256(open(os.path.join(HERE, fn), "rb").read()).hexdigest()
            for fn in ("46_s2_cells.py", "47_s2_qe.py", "48_s2_analysis.py", "49_s2_gates.py")}
+    diff_text = ident.pop("diff_text", None)
+    if diff_text:                                                           # N-F29: the diff itself, beside s2_eval.json
+        side = os.path.splitext(a.out)[0] + ".analysis_diff.patch"
+        open(side, "w").write(diff_text)
+        ident["diff_file"] = os.path.basename(side)
     body = {"commit": commit, "script_sha256": sha, "analysis_identity": ident,
             "inputs_digest": hashlib.sha256(json.dumps(table, sort_keys=True, default=str).encode()).hexdigest(), **res}
     print(f"written {write_eval(body, a.out, rerun=rerun)}")
@@ -2076,8 +2145,55 @@ def case_eval_guard(m):
     c2 = g("rev-parse", "HEAD").stdout.strip()
     ok, rec = m.analysis_guard(c0, c2, note, root=d)
     assert ok and rec["amendment"]["path"] == "amendment.md" and rec["campaign_commit"] == c0 and rec["head"] == c2, rec
-    return "unchanged code passes; a changed scripts/48 is refused without --amendment and with an uncommitted note; " \
-           "a committed dated note is accepted and recorded with both commits and the diff"
+    # round 4 (R4-C24-5): the note must be outside scripts/, added or changed after the campaign commit, with a date on
+    # or after that commit's; a given note is recorded also when the code is unchanged; the diff's sha256 and text
+    assert rec["diff_sha256"] and "changed after the campaign" in rec["diff_text"], rec
+    sub = tempfile.mkdtemp(prefix="s2_48_guard2_")
+    g2 = lambda *a: subprocess.run(["git", "-C", sub, "-c", "user.name=s2-selftest", "-c", "user.email=s2-selftest",  # noqa: E731
+                                    "-c", "commit.gpgsign=false", *a], capture_output=True, text=True, check=True)
+    g2("init", "-q")
+    for fn in ANALYSIS_FILES:
+        os.makedirs(os.path.join(sub, os.path.dirname(fn)), exist_ok=True)
+        open(os.path.join(sub, fn), "w").write(f"# {fn}\n")
+    os.makedirs(os.path.join(sub, "results"), exist_ok=True)
+    open(os.path.join(sub, "results", "S2_PLAN.md"), "w").write("plan 2026-11-03\n")
+    open(os.path.join(sub, "notes_before.md"), "w").write("an older note 2026-10-01\n")
+    g2("add", "-A"); g2("commit", "-qm", "campaign")
+    k0 = g2("rev-parse", "HEAD").stdout.strip()
+    day0 = g2("show", "-s", "--format=%cs", k0).stdout.strip()
+    open(os.path.join(sub, "scripts/48_s2_analysis.py"), "a").write(f"# changed {day0}\n")
+    os.makedirs(os.path.join(sub, "amendments"), exist_ok=True)
+    open(os.path.join(sub, "amendments", "late.md"), "w").write(f"amendment {day0}: the D3(BJ) row is not reported\n")
+    open(os.path.join(sub, "amendments", "early.md"), "w").write("amendment dated 2020-01-01 only\n")
+    g2("add", "-A"); g2("commit", "-qm", "change and amendments")
+    k1 = g2("rev-parse", "HEAD").stdout.strip()
+    refused = {}
+    for nm in ("results/S2_PLAN.md", "scripts/48_s2_analysis.py", "notes_before.md", "amendments/early.md"):
+        ok_, r_ = m.analysis_guard(k0, k1, os.path.join(sub, nm), root=sub)
+        assert not ok_, (nm, r_)
+        refused[nm] = r_["reason"][:60]
+    ok_, r_ = m.analysis_guard(k0, k1, os.path.join(sub, "amendments", "late.md"), root=sub)
+    assert ok_ and r_["amendment"]["path"] == os.path.join("amendments", "late.md") and r_["diff_sha256"], r_
+    open(os.path.join(sub, "amendments", "d3bj.md"), "w").write(f"D-S0-4 amendment {day0}: D3(BJ) not reported\n")
+    g2("add", "-A"); g2("commit", "-qm", "D3(BJ) amendment only")
+    k2 = g2("rev-parse", "HEAD").stdout.strip()
+    hist = [{"from": k0, "to": k1, "note": "2026-11-04 fix", "time": "t", "via": "c1/NODE_FIX"},
+            {"from": "0" * 40, "to": "1" * 40, "note": "x", "time": "t", "via": "c2/STEP0_FIX"}]
+    ok_, r_ = m.analysis_guard(k1, k2, os.path.join(sub, "amendments", "d3bj.md"), root=sub, commit_history=hist)
+    assert ok_ and r_["diff_stat"] == "" and r_["amendment"]["path"].endswith("d3bj.md"), r_
+    assert [{k: e[k] for k in ("from", "to", "note", "via")} for e in r_["commit_history"]] == \
+        [{k: e[k] for k in ("from", "to", "note", "via")} for e in hist], r_["commit_history"]
+    assert "48_s2_analysis.py" in r_["commit_history"][0]["diff_stat_46_50"] and \
+        r_["commit_history"][1]["diff_stat_46_50"].startswith("unavailable"), r_["commit_history"]
+    arch = tempfile.mkdtemp(prefix="s2_48_hist_")
+    os.makedirs(os.path.join(arch, "c2"))
+    json.dump({"commit": k1, "commit_history": hist}, open(os.path.join(arch, "c2", "state_end.json"), "w"))
+    assert m._commit_history(arch) == hist and m._campaign_commit(arch) == k1
+    return ("unchanged code passes; a changed scripts/48 is refused without --amendment and with an uncommitted note; "
+            "a committed dated note is accepted and recorded with both commits and the diff; round 4: refused "
+            f"{sorted(refused)} (outside scripts/, after the campaign commit, dated on or after it), a later dated note "
+            "accepted with the diff's sha256; an amendment with unchanged code recorded; commit_history copied from "
+            "state_end with the diff stat of each NODE_FIX step")
 
 
 def _planted(**kw):
@@ -2477,7 +2593,8 @@ def _this_module():
     """The functions a case uses, from this file (a rerun runs the same case on the first code instead)."""
     import types
     return types.SimpleNamespace(evaluate=evaluate, write_eval=write_eval, assemble=assemble, c2_noise=c2_noise,
-                                 required_hosts=required_hosts, analysis_guard=analysis_guard)
+                                 required_hosts=required_hosts, analysis_guard=analysis_guard, classify=classify,
+                                 _commit_history=_commit_history, _campaign_commit=_campaign_commit)
 
 
 def _a1cond_table():
@@ -2593,6 +2710,103 @@ def case_flag_rounding(m):
             f"calibrated tier keeps the A1 flag and records the flip (gap {hc['flag_recomputed']['gap_to_kT_meV']:.1e} meV)")
 
 
+def case_rule_v_r4(m):
+    """Round-4 R4-C24-6 (coverage; the code was right): (a) the calibrated sign rule counts Y_h + delta_bar_d, not Y_h:
+    10 hosts, delta_bar_Ca = -10 meV, 8 hosts positive at A1 (one at +5 meV) and 7 after the shift, both intervals above
+    +25.7 meV: A1 'repels', calibrated 'not resolved', as the independent implementation; (b) 'entirely above +25.7'
+    is strict (I-20): an interval whose lower bound is exactly 25.7 meV is not 'repels', nor one whose upper bound is
+    exactly -25.7 meV 'binds', at either tier (classify is the one rule of both). A mutation of either rule makes this
+    case fail."""
+    P10 = PROD8 + ["m33", "m13"]
+    t = _planted(eb={"Sr": 120.0, "Ca": -75.0, "Cl": 0.0, "Cs": 0.0, "GA": 60.0}, prod=P10,
+                 delta={**{d: {"m30": 2.0, "m05": -1.0} for d in TOKENS}, "Ca": {"m30": -10.0, "m05": -10.0}})
+    target = [400.0 + 3.0 * i for i in range(7)] + [5.0, -1.0, -1.5]
+    for h, y in zip(P10, target):
+        _shift_Y(t, "Ca", h, y)
+    r = m.evaluate(t)
+    a1, cal = r["per_dopant"]["Ca"]["a1"], r["per_dopant"]["Ca"]["calibrated"]
+    dbar = r["per_dopant"]["Ca"]["controls"]["C5"]["delta_bar_meV"]
+    assert abs(dbar + 10.0) < 1e-6, dbar
+    assert a1["interval_meV"][0] > KT and cal["interval_meV"][0] > KT, (a1["interval_meV"], cal["interval_meV"])
+    assert a1["class_rule_v"] == "repels" and cal["class_rule_v"] == NOT_RESOLVED, (a1["class_rule_v"], cal["class_rule_v"])
+    compare(flatten_eval(r), independent(t))
+    hv = [10.0] * 8
+    for lo, hi, want in ((KT, KT + 50.0, False), (KT + 1e-9, KT + 50.0, True)):
+        assert (m.classify(lo, hi, hv, 0.0) == "repels") is want, (lo, m.classify(lo, hi, hv, 0.0))
+    hn = [-10.0] * 8
+    for lo, hi, want in ((-KT - 50.0, -KT, False), (-KT - 50.0, -KT - 1e-9, True)):
+        assert (m.classify(lo, hi, hn, 0.0) == "binds") is want, (hi, m.classify(lo, hi, hn, 0.0))
+    return (f"calibrated sign rule on Y_h + delta_bar ({dbar:.1f} meV): A1 'repels' (8/10), calibrated 'not resolved' "
+            f"(7/10), both intervals above k_BT, equal to the independent implementation; lo = 25.7 meV not 'repels', "
+            f"25.7 + 1e-9 'repels'; hi = -25.7 meV not 'binds'")
+
+
+def _pilot_noise_table(m):
+    t = synth_table()
+    far4 = {p: g49.far4(p) for p in PILOTS}
+    truth = {}
+    for p in PILOTS:
+        P = {"host_valid": True, "F": {g49.lab_host(p): -80000.0}, "cell_valid": {}, "failed_checks": {},
+             "pair_rejected": {}, "pose": {}, "E_mace": {g49.lab_host(p): -1200.0}}
+        for k, row in enumerate(g49.noise_cells(p)):
+            labs = row["labels"]
+            P["F"][labs["V"]], P["cell_valid"][labs["V"]], P["failed_checks"][labs["V"]] = -79996.5, True, []
+            P["E_mace"][labs["V"]] = -1197.0
+            FD, FDV = -80002.0 + 0.001 * k, -79998.49 + 0.0013 * k
+            for leg, F, E in (("D", FD, -1190.0), ("DV", FDV, -1186.98)):
+                P["F"][labs[leg]], P["cell_valid"][labs[leg]], P["failed_checks"][labs[leg]] = F, True, []
+                P["E_mace"][labs[leg]] = E
+            truth[(p, f"{row['d']}{row['f']}")] = g49.eb_meV(FDV, FD, -79996.5, -80000.0)
+        t["hosts"][p] = P
+    return t, far4, truth
+
+
+def case_pilot_rows_r4(m):
+    """Round-4 R4-C24-4 and R4-C24-3: (a) an assemble round trip with default-pose noise-pilot cells on both pilots:
+    every reported noise-pilot row, Cs and Cl included, is valid and equals the E_b gate N takes from the o0 cells,
+    with its zero-shot MACE value; a pilot host without any Cs record does not crash the evaluation; (b) an A2 cell
+    killed_by_gate whose part output was left in the archive is not parsed and has no relaxation energy."""
+    t, far4, truth = _pilot_noise_table(m)
+    root = tempfile.mkdtemp(prefix="s2_48_pilot_")
+    lay = _archive_from_table(t, root)
+    # the helper's A2 part rewrites the records of A2 start cells (the pilot hosts, V+ at Pb76 ...) without their MACE
+    # values: put them back from the table
+    for hp in glob.glob(os.path.join(lay.campaign_dir("c1"), "records", "*.json")):
+        hr = json.load(open(hp))
+        E = (t["hosts"].get(hr.get("member")) or {}).get("E_mace") or {}
+        for lab in hr.get("labels") or []:
+            if E.get(lab) is not None:
+                hr["relax"] = {**(hr.get("relax") or {}), "E_mace_eV": E[lab]}
+        json.dump(hr, open(hp, "w"))
+    killed = "s2r_m30_Ca136o0_novac"
+    rp = os.path.join(lay.a2_dir("c2", killed), f"{killed}.a2.json")
+    rec = json.load(open(rp)); rec["status"] = "killed_by_gate"; json.dump(rec, open(rp, "w"))
+    S = copy.deepcopy(SITES)
+    sites = lambda h: ({L: {**S[L], "far4": far4[h][L]} for L in "BAX"} if h in PILOTS else copy.deepcopy(SITES))  # noqa: E731
+    fp = _fake_parsers()
+    seen = []
+    rp_ = fp["relax_parser"]
+
+    def relax_parser(parts, read="full", mapping=None):
+        seen.extend(os.path.basename(x) for x in parts)
+        return rp_(parts, read=read, mapping=mapping)
+    fp["relax_parser"] = relax_parser
+    t2 = m.assemble(root, layout=lay, sites_fn=sites, cal_sites=CAL, wp1_dir=root, **fp)
+    rep = m.evaluate(t2)["reported"]
+    bad = [(p, key, rep["noise_pilot"][p][key]) for (p, key), eb in sorted(truth.items())
+           if not (rep["noise_pilot"][p][key]["valid"] and abs(rep["noise_pilot"][p][key]["Eb_meV"] - eb) < 1e-6
+                   and rep["noise_pilot"][p][key]["Eb_mace_meV"] is not None)]
+    assert not bad, bad[:3]
+    ncs = sum(1 for (p, key) in truth if key[:2] in ("Cs", "Cl"))
+    t3 = copy.deepcopy(t2); t3["hosts"]["m05"]["pose"].pop("Cs", None)
+    m.evaluate(t3)
+    assert not any(x.startswith(killed + ".") for x in seen), seen
+    a2c = rep["a2_cells"][killed]
+    assert a2c["relaxation_energy_meV"] is None and a2c["n_config"] is not None, a2c
+    return (f"{len(truth)} noise-pilot rows on m30 and m05 equal gate N's E_b ({ncs} of Cs and Cl), each with its MACE "
+            f"value; no Cs record on m05: no crash; a killed_by_gate A2 cell: not parsed, relaxation energy None")
+
+
 CASES = {"independent implementation": case_independent, "planted classes": case_planted,
          "heterogeneous shell": case_heterogeneous, "refusals": case_refusals, "delta_bar bound": case_delta_bound,
          "dopant-specific rule": case_dopant_specific, "no class": case_noclass, "edge cases": case_edges,
@@ -2603,7 +2817,9 @@ CASES = {"independent implementation": case_independent, "planted classes": case
          "rule-V and control boundaries (round-3 R3C-10)": case_boundaries,
          "count term and the MACE ledger's pilot section (round-3 R3C-3, R3C-4)": case_counts_ledger,
          "one-evaluation guard against the campaign commit (round-3 R3C-6)": case_eval_guard,
-         "reported rows: path work, determinism, q = 0, WP2c (round-3 R3C-10)": case_reported_rows}
+         "reported rows: path work, determinism, q = 0, WP2c (round-3 R3C-10)": case_reported_rows,
+         "calibrated sign rule and strict class bounds (round-4 R4-C24-6)": case_rule_v_r4,
+         "pilot noise rows and killed A2 cells (round-4 R4-C24-4, R4-C24-3)": case_pilot_rows_r4}
 
 
 def self_test():
