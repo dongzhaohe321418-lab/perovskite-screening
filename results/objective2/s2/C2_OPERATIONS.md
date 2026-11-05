@@ -193,3 +193,22 @@ These two decisions fix in advance what the C2 result note reads, reports and pl
       - the projection as above;
       - K3 from `decision.K3` and its reason lists only;
       - not reached or skipped by the file rule of D-C2-10, from `gates_applied/`, the state and the A2 records.
+- **D-C2-12 (implementation of D-C2-11; recorded on 2026-11-05, before any C2 value exists).**
+  - **Script.** `figures/fig_s2_c2_a2.py`. It was developed only on the public WP2e output and on synthetic archives built from it. `--self-test` builds 15 such archives and checks the gate states, the status wording and that the withheld fields do not reach the output. Five more archives must fail a named build assert. Two review rounds checked the script against this section and against `scripts/47`, `49` and `50`; every confirmed finding is fixed.
+  - **Blinding.**
+    - A2 records, gate files, `state_end.json` and `HARD_CAP.json` are read through a guard. A field is read by its name. Reading `dF_200_180_meV`, `value_meV` or `Eb_A2_meV` raises an error. A guarded object cannot be iterated or printed.
+    - The C1 start records are read with the blinded loader of `scripts/46`, which removes every MACE energy.
+  - **Decisions taken where the runner allows more than D-C2-10 names [I].**
+    - **Step-0 after STEP0_NO_ERROR.** The gate file keeps `fail_pending_fix`, and only the A2 stop state holds `fail_final` (`scripts/50` preconditions). The step-0 outcome in force is therefore read from `state_end.json` (leaf `step0.outcome`, `step0.no_error_found`). If that file is absent, it is read from the runner's `STEP0_NO_ERROR` log line. The state is shown as "fail (fail_final: no error found)". In every other case the build asserts that the state and the last step-0 gate file agree.
+    - **K2 after a RESOLVE 'unconverged'.** The gate re-reads the outputs and can record `incomplete` where the record says `unconverged_early`. The build then checks the two decisions with `k2_eval` and shows "fail (\<record outcome\>, operator; gate read incomplete)". A relaxation 1 refused by the hard cap is shown as "fail (\<gate outcome\>; record: not_started_cap)".
+    - **Relaxations without an A2 record.**
+      - The runner writes a record only for the first job the hard cap refuses. The refused relaxation, and every later one without a record, is shown as "not started (cap)" (from `HARD_CAP.json`).
+      - Any other relaxation without a record at a final STOP is "not started (no record)".
+      - A pending record with no configuration is "stopped before k = 0".
+    - **Projection.** The strip keeps the D-C2-10 wording. cut_order's entry "no applicable cut left" goes to the detail column and to the sequence line of panel c.
+    - **Edge arrows.** Every point outside an axis gets an arrow. The arrow glyphs differ from the end glyphs. In panel a the value is printed at the extreme of each excursion and at an end outside the axis.
+    - **Cost line.** Manual ledger rows are those with `manual: true`. A ledger that is not complete is flagged with its count of problems and of untimed boots.
+  - **Presentation.**
+    - Cells are labelled host, V, D and D+V, with "V: iodide vacancy, q = +1" in the legend title. Mathtext sub- and superscripts would fall below 5 pt, and Arial has no superscript plus.
+    - The threshold is labelled 0.00078 Ry/bohr = 0.02005 eV/Å, from the `scripts/47` constants that `--build` writes into the source data.
+    - The end-glyph legend sits under panel a.
