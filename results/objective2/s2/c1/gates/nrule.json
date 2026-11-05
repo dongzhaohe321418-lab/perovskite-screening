@@ -1,0 +1,96 @@
+{
+ "schema": "s2-gate-1",
+ "gate": "nrule",
+ "campaign": "c1",
+ "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+ "attempt": 1,
+ "opened": [
+  {
+   "label": "gate:c1:N",
+   "file": "work/s2/c1/gates/N.json",
+   "sha256": "4dd7735ff7b6c7e465694b77716f19ce311320bf5e3405c616d5a08654834dcb",
+   "mode": "files"
+  },
+  {
+   "label": "gate:c1:G1",
+   "file": "work/s2/c1/gates/G1.json",
+   "sha256": "f9b72906efe61a50e6a6b15e5d68870c11b974edf2e55ec96049251374c4b548",
+   "mode": "files"
+  }
+ ],
+ "inputs_digest": "eb6b862764c66b3d0ff822f4470135e863aa0189cc201347fe21d34d624fcdff",
+ "result": {
+  "n": 8
+ },
+ "decision": {
+  "n": 8
+ },
+ "written": "2026-11-05T07:15:42Z",
+ "state_in": {
+  "schema": "s2-state-1",
+  "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+  "campaigns": {
+   "c1": "running"
+  },
+  "cuts": [],
+  "stage0": {
+   "production_n8": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23"
+   ],
+   "reserves_n8": [
+    "m33",
+    "m13"
+   ],
+   "production_n10": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23",
+    "m33",
+    "m13"
+   ],
+   "reserves_n10": [
+    "m17",
+    "m03"
+   ],
+   "m05_cal": {
+    "B": 124,
+    "A": 28,
+    "X": 49
+   },
+   "pbcl": {
+    "decision": "provisional_2.837",
+    "value_used_A": 2.837,
+    "tag_for_shifted_starts": "[M] starting point",
+    "allow_provisional_required": true
+   }
+  },
+  "a2_layout": "64",
+  "G1": {
+   "Cl": true,
+   "Ca": false
+  },
+  "gateN": {
+   "Sr": true,
+   "Ca": true,
+   "Cl": true,
+   "Cs": true,
+   "GA": true
+  },
+  "sr_stop": false
+ },
+ "inputs_in": {},
+ "c1_in": null,
+ "inputs_opened": []
+}

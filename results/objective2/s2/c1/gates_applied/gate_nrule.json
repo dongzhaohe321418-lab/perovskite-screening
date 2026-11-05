@@ -1,0 +1,12 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:nrule",
+ "gate": "nrule",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "n": 8
+ },
+ "gate_file_sha256": "93e10a81a2d7b45a179b2ee5a881157abba614e0faa9ea11306f19a12536c69d",
+ "applied": "2026-11-05T07:15:42Z"
+}

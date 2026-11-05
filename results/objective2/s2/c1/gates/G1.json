@@ -1,0 +1,222 @@
+{
+ "schema": "s2-gate-1",
+ "gate": "G1",
+ "campaign": "c1",
+ "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+ "attempt": 1,
+ "opened": [
+  {
+   "label": "s2g1_m30_host_e60",
+   "file": "jobs/s2c1/s2g1_m30_host_e60/s2g1_m30_host_e60.out",
+   "sha256": "9c4878b35152e7ee0d3641f65d1d6b4c06e3e34be870e423755078c8cb9e89d9",
+   "mode": "status"
+  },
+  {
+   "label": "s2g1_m30_host_e60",
+   "file": "jobs/s2c1/s2g1_m30_host_e60/s2g1_m30_host_e60.out",
+   "sha256": "9c4878b35152e7ee0d3641f65d1d6b4c06e3e34be870e423755078c8cb9e89d9",
+   "mode": "full"
+  },
+  {
+   "label": "s2_m30_host",
+   "file": "jobs/s2c1/s2_m30_host/s2_m30_host.out",
+   "sha256": "7758d38f92d9aac4c01a2b51d89fb908b6e850b10b6dfee8c1bb51645d97b87a",
+   "mode": "status"
+  },
+  {
+   "label": "s2_m30_host",
+   "file": "jobs/s2c1/s2_m30_host/s2_m30_host.out",
+   "sha256": "7758d38f92d9aac4c01a2b51d89fb908b6e850b10b6dfee8c1bb51645d97b87a",
+   "mode": "full"
+  },
+  {
+   "label": "s2g1_m30_Cl138o0_novac_e60",
+   "file": "jobs/s2c1/s2g1_m30_Cl138o0_novac_e60/s2g1_m30_Cl138o0_novac_e60.out",
+   "sha256": "1384dcf3904ddb166734ce4508a2b4524312ef341414b6ae42a125b1bf1dc6e7",
+   "mode": "status"
+  },
+  {
+   "label": "s2g1_m30_Cl138o0_novac_e60",
+   "file": "jobs/s2c1/s2g1_m30_Cl138o0_novac_e60/s2g1_m30_Cl138o0_novac_e60.out",
+   "sha256": "1384dcf3904ddb166734ce4508a2b4524312ef341414b6ae42a125b1bf1dc6e7",
+   "mode": "full"
+  },
+  {
+   "label": "s2g1_m30_Cl138o0_novac_e50",
+   "file": "jobs/s2c1/s2g1_m30_Cl138o0_novac_e50/s2g1_m30_Cl138o0_novac_e50.out",
+   "sha256": "98de356030db20f29fe21267c3ccfd2f5c1f54e267ca06ae3c5a865923c5ddea",
+   "mode": "status"
+  },
+  {
+   "label": "s2g1_m30_Cl138o0_novac_e50",
+   "file": "jobs/s2c1/s2g1_m30_Cl138o0_novac_e50/s2g1_m30_Cl138o0_novac_e50.out",
+   "sha256": "98de356030db20f29fe21267c3ccfd2f5c1f54e267ca06ae3c5a865923c5ddea",
+   "mode": "full"
+  },
+  {
+   "label": "s2spin_m30_Cl175o0_vac",
+   "file": "jobs/s2c1/s2spin_m30_Cl175o0_vac/s2spin_m30_Cl175o0_vac.out",
+   "sha256": "e00fcfeef75f02291940cf0a50c94d7950132ac49724da198aa618543cdd28ff",
+   "mode": "status"
+  },
+  {
+   "label": "s2spin_m30_Cl175o0_vac",
+   "file": "jobs/s2c1/s2spin_m30_Cl175o0_vac/s2spin_m30_Cl175o0_vac.out",
+   "sha256": "e00fcfeef75f02291940cf0a50c94d7950132ac49724da198aa618543cdd28ff",
+   "mode": "full"
+  },
+  {
+   "label": "s2_m30_Cl175o0_vac",
+   "file": "jobs/s2c1/s2_m30_Cl175o0_vac/s2_m30_Cl175o0_vac.out",
+   "sha256": "85c234bdb2e9f2ec61fe45f5d6616d46bd26968c0f45095efd6a857841b69027",
+   "mode": "status"
+  },
+  {
+   "label": "s2_m30_Cl175o0_vac",
+   "file": "jobs/s2c1/s2_m30_Cl175o0_vac/s2_m30_Cl175o0_vac.out",
+   "sha256": "85c234bdb2e9f2ec61fe45f5d6616d46bd26968c0f45095efd6a857841b69027",
+   "mode": "full"
+  },
+  {
+   "label": "s2g1_m30_Ca136o0_novac_e60",
+   "file": "jobs/s2c1/s2g1_m30_Ca136o0_novac_e60/s2g1_m30_Ca136o0_novac_e60.out",
+   "sha256": "572f117a2630d742576f62857a35854f0cc14c3095a258b4d45d572d7053942d",
+   "mode": "status"
+  },
+  {
+   "label": "s2g1_m30_Ca136o0_novac_e60",
+   "file": "jobs/s2c1/s2g1_m30_Ca136o0_novac_e60/s2g1_m30_Ca136o0_novac_e60.out",
+   "sha256": "572f117a2630d742576f62857a35854f0cc14c3095a258b4d45d572d7053942d",
+   "mode": "full"
+  },
+  {
+   "label": "s2g1_m30_Ca136o0_novac_e50",
+   "file": "jobs/s2c1/s2g1_m30_Ca136o0_novac_e50/s2g1_m30_Ca136o0_novac_e50.out",
+   "sha256": "dd2da675d4ccb20199a1a05d1cf41500f25a9fc26babf7f8dd513ca34e61e653",
+   "mode": "status"
+  },
+  {
+   "label": "s2g1_m30_Ca136o0_novac_e50",
+   "file": "jobs/s2c1/s2g1_m30_Ca136o0_novac_e50/s2g1_m30_Ca136o0_novac_e50.out",
+   "sha256": "dd2da675d4ccb20199a1a05d1cf41500f25a9fc26babf7f8dd513ca34e61e653",
+   "mode": "full"
+  },
+  {
+   "label": "s2spin_m30_Ca76o0_vac",
+   "file": "jobs/s2c1/s2spin_m30_Ca76o0_vac/s2spin_m30_Ca76o0_vac.out",
+   "sha256": "fb24fea817b8ac4a59903b807c24fdfaab91ed182984c57a678eb3b736a9624f",
+   "mode": "status"
+  },
+  {
+   "label": "s2spin_m30_Ca76o0_vac",
+   "file": "jobs/s2c1/s2spin_m30_Ca76o0_vac/s2spin_m30_Ca76o0_vac.out",
+   "sha256": "fb24fea817b8ac4a59903b807c24fdfaab91ed182984c57a678eb3b736a9624f",
+   "mode": "full"
+  },
+  {
+   "label": "s2_m30_Ca76o0_vac",
+   "file": "jobs/s2c1/s2_m30_Ca76o0_vac/s2_m30_Ca76o0_vac.out",
+   "sha256": "9cc786c5d51d994952e5e57cb0ccdf7d1c9ca8ca75ec9d7bd2433e7ed0b8a6a9",
+   "mode": "status"
+  },
+  {
+   "label": "s2_m30_Ca76o0_vac",
+   "file": "jobs/s2c1/s2_m30_Ca76o0_vac/s2_m30_Ca76o0_vac.out",
+   "sha256": "9cc786c5d51d994952e5e57cb0ccdf7d1c9ca8ca75ec9d7bd2433e7ed0b8a6a9",
+   "mode": "full"
+  },
+  {
+   "label": "upf:c1",
+   "file": "work/s2/c1/upf_check.json",
+   "sha256": "ad270319fd1e4d03d9b3904bb5c1e7f7d54d453ec0621d1a8b614bb489bf5e2b",
+   "mode": "files"
+  }
+ ],
+ "inputs_digest": "17134e060b8da3ba029e520df1e50385787ffe195c21f982cfe2c679aea81786",
+ "result": {
+  "Cl": {
+   "delta_cut_meV": -1.8593540153233334,
+   "dF_spin_meV": 1.635132182855159,
+   "M_total_muB": 0.0,
+   "M_abs_muB": 0.01,
+   "cut_pass": true,
+   "spin_pass": true,
+   "valence_pass": true,
+   "pass": true,
+   "reasons": []
+  },
+  "Ca": {
+   "delta_cut_meV": 49.35465179733001,
+   "dF_spin_meV": 1.6226149600697681,
+   "M_total_muB": 0.0,
+   "M_abs_muB": 0.01,
+   "cut_pass": false,
+   "spin_pass": true,
+   "valence_pass": true,
+   "pass": false,
+   "reasons": []
+  }
+ },
+ "decision": {
+  "G1": {
+   "Cl": true,
+   "Ca": false
+  }
+ },
+ "written": "2026-11-05T07:15:31Z",
+ "state_in": {
+  "schema": "s2-state-1",
+  "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+  "campaigns": {
+   "c1": "running"
+  },
+  "cuts": [],
+  "stage0": {
+   "production_n8": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23"
+   ],
+   "reserves_n8": [
+    "m33",
+    "m13"
+   ],
+   "production_n10": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23",
+    "m33",
+    "m13"
+   ],
+   "reserves_n10": [
+    "m17",
+    "m03"
+   ],
+   "m05_cal": {
+    "B": 124,
+    "A": 28,
+    "X": 49
+   },
+   "pbcl": {
+    "decision": "provisional_2.837",
+    "value_used_A": 2.837,
+    "tag_for_shifted_starts": "[M] starting point",
+    "allow_provisional_required": true
+   }
+  },
+  "a2_layout": "64"
+ },
+ "inputs_in": {},
+ "c1_in": null,
+ "inputs_opened": []
+}

@@ -1,0 +1,115 @@
+{
+ "schema": "s2-upf-1",
+ "files": {
+  "C": {
+   "file": "C.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256": "f3538158e59976e2d05079f4b7bdf890ee0c40d3bc3f4c49198762049cc80037",
+   "md5": "1fdd950c42eb37d8afe3dd2f8d12311e",
+   "z_valence": 4.0,
+   "expected": {
+    "z_valence": 4,
+    "md5": "1fdd950c42eb37d8afe3dd2f8d12311e"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "Ca": {
+   "file": "Ca.pbe-spn-rrkjus_psl.1.0.0.UPF",
+   "sha256": "60745cd19cb7c96ea734fe68ea89a54603d83eaaca19cb8b37deb3fc41fe9b43",
+   "md5": "be476cbee6758b394af5fd17922f3fca",
+   "z_valence": 10.0,
+   "expected": {
+    "z_valence": 10,
+    "sha256": "60745cd19cb7c96ea734fe68ea89a54603d83eaaca19cb8b37deb3fc41fe9b43"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "Cl": {
+   "file": "Cl.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256": "6178e5e4ea26a81a2e8556f65f13c3ba282b75cc3df620746ac20d4a195b0513",
+   "md5": "ecd63e55add66e16e2fc4813844a4ddc",
+   "z_valence": 7.0,
+   "expected": {
+    "z_valence": 7,
+    "sha256": "6178e5e4ea26a81a2e8556f65f13c3ba282b75cc3df620746ac20d4a195b0513"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "Cs": {
+   "file": "Cs.pbe-spn-rrkjus_psl.1.0.0.UPF",
+   "sha256": "7ba1fa01843e1b7e4b7487931e9834658ec132d80d9ceb4015839c86e7847017",
+   "md5": "ce91a30752c48add39cf6ac6342f9330",
+   "z_valence": 9.0,
+   "expected": {
+    "z_valence": 9,
+    "md5": "ce91a30752c48add39cf6ac6342f9330"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "H": {
+   "file": "H.pbe-rrkjus_psl.1.0.0.UPF",
+   "sha256": "e03cd098d78e3eeb37cc9f790690f5827234cbc019fb621913391689a9ddacf7",
+   "md5": "3f4114867bd07edc7f1424d066fc1888",
+   "z_valence": 1.0,
+   "expected": {
+    "z_valence": 1,
+    "md5": "3f4114867bd07edc7f1424d066fc1888"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "I": {
+   "file": "I.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256": "1735067422dcbba4ac62ea6864e19a9e056955238b08ac1e9204837ab04f7767",
+   "md5": "21b6b539e0050b62c62ace6be4e6e5e0",
+   "z_valence": 7.0,
+   "expected": {
+    "z_valence": 7,
+    "md5": "21b6b539e0050b62c62ace6be4e6e5e0"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "N": {
+   "file": "N.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256": "311bcb45ca5ad404fbab64e88d1bbe2e762c4582d841747fb9fbf4eb7f533e4a",
+   "md5": "ada94e3ed05223de5319d0572dc76806",
+   "z_valence": 5.0,
+   "expected": {
+    "z_valence": 5,
+    "md5": "ada94e3ed05223de5319d0572dc76806"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "Pb": {
+   "file": "Pb.pbe-dn-rrkjus_psl.1.0.0.UPF",
+   "sha256": "a8f21d22c4ec6dce259f0108f0d7be5e9e794a182adec90400202c7e314a283d",
+   "md5": "1cf8f5e18580e6a90a35f98a53d336de",
+   "z_valence": 14.0,
+   "expected": {
+    "z_valence": 14,
+    "md5": "1cf8f5e18580e6a90a35f98a53d336de"
+   },
+   "passed": true,
+   "reasons": []
+  },
+  "Sr": {
+   "file": "Sr.pbe-spn-rrkjus_psl.1.0.0.UPF",
+   "sha256": "ca4166cc397760afba07fb2748015ec48dfa14be0b742b8f7a988d3d670ab99d",
+   "md5": "062293b6b65f9744728f4999ca8ab72f",
+   "z_valence": 10.0,
+   "expected": {
+    "z_valence": 10,
+    "md5": "062293b6b65f9744728f4999ca8ab72f"
+   },
+   "passed": true,
+   "reasons": []
+  }
+ },
+ "reference_sha256_from": null,
+ "passed": true
+}

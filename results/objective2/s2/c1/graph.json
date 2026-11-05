@@ -1,0 +1,10017 @@
+{
+ "schema": "s2-graph-1",
+ "campaign": "c1",
+ "phases": [
+  "check",
+  "smoke",
+  "tp",
+  "smoke2",
+  "mace",
+  "qe",
+  "gate"
+ ],
+ "counts": {
+  "pw_smoke": 4,
+  "pw_tp": 4,
+  "gate": 5,
+  "pw_smoke2": 2,
+  "mace_host": 2,
+  "mace_V": 30,
+  "mace_dopant_noise": 80,
+  "mace_dopant_startset": 20,
+  "mace_pose_extra": 32,
+  "sp_g1": 5,
+  "sp_spin": 2,
+  "sp_noise": 106,
+  "sp_step0": 2,
+  "sp_pose": 36,
+  "sp_q0": 10
+ },
+ "jobs": [
+  {
+   "id": "check:upf",
+   "kind": "check",
+   "phase": "check",
+   "deps": [],
+   "seq": 0,
+   "what": "upf"
+  },
+  {
+   "id": "check:nodescripts",
+   "kind": "check",
+   "phase": "check",
+   "deps": [],
+   "seq": 1,
+   "what": "nodescripts"
+  },
+  {
+   "id": "check:mace",
+   "kind": "check",
+   "phase": "check",
+   "deps": [],
+   "seq": 2,
+   "what": "mace"
+  },
+  {
+   "id": "pw:s2smoke_ref232_n1",
+   "kind": "pw",
+   "phase": "smoke",
+   "deps": [],
+   "seq": 3,
+   "label": "s2smoke_ref232_n1",
+   "part": 1,
+   "nstep": 1,
+   "ranks": 48,
+   "cat": "pw_smoke",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "pw:s2smoke_ref232_n3",
+   "kind": "pw",
+   "phase": "smoke",
+   "deps": [
+    "pw:s2smoke_ref232_n1"
+   ],
+   "seq": 4,
+   "label": "s2smoke_ref232_n3",
+   "part": 1,
+   "nstep": 3,
+   "ranks": 48,
+   "cat": "pw_smoke",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "pw:s2smoke_ref232_rst.p1",
+   "kind": "pw",
+   "phase": "smoke",
+   "deps": [
+    "pw:s2smoke_ref232_n3"
+   ],
+   "seq": 5,
+   "label": "s2smoke_ref232_rst",
+   "part": 1,
+   "nstep": 3,
+   "ranks": 48,
+   "exit_after": 1,
+   "cat": "pw_smoke",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "pw:s2smoke_ref232_rst.p2",
+   "kind": "pw",
+   "phase": "smoke",
+   "deps": [
+    "pw:s2smoke_ref232_rst.p1"
+   ],
+   "seq": 6,
+   "label": "s2smoke_ref232_rst",
+   "part": 2,
+   "restart_of": 1,
+   "ranks": 48,
+   "cat": "pw_smoke",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "rec:smoke",
+   "kind": "record",
+   "phase": "smoke",
+   "deps": [
+    "pw:s2smoke_ref232_n1",
+    "pw:s2smoke_ref232_n3",
+    "pw:s2smoke_ref232_rst.p1",
+    "pw:s2smoke_ref232_rst.p2"
+   ],
+   "seq": 7,
+   "what": "smoke"
+  },
+  {
+   "id": "pw:s2tp_ref232_np48",
+   "kind": "pw",
+   "phase": "tp",
+   "deps": [],
+   "seq": 8,
+   "label": "s2tp_ref232_np48",
+   "part": 1,
+   "n_config": 5,
+   "ranks": 48,
+   "cat": "pw_tp",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "pw:s2tp_ref232_np64",
+   "kind": "pw",
+   "phase": "tp",
+   "deps": [
+    "pw:s2tp_ref232_np48"
+   ],
+   "seq": 9,
+   "label": "s2tp_ref232_np64",
+   "part": 1,
+   "n_config": 5,
+   "ranks": 64,
+   "cat": "pw_tp",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "pw:s2tp_ref232_np32a",
+   "kind": "pw",
+   "phase": "tp",
+   "deps": [
+    "pw:s2tp_ref232_np64"
+   ],
+   "seq": 10,
+   "label": "s2tp_ref232_np32a",
+   "part": 1,
+   "n_config": 5,
+   "ranks": 32,
+   "cat": "pw_tp",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "pw:s2tp_ref232_np32b",
+   "kind": "pw",
+   "phase": "tp",
+   "deps": [
+    "pw:s2tp_ref232_np64"
+   ],
+   "seq": 11,
+   "label": "s2tp_ref232_np32b",
+   "part": 1,
+   "n_config": 5,
+   "ranks": 32,
+   "cat": "pw_tp",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "rec:tp",
+   "kind": "record",
+   "phase": "tp",
+   "deps": [
+    "pw:s2tp_ref232_np48",
+    "pw:s2tp_ref232_np64",
+    "pw:s2tp_ref232_np32a",
+    "pw:s2tp_ref232_np32b"
+   ],
+   "seq": 12,
+   "what": "tp"
+  },
+  {
+   "id": "gate:throughput",
+   "kind": "gate",
+   "phase": "tp",
+   "deps": [
+    "rec:tp"
+   ],
+   "seq": 13,
+   "gate": "throughput",
+   "cat": "gate"
+  },
+  {
+   "id": "pw:s2smoke_ref232_rst64.p1",
+   "kind": "pw",
+   "phase": "smoke2",
+   "deps": [],
+   "seq": 14,
+   "label": "s2smoke_ref232_rst64",
+   "part": 1,
+   "nstep": 3,
+   "ranks": 64,
+   "exit_after": 1,
+   "cat": "pw_smoke2",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "pw:s2smoke_ref232_rst64.p2",
+   "kind": "pw",
+   "phase": "smoke2",
+   "deps": [
+    "pw:s2smoke_ref232_rst64.p1"
+   ],
+   "seq": 15,
+   "label": "s2smoke_ref232_rst64",
+   "part": 2,
+   "restart_of": 1,
+   "ranks": 64,
+   "cat": "pw_smoke2",
+   "cell": "ref232",
+   "region": "ref_Pb136"
+  },
+  {
+   "id": "rec:smoke2",
+   "kind": "record",
+   "phase": "smoke2",
+   "deps": [
+    "pw:s2smoke_ref232_rst64.p1",
+    "pw:s2smoke_ref232_rst64.p2"
+   ],
+   "seq": 16,
+   "what": "smoke2",
+   "label": "s2smoke_ref232_rst64"
+  },
+  {
+   "id": "mace:s2_m30_host",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [],
+   "seq": 17,
+   "action": "relax-host",
+   "member": "m30",
+   "work_id": "s2_m30_host",
+   "cell_kind": "host",
+   "role": "pilot",
+   "cat": "mace_host",
+   "xkind": "host"
+  },
+  {
+   "id": "region:m30_B76",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 18,
+   "action": "region",
+   "member": "m30",
+   "L": "B",
+   "site": 76,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VB76",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B76"
+   ],
+   "seq": 19,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VB76",
+   "L": "B",
+   "site": 76,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VB76",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B76",
+    "vstart:s2_m30_VB76"
+   ],
+   "seq": 20,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VB76",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 76,
+   "region": "region:m30_B76",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Sr76p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB76"
+   ],
+   "seq": 21,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Sr",
+   "site": 76,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Sr76p0_novac",
+    "vac": "s2_m30_Sr76p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB76"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Sr76p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr76p0",
+    "region:m30_B76"
+   ],
+   "seq": 22,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr76p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 76,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B76",
+   "pair": "pair:m30_Sr76p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Sr76p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr76p0",
+    "region:m30_B76"
+   ],
+   "seq": 23,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr76p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 76,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B76",
+   "pair": "pair:m30_Sr76p0",
+   "parents": {
+    "vac": "s2_m30_VB76"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Ca76p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB76"
+   ],
+   "seq": 24,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Ca",
+   "site": 76,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Ca76p0_novac",
+    "vac": "s2_m30_Ca76p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB76"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Ca76p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca76p0",
+    "region:m30_B76"
+   ],
+   "seq": 25,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca76p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 76,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B76",
+   "pair": "pair:m30_Ca76p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Ca76p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca76p0",
+    "region:m30_B76"
+   ],
+   "seq": 26,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca76p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 76,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B76",
+   "pair": "pair:m30_Ca76p0",
+   "parents": {
+    "vac": "s2_m30_VB76"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_B172",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 27,
+   "action": "region",
+   "member": "m30",
+   "L": "B",
+   "site": 172,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VB172",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B172"
+   ],
+   "seq": 28,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VB172",
+   "L": "B",
+   "site": 172,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VB172",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B172",
+    "vstart:s2_m30_VB172"
+   ],
+   "seq": 29,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VB172",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 172,
+   "region": "region:m30_B172",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Sr172p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB172"
+   ],
+   "seq": 30,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Sr",
+   "site": 172,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Sr172p0_novac",
+    "vac": "s2_m30_Sr172p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB172"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Sr172p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr172p0",
+    "region:m30_B172"
+   ],
+   "seq": 31,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr172p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 172,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B172",
+   "pair": "pair:m30_Sr172p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Sr172p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr172p0",
+    "region:m30_B172"
+   ],
+   "seq": 32,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr172p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 172,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B172",
+   "pair": "pair:m30_Sr172p0",
+   "parents": {
+    "vac": "s2_m30_VB172"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Ca172p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB172"
+   ],
+   "seq": 33,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Ca",
+   "site": 172,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Ca172p0_novac",
+    "vac": "s2_m30_Ca172p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB172"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Ca172p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca172p0",
+    "region:m30_B172"
+   ],
+   "seq": 34,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca172p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 172,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B172",
+   "pair": "pair:m30_Ca172p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Ca172p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca172p0",
+    "region:m30_B172"
+   ],
+   "seq": 35,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca172p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 172,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B172",
+   "pair": "pair:m30_Ca172p0",
+   "parents": {
+    "vac": "s2_m30_VB172"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_B24",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 36,
+   "action": "region",
+   "member": "m30",
+   "L": "B",
+   "site": 24,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VB24",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B24"
+   ],
+   "seq": 37,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VB24",
+   "L": "B",
+   "site": 24,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VB24",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B24",
+    "vstart:s2_m30_VB24"
+   ],
+   "seq": 38,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VB24",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 24,
+   "region": "region:m30_B24",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Sr24p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB24"
+   ],
+   "seq": 39,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Sr",
+   "site": 24,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Sr24p0_novac",
+    "vac": "s2_m30_Sr24p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB24"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Sr24p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr24p0",
+    "region:m30_B24"
+   ],
+   "seq": 40,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr24p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 24,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B24",
+   "pair": "pair:m30_Sr24p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Sr24p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr24p0",
+    "region:m30_B24"
+   ],
+   "seq": 41,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr24p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 24,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B24",
+   "pair": "pair:m30_Sr24p0",
+   "parents": {
+    "vac": "s2_m30_VB24"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Ca24p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB24"
+   ],
+   "seq": 42,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Ca",
+   "site": 24,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Ca24p0_novac",
+    "vac": "s2_m30_Ca24p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB24"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Ca24p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca24p0",
+    "region:m30_B24"
+   ],
+   "seq": 43,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca24p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 24,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B24",
+   "pair": "pair:m30_Ca24p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Ca24p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca24p0",
+    "region:m30_B24"
+   ],
+   "seq": 44,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca24p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 24,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B24",
+   "pair": "pair:m30_Ca24p0",
+   "parents": {
+    "vac": "s2_m30_VB24"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_B148",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 45,
+   "action": "region",
+   "member": "m30",
+   "L": "B",
+   "site": 148,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VB148",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B148"
+   ],
+   "seq": 46,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VB148",
+   "L": "B",
+   "site": 148,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VB148",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B148",
+    "vstart:s2_m30_VB148"
+   ],
+   "seq": 47,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VB148",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 148,
+   "region": "region:m30_B148",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Sr148p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB148"
+   ],
+   "seq": 48,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Sr",
+   "site": 148,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Sr148p0_novac",
+    "vac": "s2_m30_Sr148p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB148"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Sr148p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr148p0",
+    "region:m30_B148"
+   ],
+   "seq": 49,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr148p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 148,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B148",
+   "pair": "pair:m30_Sr148p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Sr148p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr148p0",
+    "region:m30_B148"
+   ],
+   "seq": 50,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr148p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 148,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B148",
+   "pair": "pair:m30_Sr148p0",
+   "parents": {
+    "vac": "s2_m30_VB148"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Ca148p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB148"
+   ],
+   "seq": 51,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Ca",
+   "site": 148,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Ca148p0_novac",
+    "vac": "s2_m30_Ca148p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB148"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Ca148p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca148p0",
+    "region:m30_B148"
+   ],
+   "seq": 52,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca148p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 148,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B148",
+   "pair": "pair:m30_Ca148p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Ca148p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca148p0",
+    "region:m30_B148"
+   ],
+   "seq": 53,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca148p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 148,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B148",
+   "pair": "pair:m30_Ca148p0",
+   "parents": {
+    "vac": "s2_m30_VB148"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_B136",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 54,
+   "action": "region",
+   "member": "m30",
+   "L": "B",
+   "site": 136,
+   "role": "cal"
+  },
+  {
+   "id": "vstart:s2_m30_VB136",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B136"
+   ],
+   "seq": 55,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VB136",
+   "L": "B",
+   "site": 136,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m30_VB136",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_B136",
+    "vstart:s2_m30_VB136"
+   ],
+   "seq": 56,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VB136",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 136,
+   "region": "region:m30_B136",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Sr136p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB136"
+   ],
+   "seq": 57,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Sr",
+   "site": 136,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Sr136p0_novac",
+    "vac": "s2_m30_Sr136p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB136"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m30_Sr136p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr136p0",
+    "region:m30_B136"
+   ],
+   "seq": 58,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr136p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 136,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B136",
+   "pair": "pair:m30_Sr136p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Sr136p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Sr136p0",
+    "region:m30_B136"
+   ],
+   "seq": 59,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Sr136p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 136,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B136",
+   "pair": "pair:m30_Sr136p0",
+   "parents": {
+    "vac": "s2_m30_VB136"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Ca136p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VB136"
+   ],
+   "seq": 60,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Ca",
+   "site": 136,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Ca136p0_novac",
+    "vac": "s2_m30_Ca136p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VB136"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m30_Ca136p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca136p0",
+    "region:m30_B136"
+   ],
+   "seq": 61,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca136p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 136,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_B136",
+   "pair": "pair:m30_Ca136p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Ca136p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Ca136p0",
+    "region:m30_B136"
+   ],
+   "seq": 62,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Ca136p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 136,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_B136",
+   "pair": "pair:m30_Ca136p0",
+   "parents": {
+    "vac": "s2_m30_VB136"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_A188",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 63,
+   "action": "region",
+   "member": "m30",
+   "L": "A",
+   "site": 188,
+   "role": "noise",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "vstart:s2_m30_VA188",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A188"
+   ],
+   "seq": 64,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VA188",
+   "L": "A",
+   "site": 188,
+   "role": "noise",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_VA188",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A188",
+    "vstart:s2_m30_VA188"
+   ],
+   "seq": 65,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VA188",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 188,
+   "region": "region:m30_A188",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace",
+   "also": [
+    "mace_V"
+   ]
+  },
+  {
+   "id": "pair:m30_Cs188p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 66,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cs188p0_novac",
+    "vac": "s2_m30_Cs188p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cs188p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p0",
+    "region:m30_A188"
+   ],
+   "seq": 67,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cs188p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p0",
+    "region:m30_A188"
+   ],
+   "seq": 68,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p0",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "pair:m30_GA188p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 69,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "GA",
+   "site": 188,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_GA188p0_novac",
+    "vac": "s2_m30_GA188p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_GA188p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA188p0",
+    "region:m30_A188"
+   ],
+   "seq": 70,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA188p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_GA188p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_GA188p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA188p0",
+    "region:m30_A188"
+   ],
+   "seq": 71,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA188p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_GA188p0",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_A164",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 72,
+   "action": "region",
+   "member": "m30",
+   "L": "A",
+   "site": 164,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VA164",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A164"
+   ],
+   "seq": 73,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VA164",
+   "L": "A",
+   "site": 164,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VA164",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A164",
+    "vstart:s2_m30_VA164"
+   ],
+   "seq": 74,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VA164",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 164,
+   "region": "region:m30_A164",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs164p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA164"
+   ],
+   "seq": 75,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 164,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cs164p0_novac",
+    "vac": "s2_m30_Cs164p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA164"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Cs164p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs164p0",
+    "region:m30_A164"
+   ],
+   "seq": 76,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs164p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 164,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A164",
+   "pair": "pair:m30_Cs164p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs164p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs164p0",
+    "region:m30_A164"
+   ],
+   "seq": 77,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs164p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 164,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A164",
+   "pair": "pair:m30_Cs164p0",
+   "parents": {
+    "vac": "s2_m30_VA164"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_GA164p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA164"
+   ],
+   "seq": 78,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "GA",
+   "site": 164,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_GA164p0_novac",
+    "vac": "s2_m30_GA164p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA164"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_GA164p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA164p0",
+    "region:m30_A164"
+   ],
+   "seq": 79,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA164p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 164,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A164",
+   "pair": "pair:m30_GA164p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_GA164p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA164p0",
+    "region:m30_A164"
+   ],
+   "seq": 80,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA164p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 164,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A164",
+   "pair": "pair:m30_GA164p0",
+   "parents": {
+    "vac": "s2_m30_VA164"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_A176",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 81,
+   "action": "region",
+   "member": "m30",
+   "L": "A",
+   "site": 176,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VA176",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A176"
+   ],
+   "seq": 82,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VA176",
+   "L": "A",
+   "site": 176,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VA176",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A176",
+    "vstart:s2_m30_VA176"
+   ],
+   "seq": 83,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VA176",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 176,
+   "region": "region:m30_A176",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs176p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA176"
+   ],
+   "seq": 84,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 176,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cs176p0_novac",
+    "vac": "s2_m30_Cs176p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA176"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Cs176p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs176p0",
+    "region:m30_A176"
+   ],
+   "seq": 85,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs176p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 176,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A176",
+   "pair": "pair:m30_Cs176p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs176p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs176p0",
+    "region:m30_A176"
+   ],
+   "seq": 86,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs176p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 176,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A176",
+   "pair": "pair:m30_Cs176p0",
+   "parents": {
+    "vac": "s2_m30_VA176"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_GA176p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA176"
+   ],
+   "seq": 87,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "GA",
+   "site": 176,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_GA176p0_novac",
+    "vac": "s2_m30_GA176p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA176"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_GA176p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA176p0",
+    "region:m30_A176"
+   ],
+   "seq": 88,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA176p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 176,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A176",
+   "pair": "pair:m30_GA176p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_GA176p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA176p0",
+    "region:m30_A176"
+   ],
+   "seq": 89,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA176p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 176,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A176",
+   "pair": "pair:m30_GA176p0",
+   "parents": {
+    "vac": "s2_m30_VA176"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_A200",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 90,
+   "action": "region",
+   "member": "m30",
+   "L": "A",
+   "site": 200,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VA200",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A200"
+   ],
+   "seq": 91,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VA200",
+   "L": "A",
+   "site": 200,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VA200",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A200",
+    "vstart:s2_m30_VA200"
+   ],
+   "seq": 92,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VA200",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 200,
+   "region": "region:m30_A200",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs200p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA200"
+   ],
+   "seq": 93,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 200,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cs200p0_novac",
+    "vac": "s2_m30_Cs200p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA200"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Cs200p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs200p0",
+    "region:m30_A200"
+   ],
+   "seq": 94,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs200p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 200,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A200",
+   "pair": "pair:m30_Cs200p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs200p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs200p0",
+    "region:m30_A200"
+   ],
+   "seq": 95,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs200p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 200,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A200",
+   "pair": "pair:m30_Cs200p0",
+   "parents": {
+    "vac": "s2_m30_VA200"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_GA200p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA200"
+   ],
+   "seq": 96,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "GA",
+   "site": 200,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_GA200p0_novac",
+    "vac": "s2_m30_GA200p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA200"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_GA200p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA200p0",
+    "region:m30_A200"
+   ],
+   "seq": 97,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA200p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 200,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A200",
+   "pair": "pair:m30_GA200p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_GA200p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA200p0",
+    "region:m30_A200"
+   ],
+   "seq": 98,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA200p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 200,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A200",
+   "pair": "pair:m30_GA200p0",
+   "parents": {
+    "vac": "s2_m30_VA200"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_A128",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 99,
+   "action": "region",
+   "member": "m30",
+   "L": "A",
+   "site": 128,
+   "role": "cal",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "vstart:s2_m30_VA128",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A128"
+   ],
+   "seq": 100,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VA128",
+   "L": "A",
+   "site": 128,
+   "role": "cal",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_VA128",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_A128",
+    "vstart:s2_m30_VA128"
+   ],
+   "seq": 101,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VA128",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 128,
+   "region": "region:m30_A128",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_V",
+   "xkind": "mace",
+   "also": [
+    "mace_V"
+   ]
+  },
+  {
+   "id": "pair:m30_Cs128p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 102,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cs128p0_novac",
+    "vac": "s2_m30_Cs128p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cs128p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p0",
+    "region:m30_A128"
+   ],
+   "seq": 103,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cs128p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p0",
+    "region:m30_A128"
+   ],
+   "seq": 104,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p0",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "pair:m30_GA128p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 105,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "GA",
+   "site": 128,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_GA128p0_novac",
+    "vac": "s2_m30_GA128p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m30_GA128p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA128p0",
+    "region:m30_A128"
+   ],
+   "seq": 106,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA128p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_GA128p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_GA128p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_GA128p0",
+    "region:m30_A128"
+   ],
+   "seq": 107,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_GA128p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_GA128p0",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_X175",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 108,
+   "action": "region",
+   "member": "m30",
+   "L": "X",
+   "site": 175,
+   "role": "noise",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "vstart:s2_m30_VX175",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X175"
+   ],
+   "seq": 109,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VX175",
+   "L": "X",
+   "site": 175,
+   "role": "noise",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_VX175",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X175",
+    "vstart:s2_m30_VX175"
+   ],
+   "seq": 110,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VX175",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 175,
+   "region": "region:m30_X175",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace",
+   "also": [
+    "mace_V"
+   ]
+  },
+  {
+   "id": "pair:m30_Cl175p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX175"
+   ],
+   "seq": 111,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cl175p0_novac",
+    "vac": "s2_m30_Cl175p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX175"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cl175p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl175p0",
+    "region:m30_X175"
+   ],
+   "seq": 112,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl175p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_X175",
+   "pair": "pair:m30_Cl175p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cl175p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl175p0",
+    "region:m30_X175"
+   ],
+   "seq": 113,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl175p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_X175",
+   "pair": "pair:m30_Cl175p0",
+   "parents": {
+    "vac": "s2_m30_VX175"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "region:m30_X186",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 114,
+   "action": "region",
+   "member": "m30",
+   "L": "X",
+   "site": 186,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VX186",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X186"
+   ],
+   "seq": 115,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VX186",
+   "L": "X",
+   "site": 186,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VX186",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X186",
+    "vstart:s2_m30_VX186"
+   ],
+   "seq": 116,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VX186",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 186,
+   "region": "region:m30_X186",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cl186p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX186"
+   ],
+   "seq": 117,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 186,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cl186p0_novac",
+    "vac": "s2_m30_Cl186p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX186"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Cl186p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl186p0",
+    "region:m30_X186"
+   ],
+   "seq": 118,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl186p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 186,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_X186",
+   "pair": "pair:m30_Cl186p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cl186p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl186p0",
+    "region:m30_X186"
+   ],
+   "seq": 119,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl186p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 186,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_X186",
+   "pair": "pair:m30_Cl186p0",
+   "parents": {
+    "vac": "s2_m30_VX186"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_X222",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 120,
+   "action": "region",
+   "member": "m30",
+   "L": "X",
+   "site": 222,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VX222",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X222"
+   ],
+   "seq": 121,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VX222",
+   "L": "X",
+   "site": 222,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VX222",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X222",
+    "vstart:s2_m30_VX222"
+   ],
+   "seq": 122,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VX222",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 222,
+   "region": "region:m30_X222",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cl222p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX222"
+   ],
+   "seq": 123,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 222,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cl222p0_novac",
+    "vac": "s2_m30_Cl222p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX222"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Cl222p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl222p0",
+    "region:m30_X222"
+   ],
+   "seq": 124,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl222p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 222,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_X222",
+   "pair": "pair:m30_Cl222p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cl222p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl222p0",
+    "region:m30_X222"
+   ],
+   "seq": 125,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl222p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 222,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_X222",
+   "pair": "pair:m30_Cl222p0",
+   "parents": {
+    "vac": "s2_m30_VX222"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_X174",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 126,
+   "action": "region",
+   "member": "m30",
+   "L": "X",
+   "site": 174,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m30_VX174",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X174"
+   ],
+   "seq": 127,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VX174",
+   "L": "X",
+   "site": 174,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_VX174",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X174",
+    "vstart:s2_m30_VX174"
+   ],
+   "seq": 128,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VX174",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 174,
+   "region": "region:m30_X174",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cl174p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX174"
+   ],
+   "seq": 129,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 174,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cl174p0_novac",
+    "vac": "s2_m30_Cl174p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX174"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m30_Cl174p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl174p0",
+    "region:m30_X174"
+   ],
+   "seq": 130,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl174p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 174,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_X174",
+   "pair": "pair:m30_Cl174p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cl174p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl174p0",
+    "region:m30_X174"
+   ],
+   "seq": 131,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl174p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 174,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_X174",
+   "pair": "pair:m30_Cl174p0",
+   "parents": {
+    "vac": "s2_m30_VX174"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m30_X138",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 132,
+   "action": "region",
+   "member": "m30",
+   "L": "X",
+   "site": 138,
+   "role": "cal",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "vstart:s2_m30_VX138",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X138"
+   ],
+   "seq": 133,
+   "action": "build-vac",
+   "member": "m30",
+   "work_id": "s2_m30_VX138",
+   "L": "X",
+   "site": 138,
+   "role": "cal",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_VX138",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m30_X138",
+    "vstart:s2_m30_VX138"
+   ],
+   "seq": 134,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_VX138",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 138,
+   "region": "region:m30_X138",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_V",
+   "xkind": "mace",
+   "also": [
+    "mace_V"
+   ]
+  },
+  {
+   "id": "pair:m30_Cl138p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX138"
+   ],
+   "seq": 135,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m30_Cl138p0_novac",
+    "vac": "s2_m30_Cl138p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX138"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal",
+   "also": [
+    null
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cl138p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl138p0",
+    "region:m30_X138"
+   ],
+   "seq": 136,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl138p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m30_X138",
+   "pair": "pair:m30_Cl138p0",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "mace:s2_m30_Cl138p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl138p0",
+    "region:m30_X138"
+   ],
+   "seq": 137,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl138p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m30_X138",
+   "pair": "pair:m30_Cl138p0",
+   "parents": {
+    "vac": "s2_m30_VX138"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace",
+   "also": [
+    "mace_dopant_noise"
+   ]
+  },
+  {
+   "id": "mace:s2_m05_host",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [],
+   "seq": 138,
+   "action": "relax-host",
+   "member": "m05",
+   "work_id": "s2_m05_host",
+   "cell_kind": "host",
+   "role": "pilot",
+   "cat": "mace_host",
+   "xkind": "host"
+  },
+  {
+   "id": "region:m05_B76",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 139,
+   "action": "region",
+   "member": "m05",
+   "L": "B",
+   "site": 76,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VB76",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B76"
+   ],
+   "seq": 140,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VB76",
+   "L": "B",
+   "site": 76,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VB76",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B76",
+    "vstart:s2_m05_VB76"
+   ],
+   "seq": 141,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VB76",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 76,
+   "region": "region:m05_B76",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Sr76p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB76"
+   ],
+   "seq": 142,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Sr",
+   "site": 76,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Sr76p0_novac",
+    "vac": "s2_m05_Sr76p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB76"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Sr76p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr76p0",
+    "region:m05_B76"
+   ],
+   "seq": 143,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr76p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 76,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B76",
+   "pair": "pair:m05_Sr76p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Sr76p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr76p0",
+    "region:m05_B76"
+   ],
+   "seq": 144,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr76p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 76,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B76",
+   "pair": "pair:m05_Sr76p0",
+   "parents": {
+    "vac": "s2_m05_VB76"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Ca76p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB76"
+   ],
+   "seq": 145,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Ca",
+   "site": 76,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Ca76p0_novac",
+    "vac": "s2_m05_Ca76p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB76"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Ca76p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca76p0",
+    "region:m05_B76"
+   ],
+   "seq": 146,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca76p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 76,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B76",
+   "pair": "pair:m05_Ca76p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Ca76p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca76p0",
+    "region:m05_B76"
+   ],
+   "seq": 147,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca76p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 76,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B76",
+   "pair": "pair:m05_Ca76p0",
+   "parents": {
+    "vac": "s2_m05_VB76"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_B172",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 148,
+   "action": "region",
+   "member": "m05",
+   "L": "B",
+   "site": 172,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VB172",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B172"
+   ],
+   "seq": 149,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VB172",
+   "L": "B",
+   "site": 172,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VB172",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B172",
+    "vstart:s2_m05_VB172"
+   ],
+   "seq": 150,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VB172",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 172,
+   "region": "region:m05_B172",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Sr172p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB172"
+   ],
+   "seq": 151,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Sr",
+   "site": 172,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Sr172p0_novac",
+    "vac": "s2_m05_Sr172p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB172"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Sr172p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr172p0",
+    "region:m05_B172"
+   ],
+   "seq": 152,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr172p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 172,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B172",
+   "pair": "pair:m05_Sr172p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Sr172p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr172p0",
+    "region:m05_B172"
+   ],
+   "seq": 153,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr172p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 172,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B172",
+   "pair": "pair:m05_Sr172p0",
+   "parents": {
+    "vac": "s2_m05_VB172"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Ca172p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB172"
+   ],
+   "seq": 154,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Ca",
+   "site": 172,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Ca172p0_novac",
+    "vac": "s2_m05_Ca172p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB172"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Ca172p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca172p0",
+    "region:m05_B172"
+   ],
+   "seq": 155,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca172p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 172,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B172",
+   "pair": "pair:m05_Ca172p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Ca172p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca172p0",
+    "region:m05_B172"
+   ],
+   "seq": 156,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca172p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 172,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B172",
+   "pair": "pair:m05_Ca172p0",
+   "parents": {
+    "vac": "s2_m05_VB172"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_B24",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 157,
+   "action": "region",
+   "member": "m05",
+   "L": "B",
+   "site": 24,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VB24",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B24"
+   ],
+   "seq": 158,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VB24",
+   "L": "B",
+   "site": 24,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VB24",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B24",
+    "vstart:s2_m05_VB24"
+   ],
+   "seq": 159,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VB24",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 24,
+   "region": "region:m05_B24",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Sr24p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB24"
+   ],
+   "seq": 160,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Sr",
+   "site": 24,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Sr24p0_novac",
+    "vac": "s2_m05_Sr24p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB24"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Sr24p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr24p0",
+    "region:m05_B24"
+   ],
+   "seq": 161,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr24p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 24,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B24",
+   "pair": "pair:m05_Sr24p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Sr24p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr24p0",
+    "region:m05_B24"
+   ],
+   "seq": 162,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr24p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 24,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B24",
+   "pair": "pair:m05_Sr24p0",
+   "parents": {
+    "vac": "s2_m05_VB24"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Ca24p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB24"
+   ],
+   "seq": 163,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Ca",
+   "site": 24,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Ca24p0_novac",
+    "vac": "s2_m05_Ca24p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB24"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Ca24p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca24p0",
+    "region:m05_B24"
+   ],
+   "seq": 164,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca24p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 24,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B24",
+   "pair": "pair:m05_Ca24p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Ca24p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca24p0",
+    "region:m05_B24"
+   ],
+   "seq": 165,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca24p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 24,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B24",
+   "pair": "pair:m05_Ca24p0",
+   "parents": {
+    "vac": "s2_m05_VB24"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_B64",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 166,
+   "action": "region",
+   "member": "m05",
+   "L": "B",
+   "site": 64,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VB64",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B64"
+   ],
+   "seq": 167,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VB64",
+   "L": "B",
+   "site": 64,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VB64",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B64",
+    "vstart:s2_m05_VB64"
+   ],
+   "seq": 168,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VB64",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 64,
+   "region": "region:m05_B64",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Sr64p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB64"
+   ],
+   "seq": 169,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Sr",
+   "site": 64,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Sr64p0_novac",
+    "vac": "s2_m05_Sr64p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB64"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Sr64p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr64p0",
+    "region:m05_B64"
+   ],
+   "seq": 170,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr64p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 64,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B64",
+   "pair": "pair:m05_Sr64p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Sr64p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr64p0",
+    "region:m05_B64"
+   ],
+   "seq": 171,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr64p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 64,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B64",
+   "pair": "pair:m05_Sr64p0",
+   "parents": {
+    "vac": "s2_m05_VB64"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Ca64p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB64"
+   ],
+   "seq": 172,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Ca",
+   "site": 64,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Ca64p0_novac",
+    "vac": "s2_m05_Ca64p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB64"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Ca64p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca64p0",
+    "region:m05_B64"
+   ],
+   "seq": 173,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca64p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 64,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B64",
+   "pair": "pair:m05_Ca64p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Ca64p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca64p0",
+    "region:m05_B64"
+   ],
+   "seq": 174,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca64p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 64,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B64",
+   "pair": "pair:m05_Ca64p0",
+   "parents": {
+    "vac": "s2_m05_VB64"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_B124",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 175,
+   "action": "region",
+   "member": "m05",
+   "L": "B",
+   "site": 124,
+   "role": "cal"
+  },
+  {
+   "id": "vstart:s2_m05_VB124",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B124"
+   ],
+   "seq": 176,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VB124",
+   "L": "B",
+   "site": 124,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_VB124",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_B124",
+    "vstart:s2_m05_VB124"
+   ],
+   "seq": 177,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VB124",
+   "cell_kind": "V",
+   "L": "B",
+   "site": 124,
+   "region": "region:m05_B124",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Sr124p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB124"
+   ],
+   "seq": 178,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Sr",
+   "site": 124,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Sr124p0_novac",
+    "vac": "s2_m05_Sr124p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB124"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_Sr124p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr124p0",
+    "region:m05_B124"
+   ],
+   "seq": 179,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr124p0_novac",
+   "cell_kind": "D",
+   "token": "Sr",
+   "site": 124,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B124",
+   "pair": "pair:m05_Sr124p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Sr124p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Sr124p0",
+    "region:m05_B124"
+   ],
+   "seq": 180,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Sr124p0_vac",
+   "cell_kind": "DV",
+   "token": "Sr",
+   "site": 124,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B124",
+   "pair": "pair:m05_Sr124p0",
+   "parents": {
+    "vac": "s2_m05_VB124"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Ca124p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VB124"
+   ],
+   "seq": 181,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Ca",
+   "site": 124,
+   "L": "B",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Ca124p0_novac",
+    "vac": "s2_m05_Ca124p0_vac"
+   },
+   "pose": "swap",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VB124"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_Ca124p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca124p0",
+    "region:m05_B124"
+   ],
+   "seq": 182,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca124p0_novac",
+   "cell_kind": "D",
+   "token": "Ca",
+   "site": 124,
+   "L": "B",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_B124",
+   "pair": "pair:m05_Ca124p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Ca124p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Ca124p0",
+    "region:m05_B124"
+   ],
+   "seq": 183,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Ca124p0_vac",
+   "cell_kind": "DV",
+   "token": "Ca",
+   "site": 124,
+   "L": "B",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_B124",
+   "pair": "pair:m05_Ca124p0",
+   "parents": {
+    "vac": "s2_m05_VB124"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_A188",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 184,
+   "action": "region",
+   "member": "m05",
+   "L": "A",
+   "site": 188,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VA188",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A188"
+   ],
+   "seq": 185,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VA188",
+   "L": "A",
+   "site": 188,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VA188",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A188",
+    "vstart:s2_m05_VA188"
+   ],
+   "seq": 186,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VA188",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 188,
+   "region": "region:m05_A188",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cs188p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA188"
+   ],
+   "seq": 187,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cs188p0_novac",
+    "vac": "s2_m05_Cs188p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cs188p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs188p0",
+    "region:m05_A188"
+   ],
+   "seq": 188,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs188p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A188",
+   "pair": "pair:m05_Cs188p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cs188p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs188p0",
+    "region:m05_A188"
+   ],
+   "seq": 189,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs188p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A188",
+   "pair": "pair:m05_Cs188p0",
+   "parents": {
+    "vac": "s2_m05_VA188"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_GA188p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA188"
+   ],
+   "seq": 190,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "GA",
+   "site": 188,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_GA188p0_novac",
+    "vac": "s2_m05_GA188p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_GA188p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA188p0",
+    "region:m05_A188"
+   ],
+   "seq": 191,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA188p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A188",
+   "pair": "pair:m05_GA188p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_GA188p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA188p0",
+    "region:m05_A188"
+   ],
+   "seq": 192,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA188p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A188",
+   "pair": "pair:m05_GA188p0",
+   "parents": {
+    "vac": "s2_m05_VA188"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_A164",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 193,
+   "action": "region",
+   "member": "m05",
+   "L": "A",
+   "site": 164,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VA164",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A164"
+   ],
+   "seq": 194,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VA164",
+   "L": "A",
+   "site": 164,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VA164",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A164",
+    "vstart:s2_m05_VA164"
+   ],
+   "seq": 195,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VA164",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 164,
+   "region": "region:m05_A164",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cs164p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA164"
+   ],
+   "seq": 196,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cs",
+   "site": 164,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cs164p0_novac",
+    "vac": "s2_m05_Cs164p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA164"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cs164p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs164p0",
+    "region:m05_A164"
+   ],
+   "seq": 197,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs164p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 164,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A164",
+   "pair": "pair:m05_Cs164p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cs164p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs164p0",
+    "region:m05_A164"
+   ],
+   "seq": 198,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs164p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 164,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A164",
+   "pair": "pair:m05_Cs164p0",
+   "parents": {
+    "vac": "s2_m05_VA164"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_GA164p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA164"
+   ],
+   "seq": 199,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "GA",
+   "site": 164,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_GA164p0_novac",
+    "vac": "s2_m05_GA164p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA164"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_GA164p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA164p0",
+    "region:m05_A164"
+   ],
+   "seq": 200,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA164p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 164,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A164",
+   "pair": "pair:m05_GA164p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_GA164p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA164p0",
+    "region:m05_A164"
+   ],
+   "seq": 201,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA164p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 164,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A164",
+   "pair": "pair:m05_GA164p0",
+   "parents": {
+    "vac": "s2_m05_VA164"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_A152",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 202,
+   "action": "region",
+   "member": "m05",
+   "L": "A",
+   "site": 152,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VA152",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A152"
+   ],
+   "seq": 203,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VA152",
+   "L": "A",
+   "site": 152,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VA152",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A152",
+    "vstart:s2_m05_VA152"
+   ],
+   "seq": 204,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VA152",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 152,
+   "region": "region:m05_A152",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cs152p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA152"
+   ],
+   "seq": 205,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cs",
+   "site": 152,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cs152p0_novac",
+    "vac": "s2_m05_Cs152p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA152"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cs152p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs152p0",
+    "region:m05_A152"
+   ],
+   "seq": 206,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs152p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 152,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A152",
+   "pair": "pair:m05_Cs152p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cs152p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs152p0",
+    "region:m05_A152"
+   ],
+   "seq": 207,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs152p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 152,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A152",
+   "pair": "pair:m05_Cs152p0",
+   "parents": {
+    "vac": "s2_m05_VA152"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_GA152p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA152"
+   ],
+   "seq": 208,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "GA",
+   "site": 152,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_GA152p0_novac",
+    "vac": "s2_m05_GA152p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA152"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_GA152p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA152p0",
+    "region:m05_A152"
+   ],
+   "seq": 209,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA152p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 152,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A152",
+   "pair": "pair:m05_GA152p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_GA152p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA152p0",
+    "region:m05_A152"
+   ],
+   "seq": 210,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA152p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 152,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A152",
+   "pair": "pair:m05_GA152p0",
+   "parents": {
+    "vac": "s2_m05_VA152"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_A68",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 211,
+   "action": "region",
+   "member": "m05",
+   "L": "A",
+   "site": 68,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VA68",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A68"
+   ],
+   "seq": 212,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VA68",
+   "L": "A",
+   "site": 68,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VA68",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A68",
+    "vstart:s2_m05_VA68"
+   ],
+   "seq": 213,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VA68",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 68,
+   "region": "region:m05_A68",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cs68p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA68"
+   ],
+   "seq": 214,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cs",
+   "site": 68,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cs68p0_novac",
+    "vac": "s2_m05_Cs68p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA68"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cs68p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs68p0",
+    "region:m05_A68"
+   ],
+   "seq": 215,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs68p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 68,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A68",
+   "pair": "pair:m05_Cs68p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cs68p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs68p0",
+    "region:m05_A68"
+   ],
+   "seq": 216,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs68p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 68,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A68",
+   "pair": "pair:m05_Cs68p0",
+   "parents": {
+    "vac": "s2_m05_VA68"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_GA68p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA68"
+   ],
+   "seq": 217,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "GA",
+   "site": 68,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_GA68p0_novac",
+    "vac": "s2_m05_GA68p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA68"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_GA68p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA68p0",
+    "region:m05_A68"
+   ],
+   "seq": 218,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA68p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 68,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A68",
+   "pair": "pair:m05_GA68p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_GA68p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA68p0",
+    "region:m05_A68"
+   ],
+   "seq": 219,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA68p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 68,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A68",
+   "pair": "pair:m05_GA68p0",
+   "parents": {
+    "vac": "s2_m05_VA68"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_A28",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 220,
+   "action": "region",
+   "member": "m05",
+   "L": "A",
+   "site": 28,
+   "role": "cal"
+  },
+  {
+   "id": "vstart:s2_m05_VA28",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A28"
+   ],
+   "seq": 221,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VA28",
+   "L": "A",
+   "site": 28,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_VA28",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_A28",
+    "vstart:s2_m05_VA28"
+   ],
+   "seq": 222,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VA28",
+   "cell_kind": "V",
+   "L": "A",
+   "site": 28,
+   "region": "region:m05_A28",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cs28p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA28"
+   ],
+   "seq": 223,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cs",
+   "site": 28,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cs28p0_novac",
+    "vac": "s2_m05_Cs28p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA28"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_Cs28p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs28p0",
+    "region:m05_A28"
+   ],
+   "seq": 224,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs28p0_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 28,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A28",
+   "pair": "pair:m05_Cs28p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cs28p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cs28p0",
+    "region:m05_A28"
+   ],
+   "seq": 225,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cs28p0_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 28,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A28",
+   "pair": "pair:m05_Cs28p0",
+   "parents": {
+    "vac": "s2_m05_VA28"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_GA28p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VA28"
+   ],
+   "seq": 226,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "GA",
+   "site": 28,
+   "L": "A",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_GA28p0_novac",
+    "vac": "s2_m05_GA28p0_vac"
+   },
+   "pose": "inherit",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VA28"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_GA28p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA28p0",
+    "region:m05_A28"
+   ],
+   "seq": 227,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA28p0_novac",
+   "cell_kind": "D",
+   "token": "GA",
+   "site": 28,
+   "L": "A",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_A28",
+   "pair": "pair:m05_GA28p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_GA28p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_GA28p0",
+    "region:m05_A28"
+   ],
+   "seq": 228,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_GA28p0_vac",
+   "cell_kind": "DV",
+   "token": "GA",
+   "site": 28,
+   "L": "A",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_A28",
+   "pair": "pair:m05_GA28p0",
+   "parents": {
+    "vac": "s2_m05_VA28"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_X175",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 229,
+   "action": "region",
+   "member": "m05",
+   "L": "X",
+   "site": 175,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VX175",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X175"
+   ],
+   "seq": 230,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VX175",
+   "L": "X",
+   "site": 175,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VX175",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X175",
+    "vstart:s2_m05_VX175"
+   ],
+   "seq": 231,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VX175",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 175,
+   "region": "region:m05_X175",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cl175p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VX175"
+   ],
+   "seq": 232,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cl175p0_novac",
+    "vac": "s2_m05_Cl175p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VX175"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cl175p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl175p0",
+    "region:m05_X175"
+   ],
+   "seq": 233,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl175p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_X175",
+   "pair": "pair:m05_Cl175p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cl175p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl175p0",
+    "region:m05_X175"
+   ],
+   "seq": 234,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl175p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_X175",
+   "pair": "pair:m05_Cl175p0",
+   "parents": {
+    "vac": "s2_m05_VX175"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_X222",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 235,
+   "action": "region",
+   "member": "m05",
+   "L": "X",
+   "site": 222,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VX222",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X222"
+   ],
+   "seq": 236,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VX222",
+   "L": "X",
+   "site": 222,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VX222",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X222",
+    "vstart:s2_m05_VX222"
+   ],
+   "seq": 237,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VX222",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 222,
+   "region": "region:m05_X222",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cl222p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VX222"
+   ],
+   "seq": 238,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cl",
+   "site": 222,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cl222p0_novac",
+    "vac": "s2_m05_Cl222p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VX222"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cl222p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl222p0",
+    "region:m05_X222"
+   ],
+   "seq": 239,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl222p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 222,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_X222",
+   "pair": "pair:m05_Cl222p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cl222p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl222p0",
+    "region:m05_X222"
+   ],
+   "seq": 240,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl222p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 222,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_X222",
+   "pair": "pair:m05_Cl222p0",
+   "parents": {
+    "vac": "s2_m05_VX222"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_X186",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 241,
+   "action": "region",
+   "member": "m05",
+   "L": "X",
+   "site": 186,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VX186",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X186"
+   ],
+   "seq": 242,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VX186",
+   "L": "X",
+   "site": 186,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VX186",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X186",
+    "vstart:s2_m05_VX186"
+   ],
+   "seq": 243,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VX186",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 186,
+   "region": "region:m05_X186",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cl186p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VX186"
+   ],
+   "seq": 244,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cl",
+   "site": 186,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cl186p0_novac",
+    "vac": "s2_m05_Cl186p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VX186"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cl186p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl186p0",
+    "region:m05_X186"
+   ],
+   "seq": 245,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl186p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 186,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_X186",
+   "pair": "pair:m05_Cl186p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cl186p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl186p0",
+    "region:m05_X186"
+   ],
+   "seq": 246,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl186p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 186,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_X186",
+   "pair": "pair:m05_Cl186p0",
+   "parents": {
+    "vac": "s2_m05_VX186"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_X174",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 247,
+   "action": "region",
+   "member": "m05",
+   "L": "X",
+   "site": 174,
+   "role": "noise"
+  },
+  {
+   "id": "vstart:s2_m05_VX174",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X174"
+   ],
+   "seq": 248,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VX174",
+   "L": "X",
+   "site": 174,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_VX174",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X174",
+    "vstart:s2_m05_VX174"
+   ],
+   "seq": 249,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VX174",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 174,
+   "region": "region:m05_X174",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cl174p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VX174"
+   ],
+   "seq": 250,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cl",
+   "site": 174,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cl174p0_novac",
+    "vac": "s2_m05_Cl174p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VX174"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "noise"
+  },
+  {
+   "id": "mace:s2_m05_Cl174p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl174p0",
+    "region:m05_X174"
+   ],
+   "seq": 251,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl174p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 174,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_X174",
+   "pair": "pair:m05_Cl174p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cl174p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl174p0",
+    "region:m05_X174"
+   ],
+   "seq": 252,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl174p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 174,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_X174",
+   "pair": "pair:m05_Cl174p0",
+   "parents": {
+    "vac": "s2_m05_VX174"
+   },
+   "role": "noise",
+   "cat": "mace_dopant_noise",
+   "xkind": "mace"
+  },
+  {
+   "id": "region:m05_X49",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 253,
+   "action": "region",
+   "member": "m05",
+   "L": "X",
+   "site": 49,
+   "role": "cal"
+  },
+  {
+   "id": "vstart:s2_m05_VX49",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X49"
+   ],
+   "seq": 254,
+   "action": "build-vac",
+   "member": "m05",
+   "work_id": "s2_m05_VX49",
+   "L": "X",
+   "site": 49,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_VX49",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "region:m05_X49",
+    "vstart:s2_m05_VX49"
+   ],
+   "seq": 255,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_VX49",
+   "cell_kind": "V",
+   "L": "X",
+   "site": 49,
+   "region": "region:m05_X49",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_V",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m05_Cl49p0",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m05_host",
+    "mace:s2_m05_VX49"
+   ],
+   "seq": 256,
+   "action": "build-pair",
+   "member": "m05",
+   "token": "Cl",
+   "site": 49,
+   "L": "X",
+   "start": "p0",
+   "legs": {
+    "novac": "s2_m05_Cl49p0_novac",
+    "vac": "s2_m05_Cl49p0_vac"
+   },
+   "pose": "centred",
+   "parents": {
+    "host": "s2_m05_host",
+    "vac": "s2_m05_VX49"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "cal"
+  },
+  {
+   "id": "mace:s2_m05_Cl49p0_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl49p0",
+    "region:m05_X49"
+   ],
+   "seq": 257,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl49p0_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 49,
+   "L": "X",
+   "leg": "novac",
+   "start": "p0",
+   "region": "region:m05_X49",
+   "pair": "pair:m05_Cl49p0",
+   "parents": {
+    "host": "s2_m05_host"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m05_Cl49p0_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m05_Cl49p0",
+    "region:m05_X49"
+   ],
+   "seq": 258,
+   "action": "relax",
+   "member": "m05",
+   "work_id": "s2_m05_Cl49p0_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 49,
+   "L": "X",
+   "leg": "vac",
+   "start": "p0",
+   "region": "region:m05_X49",
+   "pair": "pair:m05_Cl49p0",
+   "parents": {
+    "vac": "s2_m05_VX49"
+   },
+   "role": "cal",
+   "cat": "mace_dopant_startset",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs128p1",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 259,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "start": "p1",
+   "legs": {
+    "novac": "s2_m30_Cs128p1_novac",
+    "vac": "s2_m30_Cs128p1_vac"
+   },
+   "pose": "q0+",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p1_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p1",
+    "region:m30_A128"
+   ],
+   "seq": 260,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p1_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p1",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p1",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p1_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p1",
+    "region:m30_A128"
+   ],
+   "seq": 261,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p1_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p1",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p1",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs128p2",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 262,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "start": "p2",
+   "legs": {
+    "novac": "s2_m30_Cs128p2_novac",
+    "vac": "s2_m30_Cs128p2_vac"
+   },
+   "pose": "q0-",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p2_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p2",
+    "region:m30_A128"
+   ],
+   "seq": 263,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p2_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p2",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p2",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p2_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p2",
+    "region:m30_A128"
+   ],
+   "seq": 264,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p2_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p2",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p2",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs128p3",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 265,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "start": "p3",
+   "legs": {
+    "novac": "s2_m30_Cs128p3_novac",
+    "vac": "s2_m30_Cs128p3_vac"
+   },
+   "pose": "q1+",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p3_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p3",
+    "region:m30_A128"
+   ],
+   "seq": 266,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p3_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p3",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p3",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p3_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p3",
+    "region:m30_A128"
+   ],
+   "seq": 267,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p3_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p3",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p3",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs128p4",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 268,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "start": "p4",
+   "legs": {
+    "novac": "s2_m30_Cs128p4_novac",
+    "vac": "s2_m30_Cs128p4_vac"
+   },
+   "pose": "q1-",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p4_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p4",
+    "region:m30_A128"
+   ],
+   "seq": 269,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p4_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p4",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p4",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p4_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p4",
+    "region:m30_A128"
+   ],
+   "seq": 270,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p4_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p4",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p4",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs128p5",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 271,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "start": "p5",
+   "legs": {
+    "novac": "s2_m30_Cs128p5_novac",
+    "vac": "s2_m30_Cs128p5_vac"
+   },
+   "pose": "q2+",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p5_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p5",
+    "region:m30_A128"
+   ],
+   "seq": 272,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p5_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p5",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p5",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p5_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p5",
+    "region:m30_A128"
+   ],
+   "seq": 273,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p5_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p5",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p5",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs128p6",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 274,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "start": "p6",
+   "legs": {
+    "novac": "s2_m30_Cs128p6_novac",
+    "vac": "s2_m30_Cs128p6_vac"
+   },
+   "pose": "q2-",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA128"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p6_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p6",
+    "region:m30_A128"
+   ],
+   "seq": 275,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p6_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "novac",
+   "start": "p6",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p6",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs128p6_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs128p6",
+    "region:m30_A128"
+   ],
+   "seq": 276,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs128p6_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 128,
+   "L": "A",
+   "leg": "vac",
+   "start": "p6",
+   "region": "region:m30_A128",
+   "pair": "pair:m30_Cs128p6",
+   "parents": {
+    "vac": "s2_m30_VA128"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "distinct:m30_Cs128_novac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cs128p0_novac",
+    "mace:s2_m30_Cs128p1_novac",
+    "mace:s2_m30_Cs128p2_novac",
+    "mace:s2_m30_Cs128p3_novac",
+    "mace:s2_m30_Cs128p4_novac",
+    "mace:s2_m30_Cs128p5_novac",
+    "mace:s2_m30_Cs128p6_novac"
+   ],
+   "seq": 277,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "leg": "novac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6"
+   ],
+   "work_ids": [
+    "s2_m30_Cs128p0_novac",
+    "s2_m30_Cs128p1_novac",
+    "s2_m30_Cs128p2_novac",
+    "s2_m30_Cs128p3_novac",
+    "s2_m30_Cs128p4_novac",
+    "s2_m30_Cs128p5_novac",
+    "s2_m30_Cs128p6_novac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "distinct:m30_Cs128_vac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cs128p0_vac",
+    "mace:s2_m30_Cs128p1_vac",
+    "mace:s2_m30_Cs128p2_vac",
+    "mace:s2_m30_Cs128p3_vac",
+    "mace:s2_m30_Cs128p4_vac",
+    "mace:s2_m30_Cs128p5_vac",
+    "mace:s2_m30_Cs128p6_vac"
+   ],
+   "seq": 278,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cs",
+   "site": 128,
+   "leg": "vac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6"
+   ],
+   "work_ids": [
+    "s2_m30_Cs128p0_vac",
+    "s2_m30_Cs128p1_vac",
+    "s2_m30_Cs128p2_vac",
+    "s2_m30_Cs128p3_vac",
+    "s2_m30_Cs128p4_vac",
+    "s2_m30_Cs128p5_vac",
+    "s2_m30_Cs128p6_vac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "pair:m30_Cs188p1",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 279,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p1",
+   "legs": {
+    "novac": "s2_m30_Cs188p1_novac",
+    "vac": "s2_m30_Cs188p1_vac"
+   },
+   "pose": "q0+",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p1_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p1",
+    "region:m30_A188"
+   ],
+   "seq": 280,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p1_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p1",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p1",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p1_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p1",
+    "region:m30_A188"
+   ],
+   "seq": 281,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p1_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p1",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p1",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs188p2",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 282,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p2",
+   "legs": {
+    "novac": "s2_m30_Cs188p2_novac",
+    "vac": "s2_m30_Cs188p2_vac"
+   },
+   "pose": "q0-",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p2_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p2",
+    "region:m30_A188"
+   ],
+   "seq": 283,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p2_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p2",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p2",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p2_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p2",
+    "region:m30_A188"
+   ],
+   "seq": 284,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p2_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p2",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p2",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs188p3",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 285,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p3",
+   "legs": {
+    "novac": "s2_m30_Cs188p3_novac",
+    "vac": "s2_m30_Cs188p3_vac"
+   },
+   "pose": "q1+",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p3_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p3",
+    "region:m30_A188"
+   ],
+   "seq": 286,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p3_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p3",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p3",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p3_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p3",
+    "region:m30_A188"
+   ],
+   "seq": 287,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p3_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p3",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p3",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs188p4",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 288,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p4",
+   "legs": {
+    "novac": "s2_m30_Cs188p4_novac",
+    "vac": "s2_m30_Cs188p4_vac"
+   },
+   "pose": "q1-",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p4_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p4",
+    "region:m30_A188"
+   ],
+   "seq": 289,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p4_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p4",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p4",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p4_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p4",
+    "region:m30_A188"
+   ],
+   "seq": 290,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p4_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p4",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p4",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs188p5",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 291,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p5",
+   "legs": {
+    "novac": "s2_m30_Cs188p5_novac",
+    "vac": "s2_m30_Cs188p5_vac"
+   },
+   "pose": "q2+",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p5_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p5",
+    "region:m30_A188"
+   ],
+   "seq": 292,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p5_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p5",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p5",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p5_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p5",
+    "region:m30_A188"
+   ],
+   "seq": 293,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p5_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p5",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p5",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cs188p6",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 294,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "start": "p6",
+   "legs": {
+    "novac": "s2_m30_Cs188p6_novac",
+    "vac": "s2_m30_Cs188p6_vac"
+   },
+   "pose": "q2-",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VA188"
+   },
+   "partners": "relaxed",
+   "allow_provisional": false,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p6_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p6",
+    "region:m30_A188"
+   ],
+   "seq": 295,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p6_novac",
+   "cell_kind": "D",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "novac",
+   "start": "p6",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p6",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cs188p6_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cs188p6",
+    "region:m30_A188"
+   ],
+   "seq": 296,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cs188p6_vac",
+   "cell_kind": "DV",
+   "token": "Cs",
+   "site": 188,
+   "L": "A",
+   "leg": "vac",
+   "start": "p6",
+   "region": "region:m30_A188",
+   "pair": "pair:m30_Cs188p6",
+   "parents": {
+    "vac": "s2_m30_VA188"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "distinct:m30_Cs188_novac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cs188p0_novac",
+    "mace:s2_m30_Cs188p1_novac",
+    "mace:s2_m30_Cs188p2_novac",
+    "mace:s2_m30_Cs188p3_novac",
+    "mace:s2_m30_Cs188p4_novac",
+    "mace:s2_m30_Cs188p5_novac",
+    "mace:s2_m30_Cs188p6_novac"
+   ],
+   "seq": 297,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "leg": "novac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6"
+   ],
+   "work_ids": [
+    "s2_m30_Cs188p0_novac",
+    "s2_m30_Cs188p1_novac",
+    "s2_m30_Cs188p2_novac",
+    "s2_m30_Cs188p3_novac",
+    "s2_m30_Cs188p4_novac",
+    "s2_m30_Cs188p5_novac",
+    "s2_m30_Cs188p6_novac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "distinct:m30_Cs188_vac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cs188p0_vac",
+    "mace:s2_m30_Cs188p1_vac",
+    "mace:s2_m30_Cs188p2_vac",
+    "mace:s2_m30_Cs188p3_vac",
+    "mace:s2_m30_Cs188p4_vac",
+    "mace:s2_m30_Cs188p5_vac",
+    "mace:s2_m30_Cs188p6_vac"
+   ],
+   "seq": 298,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cs",
+   "site": 188,
+   "leg": "vac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6"
+   ],
+   "work_ids": [
+    "s2_m30_Cs188p0_vac",
+    "s2_m30_Cs188p1_vac",
+    "s2_m30_Cs188p2_vac",
+    "s2_m30_Cs188p3_vac",
+    "s2_m30_Cs188p4_vac",
+    "s2_m30_Cs188p5_vac",
+    "s2_m30_Cs188p6_vac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "pair:m30_Cl138p1",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX138"
+   ],
+   "seq": 299,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "start": "p1",
+   "legs": {
+    "novac": "s2_m30_Cl138p1_novac",
+    "vac": "s2_m30_Cl138p1_vac"
+   },
+   "pose": "shift_a",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX138"
+   },
+   "partners": "relaxed",
+   "allow_provisional": true,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cl138p1_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl138p1",
+    "region:m30_X138"
+   ],
+   "seq": 300,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl138p1_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "leg": "novac",
+   "start": "p1",
+   "region": "region:m30_X138",
+   "pair": "pair:m30_Cl138p1",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cl138p1_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl138p1",
+    "region:m30_X138"
+   ],
+   "seq": 301,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl138p1_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "leg": "vac",
+   "start": "p1",
+   "region": "region:m30_X138",
+   "pair": "pair:m30_Cl138p1",
+   "parents": {
+    "vac": "s2_m30_VX138"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cl138p2",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX138"
+   ],
+   "seq": 302,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "start": "p2",
+   "legs": {
+    "novac": "s2_m30_Cl138p2_novac",
+    "vac": "s2_m30_Cl138p2_vac"
+   },
+   "pose": "shift_b",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX138"
+   },
+   "partners": "relaxed",
+   "allow_provisional": true,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cl138p2_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl138p2",
+    "region:m30_X138"
+   ],
+   "seq": 303,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl138p2_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "leg": "novac",
+   "start": "p2",
+   "region": "region:m30_X138",
+   "pair": "pair:m30_Cl138p2",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cl138p2_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl138p2",
+    "region:m30_X138"
+   ],
+   "seq": 304,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl138p2_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 138,
+   "L": "X",
+   "leg": "vac",
+   "start": "p2",
+   "region": "region:m30_X138",
+   "pair": "pair:m30_Cl138p2",
+   "parents": {
+    "vac": "s2_m30_VX138"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "distinct:m30_Cl138_novac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cl138p0_novac",
+    "mace:s2_m30_Cl138p1_novac",
+    "mace:s2_m30_Cl138p2_novac"
+   ],
+   "seq": 305,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cl",
+   "site": 138,
+   "leg": "novac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2"
+   ],
+   "work_ids": [
+    "s2_m30_Cl138p0_novac",
+    "s2_m30_Cl138p1_novac",
+    "s2_m30_Cl138p2_novac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "distinct:m30_Cl138_vac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cl138p0_vac",
+    "mace:s2_m30_Cl138p1_vac",
+    "mace:s2_m30_Cl138p2_vac"
+   ],
+   "seq": 306,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cl",
+   "site": 138,
+   "leg": "vac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2"
+   ],
+   "work_ids": [
+    "s2_m30_Cl138p0_vac",
+    "s2_m30_Cl138p1_vac",
+    "s2_m30_Cl138p2_vac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "pair:m30_Cl175p1",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX175"
+   ],
+   "seq": 307,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "start": "p1",
+   "legs": {
+    "novac": "s2_m30_Cl175p1_novac",
+    "vac": "s2_m30_Cl175p1_vac"
+   },
+   "pose": "shift_a",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX175"
+   },
+   "partners": "relaxed",
+   "allow_provisional": true,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cl175p1_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl175p1",
+    "region:m30_X175"
+   ],
+   "seq": 308,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl175p1_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "novac",
+   "start": "p1",
+   "region": "region:m30_X175",
+   "pair": "pair:m30_Cl175p1",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cl175p1_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl175p1",
+    "region:m30_X175"
+   ],
+   "seq": 309,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl175p1_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "vac",
+   "start": "p1",
+   "region": "region:m30_X175",
+   "pair": "pair:m30_Cl175p1",
+   "parents": {
+    "vac": "s2_m30_VX175"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "pair:m30_Cl175p2",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host",
+    "mace:s2_m30_VX175"
+   ],
+   "seq": 310,
+   "action": "build-pair",
+   "member": "m30",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "start": "p2",
+   "legs": {
+    "novac": "s2_m30_Cl175p2_novac",
+    "vac": "s2_m30_Cl175p2_vac"
+   },
+   "pose": "shift_b",
+   "parents": {
+    "host": "s2_m30_host",
+    "vac": "s2_m30_VX175"
+   },
+   "partners": "relaxed",
+   "allow_provisional": true,
+   "role": "pose"
+  },
+  {
+   "id": "mace:s2_m30_Cl175p2_novac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl175p2",
+    "region:m30_X175"
+   ],
+   "seq": 311,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl175p2_novac",
+   "cell_kind": "D",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "novac",
+   "start": "p2",
+   "region": "region:m30_X175",
+   "pair": "pair:m30_Cl175p2",
+   "parents": {
+    "host": "s2_m30_host"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "mace:s2_m30_Cl175p2_vac",
+   "kind": "mace",
+   "phase": "mace",
+   "deps": [
+    "pair:m30_Cl175p2",
+    "region:m30_X175"
+   ],
+   "seq": 312,
+   "action": "relax",
+   "member": "m30",
+   "work_id": "s2_m30_Cl175p2_vac",
+   "cell_kind": "DV",
+   "token": "Cl",
+   "site": 175,
+   "L": "X",
+   "leg": "vac",
+   "start": "p2",
+   "region": "region:m30_X175",
+   "pair": "pair:m30_Cl175p2",
+   "parents": {
+    "vac": "s2_m30_VX175"
+   },
+   "role": "pose",
+   "cat": "mace_pose_extra",
+   "xkind": "mace"
+  },
+  {
+   "id": "distinct:m30_Cl175_novac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cl175p0_novac",
+    "mace:s2_m30_Cl175p1_novac",
+    "mace:s2_m30_Cl175p2_novac"
+   ],
+   "seq": 313,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cl",
+   "site": 175,
+   "leg": "novac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2"
+   ],
+   "work_ids": [
+    "s2_m30_Cl175p0_novac",
+    "s2_m30_Cl175p1_novac",
+    "s2_m30_Cl175p2_novac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "distinct:m30_Cl175_vac",
+   "kind": "g46",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_Cl175p0_vac",
+    "mace:s2_m30_Cl175p1_vac",
+    "mace:s2_m30_Cl175p2_vac"
+   ],
+   "seq": 314,
+   "action": "distinct",
+   "member": "m30",
+   "token": "Cl",
+   "site": 175,
+   "leg": "vac",
+   "starts": [
+    "p0",
+    "p1",
+    "p2"
+   ],
+   "work_ids": [
+    "s2_m30_Cl175p0_vac",
+    "s2_m30_Cl175p1_vac",
+    "s2_m30_Cl175p2_vac"
+   ],
+   "role": "pose"
+  },
+  {
+   "id": "g1:m30",
+   "kind": "g1",
+   "phase": "mace",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 315,
+   "member": "m30",
+   "cells": [
+    [
+     "Cl",
+     "X",
+     138
+    ],
+    [
+     "Ca",
+     "B",
+     136
+    ]
+   ]
+  },
+  {
+   "id": "sp:s2g1_m30_host_e60",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 316,
+   "label": "s2g1_m30_host_e60",
+   "cell": "s2_m30_host",
+   "src": "cell",
+   "cat": "sp_g1",
+   "sp_kind": "sp_g1"
+  },
+  {
+   "id": "sp:s2g1_m30_Cl138o0_novac_e60",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "g1:m30"
+   ],
+   "seq": 317,
+   "label": "s2g1_m30_Cl138o0_novac_e60",
+   "cell": null,
+   "src": "g1",
+   "cat": "sp_g1",
+   "g1": "Cl138",
+   "sp_kind": "sp_g1"
+  },
+  {
+   "id": "sp:s2g1_m30_Cl138o0_novac_e50",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "g1:m30"
+   ],
+   "seq": 318,
+   "label": "s2g1_m30_Cl138o0_novac_e50",
+   "cell": null,
+   "src": "g1",
+   "cat": "sp_g1",
+   "g1": "Cl138",
+   "sp_kind": "sp"
+  },
+  {
+   "id": "sp:s2g1_m30_Ca136o0_novac_e60",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "g1:m30"
+   ],
+   "seq": 319,
+   "label": "s2g1_m30_Ca136o0_novac_e60",
+   "cell": null,
+   "src": "g1",
+   "cat": "sp_g1",
+   "g1": "Ca136",
+   "sp_kind": "sp_g1"
+  },
+  {
+   "id": "sp:s2g1_m30_Ca136o0_novac_e50",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "g1:m30"
+   ],
+   "seq": 320,
+   "label": "s2g1_m30_Ca136o0_novac_e50",
+   "cell": null,
+   "src": "g1",
+   "cat": "sp_g1",
+   "g1": "Ca136",
+   "sp_kind": "sp"
+  },
+  {
+   "id": "sp:s2spin_m30_Cl175o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl175p0_vac"
+   ],
+   "seq": 321,
+   "label": "s2spin_m30_Cl175o0_vac",
+   "cell": "s2_m30_Cl175p0_vac",
+   "src": "cell",
+   "cat": "sp_spin",
+   "sp_kind": "sp_spin",
+   "dopant": "Cl"
+  },
+  {
+   "id": "sp:s2spin_m30_Ca76o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca76p0_vac"
+   ],
+   "seq": 322,
+   "label": "s2spin_m30_Ca76o0_vac",
+   "cell": "s2_m30_Ca76p0_vac",
+   "src": "cell",
+   "cat": "sp_spin",
+   "sp_kind": "sp_spin",
+   "dopant": "Ca"
+  },
+  {
+   "id": "sp:s2_m30_host",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_host"
+   ],
+   "seq": 323,
+   "label": "s2_m30_host",
+   "cell": "s2_m30_host",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VB76",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VB76"
+   ],
+   "seq": 324,
+   "label": "s2_m30_VB76",
+   "cell": "s2_m30_VB76",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VB172",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VB172"
+   ],
+   "seq": 325,
+   "label": "s2_m30_VB172",
+   "cell": "s2_m30_VB172",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VB24",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VB24"
+   ],
+   "seq": 326,
+   "label": "s2_m30_VB24",
+   "cell": "s2_m30_VB24",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VB148",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VB148"
+   ],
+   "seq": 327,
+   "label": "s2_m30_VB148",
+   "cell": "s2_m30_VB148",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VA188",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VA188"
+   ],
+   "seq": 328,
+   "label": "s2_m30_VA188",
+   "cell": "s2_m30_VA188",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VA164",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VA164"
+   ],
+   "seq": 329,
+   "label": "s2_m30_VA164",
+   "cell": "s2_m30_VA164",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VA176",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VA176"
+   ],
+   "seq": 330,
+   "label": "s2_m30_VA176",
+   "cell": "s2_m30_VA176",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VA200",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VA200"
+   ],
+   "seq": 331,
+   "label": "s2_m30_VA200",
+   "cell": "s2_m30_VA200",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VX175",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VX175"
+   ],
+   "seq": 332,
+   "label": "s2_m30_VX175",
+   "cell": "s2_m30_VX175",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VX186",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VX186"
+   ],
+   "seq": 333,
+   "label": "s2_m30_VX186",
+   "cell": "s2_m30_VX186",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VX222",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VX222"
+   ],
+   "seq": 334,
+   "label": "s2_m30_VX222",
+   "cell": "s2_m30_VX222",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VX174",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VX174"
+   ],
+   "seq": 335,
+   "label": "s2_m30_VX174",
+   "cell": "s2_m30_VX174",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr76o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr76p0_novac"
+   ],
+   "seq": 336,
+   "label": "s2_m30_Sr76o0_novac",
+   "cell": "s2_m30_Sr76p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr76o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr76p0_vac"
+   ],
+   "seq": 337,
+   "label": "s2_m30_Sr76o0_vac",
+   "cell": "s2_m30_Sr76p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr172o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr172p0_novac"
+   ],
+   "seq": 338,
+   "label": "s2_m30_Sr172o0_novac",
+   "cell": "s2_m30_Sr172p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr172o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr172p0_vac"
+   ],
+   "seq": 339,
+   "label": "s2_m30_Sr172o0_vac",
+   "cell": "s2_m30_Sr172p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr24o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr24p0_novac"
+   ],
+   "seq": 340,
+   "label": "s2_m30_Sr24o0_novac",
+   "cell": "s2_m30_Sr24p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr24o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr24p0_vac"
+   ],
+   "seq": 341,
+   "label": "s2_m30_Sr24o0_vac",
+   "cell": "s2_m30_Sr24p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr148o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr148p0_novac"
+   ],
+   "seq": 342,
+   "label": "s2_m30_Sr148o0_novac",
+   "cell": "s2_m30_Sr148p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Sr148o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr148p0_vac"
+   ],
+   "seq": 343,
+   "label": "s2_m30_Sr148o0_vac",
+   "cell": "s2_m30_Sr148p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca76o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca76p0_novac"
+   ],
+   "seq": 344,
+   "label": "s2_m30_Ca76o0_novac",
+   "cell": "s2_m30_Ca76p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca76o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca76p0_vac"
+   ],
+   "seq": 345,
+   "label": "s2_m30_Ca76o0_vac",
+   "cell": "s2_m30_Ca76p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca172o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca172p0_novac"
+   ],
+   "seq": 346,
+   "label": "s2_m30_Ca172o0_novac",
+   "cell": "s2_m30_Ca172p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca172o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca172p0_vac"
+   ],
+   "seq": 347,
+   "label": "s2_m30_Ca172o0_vac",
+   "cell": "s2_m30_Ca172p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca24o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca24p0_novac"
+   ],
+   "seq": 348,
+   "label": "s2_m30_Ca24o0_novac",
+   "cell": "s2_m30_Ca24p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca24o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca24p0_vac"
+   ],
+   "seq": 349,
+   "label": "s2_m30_Ca24o0_vac",
+   "cell": "s2_m30_Ca24p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca148o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca148p0_novac"
+   ],
+   "seq": 350,
+   "label": "s2_m30_Ca148o0_novac",
+   "cell": "s2_m30_Ca148p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Ca148o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca148p0_vac"
+   ],
+   "seq": 351,
+   "label": "s2_m30_Ca148o0_vac",
+   "cell": "s2_m30_Ca148p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs188o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs188p0_novac"
+   ],
+   "seq": 352,
+   "label": "s2_m30_Cs188o0_novac",
+   "cell": "s2_m30_Cs188p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs188o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs188p0_vac"
+   ],
+   "seq": 353,
+   "label": "s2_m30_Cs188o0_vac",
+   "cell": "s2_m30_Cs188p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs164o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs164p0_novac"
+   ],
+   "seq": 354,
+   "label": "s2_m30_Cs164o0_novac",
+   "cell": "s2_m30_Cs164p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs164o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs164p0_vac"
+   ],
+   "seq": 355,
+   "label": "s2_m30_Cs164o0_vac",
+   "cell": "s2_m30_Cs164p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs176o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs176p0_novac"
+   ],
+   "seq": 356,
+   "label": "s2_m30_Cs176o0_novac",
+   "cell": "s2_m30_Cs176p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs176o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs176p0_vac"
+   ],
+   "seq": 357,
+   "label": "s2_m30_Cs176o0_vac",
+   "cell": "s2_m30_Cs176p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs200o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs200p0_novac"
+   ],
+   "seq": 358,
+   "label": "s2_m30_Cs200o0_novac",
+   "cell": "s2_m30_Cs200p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cs200o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs200p0_vac"
+   ],
+   "seq": 359,
+   "label": "s2_m30_Cs200o0_vac",
+   "cell": "s2_m30_Cs200p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA188o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA188p0_novac"
+   ],
+   "seq": 360,
+   "label": "s2_m30_GA188o0_novac",
+   "cell": "s2_m30_GA188p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA188o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA188p0_vac"
+   ],
+   "seq": 361,
+   "label": "s2_m30_GA188o0_vac",
+   "cell": "s2_m30_GA188p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA164o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA164p0_novac"
+   ],
+   "seq": 362,
+   "label": "s2_m30_GA164o0_novac",
+   "cell": "s2_m30_GA164p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA164o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA164p0_vac"
+   ],
+   "seq": 363,
+   "label": "s2_m30_GA164o0_vac",
+   "cell": "s2_m30_GA164p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA176o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA176p0_novac"
+   ],
+   "seq": 364,
+   "label": "s2_m30_GA176o0_novac",
+   "cell": "s2_m30_GA176p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA176o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA176p0_vac"
+   ],
+   "seq": 365,
+   "label": "s2_m30_GA176o0_vac",
+   "cell": "s2_m30_GA176p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA200o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA200p0_novac"
+   ],
+   "seq": 366,
+   "label": "s2_m30_GA200o0_novac",
+   "cell": "s2_m30_GA200p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_GA200o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA200p0_vac"
+   ],
+   "seq": 367,
+   "label": "s2_m30_GA200o0_vac",
+   "cell": "s2_m30_GA200p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl175o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl175p0_novac"
+   ],
+   "seq": 368,
+   "label": "s2_m30_Cl175o0_novac",
+   "cell": "s2_m30_Cl175p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl175o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl175p0_vac"
+   ],
+   "seq": 369,
+   "label": "s2_m30_Cl175o0_vac",
+   "cell": "s2_m30_Cl175p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl186o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl186p0_novac"
+   ],
+   "seq": 370,
+   "label": "s2_m30_Cl186o0_novac",
+   "cell": "s2_m30_Cl186p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl186o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl186p0_vac"
+   ],
+   "seq": 371,
+   "label": "s2_m30_Cl186o0_vac",
+   "cell": "s2_m30_Cl186p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl222o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl222p0_novac"
+   ],
+   "seq": 372,
+   "label": "s2_m30_Cl222o0_novac",
+   "cell": "s2_m30_Cl222p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl222o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl222p0_vac"
+   ],
+   "seq": 373,
+   "label": "s2_m30_Cl222o0_vac",
+   "cell": "s2_m30_Cl222p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl174o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl174p0_novac"
+   ],
+   "seq": 374,
+   "label": "s2_m30_Cl174o0_novac",
+   "cell": "s2_m30_Cl174p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_Cl174o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl174p0_vac"
+   ],
+   "seq": 375,
+   "label": "s2_m30_Cl174o0_vac",
+   "cell": "s2_m30_Cl174p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_host",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_host"
+   ],
+   "seq": 376,
+   "label": "s2_m05_host",
+   "cell": "s2_m05_host",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VB76",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VB76"
+   ],
+   "seq": 377,
+   "label": "s2_m05_VB76",
+   "cell": "s2_m05_VB76",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VB172",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VB172"
+   ],
+   "seq": 378,
+   "label": "s2_m05_VB172",
+   "cell": "s2_m05_VB172",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VB24",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VB24"
+   ],
+   "seq": 379,
+   "label": "s2_m05_VB24",
+   "cell": "s2_m05_VB24",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VB64",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VB64"
+   ],
+   "seq": 380,
+   "label": "s2_m05_VB64",
+   "cell": "s2_m05_VB64",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VA188",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VA188"
+   ],
+   "seq": 381,
+   "label": "s2_m05_VA188",
+   "cell": "s2_m05_VA188",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VA164",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VA164"
+   ],
+   "seq": 382,
+   "label": "s2_m05_VA164",
+   "cell": "s2_m05_VA164",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VA152",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VA152"
+   ],
+   "seq": 383,
+   "label": "s2_m05_VA152",
+   "cell": "s2_m05_VA152",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VA68",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VA68"
+   ],
+   "seq": 384,
+   "label": "s2_m05_VA68",
+   "cell": "s2_m05_VA68",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VX175",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VX175"
+   ],
+   "seq": 385,
+   "label": "s2_m05_VX175",
+   "cell": "s2_m05_VX175",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VX222",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VX222"
+   ],
+   "seq": 386,
+   "label": "s2_m05_VX222",
+   "cell": "s2_m05_VX222",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VX186",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VX186"
+   ],
+   "seq": 387,
+   "label": "s2_m05_VX186",
+   "cell": "s2_m05_VX186",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_VX174",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_VX174"
+   ],
+   "seq": 388,
+   "label": "s2_m05_VX174",
+   "cell": "s2_m05_VX174",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr76o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr76p0_novac"
+   ],
+   "seq": 389,
+   "label": "s2_m05_Sr76o0_novac",
+   "cell": "s2_m05_Sr76p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr76o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr76p0_vac"
+   ],
+   "seq": 390,
+   "label": "s2_m05_Sr76o0_vac",
+   "cell": "s2_m05_Sr76p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr172o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr172p0_novac"
+   ],
+   "seq": 391,
+   "label": "s2_m05_Sr172o0_novac",
+   "cell": "s2_m05_Sr172p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr172o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr172p0_vac"
+   ],
+   "seq": 392,
+   "label": "s2_m05_Sr172o0_vac",
+   "cell": "s2_m05_Sr172p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr24o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr24p0_novac"
+   ],
+   "seq": 393,
+   "label": "s2_m05_Sr24o0_novac",
+   "cell": "s2_m05_Sr24p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr24o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr24p0_vac"
+   ],
+   "seq": 394,
+   "label": "s2_m05_Sr24o0_vac",
+   "cell": "s2_m05_Sr24p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr64o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr64p0_novac"
+   ],
+   "seq": 395,
+   "label": "s2_m05_Sr64o0_novac",
+   "cell": "s2_m05_Sr64p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Sr64o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Sr64p0_vac"
+   ],
+   "seq": 396,
+   "label": "s2_m05_Sr64o0_vac",
+   "cell": "s2_m05_Sr64p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca76o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca76p0_novac"
+   ],
+   "seq": 397,
+   "label": "s2_m05_Ca76o0_novac",
+   "cell": "s2_m05_Ca76p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca76o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca76p0_vac"
+   ],
+   "seq": 398,
+   "label": "s2_m05_Ca76o0_vac",
+   "cell": "s2_m05_Ca76p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca172o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca172p0_novac"
+   ],
+   "seq": 399,
+   "label": "s2_m05_Ca172o0_novac",
+   "cell": "s2_m05_Ca172p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca172o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca172p0_vac"
+   ],
+   "seq": 400,
+   "label": "s2_m05_Ca172o0_vac",
+   "cell": "s2_m05_Ca172p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca24o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca24p0_novac"
+   ],
+   "seq": 401,
+   "label": "s2_m05_Ca24o0_novac",
+   "cell": "s2_m05_Ca24p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca24o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca24p0_vac"
+   ],
+   "seq": 402,
+   "label": "s2_m05_Ca24o0_vac",
+   "cell": "s2_m05_Ca24p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca64o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca64p0_novac"
+   ],
+   "seq": 403,
+   "label": "s2_m05_Ca64o0_novac",
+   "cell": "s2_m05_Ca64p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Ca64o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Ca64p0_vac"
+   ],
+   "seq": 404,
+   "label": "s2_m05_Ca64o0_vac",
+   "cell": "s2_m05_Ca64p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs188o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs188p0_novac"
+   ],
+   "seq": 405,
+   "label": "s2_m05_Cs188o0_novac",
+   "cell": "s2_m05_Cs188p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs188o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs188p0_vac"
+   ],
+   "seq": 406,
+   "label": "s2_m05_Cs188o0_vac",
+   "cell": "s2_m05_Cs188p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs164o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs164p0_novac"
+   ],
+   "seq": 407,
+   "label": "s2_m05_Cs164o0_novac",
+   "cell": "s2_m05_Cs164p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs164o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs164p0_vac"
+   ],
+   "seq": 408,
+   "label": "s2_m05_Cs164o0_vac",
+   "cell": "s2_m05_Cs164p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs152o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs152p0_novac"
+   ],
+   "seq": 409,
+   "label": "s2_m05_Cs152o0_novac",
+   "cell": "s2_m05_Cs152p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs152o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs152p0_vac"
+   ],
+   "seq": 410,
+   "label": "s2_m05_Cs152o0_vac",
+   "cell": "s2_m05_Cs152p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs68o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs68p0_novac"
+   ],
+   "seq": 411,
+   "label": "s2_m05_Cs68o0_novac",
+   "cell": "s2_m05_Cs68p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cs68o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cs68p0_vac"
+   ],
+   "seq": 412,
+   "label": "s2_m05_Cs68o0_vac",
+   "cell": "s2_m05_Cs68p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA188o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA188p0_novac"
+   ],
+   "seq": 413,
+   "label": "s2_m05_GA188o0_novac",
+   "cell": "s2_m05_GA188p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA188o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA188p0_vac"
+   ],
+   "seq": 414,
+   "label": "s2_m05_GA188o0_vac",
+   "cell": "s2_m05_GA188p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA164o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA164p0_novac"
+   ],
+   "seq": 415,
+   "label": "s2_m05_GA164o0_novac",
+   "cell": "s2_m05_GA164p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA164o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA164p0_vac"
+   ],
+   "seq": 416,
+   "label": "s2_m05_GA164o0_vac",
+   "cell": "s2_m05_GA164p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA152o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA152p0_novac"
+   ],
+   "seq": 417,
+   "label": "s2_m05_GA152o0_novac",
+   "cell": "s2_m05_GA152p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA152o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA152p0_vac"
+   ],
+   "seq": 418,
+   "label": "s2_m05_GA152o0_vac",
+   "cell": "s2_m05_GA152p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA68o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA68p0_novac"
+   ],
+   "seq": 419,
+   "label": "s2_m05_GA68o0_novac",
+   "cell": "s2_m05_GA68p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_GA68o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_GA68p0_vac"
+   ],
+   "seq": 420,
+   "label": "s2_m05_GA68o0_vac",
+   "cell": "s2_m05_GA68p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl175o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl175p0_novac"
+   ],
+   "seq": 421,
+   "label": "s2_m05_Cl175o0_novac",
+   "cell": "s2_m05_Cl175p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl175o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl175p0_vac"
+   ],
+   "seq": 422,
+   "label": "s2_m05_Cl175o0_vac",
+   "cell": "s2_m05_Cl175p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl222o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl222p0_novac"
+   ],
+   "seq": 423,
+   "label": "s2_m05_Cl222o0_novac",
+   "cell": "s2_m05_Cl222p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl222o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl222p0_vac"
+   ],
+   "seq": 424,
+   "label": "s2_m05_Cl222o0_vac",
+   "cell": "s2_m05_Cl222p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl186o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl186p0_novac"
+   ],
+   "seq": 425,
+   "label": "s2_m05_Cl186o0_novac",
+   "cell": "s2_m05_Cl186p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl186o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl186p0_vac"
+   ],
+   "seq": 426,
+   "label": "s2_m05_Cl186o0_vac",
+   "cell": "s2_m05_Cl186p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl174o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl174p0_novac"
+   ],
+   "seq": 427,
+   "label": "s2_m05_Cl174o0_novac",
+   "cell": "s2_m05_Cl174p0_novac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m05_Cl174o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m05_Cl174p0_vac"
+   ],
+   "seq": 428,
+   "label": "s2_m05_Cl174o0_vac",
+   "cell": "s2_m05_Cl174p0_vac",
+   "src": "cell",
+   "cat": "sp_noise"
+  },
+  {
+   "id": "sp:s2_m30_VB136",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VB136"
+   ],
+   "seq": 429,
+   "label": "s2_m30_VB136",
+   "cell": "s2_m30_VB136",
+   "src": "cell",
+   "cat": "sp_step0"
+  },
+  {
+   "id": "sp:s2_m30_Sr136o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr136p0_vac"
+   ],
+   "seq": 430,
+   "label": "s2_m30_Sr136o0_vac",
+   "cell": "s2_m30_Sr136p0_vac",
+   "src": "cell",
+   "cat": "sp_step0"
+  },
+  {
+   "id": "sp:s2_m30_Cs128o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs128p0_novac"
+   ],
+   "seq": 431,
+   "label": "s2_m30_Cs128o0_novac",
+   "cell": "s2_m30_Cs128p0_novac",
+   "src": "cell",
+   "cat": "sp_pose"
+  },
+  {
+   "id": "sp:s2_m30_Cs128o1_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_novac"
+   ],
+   "seq": 432,
+   "label": "s2_m30_Cs128o1_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_novac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o2_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_novac"
+   ],
+   "seq": 433,
+   "label": "s2_m30_Cs128o2_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_novac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o3_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_novac"
+   ],
+   "seq": 434,
+   "label": "s2_m30_Cs128o3_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_novac",
+    "k": 3,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o4_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_novac"
+   ],
+   "seq": 435,
+   "label": "s2_m30_Cs128o4_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_novac",
+    "k": 4,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o5_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_novac"
+   ],
+   "seq": 436,
+   "label": "s2_m30_Cs128o5_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_novac",
+    "k": 5,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o6_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_novac"
+   ],
+   "seq": 437,
+   "label": "s2_m30_Cs128o6_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_novac",
+    "k": 6,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs128p0_vac"
+   ],
+   "seq": 438,
+   "label": "s2_m30_Cs128o0_vac",
+   "cell": "s2_m30_Cs128p0_vac",
+   "src": "cell",
+   "cat": "sp_pose"
+  },
+  {
+   "id": "sp:s2_m30_Cs128o1_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_vac"
+   ],
+   "seq": 439,
+   "label": "s2_m30_Cs128o1_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_vac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o2_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_vac"
+   ],
+   "seq": 440,
+   "label": "s2_m30_Cs128o2_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_vac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o3_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_vac"
+   ],
+   "seq": 441,
+   "label": "s2_m30_Cs128o3_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_vac",
+    "k": 3,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o4_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_vac"
+   ],
+   "seq": 442,
+   "label": "s2_m30_Cs128o4_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_vac",
+    "k": 4,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o5_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_vac"
+   ],
+   "seq": 443,
+   "label": "s2_m30_Cs128o5_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_vac",
+    "k": 5,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs128o6_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs128_vac"
+   ],
+   "seq": 444,
+   "label": "s2_m30_Cs128o6_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs128_vac",
+    "k": 6,
+    "member": "m30",
+    "token": "Cs",
+    "site": 128,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o1_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_novac"
+   ],
+   "seq": 445,
+   "label": "s2_m30_Cs188o1_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_novac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o2_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_novac"
+   ],
+   "seq": 446,
+   "label": "s2_m30_Cs188o2_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_novac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o3_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_novac"
+   ],
+   "seq": 447,
+   "label": "s2_m30_Cs188o3_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_novac",
+    "k": 3,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o4_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_novac"
+   ],
+   "seq": 448,
+   "label": "s2_m30_Cs188o4_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_novac",
+    "k": 4,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o5_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_novac"
+   ],
+   "seq": 449,
+   "label": "s2_m30_Cs188o5_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_novac",
+    "k": 5,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o6_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_novac"
+   ],
+   "seq": 450,
+   "label": "s2_m30_Cs188o6_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_novac",
+    "k": 6,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o1_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_vac"
+   ],
+   "seq": 451,
+   "label": "s2_m30_Cs188o1_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_vac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o2_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_vac"
+   ],
+   "seq": 452,
+   "label": "s2_m30_Cs188o2_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_vac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o3_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_vac"
+   ],
+   "seq": 453,
+   "label": "s2_m30_Cs188o3_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_vac",
+    "k": 3,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o4_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_vac"
+   ],
+   "seq": 454,
+   "label": "s2_m30_Cs188o4_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_vac",
+    "k": 4,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o5_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_vac"
+   ],
+   "seq": 455,
+   "label": "s2_m30_Cs188o5_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_vac",
+    "k": 5,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cs188o6_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cs188_vac"
+   ],
+   "seq": 456,
+   "label": "s2_m30_Cs188o6_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cs188_vac",
+    "k": 6,
+    "member": "m30",
+    "token": "Cs",
+    "site": 188,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl138o0_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl138p0_novac"
+   ],
+   "seq": 457,
+   "label": "s2_m30_Cl138o0_novac",
+   "cell": "s2_m30_Cl138p0_novac",
+   "src": "cell",
+   "cat": "sp_pose"
+  },
+  {
+   "id": "sp:s2_m30_Cl138o1_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl138_novac"
+   ],
+   "seq": 458,
+   "label": "s2_m30_Cl138o1_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl138_novac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cl",
+    "site": 138,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl138o2_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl138_novac"
+   ],
+   "seq": 459,
+   "label": "s2_m30_Cl138o2_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl138_novac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cl",
+    "site": 138,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl138o0_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl138p0_vac"
+   ],
+   "seq": 460,
+   "label": "s2_m30_Cl138o0_vac",
+   "cell": "s2_m30_Cl138p0_vac",
+   "src": "cell",
+   "cat": "sp_pose"
+  },
+  {
+   "id": "sp:s2_m30_Cl138o1_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl138_vac"
+   ],
+   "seq": 461,
+   "label": "s2_m30_Cl138o1_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl138_vac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cl",
+    "site": 138,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl138o2_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl138_vac"
+   ],
+   "seq": 462,
+   "label": "s2_m30_Cl138o2_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl138_vac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cl",
+    "site": 138,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl175o1_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl175_novac"
+   ],
+   "seq": 463,
+   "label": "s2_m30_Cl175o1_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl175_novac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cl",
+    "site": 175,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl175o2_novac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl175_novac"
+   ],
+   "seq": 464,
+   "label": "s2_m30_Cl175o2_novac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl175_novac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cl",
+    "site": 175,
+    "leg": "novac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl175o1_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl175_vac"
+   ],
+   "seq": 465,
+   "label": "s2_m30_Cl175o1_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl175_vac",
+    "k": 1,
+    "member": "m30",
+    "token": "Cl",
+    "site": 175,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_Cl175o2_vac",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "distinct:m30_Cl175_vac"
+   ],
+   "seq": 466,
+   "label": "s2_m30_Cl175o2_vac",
+   "cell": null,
+   "src": "distinct",
+   "cat": "sp_pose",
+   "slot": {
+    "distinct": "distinct:m30_Cl175_vac",
+    "k": 2,
+    "member": "m30",
+    "token": "Cl",
+    "site": 175,
+    "leg": "vac"
+   }
+  },
+  {
+   "id": "sp:s2_m30_VB136_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VB136"
+   ],
+   "seq": 467,
+   "label": "s2_m30_VB136_q0",
+   "cell": "s2_m30_VB136",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_Sr136o0_vac_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr136p0_vac"
+   ],
+   "seq": 468,
+   "label": "s2_m30_Sr136o0_vac_q0",
+   "cell": "s2_m30_Sr136p0_vac",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_Ca136o0_vac_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Ca136p0_vac"
+   ],
+   "seq": 469,
+   "label": "s2_m30_Ca136o0_vac_q0",
+   "cell": "s2_m30_Ca136p0_vac",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_VB76_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VB76"
+   ],
+   "seq": 470,
+   "label": "s2_m30_VB76_q0",
+   "cell": "s2_m30_VB76",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_Sr76o0_vac_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Sr76p0_vac"
+   ],
+   "seq": 471,
+   "label": "s2_m30_Sr76o0_vac_q0",
+   "cell": "s2_m30_Sr76p0_vac",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_VX138_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VX138"
+   ],
+   "seq": 472,
+   "label": "s2_m30_VX138_q0",
+   "cell": "s2_m30_VX138",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_Cl138o0_vac_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cl138p0_vac"
+   ],
+   "seq": 473,
+   "label": "s2_m30_Cl138o0_vac_q0",
+   "cell": "s2_m30_Cl138p0_vac",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_VA128_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_VA128"
+   ],
+   "seq": 474,
+   "label": "s2_m30_VA128_q0",
+   "cell": "s2_m30_VA128",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_Cs128o0_vac_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_Cs128p0_vac"
+   ],
+   "seq": 475,
+   "label": "s2_m30_Cs128o0_vac_q0",
+   "cell": "s2_m30_Cs128p0_vac",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "sp:s2_m30_GA128o0_vac_q0",
+   "kind": "sp",
+   "phase": "qe",
+   "deps": [
+    "mace:s2_m30_GA128p0_vac"
+   ],
+   "seq": 476,
+   "label": "s2_m30_GA128o0_vac_q0",
+   "cell": "s2_m30_GA128p0_vac",
+   "src": "cell",
+   "cat": "sp_q0"
+  },
+  {
+   "id": "gate:G1",
+   "kind": "gate",
+   "phase": "gate",
+   "deps": [],
+   "seq": 477,
+   "gate": "G1",
+   "cat": "gate"
+  },
+  {
+   "id": "gate:N",
+   "kind": "gate",
+   "phase": "gate",
+   "deps": [],
+   "seq": 478,
+   "gate": "N",
+   "cat": "gate"
+  },
+  {
+   "id": "gate:nrule",
+   "kind": "gate",
+   "phase": "gate",
+   "deps": [],
+   "seq": 479,
+   "gate": "nrule",
+   "cat": "gate"
+  },
+  {
+   "id": "gate:pose",
+   "kind": "gate",
+   "phase": "gate",
+   "deps": [],
+   "seq": 480,
+   "gate": "pose",
+   "cat": "gate"
+  }
+ ]
+}

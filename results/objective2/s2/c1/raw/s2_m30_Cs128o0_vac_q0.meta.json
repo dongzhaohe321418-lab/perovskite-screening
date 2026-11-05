@@ -1,0 +1,106 @@
+{
+ "schema": "s2-qejob-1",
+ "label": "s2_m30_Cs128o0_vac_q0",
+ "kind": "sp",
+ "campaign": "c1",
+ "parsed_label": {
+  "label": "s2_m30_Cs128o0_vac_q0",
+  "prefix": "s2",
+  "kind": "sp",
+  "host": "m30",
+  "cell_kind": "DV",
+  "sublattice": "A",
+  "site": 128,
+  "token": "Cs",
+  "k": 0,
+  "leg": "vac",
+  "vacancy": true,
+  "q0": true,
+  "ecut": null,
+  "ref": null
+ },
+ "cell": {
+  "work_id": "s2_m30_Cs128p0_vac",
+  "atoms_sha256": "6a25dcc01be0f021c8db00c9d14b049f2c440a388b65108b5836c98ae56887f7"
+ },
+ "settings": {
+  "calculation": "scf",
+  "ecutwfc": 50.0,
+  "ecutrho": 400.0,
+  "kpts": "R (1,1,1) offset (1,1,1)",
+  "occupations": "smearing",
+  "smearing": "gaussian",
+  "degauss": 0.005,
+  "nspin": 1,
+  "tot_charge": 0,
+  "nosym": true,
+  "conv_thr": 1e-08,
+  "mixing_beta": 0.3,
+  "electron_maxstep": 200,
+  "tprnfor": true,
+  "tstress": false,
+  "disk_io": "none",
+  "relax": null,
+  "starting_magnetization": null
+ },
+ "composition": {
+  "C": 18,
+  "Cs": 2,
+  "H": 90,
+  "I": 59,
+  "N": 36,
+  "Pb": 20
+ },
+ "n_X": 59,
+ "vacancy": true,
+ "electrons": {
+  "z_sum": 1053,
+  "tot_charge": 0,
+  "n_el": 1053,
+  "expected": 1053,
+  "even": false
+ },
+ "pseudopotentials": {
+  "C": {
+   "file": "C.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "1fdd950c42eb37d8afe3dd2f8d12311e"
+  },
+  "Cs": {
+   "file": "Cs.pbe-spn-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "ce91a30752c48add39cf6ac6342f9330"
+  },
+  "H": {
+   "file": "H.pbe-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "3f4114867bd07edc7f1424d066fc1888"
+  },
+  "I": {
+   "file": "I.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "21b6b539e0050b62c62ace6be4e6e5e0"
+  },
+  "N": {
+   "file": "N.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "ada94e3ed05223de5319d0572dc76806"
+  },
+  "Pb": {
+   "file": "Pb.pbe-dn-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "1cf8f5e18580e6a90a35f98a53d336de"
+  }
+ },
+ "starting_magnetization_rewritten": false,
+ "input_sha256": "56ea767ba4208c777965b56cc4f4cef047f1b013441e3ca17333e664c87a3626",
+ "input_norm_sha256": "39e15ec43b25e879c1ac947ccbdf319b622880a0a7ee103b06d9845590f8a760",
+ "geometry_sha256": "eafa0265ec1b2a6f647216507c7ef5b686d53bb5d8d3ec8efbd39711f33a575d",
+ "ranks_expected": 64,
+ "writer": {
+  "script_sha256": "ace31dd3fb5ca6fe08cfda1172f35f1bddd9933fd7a4d53d8cd4402838532c39",
+  "builder": "s2b-2"
+ },
+ "queue": null,
+ "result": null
+}

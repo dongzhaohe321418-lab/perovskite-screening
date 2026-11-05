@@ -359,3 +359,21 @@ after three reviews, the analyst's decisions on their open issues and a review o
    classes move from the S2 row to S3), a Cs-distal vacancy check for Sr and every classified
    dopant, and the deferred tokens once their starts are physical.
    The estimates of S3, S4a and S4b are not revised here; they depend on what S2 finds.
+
+## Update 2026-11-05 (a) — S2 campaign 1 done
+
+C1 ran on 2026-11-04/05 at the campaign commit `8bff03e`. It used 20.6 node-h (estimate ≈ 29) over two boots, with one spot interruption that the runner held and resumed. Result note: `s2/C1_RESULT.md`. Archive: `s2/c1/`. Figure: `s2/figures/fig_s2_c1_gates.pdf`. The node's five gate files were recomputed from the archive on the laptop with no difference.
+
+1. **Elements gate G1.**
+   - Cl passes.
+   - Ca fails on the cutoff part: Δ_cut = +49.4 meV against 5 meV.
+   - Ca therefore leaves the decisive family (`s2/S2_PLAN.md` §7). Its production and A2 cells are not run, and it receives no class; its pilot values are reported.
+   - The decisive family is now Cl, Cs and GA, with Sr as the control. The family quantile stays at Bonferroni over 4.
+   - Without Ca the calibration has df_δ ≤ 4, not 5. Under the unchanged cut order of `s2/S2_PLAN.md` §16, cut 2 (Cs on m05) would now leave df_δ = 2 and end the validated tier (`s2/C1_RESULT.md` §5a) [I].
+2. **Gate N.**
+   - All five dopants pass. σ_far is 12.4 (Sr), 8.8 (Ca), 17.8 (Cl), 3.8 (Cs) and 5.8 (GA) meV, with df 6 each and the bound at 25 meV.
+   - Sr passes, so S2 continues to A2.
+   - No decisive dopant lies above 20 meV, so **n = 8**.
+3. **Pose rule.** Cs and Cl keep one minimum per leg at both pilot sites. Production uses the default pose, with a_pose = 0.
+4. **A2 layout.** 64 ranks: 13.10 configurations per node-hour against 10.60 at 48 ranks.
+5. **Next: C2.** C2 is A2 on m30 at the same commit: 8 relaxations, with the Ca136 pair dropped. The step-0, K2, projection and K3 gates apply as pre-registered.

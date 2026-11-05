@@ -1,0 +1,351 @@
+{
+ "schema": "s2-cell-1",
+ "work_id": "s2_m30_GA200p0_vac",
+ "labels": [
+  "s2_m30_GA200o0_vac"
+ ],
+ "campaign": "c1",
+ "member": "m30",
+ "role": "pilot",
+ "cell_kind": "DV",
+ "leg": "vac",
+ "site": 200,
+ "site_cell": 199,
+ "sublattice": "A",
+ "site_roles": [
+  "far4"
+ ],
+ "token": "GA",
+ "start": "p0",
+ "pose_id": "inherit",
+ "is_default_pose": true,
+ "k_min": 0,
+ "region_id": "b6ccc7af3392e317f292f5920a19bb5212586c153afe4e508adfc007cab4d674",
+ "free": [
+  3,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  39,
+  49,
+  53,
+  76,
+  78,
+  90,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98,
+  99,
+  100,
+  102,
+  103,
+  112,
+  124,
+  125,
+  126,
+  127,
+  128,
+  129,
+  130,
+  131,
+  132,
+  133,
+  134,
+  135,
+  136,
+  137,
+  171,
+  173,
+  174,
+  195,
+  196,
+  197,
+  198,
+  199,
+  200,
+  201,
+  202,
+  203,
+  204,
+  205,
+  206,
+  207,
+  208,
+  218,
+  219,
+  230,
+  231,
+  232,
+  233
+ ],
+ "n_free": 66,
+ "n_fixed": 168,
+ "parent": {
+  "work_id": "s2_m30_VA200",
+  "map": "old_to_new"
+ },
+ "pair": "pairs/m30_GA200p0.json",
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+  "partners": "relaxed"
+ },
+ "model": {
+  "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+  "file": "20231203mace128L1_epoch199model",
+  "dtype": "float64",
+  "device": "cpu",
+  "threads": 6,
+  "atomic_numbers_covered": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72,
+   73,
+   74,
+   75,
+   76,
+   77,
+   78,
+   79,
+   80,
+   81,
+   82,
+   83,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94
+  ],
+  "z_required_ok": true,
+  "versions": {
+   "ase": "3.29.0",
+   "numpy": "2.5.4",
+   "python": "3.12.15",
+   "mace": "0.3.16",
+   "torch": "2.14.1+cpu",
+   "e3nn": "0.4.4"
+  }
+ },
+ "relax": {
+  "optimizer": "ASE FIRE, default parameters",
+  "fmax_eVA": 0.01,
+  "steps_cap": 10000,
+  "steps": 376,
+  "converged": true,
+  "fmax_final_free_eVA": 0.009890253275526239,
+  "held_max_dr_A": 0.0,
+  "n_free": 66,
+  "n_fixed": 168,
+  "max_dr_free_A": 0.4012820390395846,
+  "wall_s": 1196.1,
+  "E_mace_eV": -1077.0812457141258
+ },
+ "validity": {
+  "checks": {
+   "1": {
+    "passed": true,
+    "steps": 376,
+    "fmax_final_free_eVA": 0.009890253275526239,
+    "strict": true
+   },
+   "2": {
+    "passed": true,
+    "min_X_to_v_A": 4.162002722649158,
+    "species": "I",
+    "index": 137
+   },
+   "3": {
+    "passed": true,
+    "centre": 199,
+    "displacement_A": 0.2649079602690514
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 135,
+    "bonds_final": 135,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.6496965460481112,
+    "cn_inorganic_min_A": 3.572409145501027,
+    "min_pair_A": 1.015012973013378
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 12,
+     "n_fa": 3,
+     "max_dr_inorganic_A": 0.035325037629931395,
+     "max_dr_fa_carbon_A": 0.047034023590206954,
+     "max_rot_fa_deg": 3.636488366096061,
+     "worst": {
+      "inorganic": {
+       "index": 125,
+       "d_host_A": 8.428668472506043,
+       "dr_A": 0.035325037629931395
+      },
+      "fa_carbon": {
+       "carbon": 127,
+       "d_host_A": 6.591162949714954,
+       "dr_carbon_A": 0.047034023590206954,
+       "rot_deg": 3.636488366096061
+      },
+      "fa_rotation": {
+       "carbon": 127,
+       "d_host_A": 6.591162949714954,
+       "dr_carbon_A": 0.047034023590206954,
+       "rot_deg": 3.636488366096061
+      }
+     }
+    },
+    "within_6A_reported": {
+     "n_inorganic": 20,
+     "n_fa": 1,
+     "max_dr_inorganic_A": 0.4012820433069347,
+     "max_dr_fa_carbon_A": 0.2649079602690514,
+     "max_rot_fa_deg": 7.748497659944132,
+     "worst": {
+      "inorganic": {
+       "index": 103,
+       "d_host_A": 4.267319461879161,
+       "dr_A": 0.4012820433069347
+      },
+      "fa_carbon": {
+       "carbon": 199,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.2649079602690514,
+       "rot_deg": 7.748497659944132
+      },
+      "fa_rotation": {
+       "carbon": 199,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.2649079602690514,
+       "rot_deg": 7.748497659944132
+      }
+     }
+    },
+    "parent": "s2_m30_VA200",
+    "centre": "site j"
+   }
+  },
+  "valid": true,
+  "failed": []
+ },
+ "files": {
+  "start": "cells/s2_m30_GA200p0_vac/start.extxyz",
+  "relaxed": "cells/s2_m30_GA200p0_vac/relaxed.extxyz"
+ },
+ "sha256": {
+  "start": "de2d9cc45c0656253d05908bfbd5dc5d501bbb41bf4ad71b5b4ab0cd93649d45",
+  "relaxed": "a824dd3a286ca0ec6e06c22d0874776975342c10c0162ea078fad542deb0fbcf"
+ },
+ "geometry_sha256": {
+  "start": "f70b7998a2de383a28fbb83038238c3822c1bfc32a723cdf3263716e3e884ec6",
+  "relaxed": "e732d214d4f89db93bf5b00d203672988306e396b7131fe6cf2f3cad2a197e5d"
+ },
+ "attempts": [
+  {
+   "n": 1,
+   "boot": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "started": "2026-11-04T15:30:19Z",
+   "started_epoch": 1793806219.1277792,
+   "pid": 28596
+  }
+ ],
+ "code": {
+  "script_sha256": {
+   "46": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "42": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+  },
+  "git": {
+   "head": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+   "clean": true
+  }
+ },
+ "written": "2026-11-04T15:50:19Z"
+}

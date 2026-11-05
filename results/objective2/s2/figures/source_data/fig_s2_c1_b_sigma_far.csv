@@ -1,0 +1,6 @@
+dopant,sigma_far_meV,df,gateN_pass,G1_pass,counts_for_n
+Sr,12.445143372646529,6,True,not_tested,False
+Ca,8.766854625776046,6,True,False,False
+Cl,17.768416651222633,6,True,True,True
+Cs,3.7957533052695265,6,True,not_tested,True
+GA,5.791320816002075,6,True,not_tested,True

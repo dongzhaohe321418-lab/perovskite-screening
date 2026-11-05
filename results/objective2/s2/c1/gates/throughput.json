@@ -1,0 +1,86 @@
+{
+ "schema": "s2-gate-1",
+ "gate": "throughput",
+ "campaign": "c1",
+ "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+ "attempt": 1,
+ "opened": [
+  {
+   "label": "throughput:c1",
+   "file": "work/s2/c1/throughput.json",
+   "sha256": "4751131dae8e599ae00b522f71238a2a1c346cc242e44f54122bee7691931f2c",
+   "mode": "files"
+  }
+ ],
+ "inputs_digest": "b7fe7526ff77c45c6d36e08cd0712ebd381156d8335df28f1bb464242da5ae44",
+ "result": {
+  "rate_config_per_node_h": {
+   "48": 10.596305196027393,
+   "64": 13.096170207644384,
+   "2x32": 12.585821024791382
+  },
+  "choice": "64",
+  "why": "64: 1.2359 x rate(48) >= 1.15",
+  "pair_not_counted": [],
+  "rule": ">= 1.15 x rate(48), else 48; 2x32 only for two concurrent copies on disjoint cores (I-C13)",
+  "energies_read": false
+ },
+ "decision": {
+  "a2_layout": "64"
+ },
+ "written": "2026-11-04T13:44:18Z",
+ "state_in": {
+  "schema": "s2-state-1",
+  "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+  "campaigns": {
+   "c1": "running"
+  },
+  "cuts": [],
+  "stage0": {
+   "production_n8": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23"
+   ],
+   "reserves_n8": [
+    "m33",
+    "m13"
+   ],
+   "production_n10": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23",
+    "m33",
+    "m13"
+   ],
+   "reserves_n10": [
+    "m17",
+    "m03"
+   ],
+   "m05_cal": {
+    "B": 124,
+    "A": 28,
+    "X": 49
+   },
+   "pbcl": {
+    "decision": "provisional_2.837",
+    "value_used_A": 2.837,
+    "tag_for_shifted_starts": "[M] starting point",
+    "allow_provisional_required": true
+   }
+  }
+ },
+ "inputs_in": {},
+ "c1_in": null,
+ "inputs_opened": []
+}

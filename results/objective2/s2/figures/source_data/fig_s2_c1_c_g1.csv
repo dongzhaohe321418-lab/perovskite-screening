@@ -1,0 +1,3 @@
+element,delta_cut_meV,dF_spin_meV,M_total_muB,M_abs_muB,cut_pass,spin_pass,valence_pass,pass
+Cl,-1.8593540153233334,1.635132182855159,0.0,0.01,True,True,True,True
+Ca,49.35465179733001,1.6226149600697681,0.0,0.01,False,True,True,False

@@ -1,0 +1,61 @@
+{
+ "schema": "s2-throughput-1",
+ "runs": {
+  "np48": {
+   "n_config": 5,
+   "wall_s": 1698.7053191661835,
+   "ok": true,
+   "cpuset": null,
+   "affinity": "0-47",
+   "interval": [
+    1793793879.820871,
+    1793795578.5261903
+   ]
+  },
+  "np64": {
+   "n_config": 5,
+   "wall_s": 1374.4476220607758,
+   "ok": true,
+   "cpuset": null,
+   "affinity": "0-63",
+   "interval": [
+    1793795591.202506,
+    1793796965.6501281
+   ]
+  },
+  "np32a": {
+   "n_config": 5,
+   "wall_s": 2860.3616664409637,
+   "ok": true,
+   "cpuset": "0-31",
+   "affinity": "0-31",
+   "interval": [
+    1793796979.1023393,
+    1793799839.4640057
+   ]
+  },
+  "np32b": {
+   "n_config": 5,
+   "wall_s": 2788.746592760086,
+   "ok": true,
+   "cpuset": "32-63",
+   "affinity": "32-63",
+   "interval": [
+    1793796979.1144762,
+    1793799767.861069
+   ]
+  }
+ },
+ "rate_config_per_node_h": {
+  "48": 10.596305196027393,
+  "64": 13.096170207644384,
+  "2x32": 12.585821024791382
+ },
+ "pair": {
+  "valid": true,
+  "reasons": [],
+  "overlap_s": 2788.746592760086
+ },
+ "rule": ">= 1.15 x rate(48), else 48 (the choice is the throughput gate's, scripts/49); the 2x32 rate only for two copies that ran together on disjoint cores (N-F30)",
+ "energies_read": false
+}

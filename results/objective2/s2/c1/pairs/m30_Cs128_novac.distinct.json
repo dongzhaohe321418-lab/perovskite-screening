@@ -1,0 +1,91 @@
+{
+ "schema": "s2-distinct-1",
+ "member": "m30",
+ "token": "Cs",
+ "site": 128,
+ "leg": "novac",
+ "kind": "D",
+ "region_id": "d9175e0e8059438ab5d84800685e25c4490a8e381ce11badf9c35a1033fd3d11",
+ "starts": [
+  "p0",
+  "p1",
+  "p2",
+  "p3",
+  "p4",
+  "p5",
+  "p6"
+ ],
+ "status": {
+  "p0": "valid",
+  "p1": "valid",
+  "p2": "valid",
+  "p3": "valid",
+  "p4": "valid",
+  "p5": "valid",
+  "p6": "valid"
+ },
+ "kept": [
+  "p0"
+ ],
+ "map": {
+  "o0": "p0"
+ },
+ "pairs": [
+  {
+   "max_dopant_dr_A": 0.0561712738206421,
+   "max_fa_carbon_dr_A": 0.0012483277014071772,
+   "max_fa_rot_deg": 0.06190493255130244,
+   "distinct": false,
+   "a": "p1",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.046081220973863246,
+   "max_fa_carbon_dr_A": 0.004898814170062144,
+   "max_fa_rot_deg": 0.13342024621341503,
+   "distinct": false,
+   "a": "p2",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.042468309467386445,
+   "max_fa_carbon_dr_A": 0.0023987700566953786,
+   "max_fa_rot_deg": 0.14275896354217343,
+   "distinct": false,
+   "a": "p3",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.02747908797771486,
+   "max_fa_carbon_dr_A": 0.004729790619667716,
+   "max_fa_rot_deg": 0.13388679551866442,
+   "distinct": false,
+   "a": "p4",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.057158710546751666,
+   "max_fa_carbon_dr_A": 0.004670896009911178,
+   "max_fa_rot_deg": 0.11924547675182563,
+   "distinct": false,
+   "a": "p5",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.04045887626478513,
+   "max_fa_carbon_dr_A": 0.005781201944994346,
+   "max_fa_rot_deg": 0.13016494142957413,
+   "distinct": false,
+   "a": "p6",
+   "b": "p0"
+  }
+ ],
+ "excluded": [],
+ "labels": {
+  "o0": "s2_m30_Cs128o0_novac"
+ },
+ "work_ids": {
+  "o0": "s2_m30_Cs128p0_novac"
+ },
+ "written": "2026-11-04T16:56:23Z"
+}

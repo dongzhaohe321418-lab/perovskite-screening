@@ -1,0 +1,333 @@
+{
+ "schema": "s2-cell-1",
+ "work_id": "s2_m05_GA28p0_novac",
+ "labels": [
+  "s2_m05_GA28o0_novac"
+ ],
+ "campaign": "c1",
+ "member": "m05",
+ "role": "pilot",
+ "cell_kind": "D",
+ "leg": "novac",
+ "site": 28,
+ "site_cell": 28,
+ "sublattice": "A",
+ "site_roles": [
+  "first",
+  "cal"
+ ],
+ "token": "GA",
+ "start": "p0",
+ "pose_id": "inherit",
+ "is_default_pose": true,
+ "k_min": 0,
+ "region_id": "b1fe5d26f9f0b344d6df0bcf0a3c9a9e96b9764af067bedd2ae4b44dfca133b4",
+ "free": [
+  3,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  47,
+  48,
+  50,
+  51,
+  52,
+  87,
+  89,
+  90,
+  91,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98,
+  99,
+  101,
+  123,
+  124,
+  125,
+  126,
+  127,
+  128,
+  129,
+  130,
+  131,
+  132,
+  133,
+  134,
+  135,
+  136,
+  137,
+  231,
+  232,
+  233,
+  234
+ ],
+ "n_free": 52,
+ "n_fixed": 183,
+ "parent": {
+  "work_id": "s2_m05_host",
+  "map": "old_to_new"
+ },
+ "pair": "pairs/m05_GA28p0.json",
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+  "partners": "relaxed"
+ },
+ "model": {
+  "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+  "file": "20231203mace128L1_epoch199model",
+  "dtype": "float64",
+  "device": "cpu",
+  "threads": 6,
+  "atomic_numbers_covered": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72,
+   73,
+   74,
+   75,
+   76,
+   77,
+   78,
+   79,
+   80,
+   81,
+   82,
+   83,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94
+  ],
+  "z_required_ok": true,
+  "versions": {
+   "ase": "3.29.0",
+   "numpy": "2.5.4",
+   "python": "3.12.15",
+   "mace": "0.3.16",
+   "torch": "2.14.1+cpu",
+   "e3nn": "0.4.4"
+  }
+ },
+ "relax": {
+  "optimizer": "ASE FIRE, default parameters",
+  "fmax_eVA": 0.01,
+  "steps_cap": 10000,
+  "steps": 289,
+  "converged": true,
+  "fmax_final_free_eVA": 0.009876804540173067,
+  "held_max_dr_A": 0.0,
+  "n_free": 52,
+  "n_fixed": 183,
+  "max_dr_free_A": 0.4136280549227614,
+  "wall_s": 910.3,
+  "E_mace_eV": -1079.3806822140632
+ },
+ "validity": {
+  "checks": {
+   "1": {
+    "passed": true,
+    "steps": 289,
+    "fmax_final_free_eVA": 0.009876804540173067,
+    "strict": true
+   },
+   "2": null,
+   "3": {
+    "passed": true,
+    "centre": 28,
+    "displacement_A": 0.2878657580518066
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 135,
+    "bonds_final": 135,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.614319918761913,
+    "cn_inorganic_min_A": 3.5450110401373003,
+    "min_pair_A": 1.0148495245061893
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 6,
+     "n_fa": 2,
+     "max_dr_inorganic_A": 0.06692558875926162,
+     "max_dr_fa_carbon_A": 0.011521476386167311,
+     "max_rot_fa_deg": 0.7104785228431858,
+     "worst": {
+      "inorganic": {
+       "index": 137,
+       "d_host_A": 8.176744606382112,
+       "dr_A": 0.06692558875926162
+      },
+      "fa_carbon": {
+       "carbon": 91,
+       "d_host_A": 6.513885377467396,
+       "dr_carbon_A": 0.011521476386167311,
+       "rot_deg": 0.7104785228431858
+      },
+      "fa_rotation": {
+       "carbon": 91,
+       "d_host_A": 6.513885377467396,
+       "dr_carbon_A": 0.011521476386167311,
+       "rot_deg": 0.7104785228431858
+      }
+     }
+    },
+    "within_6A_reported": {
+     "n_inorganic": 20,
+     "n_fa": 1,
+     "max_dr_inorganic_A": 0.25748821114295034,
+     "max_dr_fa_carbon_A": 0.2878657580518066,
+     "max_rot_fa_deg": 3.4636377016507125,
+     "worst": {
+      "inorganic": {
+       "index": 25,
+       "d_host_A": 4.331730158410478,
+       "dr_A": 0.25748821114295034
+      },
+      "fa_carbon": {
+       "carbon": 28,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.2878657580518066,
+       "rot_deg": 3.4636377016507125
+      },
+      "fa_rotation": {
+       "carbon": 28,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.2878657580518066,
+       "rot_deg": 3.4636377016507125
+      }
+     }
+    },
+    "parent": "s2_m05_host",
+    "centre": "site j"
+   }
+  },
+  "valid": true,
+  "failed": []
+ },
+ "files": {
+  "start": "cells/s2_m05_GA28p0_novac/start.extxyz",
+  "relaxed": "cells/s2_m05_GA28p0_novac/relaxed.extxyz"
+ },
+ "sha256": {
+  "start": "4a2290624c9d3f2a91c8e44da17afb1dd07680370b3db02c003463b976c80770",
+  "relaxed": "8c3233a87418d685c990a838fe9dd7634bc2594cdd2f42e3e06261c906a85d47"
+ },
+ "geometry_sha256": {
+  "start": "8f77abd32f76646f29cdca5ac998853b887508c2f40a9b2847933b2e52a0f61d",
+  "relaxed": "411777b014ffc0facd9b5910574f7702fae92a71904922227d6f9f75cb7fc2c7"
+ },
+ "attempts": [
+  {
+   "n": 1,
+   "boot": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "started": "2026-11-04T16:18:15Z",
+   "started_epoch": 1793809095.025072,
+   "pid": 31697
+  }
+ ],
+ "code": {
+  "script_sha256": {
+   "46": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "42": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+  },
+  "git": {
+   "head": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+   "clean": true
+  }
+ },
+ "written": "2026-11-04T16:33:29Z"
+}

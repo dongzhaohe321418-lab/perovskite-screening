@@ -1,0 +1,15 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:G1",
+ "gate": "G1",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "G1": {
+   "Cl": true,
+   "Ca": false
+  }
+ },
+ "gate_file_sha256": "f9b72906efe61a50e6a6b15e5d68870c11b974edf2e55ec96049251374c4b548",
+ "applied": "2026-11-05T07:15:31Z"
+}

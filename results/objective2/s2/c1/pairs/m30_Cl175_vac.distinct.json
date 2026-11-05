@@ -1,0 +1,51 @@
+{
+ "schema": "s2-distinct-1",
+ "member": "m30",
+ "token": "Cl",
+ "site": 175,
+ "leg": "vac",
+ "kind": "DV",
+ "region_id": "0ecec14d4f351c57cf4e45512d327debd762fe0992f169de8a63c1d87665f2a3",
+ "starts": [
+  "p0",
+  "p1",
+  "p2"
+ ],
+ "status": {
+  "p0": "valid",
+  "p1": "valid",
+  "p2": "valid"
+ },
+ "kept": [
+  "p0"
+ ],
+ "map": {
+  "o0": "p0"
+ },
+ "pairs": [
+  {
+   "max_dopant_dr_A": 0.0007857394766075445,
+   "max_fa_carbon_dr_A": 0.003304224435796093,
+   "max_fa_rot_deg": 0.37430467811459506,
+   "distinct": false,
+   "a": "p1",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.0010711555571905611,
+   "max_fa_carbon_dr_A": 0.003602030662181962,
+   "max_fa_rot_deg": 0.33412666426798043,
+   "distinct": false,
+   "a": "p2",
+   "b": "p0"
+  }
+ ],
+ "excluded": [],
+ "labels": {
+  "o0": "s2_m30_Cl175o0_vac"
+ },
+ "work_ids": {
+  "o0": "s2_m30_Cl175p0_vac"
+ },
+ "written": "2026-11-04T17:31:27Z"
+}

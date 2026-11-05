@@ -1,0 +1,165 @@
+{
+ "schema": "s2-campaign-1",
+ "campaign": "c1",
+ "started": "2026-11-04T11:10:23Z",
+ "boots": [
+  "3769b9e1-25a6-473f-964e-95a4eea08c7f",
+  "686fc703-d090-416a-9e87-cf6cbb3dbc3e"
+ ],
+ "status": "done",
+ "updated": "2026-11-05T07:15:52Z",
+ "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+ "phases": {
+  "check": {
+   "start": 1793790628.4016004,
+   "end": 1793790638.626376
+  },
+  "smoke": {
+   "start": 1793790638.626376,
+   "end": 1793793879.79121
+  },
+  "tp": {
+   "start": 1793793879.79121,
+   "end": 1793799863.1419358
+  },
+  "smoke2": {
+   "start": 1793799863.1419358,
+   "end": 1793800780.139816
+  },
+  "mace": {
+   "start": 1793800780.139816,
+   "end": 1793813492.8355625
+  },
+  "qe": {
+   "start": 1793813492.8355625,
+   "end": 1793862930.6551864
+  },
+  "gate": {
+   "start": 1793862930.6551864,
+   "end": 1793862952.926692
+  }
+ },
+ "mocked": [],
+ "notes": [
+  "I-10",
+  "I-21",
+  "I-23",
+  "I-28",
+  "I-31",
+  "I-48",
+  "I-D1",
+  "I-D2",
+  "I-D3",
+  "I-D4",
+  "I-D5",
+  "I-D6",
+  "I-D7",
+  "I-D8",
+  "I-D9",
+  "I-F1",
+  "I-F6",
+  "I-F7",
+  "I-F8",
+  "N-10",
+  "N-11",
+  "N-12",
+  "N-5",
+  "N-6",
+  "N-7",
+  "N-9",
+  "N-D1",
+  "N-D10",
+  "N-D11",
+  "N-D2",
+  "N-D3",
+  "N-D4",
+  "N-D5",
+  "N-D6",
+  "N-D7",
+  "N-D8",
+  "N-D9",
+  "N-F10",
+  "N-F11",
+  "N-F12",
+  "N-F13",
+  "N-F14",
+  "N-F15",
+  "N-F16",
+  "N-F17",
+  "N-F18",
+  "N-F19",
+  "N-F20",
+  "N-F21",
+  "N-F22",
+  "N-F23",
+  "N-F24",
+  "N-F25",
+  "N-F30",
+  "N-F31",
+  "N-F32",
+  "N-F33",
+  "N-F34",
+  "N-F35",
+  "N-F36",
+  "N-F37",
+  "N-F38",
+  "N-F6",
+  "N-F7",
+  "N-F8",
+  "N-F9",
+  "X-3",
+  "X-4",
+  "X-5"
+ ],
+ "start_commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+ "commit_history": [],
+ "completeness": {
+  "pw_smoke": {
+   "done": 4
+  },
+  "pw_tp": {
+   "done": 4
+  },
+  "gate": {
+   "done": 5
+  },
+  "pw_smoke2": {
+   "done": 2
+  },
+  "mace_host": {
+   "done": 2
+  },
+  "mace_V": {
+   "done": 30
+  },
+  "mace_dopant_noise": {
+   "done": 80
+  },
+  "mace_dopant_startset": {
+   "done": 20
+  },
+  "mace_pose_extra": {
+   "done": 28,
+   "skipped": 4
+  },
+  "sp_g1": {
+   "done": 5
+  },
+  "sp_spin": {
+   "done": 2
+  },
+  "sp_noise": {
+   "done": 106
+  },
+  "sp_step0": {
+   "done": 2
+  },
+  "sp_pose": {
+   "done": 4,
+   "skipped": 32
+  },
+  "sp_q0": {
+   "done": 10
+  }
+ }
+}

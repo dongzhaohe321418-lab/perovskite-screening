@@ -1,0 +1,71 @@
+{
+ "schema": "s2-distinct-1",
+ "member": "m30",
+ "token": "Cs",
+ "site": 188,
+ "leg": "novac",
+ "kind": "D",
+ "region_id": "fbd636de95e98e511d96ce0db3ea14f70da91cf483e71d4b4afac2ce0124a425",
+ "starts": [
+  "p0",
+  "p1",
+  "p2",
+  "p4",
+  "p5"
+ ],
+ "status": {
+  "p0": "valid",
+  "p1": "valid",
+  "p2": "valid",
+  "p4": "valid",
+  "p5": "valid"
+ },
+ "kept": [
+  "p0"
+ ],
+ "map": {
+  "o0": "p0"
+ },
+ "pairs": [
+  {
+   "max_dopant_dr_A": 0.03822489488086442,
+   "max_fa_carbon_dr_A": 0.014905278285724969,
+   "max_fa_rot_deg": 0.34642263056309097,
+   "distinct": false,
+   "a": "p1",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.07647869058553437,
+   "max_fa_carbon_dr_A": 0.005361281698298398,
+   "max_fa_rot_deg": 0.13725147368402332,
+   "distinct": false,
+   "a": "p2",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.04349167154623183,
+   "max_fa_carbon_dr_A": 0.006552708907269203,
+   "max_fa_rot_deg": 0.07380772293263153,
+   "distinct": false,
+   "a": "p4",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.012265319748546877,
+   "max_fa_carbon_dr_A": 0.013129779183858995,
+   "max_fa_rot_deg": 0.2936158219432187,
+   "distinct": false,
+   "a": "p5",
+   "b": "p0"
+  }
+ ],
+ "excluded": [],
+ "labels": {
+  "o0": "s2_m30_Cs188o0_novac"
+ },
+ "work_ids": {
+  "o0": "s2_m30_Cs188p0_novac"
+ },
+ "written": "2026-11-04T17:03:46Z"
+}

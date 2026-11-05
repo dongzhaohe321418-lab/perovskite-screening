@@ -1,0 +1,32 @@
+{
+ "schema": "s2-nodescripts-1",
+ "campaign": "c1",
+ "files": {
+  "run_qe.sh": {
+   "sha256": "64d4d9bdd0d1d2f960f1cae4aa7b248ca9c06fd3e71715ce514a604a20875cbc",
+   "bytes": 1403
+  },
+  "qe.sh": {
+   "sha256": "61fe51c7b5ef9812882f334089b0e61a09435dcee504ab098c7850588af568a6",
+   "bytes": 195
+  },
+  "qe_queue.sh": {
+   "sha256": "05a364997d22731cbe1a993af85c83b1fc0cdc512435750ee9285713f020f3dc",
+   "bytes": 1144,
+   "equal_to_checkout": true
+  },
+  "chain.sh": {
+   "sha256": "7d5f0a211c37e50a70c04510c353182d802feae27c87a283b7c57ec92cfa9402",
+   "bytes": 380,
+   "equal_to_checkout": true
+  },
+  "s2_run_qe.sh": {
+   "sha256": "3a13063c146928a2d86e97017c61cc77fd6fef7804f1bdacf5adba47a9b4584f",
+   "bytes": 2692,
+   "equal_to_checkout": true
+  }
+ },
+ "compared_with_c1": false,
+ "problems": [],
+ "passed": true
+}

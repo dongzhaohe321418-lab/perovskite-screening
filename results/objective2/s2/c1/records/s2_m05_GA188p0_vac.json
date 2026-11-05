@@ -1,0 +1,360 @@
+{
+ "schema": "s2-cell-1",
+ "work_id": "s2_m05_GA188p0_vac",
+ "labels": [
+  "s2_m05_GA188o0_vac"
+ ],
+ "campaign": "c1",
+ "member": "m05",
+ "role": "pilot",
+ "cell_kind": "DV",
+ "leg": "vac",
+ "site": 188,
+ "site_cell": 187,
+ "sublattice": "A",
+ "site_roles": [
+  "far",
+  "far4"
+ ],
+ "token": "GA",
+ "start": "p0",
+ "pose_id": "inherit",
+ "is_default_pose": true,
+ "k_min": 0,
+ "region_id": "a3055e7711c878eac8840a961bc2cc0226a2d81dea5b8a218748562e2e3c81cf",
+ "free": [
+  3,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  49,
+  53,
+  88,
+  90,
+  91,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98,
+  99,
+  100,
+  102,
+  124,
+  125,
+  126,
+  127,
+  128,
+  129,
+  130,
+  131,
+  132,
+  133,
+  134,
+  135,
+  136,
+  137,
+  159,
+  161,
+  162,
+  171,
+  173,
+  183,
+  184,
+  185,
+  186,
+  187,
+  188,
+  189,
+  190,
+  191,
+  192,
+  193,
+  194,
+  195,
+  196,
+  230,
+  231,
+  232,
+  233
+ ],
+ "n_free": 74,
+ "n_fixed": 160,
+ "parent": {
+  "work_id": "s2_m05_VA188",
+  "map": "old_to_new"
+ },
+ "pair": "pairs/m05_GA188p0.json",
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+  "partners": "relaxed"
+ },
+ "model": {
+  "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+  "file": "20231203mace128L1_epoch199model",
+  "dtype": "float64",
+  "device": "cpu",
+  "threads": 6,
+  "atomic_numbers_covered": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72,
+   73,
+   74,
+   75,
+   76,
+   77,
+   78,
+   79,
+   80,
+   81,
+   82,
+   83,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94
+  ],
+  "z_required_ok": true,
+  "versions": {
+   "ase": "3.29.0",
+   "numpy": "2.5.4",
+   "python": "3.12.15",
+   "mace": "0.3.16",
+   "torch": "2.14.1+cpu",
+   "e3nn": "0.4.4"
+  }
+ },
+ "relax": {
+  "optimizer": "ASE FIRE, default parameters",
+  "fmax_eVA": 0.01,
+  "steps_cap": 10000,
+  "steps": 368,
+  "converged": true,
+  "fmax_final_free_eVA": 0.00979211214304655,
+  "held_max_dr_A": 0.0,
+  "n_free": 74,
+  "n_fixed": 160,
+  "max_dr_free_A": 0.464611226436872,
+  "wall_s": 1100.4,
+  "E_mace_eV": -1077.0686485289405
+ },
+ "validity": {
+  "checks": {
+   "1": {
+    "passed": true,
+    "steps": 368,
+    "fmax_final_free_eVA": 0.00979211214304655,
+    "strict": true
+   },
+   "2": {
+    "passed": true,
+    "min_X_to_v_A": 4.174973975792602,
+    "species": "I",
+    "index": 53
+   },
+   "3": {
+    "passed": true,
+    "centre": 187,
+    "displacement_A": 0.28861717714506446
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 135,
+    "bonds_final": 135,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.587350745259729,
+    "cn_inorganic_min_A": 3.505163318264744,
+    "min_pair_A": 1.0145352742142506
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 12,
+     "n_fa": 3,
+     "max_dr_inorganic_A": 0.07850335504206488,
+     "max_dr_fa_carbon_A": 0.026290205052320874,
+     "max_rot_fa_deg": 1.5901051750857698,
+     "worst": {
+      "inorganic": {
+       "index": 137,
+       "d_host_A": 7.95410286280489,
+       "dr_A": 0.07850335504206488
+      },
+      "fa_carbon": {
+       "carbon": 127,
+       "d_host_A": 8.856341233855382,
+       "dr_carbon_A": 0.026290205052320874,
+       "rot_deg": 0.4662313629281447
+      },
+      "fa_rotation": {
+       "carbon": 92,
+       "d_host_A": 9.409192679700334,
+       "dr_carbon_A": 0.012463843017953042,
+       "rot_deg": 1.5901051750857698
+      }
+     }
+    },
+    "within_6A_reported": {
+     "n_inorganic": 20,
+     "n_fa": 2,
+     "max_dr_inorganic_A": 0.36336717332469887,
+     "max_dr_fa_carbon_A": 0.28861717714506446,
+     "max_rot_fa_deg": 4.32958447998464,
+     "worst": {
+      "inorganic": {
+       "index": 185,
+       "d_host_A": 4.182645327935406,
+       "dr_A": 0.36336717332469887
+      },
+      "fa_carbon": {
+       "carbon": 187,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.28861717714506446,
+       "rot_deg": 4.32958447998464
+      },
+      "fa_rotation": {
+       "carbon": 187,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.28861717714506446,
+       "rot_deg": 4.32958447998464
+      }
+     }
+    },
+    "parent": "s2_m05_VA188",
+    "centre": "site j"
+   }
+  },
+  "valid": true,
+  "failed": []
+ },
+ "files": {
+  "start": "cells/s2_m05_GA188p0_vac/start.extxyz",
+  "relaxed": "cells/s2_m05_GA188p0_vac/relaxed.extxyz"
+ },
+ "sha256": {
+  "start": "572ddfd3286f4a4dab564c5e8f90c3a0854e4afeae6552f497ad20e16ddb0a04",
+  "relaxed": "bd6161f5c1cc9e6374aab8ec1dda57db042d269c9fbcd66d6a618c43c9463b25"
+ },
+ "geometry_sha256": {
+  "start": "0e2d9025c14f29cb133da1186b4b275a135526772db4ab4e408c91c623df318b",
+  "relaxed": "9c795a03fffbe683e4570f0948c97e6297d6b87bf6f4e48c808861e3b5a5e2d0"
+ },
+ "attempts": [
+  {
+   "n": 1,
+   "boot": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "started": "2026-11-04T16:08:33Z",
+   "started_epoch": 1793808513.3440075,
+   "pid": 31137
+  }
+ ],
+ "code": {
+  "script_sha256": {
+   "46": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "42": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+  },
+  "git": {
+   "head": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+   "clean": true
+  }
+ },
+ "written": "2026-11-04T16:26:57Z"
+}

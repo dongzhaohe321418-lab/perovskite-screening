@@ -1,0 +1,321 @@
+[2026-11-04T11:10:23Z] start c1; boot 3769b9e1; pid 6097; mocked none
+[2026-11-04T11:10:23Z] S2 campaign commit recorded: 8bff03ede8b9
+[2026-11-04T11:10:23Z] measured walls loaded: none yet (unit costs of section 16 apply, I-21)
+[2026-11-04T11:10:28Z] check upf: passed
+[2026-11-04T11:10:28Z] check nodescripts: passed
+[2026-11-04T11:10:33Z] check mace: passed
+[2026-11-04T11:10:38Z] pw.x s2smoke_ref232_n1.p1 started at 48 ranks (pid 6367)
+[2026-11-04T11:14:28Z] spot termination notice recorded: nothing new starts for 1800 s (N-11); exit files for every running A2 part
+[2026-11-04T11:27:46Z] start c1; boot 686fc703; pid 4738; mocked none
+[2026-11-04T11:27:46Z] measured walls loaded: smoke 1
+[2026-11-04T11:27:52Z] pw.x s2smoke_ref232_n3.p1 started at 48 ranks (pid 5004)
+[2026-11-04T11:45:48Z] pw.x s2smoke_ref232_rst.p1 started at 48 ranks (pid 5748)
+[2026-11-04T11:53:38Z] s2smoke_ref232_rst: exit file created (smoke)
+[2026-11-04T11:53:53Z] pw.x s2smoke_ref232_rst.p2 started at 48 ranks (pid 6038)
+[2026-11-04T12:04:34Z] record smoke written
+[2026-11-04T12:04:39Z] pw.x s2tp_ref232_np48.p1 started at 48 ranks (pid 6412)
+[2026-11-04T12:33:11Z] pw.x s2tp_ref232_np64.p1 started at 64 ranks (pid 7153)
+[2026-11-04T12:56:19Z] pw.x s2tp_ref232_np32a.p1 started at 32 ranks (pid 7791) on cores 0-31
+[2026-11-04T12:56:19Z] pw.x s2tp_ref232_np32b.p1 started at 32 ranks (pid 7799) on cores 32-63
+[2026-11-04T13:44:12Z] record tp written
+[2026-11-04T13:44:18Z] gate gate:throughput: decision {"a2_layout": "64"}
+[2026-11-04T13:44:23Z] pw.x s2smoke_ref232_rst64.p1 started at 64 ranks (pid 9133)
+[2026-11-04T13:50:44Z] s2smoke_ref232_rst64: exit file created (smoke)
+[2026-11-04T13:50:59Z] pw.x s2smoke_ref232_rst64.p2 started at 64 ranks (pid 9631)
+[2026-11-04T13:59:35Z] record smoke2 written
+[2026-11-04T13:59:40Z] MACE relax-host s2_m30_host attempt 1 started (pid 10079)
+[2026-11-04T13:59:40Z] MACE relax-host s2_m05_host attempt 1 started (pid 10084)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VB76 attempt 1 started (pid 15213)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VB172 attempt 1 started (pid 15218)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VB24 attempt 1 started (pid 15223)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VB64 attempt 1 started (pid 15228)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VB124 attempt 1 started (pid 15233)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VA188 attempt 1 started (pid 15238)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VA164 attempt 1 started (pid 15243)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VA152 attempt 1 started (pid 15248)
+[2026-11-04T15:01:09Z] MACE relax s2_m05_VA68 attempt 1 started (pid 15253)
+[2026-11-04T15:06:43Z] MACE relax s2_m05_VA28 attempt 1 started (pid 16016)
+[2026-11-04T15:06:43Z] MACE relax s2_m05_VX175 attempt 1 started (pid 16021)
+[2026-11-04T15:06:43Z] MACE relax s2_m05_VX222 attempt 1 started (pid 16026)
+[2026-11-04T15:06:48Z] MACE relax s2_m05_Sr76p0_novac attempt 1 started (pid 16082)
+[2026-11-04T15:06:48Z] MACE relax s2_m05_Sr76p0_vac attempt 1 started (pid 16087)
+[2026-11-04T15:06:53Z] MACE relax s2_m05_Cs164p0_novac attempt 1 started (pid 16891)
+[2026-11-04T15:06:58Z] MACE relax s2_m05_Ca76p0_novac attempt 1 started (pid 16911)
+[2026-11-04T15:07:11Z] MACE relax s2_m05_Ca76p0_vac attempt 1 started (pid 17444)
+[2026-11-04T15:07:23Z] MACE relax s2_m05_Sr172p0_novac attempt 1 started (pid 17723)
+[2026-11-04T15:07:56Z] MACE relax s2_m05_Sr172p0_vac attempt 1 started (pid 19925)
+[2026-11-04T15:07:56Z] G1 cells built (Cl138, Ca136 host legs)
+[2026-11-04T15:08:22Z] MACE relax s2_m30_VB76 attempt 1 started (pid 21855)
+[2026-11-04T15:08:32Z] MACE relax s2_m30_VB172 attempt 1 started (pid 21881)
+[2026-11-04T15:09:12Z] MACE relax s2_m30_VB24 attempt 1 started (pid 21932)
+[2026-11-04T15:09:12Z] MACE relax s2_m30_VB148 attempt 1 started (pid 21937)
+[2026-11-04T15:09:27Z] MACE relax s2_m30_VB136 attempt 1 started (pid 21974)
+[2026-11-04T15:09:37Z] MACE relax s2_m30_VA188 attempt 1 started (pid 21999)
+[2026-11-04T15:11:53Z] MACE relax s2_m30_VA164 attempt 1 started (pid 22092)
+[2026-11-04T15:12:13Z] MACE relax s2_m30_VA176 attempt 1 started (pid 22117)
+[2026-11-04T15:12:24Z] MACE relax s2_m30_VA200 attempt 1 started (pid 22395)
+[2026-11-04T15:12:30Z] MACE relax s2_m30_VA128 attempt 1 started (pid 22546)
+[2026-11-04T15:13:53Z] MACE relax s2_m30_VX175 attempt 1 started (pid 22988)
+[2026-11-04T15:14:13Z] MACE relax s2_m30_Sr76p0_novac attempt 1 started (pid 23012)
+[2026-11-04T15:14:55Z] MACE relax s2_m30_Sr76p0_vac attempt 1 started (pid 23310)
+[2026-11-04T15:15:06Z] MACE relax s2_m30_Ca76p0_novac attempt 1 started (pid 23601)
+[2026-11-04T15:15:18Z] MACE relax s2_m30_Ca76p0_vac attempt 1 started (pid 23879)
+[2026-11-04T15:15:36Z] MACE relax s2_m30_VX186 attempt 1 started (pid 24413)
+[2026-11-04T15:16:06Z] MACE relax s2_m30_Sr172p0_novac attempt 1 started (pid 25217)
+[2026-11-04T15:16:31Z] MACE relax s2_m30_Sr172p0_vac attempt 1 started (pid 25241)
+[2026-11-04T15:17:11Z] MACE relax s2_m30_Ca172p0_novac attempt 1 started (pid 25287)
+[2026-11-04T15:17:38Z] MACE relax s2_m30_Ca172p0_vac attempt 1 started (pid 25566)
+[2026-11-04T15:17:53Z] MACE relax s2_m30_Sr24p0_novac attempt 1 started (pid 25608)
+[2026-11-04T15:18:23Z] MACE relax s2_m30_Sr24p0_vac attempt 1 started (pid 25641)
+[2026-11-04T15:18:23Z] MACE relax s2_m30_Ca24p0_novac attempt 1 started (pid 25646)
+[2026-11-04T15:18:30Z] MACE relax s2_m30_Ca24p0_vac attempt 1 started (pid 25945)
+[2026-11-04T15:18:30Z] MACE relax s2_m30_Sr148p0_novac attempt 1 started (pid 25950)
+[2026-11-04T15:18:39Z] MACE relax s2_m30_Cs188p1_novac attempt 1 started (pid 27255)
+[2026-11-04T15:18:44Z] MACE relax s2_m30_Sr148p0_vac attempt 1 started (pid 27279)
+[2026-11-04T15:19:26Z] MACE relax s2_m30_Ca148p0_novac attempt 1 started (pid 27702)
+[2026-11-04T15:19:51Z] MACE relax s2_m30_Ca148p0_vac attempt 1 started (pid 27735)
+[2026-11-04T15:19:51Z] MACE relax s2_m30_Sr136p0_novac attempt 1 started (pid 27740)
+[2026-11-04T15:20:21Z] MACE relax s2_m30_Sr136p0_vac attempt 1 started (pid 27808)
+[2026-11-04T15:20:26Z] MACE relax s2_m30_Ca136p0_novac attempt 1 started (pid 27830)
+[2026-11-04T15:21:02Z] MACE relax s2_m30_Ca136p0_vac attempt 1 started (pid 27874)
+[2026-11-04T15:21:12Z] MACE relax s2_m30_Cs188p0_novac attempt 1 started (pid 27900)
+[2026-11-04T15:21:17Z] MACE relax s2_m30_Cs188p0_vac attempt 1 started (pid 28052)
+[2026-11-04T15:21:47Z] MACE relax s2_m30_GA188p0_novac attempt 1 started (pid 28076)
+[2026-11-04T15:22:18Z] MACE relax s2_m30_GA188p0_vac attempt 1 started (pid 28119)
+[2026-11-04T15:22:48Z] MACE relax s2_m30_Cs164p0_novac attempt 1 started (pid 28144)
+[2026-11-04T15:22:58Z] MACE relax s2_m30_Cs164p0_vac attempt 1 started (pid 28169)
+[2026-11-04T15:23:38Z] MACE relax s2_m30_GA164p0_novac attempt 1 started (pid 28212)
+[2026-11-04T15:25:43Z] MACE relax s2_m30_GA164p0_vac attempt 1 started (pid 28295)
+[2026-11-04T15:26:18Z] MACE relax s2_m30_Cs176p0_novac attempt 1 started (pid 28343)
+[2026-11-04T15:26:23Z] MACE relax s2_m30_Cs176p0_vac attempt 1 started (pid 28370)
+[2026-11-04T15:26:23Z] MACE relax s2_m30_GA176p0_novac attempt 1 started (pid 28375)
+[2026-11-04T15:26:38Z] MACE relax s2_m30_GA176p0_vac attempt 1 started (pid 28417)
+[2026-11-04T15:26:43Z] MACE relax s2_m30_Cs200p0_novac attempt 1 started (pid 28444)
+[2026-11-04T15:26:43Z] MACE relax s2_m30_Cs200p0_vac attempt 1 started (pid 28449)
+[2026-11-04T15:29:49Z] MACE relax s2_m30_GA200p0_novac attempt 1 started (pid 28541)
+[2026-11-04T15:30:19Z] MACE relax s2_m30_GA200p0_vac attempt 1 started (pid 28596)
+[2026-11-04T15:32:04Z] MACE relax s2_m30_Cs128p0_novac attempt 1 started (pid 28648)
+[2026-11-04T15:32:09Z] MACE relax s2_m30_Cs128p0_vac attempt 1 started (pid 28669)
+[2026-11-04T15:35:49Z] MACE relax s2_m30_GA128p0_novac attempt 1 started (pid 28789)
+[2026-11-04T15:37:24Z] MACE relax s2_m30_GA128p0_vac attempt 1 started (pid 28987)
+[2026-11-04T15:37:40Z] MACE relax s2_m30_Cl175p0_novac attempt 1 started (pid 29011)
+[2026-11-04T15:38:35Z] MACE relax s2_m30_Cl175p0_vac attempt 1 started (pid 29055)
+[2026-11-04T15:45:45Z] MACE relax s2_m30_Cl186p0_novac attempt 1 started (pid 29258)
+[2026-11-04T15:46:36Z] MACE relax s2_m30_Cl186p0_vac attempt 1 started (pid 29314)
+[2026-11-04T15:48:56Z] MACE relax s2_m30_VX222 attempt 1 started (pid 29381)
+[2026-11-04T15:49:26Z] MACE relax s2_m30_VX174 attempt 1 started (pid 29410)
+[2026-11-04T15:50:21Z] MACE relax s2_m30_VX138 attempt 1 started (pid 29466)
+[2026-11-04T15:51:21Z] MACE relax s2_m05_Ca172p0_novac attempt 1 started (pid 29513)
+[2026-11-04T15:52:01Z] MACE relax s2_m05_Ca172p0_vac attempt 1 started (pid 29556)
+[2026-11-04T15:54:07Z] MACE relax s2_m05_Sr24p0_novac attempt 1 started (pid 29617)
+[2026-11-04T15:54:17Z] MACE relax s2_m05_Sr24p0_vac attempt 1 started (pid 29643)
+[2026-11-04T15:55:07Z] MACE relax s2_m05_Ca24p0_novac attempt 1 started (pid 29840)
+[2026-11-04T15:55:08Z] MACE relax s2_m05_Ca24p0_vac attempt 1 started (pid 29845)
+[2026-11-04T15:55:13Z] MACE relax s2_m30_Cl222p0_novac attempt 1 started (pid 29876)
+[2026-11-04T15:55:59Z] MACE relax s2_m30_Cl222p0_vac attempt 1 started (pid 30045)
+[2026-11-04T15:56:04Z] MACE relax s2_m30_Cl174p0_novac attempt 1 started (pid 30071)
+[2026-11-04T15:56:19Z] MACE relax s2_m30_Cl174p0_vac attempt 1 started (pid 30103)
+[2026-11-04T15:56:19Z] MACE relax s2_m05_Sr64p0_novac attempt 1 started (pid 30235)
+[2026-11-04T15:56:41Z] MACE relax s2_m30_Cl138p0_novac attempt 1 started (pid 30527)
+[2026-11-04T15:56:51Z] MACE relax s2_m30_Cl138p0_vac attempt 1 started (pid 30570)
+[2026-11-04T15:57:26Z] MACE relax s2_m05_Sr64p0_vac attempt 1 started (pid 30596)
+[2026-11-04T15:58:16Z] MACE relax s2_m05_Ca64p0_novac attempt 1 started (pid 30639)
+[2026-11-04T15:59:42Z] MACE relax s2_m05_Ca64p0_vac attempt 1 started (pid 30684)
+[2026-11-04T16:00:57Z] MACE relax s2_m05_Sr124p0_novac attempt 1 started (pid 30773)
+[2026-11-04T16:01:42Z] MACE relax s2_m05_Sr124p0_vac attempt 1 started (pid 30799)
+[2026-11-04T16:02:32Z] MACE relax s2_m05_Ca124p0_novac attempt 1 started (pid 30841)
+[2026-11-04T16:03:52Z] MACE relax s2_m05_Ca124p0_vac attempt 1 started (pid 30886)
+[2026-11-04T16:04:27Z] MACE relax s2_m05_Cs188p0_novac attempt 1 started (pid 30932)
+[2026-11-04T16:04:42Z] MACE relax s2_m05_Cs188p0_vac attempt 1 started (pid 30960)
+[2026-11-04T16:06:23Z] MACE relax s2_m05_GA188p0_novac attempt 1 started (pid 31058)
+[2026-11-04T16:08:33Z] MACE relax s2_m05_GA188p0_vac attempt 1 started (pid 31137)
+[2026-11-04T16:09:38Z] MACE relax s2_m05_Cs164p0_vac attempt 1 started (pid 31181)
+[2026-11-04T16:10:03Z] MACE relax s2_m05_GA164p0_novac attempt 1 started (pid 31223)
+[2026-11-04T16:10:13Z] MACE relax s2_m05_GA164p0_vac attempt 1 started (pid 31265)
+[2026-11-04T16:10:18Z] MACE relax s2_m05_Cs152p0_novac attempt 1 started (pid 31298)
+[2026-11-04T16:10:18Z] MACE relax s2_m05_Cs152p0_vac attempt 1 started (pid 31303)
+[2026-11-04T16:11:08Z] MACE relax s2_m05_GA152p0_novac attempt 1 started (pid 31360)
+[2026-11-04T16:12:14Z] MACE relax s2_m05_GA152p0_vac attempt 1 started (pid 31407)
+[2026-11-04T16:13:39Z] MACE relax s2_m05_Cs68p0_novac attempt 1 started (pid 31451)
+[2026-11-04T16:13:59Z] MACE relax s2_m05_Cs68p0_vac attempt 1 started (pid 31476)
+[2026-11-04T16:15:24Z] MACE relax s2_m05_GA68p0_novac attempt 1 started (pid 31549)
+[2026-11-04T16:15:34Z] MACE relax s2_m05_GA68p0_vac attempt 1 started (pid 31576)
+[2026-11-04T16:16:49Z] MACE relax s2_m05_Cs28p0_novac attempt 1 started (pid 31623)
+[2026-11-04T16:17:04Z] MACE relax s2_m05_Cs28p0_vac attempt 1 started (pid 31652)
+[2026-11-04T16:18:15Z] MACE relax s2_m05_GA28p0_novac attempt 1 started (pid 31697)
+[2026-11-04T16:18:20Z] MACE relax s2_m05_GA28p0_vac attempt 1 started (pid 31740)
+[2026-11-04T16:21:05Z] MACE relax s2_m05_Cl175p0_novac attempt 1 started (pid 31818)
+[2026-11-04T16:23:45Z] MACE relax s2_m05_Cl175p0_vac attempt 1 started (pid 31903)
+[2026-11-04T16:24:05Z] MACE relax s2_m05_Cl222p0_novac attempt 1 started (pid 31930)
+[2026-11-04T16:27:01Z] MACE relax s2_m05_Cl222p0_vac attempt 1 started (pid 32030)
+[2026-11-04T16:29:16Z] MACE relax s2_m05_VX186 attempt 1 started (pid 32110)
+[2026-11-04T16:33:32Z] MACE relax s2_m05_VX174 attempt 1 started (pid 32228)
+[2026-11-04T16:35:07Z] MACE relax s2_m05_VX49 attempt 1 started (pid 32300)
+[2026-11-04T16:35:33Z] MACE relax s2_m30_Cs128p1_novac attempt 1 started (pid 32454)
+[2026-11-04T16:36:58Z] MACE relax s2_m05_Cl186p0_novac attempt 1 started (pid 32514)
+[2026-11-04T16:37:03Z] MACE relax s2_m05_Cl186p0_vac attempt 1 started (pid 32540)
+[2026-11-04T16:38:59Z] MACE relax s2_m30_Cs128p1_vac attempt 1 started (pid 32746)
+[2026-11-04T16:39:59Z] MACE relax s2_m05_Cl174p0_novac attempt 1 started (pid 32789)
+[2026-11-04T16:40:45Z] MACE relax s2_m05_Cl174p0_vac attempt 1 started (pid 32825)
+[2026-11-04T16:40:50Z] MACE relax s2_m30_Cs128p2_novac attempt 1 started (pid 32862)
+[2026-11-04T16:40:50Z] MACE relax s2_m30_Cs128p2_vac attempt 1 started (pid 32877)
+[2026-11-04T16:41:26Z] MACE relax s2_m30_Cs128p3_novac attempt 1 started (pid 33047)
+[2026-11-04T16:41:31Z] MACE relax s2_m05_Cl49p0_novac attempt 1 started (pid 33071)
+[2026-11-04T16:42:31Z] MACE relax s2_m05_Cl49p0_vac attempt 1 started (pid 33114)
+[2026-11-04T16:43:01Z] MACE relax s2_m30_Cs128p3_vac attempt 1 started (pid 33158)
+[2026-11-04T16:45:11Z] MACE relax s2_m30_Cs128p4_novac attempt 1 started (pid 33233)
+[2026-11-04T16:46:31Z] MACE relax s2_m30_Cs128p4_vac attempt 1 started (pid 33277)
+[2026-11-04T16:47:31Z] MACE relax s2_m30_Cs128p5_novac attempt 1 started (pid 33321)
+[2026-11-04T16:48:22Z] MACE relax s2_m30_Cs128p5_vac attempt 1 started (pid 33368)
+[2026-11-04T16:48:47Z] MACE relax s2_m30_Cs128p6_novac attempt 1 started (pid 33394)
+[2026-11-04T16:49:47Z] MACE relax s2_m30_Cs128p6_vac attempt 1 started (pid 33437)
+[2026-11-04T16:51:27Z] MACE relax s2_m30_Cs188p1_vac attempt 1 started (pid 33519)
+[2026-11-04T16:51:27Z] MACE relax s2_m30_Cs188p2_novac attempt 1 started (pid 33524)
+[2026-11-04T16:52:47Z] MACE relax s2_m30_Cs188p2_vac attempt 1 started (pid 33579)
+[2026-11-04T16:53:43Z] MACE relax s2_m30_Cs188p4_novac attempt 1 started (pid 33623)
+[2026-11-04T16:54:48Z] MACE relax s2_m30_Cs188p4_vac attempt 1 started (pid 33667)
+[2026-11-04T16:56:24Z] MACE relax s2_m30_Cs188p5_novac attempt 1 started (pid 33869)
+[2026-11-04T16:57:19Z] MACE relax s2_m30_Cs188p5_vac attempt 1 started (pid 34040)
+[2026-11-04T16:57:49Z] MACE relax s2_m30_Cl138p1_novac attempt 1 started (pid 34068)
+[2026-11-04T16:58:45Z] MACE relax s2_m30_Cl138p1_vac attempt 1 started (pid 34113)
+[2026-11-04T16:59:05Z] MACE relax s2_m30_Cl138p2_novac attempt 1 started (pid 34138)
+[2026-11-04T16:59:15Z] MACE relax s2_m30_Cl138p2_vac attempt 1 started (pid 34184)
+[2026-11-04T16:59:30Z] MACE relax s2_m30_Cl175p1_novac attempt 1 started (pid 34210)
+[2026-11-04T17:03:46Z] MACE relax s2_m30_Cl175p1_vac attempt 1 started (pid 34449)
+[2026-11-04T17:04:47Z] MACE relax s2_m30_Cl175p2_novac attempt 1 started (pid 34619)
+[2026-11-04T17:07:52Z] MACE relax s2_m30_Cl175p2_vac attempt 1 started (pid 34716)
+[2026-11-04T17:31:32Z] single point s2g1_m30_host_e60 published
+[2026-11-04T17:31:32Z] single point s2g1_m30_Cl138o0_novac_e60 published
+[2026-11-04T17:31:37Z] chain.sh s2c1 started (2 outstanding)
+[2026-11-04T17:40:00Z] single point s2g1_m30_Cl138o0_novac_e50 published
+[2026-11-04T17:47:57Z] single point s2g1_m30_Ca136o0_novac_e60 published
+[2026-11-04T17:54:19Z] single point s2g1_m30_Ca136o0_novac_e50 published
+[2026-11-04T18:02:31Z] single point s2spin_m30_Cl175o0_vac published
+[2026-11-04T18:08:53Z] single point s2spin_m30_Ca76o0_vac published
+[2026-11-04T18:23:07Z] single point s2_m30_host published
+[2026-11-04T18:38:07Z] single point s2_m30_VB76 published
+[2026-11-04T18:44:08Z] single point s2_m30_VB172 published
+[2026-11-04T18:50:10Z] single point s2_m30_VB24 published
+[2026-11-04T18:56:12Z] single point s2_m30_VB148 published
+[2026-11-04T19:02:18Z] single point s2_m30_VA188 published
+[2026-11-04T19:08:20Z] single point s2_m30_VA164 published
+[2026-11-04T19:14:22Z] single point s2_m30_VA176 published
+[2026-11-04T19:20:28Z] single point s2_m30_VA200 published
+[2026-11-04T19:26:30Z] single point s2_m30_VX175 published
+[2026-11-04T19:32:32Z] single point s2_m30_VX186 published
+[2026-11-04T19:38:33Z] single point s2_m30_VX222 published
+[2026-11-04T19:44:35Z] single point s2_m30_VX174 published
+[2026-11-04T19:50:41Z] single point s2_m30_Sr76o0_novac published
+[2026-11-04T19:56:43Z] single point s2_m30_Sr76o0_vac published
+[2026-11-04T20:03:05Z] single point s2_m30_Sr172o0_novac published
+[2026-11-04T20:09:16Z] single point s2_m30_Sr172o0_vac published
+[2026-11-04T20:15:33Z] single point s2_m30_Sr24o0_novac published
+[2026-11-04T20:21:44Z] single point s2_m30_Sr24o0_vac published
+[2026-11-04T20:27:56Z] single point s2_m30_Sr148o0_novac published
+[2026-11-04T20:34:13Z] single point s2_m30_Sr148o0_vac published
+[2026-11-04T20:40:24Z] single point s2_m30_Ca76o0_novac published
+[2026-11-04T20:46:36Z] single point s2_m30_Ca76o0_vac published
+[2026-11-04T20:52:57Z] single point s2_m30_Ca172o0_novac published
+[2026-11-04T20:59:39Z] single point s2_m30_Ca172o0_vac published
+[2026-11-04T21:06:00Z] single point s2_m30_Ca24o0_novac published
+[2026-11-04T21:12:17Z] single point s2_m30_Ca24o0_vac published
+[2026-11-04T21:18:38Z] single point s2_m30_Ca148o0_novac published
+[2026-11-04T21:25:00Z] single point s2_m30_Ca148o0_vac published
+[2026-11-04T21:31:21Z] single point s2_m30_Cs188o0_novac published
+[2026-11-04T21:37:38Z] single point s2_m30_Cs188o0_vac published
+[2026-11-04T21:43:39Z] single point s2_m30_Cs164o0_novac published
+[2026-11-04T21:49:40Z] single point s2_m30_Cs164o0_vac published
+[2026-11-04T21:55:37Z] single point s2_m30_Cs176o0_novac published
+[2026-11-04T22:01:33Z] single point s2_m30_Cs176o0_vac published
+[2026-11-04T22:07:34Z] single point s2_m30_Cs200o0_novac published
+[2026-11-04T22:13:31Z] single point s2_m30_Cs200o0_vac published
+[2026-11-04T22:19:32Z] single point s2_m30_GA188o0_novac published
+[2026-11-04T22:25:33Z] single point s2_m30_GA188o0_vac published
+[2026-11-04T22:31:45Z] single point s2_m30_GA164o0_novac published
+[2026-11-04T22:37:56Z] single point s2_m30_GA164o0_vac published
+[2026-11-04T22:44:08Z] single point s2_m30_GA176o0_novac published
+[2026-11-04T22:50:09Z] single point s2_m30_GA176o0_vac published
+[2026-11-04T22:56:20Z] single point s2_m30_GA200o0_novac published
+[2026-11-04T23:02:26Z] single point s2_m30_GA200o0_vac published
+[2026-11-04T23:08:33Z] single point s2_m30_Cl175o0_novac published
+[2026-11-04T23:14:39Z] single point s2_m30_Cl175o0_vac published
+[2026-11-04T23:20:55Z] single point s2_m30_Cl186o0_novac published
+[2026-11-04T23:27:17Z] single point s2_m30_Cl186o0_vac published
+[2026-11-04T23:33:33Z] single point s2_m30_Cl222o0_novac published
+[2026-11-04T23:39:54Z] single point s2_m30_Cl222o0_vac published
+[2026-11-04T23:46:10Z] single point s2_m30_Cl174o0_novac published
+[2026-11-04T23:52:27Z] single point s2_m30_Cl174o0_vac published
+[2026-11-04T23:58:48Z] single point s2_m05_host published
+[2026-11-05T00:05:04Z] single point s2_m05_VB76 published
+[2026-11-05T00:11:10Z] single point s2_m05_VB172 published
+[2026-11-05T00:17:16Z] single point s2_m05_VB24 published
+[2026-11-05T00:23:23Z] single point s2_m05_VB64 published
+[2026-11-05T00:29:34Z] single point s2_m05_VA188 published
+[2026-11-05T00:35:45Z] single point s2_m05_VA164 published
+[2026-11-05T00:41:51Z] single point s2_m05_VA152 published
+[2026-11-05T00:48:02Z] single point s2_m05_VA68 published
+[2026-11-05T00:54:08Z] single point s2_m05_VX175 published
+[2026-11-05T01:00:09Z] single point s2_m05_VX222 published
+[2026-11-05T01:06:10Z] single point s2_m05_VX186 published
+[2026-11-05T01:12:21Z] single point s2_m05_VX174 published
+[2026-11-05T01:18:27Z] single point s2_m05_Sr76o0_novac published
+[2026-11-05T01:24:28Z] single point s2_m05_Sr76o0_vac published
+[2026-11-05T01:30:50Z] single point s2_m05_Sr172o0_novac published
+[2026-11-05T01:37:01Z] single point s2_m05_Sr172o0_vac published
+[2026-11-05T01:43:17Z] single point s2_m05_Sr24o0_novac published
+[2026-11-05T01:49:33Z] single point s2_m05_Sr24o0_vac published
+[2026-11-05T01:55:48Z] single point s2_m05_Sr64o0_novac published
+[2026-11-05T02:01:59Z] single point s2_m05_Sr64o0_vac published
+[2026-11-05T02:08:15Z] single point s2_m05_Ca76o0_novac published
+[2026-11-05T02:14:26Z] single point s2_m05_Ca76o0_vac published
+[2026-11-05T02:20:52Z] single point s2_m05_Ca172o0_novac published
+[2026-11-05T02:27:08Z] single point s2_m05_Ca172o0_vac published
+[2026-11-05T02:33:29Z] single point s2_m05_Ca24o0_novac published
+[2026-11-05T02:40:15Z] single point s2_m05_Ca24o0_vac published
+[2026-11-05T02:46:31Z] single point s2_m05_Ca64o0_novac published
+[2026-11-05T02:52:52Z] single point s2_m05_Ca64o0_vac published
+[2026-11-05T02:59:13Z] single point s2_m05_Cs188o0_novac published
+[2026-11-05T03:05:59Z] single point s2_m05_Cs188o0_vac published
+[2026-11-05T03:12:00Z] single point s2_m05_Cs164o0_novac published
+[2026-11-05T03:18:01Z] single point s2_m05_Cs164o0_vac published
+[2026-11-05T03:24:01Z] single point s2_m05_Cs152o0_novac published
+[2026-11-05T03:30:02Z] single point s2_m05_Cs152o0_vac published
+[2026-11-05T03:36:03Z] single point s2_m05_Cs68o0_novac published
+[2026-11-05T03:41:59Z] single point s2_m05_Cs68o0_vac published
+[2026-11-05T03:48:05Z] single point s2_m05_GA188o0_novac published
+[2026-11-05T03:54:00Z] single point s2_m05_GA188o0_vac published
+[2026-11-05T04:00:11Z] single point s2_m05_GA164o0_novac published
+[2026-11-05T04:06:12Z] single point s2_m05_GA164o0_vac published
+[2026-11-05T04:12:23Z] single point s2_m05_GA152o0_novac published
+[2026-11-05T04:18:29Z] single point s2_m05_GA152o0_vac published
+[2026-11-05T04:24:29Z] single point s2_m05_GA68o0_novac published
+[2026-11-05T04:30:40Z] single point s2_m05_GA68o0_vac published
+[2026-11-05T04:36:46Z] single point s2_m05_Cl175o0_novac published
+[2026-11-05T04:42:52Z] single point s2_m05_Cl175o0_vac published
+[2026-11-05T04:49:12Z] single point s2_m05_Cl222o0_novac published
+[2026-11-05T04:55:28Z] single point s2_m05_Cl222o0_vac published
+[2026-11-05T05:01:54Z] single point s2_m05_Cl186o0_novac published
+[2026-11-05T05:08:09Z] single point s2_m05_Cl186o0_vac published
+[2026-11-05T05:14:30Z] single point s2_m05_Cl174o0_novac published
+[2026-11-05T05:20:56Z] single point s2_m05_Cl174o0_vac published
+[2026-11-05T05:27:16Z] single point s2_m30_VB136 published
+[2026-11-05T05:33:32Z] single point s2_m30_Sr136o0_vac published
+[2026-11-05T05:39:33Z] single point s2_m30_Cs128o0_novac published
+[2026-11-05T05:45:43Z] single point s2_m30_Cs128o0_vac published
+[2026-11-05T05:51:44Z] single point s2_m30_Cl138o0_novac published
+[2026-11-05T05:58:00Z] single point s2_m30_Cl138o0_vac published
+[2026-11-05T06:04:20Z] single point s2_m30_VB136_q0 published
+[2026-11-05T06:10:21Z] single point s2_m30_Sr136o0_vac_q0 published
+[2026-11-05T06:16:46Z] single point s2_m30_Ca136o0_vac_q0 published
+[2026-11-05T06:23:22Z] single point s2_m30_VB76_q0 published
+[2026-11-05T06:30:07Z] single point s2_m30_Sr76o0_vac_q0 published
+[2026-11-05T06:36:28Z] single point s2_m30_VX138_q0 published
+[2026-11-05T06:43:03Z] single point s2_m30_Cl138o0_vac_q0 published
+[2026-11-05T06:49:29Z] single point s2_m30_VA128_q0 published
+[2026-11-05T06:56:14Z] single point s2_m30_Cs128o0_vac_q0 published
+[2026-11-05T07:02:39Z] single point s2_m30_GA128o0_vac_q0 published
+[2026-11-05T07:15:31Z] gate gate:G1: decision {"G1": {"Ca": false, "Cl": true}}
+[2026-11-05T07:15:36Z] gate gate:N: decision {"gateN": {"Ca": true, "Cl": true, "Cs": true, "GA": true, "Sr": true}, "sr_stop": false}
+[2026-11-05T07:15:42Z] gate gate:nrule: decision {"n": 8}
+[2026-11-05T07:15:47Z] gate gate:pose: decision {"pose": {"Cl": "default", "Cs": "default"}}
+[2026-11-05T07:15:52Z] end: {'done': 443, 'rejected': 2, 'skipped': 36}; CAMPAIGN_DONE; KEEP_ALIVE removed

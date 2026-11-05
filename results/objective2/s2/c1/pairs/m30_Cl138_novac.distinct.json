@@ -1,0 +1,51 @@
+{
+ "schema": "s2-distinct-1",
+ "member": "m30",
+ "token": "Cl",
+ "site": 138,
+ "leg": "novac",
+ "kind": "D",
+ "region_id": "919af1b4c54eb0d1f8d5955ff1fe8799ca7c0cbfa92662e5b6e9e976f532595b",
+ "starts": [
+  "p0",
+  "p1",
+  "p2"
+ ],
+ "status": {
+  "p0": "valid",
+  "p1": "valid",
+  "p2": "valid"
+ },
+ "kept": [
+  "p0"
+ ],
+ "map": {
+  "o0": "p0"
+ },
+ "pairs": [
+  {
+   "max_dopant_dr_A": 0.0019968776310532524,
+   "max_fa_carbon_dr_A": 0.0035728298531267533,
+   "max_fa_rot_deg": 0.23161849833254594,
+   "distinct": false,
+   "a": "p1",
+   "b": "p0"
+  },
+  {
+   "max_dopant_dr_A": 0.002505691843982129,
+   "max_fa_carbon_dr_A": 0.004214660961050721,
+   "max_fa_rot_deg": 0.4839068221060374,
+   "distinct": false,
+   "a": "p2",
+   "b": "p0"
+  }
+ ],
+ "excluded": [],
+ "labels": {
+  "o0": "s2_m30_Cl138o0_novac"
+ },
+ "work_ids": {
+  "o0": "s2_m30_Cl138p0_novac"
+ },
+ "written": "2026-11-04T17:08:58Z"
+}

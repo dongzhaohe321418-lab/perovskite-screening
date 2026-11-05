@@ -1,0 +1,348 @@
+{
+ "schema": "s2-cell-1",
+ "work_id": "s2_m05_Cs68p0_vac",
+ "labels": [
+  "s2_m05_Cs68o0_vac"
+ ],
+ "campaign": "c1",
+ "member": "m05",
+ "role": "pilot",
+ "cell_kind": "DV",
+ "leg": "vac",
+ "site": 68,
+ "site_cell": null,
+ "sublattice": "A",
+ "site_roles": [
+  "far4"
+ ],
+ "token": "Cs",
+ "start": "p0",
+ "pose_id": "centred",
+ "is_default_pose": true,
+ "k_min": 0,
+ "region_id": "1e991e6a37907063cba4ea0188ffd0e5ae7c2e828f025c8fcb29d157589ba9fd",
+ "free": [
+  0,
+  2,
+  3,
+  13,
+  14,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  49,
+  53,
+  64,
+  65,
+  66,
+  67,
+  68,
+  82,
+  84,
+  85,
+  86,
+  87,
+  88,
+  89,
+  90,
+  91,
+  94,
+  116,
+  117,
+  118,
+  119,
+  120,
+  121,
+  122,
+  123,
+  124,
+  125,
+  126,
+  127,
+  128,
+  129,
+  141,
+  142,
+  163,
+  166,
+  187,
+  188,
+  190,
+  191,
+  192,
+  193,
+  194,
+  195,
+  196,
+  197,
+  198,
+  199,
+  200,
+  223,
+  224
+ ],
+ "n_free": 63,
+ "n_fixed": 162,
+ "parent": {
+  "work_id": "s2_m05_VA68",
+  "map": "old_to_new"
+ },
+ "pair": "pairs/m05_Cs68p0.json",
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+  "partners": "relaxed"
+ },
+ "model": {
+  "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+  "file": "20231203mace128L1_epoch199model",
+  "dtype": "float64",
+  "device": "cpu",
+  "threads": 6,
+  "atomic_numbers_covered": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72,
+   73,
+   74,
+   75,
+   76,
+   77,
+   78,
+   79,
+   80,
+   81,
+   82,
+   83,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94
+  ],
+  "z_required_ok": true,
+  "versions": {
+   "ase": "3.29.0",
+   "numpy": "2.5.4",
+   "python": "3.12.15",
+   "mace": "0.3.16",
+   "torch": "2.14.1+cpu",
+   "e3nn": "0.4.4"
+  }
+ },
+ "relax": {
+  "optimizer": "ASE FIRE, default parameters",
+  "fmax_eVA": 0.01,
+  "steps_cap": 10000,
+  "steps": 64,
+  "converged": true,
+  "fmax_final_free_eVA": 0.009563501599909036,
+  "held_max_dr_A": 0.0,
+  "n_free": 63,
+  "n_fixed": 162,
+  "max_dr_free_A": 0.17136442212995176,
+  "wall_s": 179.5,
+  "E_mace_eV": -1022.9127734845063
+ },
+ "validity": {
+  "checks": {
+   "1": {
+    "passed": true,
+    "steps": 64,
+    "fmax_final_free_eVA": 0.009563501599909036,
+    "strict": true
+   },
+   "2": {
+    "passed": true,
+    "min_X_to_v_A": 4.15310142809606,
+    "species": "I",
+    "index": 53
+   },
+   "3": {
+    "passed": true,
+    "centre": 224,
+    "displacement_A": 0.1713644160068125
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 126,
+    "bonds_final": 126,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.614319918761913,
+    "cn_inorganic_min_A": 3.6121967816910012,
+    "min_pair_A": 1.0148495245061893
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 12,
+     "n_fa": 3,
+     "max_dr_inorganic_A": 0.03084083609871979,
+     "max_dr_fa_carbon_A": 0.00952873230798865,
+     "max_rot_fa_deg": 0.5933486503388746,
+     "worst": {
+      "inorganic": {
+       "index": 223,
+       "d_host_A": 9.624831550132686,
+       "dr_A": 0.03084083609871979
+      },
+      "fa_carbon": {
+       "carbon": 84,
+       "d_host_A": 6.346220960671693,
+       "dr_carbon_A": 0.00952873230798865,
+       "rot_deg": 0.5933486503388746
+      },
+      "fa_rotation": {
+       "carbon": 84,
+       "d_host_A": 6.346220960671693,
+       "dr_carbon_A": 0.00952873230798865,
+       "rot_deg": 0.5933486503388746
+      }
+     }
+    },
+    "within_6A_reported": {
+     "n_inorganic": 18,
+     "n_fa": 1,
+     "max_dr_inorganic_A": 0.15904368269565017,
+     "max_dr_fa_carbon_A": 0.01749793428664297,
+     "max_rot_fa_deg": 0.8728808749025176,
+     "worst": {
+      "inorganic": {
+       "index": 166,
+       "d_host_A": 4.274772686323146,
+       "dr_A": 0.15904368269565017
+      },
+      "fa_carbon": {
+       "carbon": 191,
+       "d_host_A": 5.604502664447726,
+       "dr_carbon_A": 0.01749793428664297,
+       "rot_deg": 0.8728808749025176
+      },
+      "fa_rotation": {
+       "carbon": 191,
+       "d_host_A": 5.604502664447726,
+       "dr_carbon_A": 0.01749793428664297,
+       "rot_deg": 0.8728808749025176
+      }
+     }
+    },
+    "parent": "s2_m05_VA68",
+    "centre": "site j"
+   }
+  },
+  "valid": true,
+  "failed": []
+ },
+ "files": {
+  "start": "cells/s2_m05_Cs68p0_vac/start.extxyz",
+  "relaxed": "cells/s2_m05_Cs68p0_vac/relaxed.extxyz"
+ },
+ "sha256": {
+  "start": "5e2b6a91cbcf3e2f8dbccb7ee41bf4e3772a811ecc89a0c724a3da24b322f749",
+  "relaxed": "6e9e3a7182519b97c3dd7edba920d1e879725916e9a007c1d74ef38ed7ab261b"
+ },
+ "geometry_sha256": {
+  "start": "ba6f056299be416b8d70aaf48f5be43b321e24db0ed8e66e52afbc745f63857c",
+  "relaxed": "4a7c780a5599c756b182918c99838cb457c0d04039344119850be47dfdf29376"
+ },
+ "attempts": [
+  {
+   "n": 1,
+   "boot": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "started": "2026-11-04T16:13:59Z",
+   "started_epoch": 1793808839.375433,
+   "pid": 31476
+  }
+ ],
+ "code": {
+  "script_sha256": {
+   "46": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "42": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+  },
+  "git": {
+   "head": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+   "clean": true
+  }
+ },
+ "written": "2026-11-04T16:17:02Z"
+}

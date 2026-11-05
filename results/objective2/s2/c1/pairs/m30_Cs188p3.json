@@ -1,0 +1,35 @@
+{
+ "schema": "s2-pair-1",
+ "member": "m30",
+ "token": "Cs",
+ "site": 188,
+ "site_vac": 187,
+ "sublattice": "A",
+ "start": "p3",
+ "pose_name": "q1+",
+ "is_default_pose": false,
+ "partners": "relaxed",
+ "status": "rejected",
+ "rejection": {
+  "exception": "Inadmissible",
+  "leg": "host",
+  "reason": "host leg: Cs pose q1+: displaced start closes an A-X contact: {'tested': 225, 'rule': 'A-X displaced', 'd_A': 3.9586, 'thr_A': 4.0}"
+ },
+ "legs": null,
+ "pose": null,
+ "pose_vac_leg": null,
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+  "mig": null,
+  "replaced_migrating_iodide": false,
+  "provisional": false,
+  "allow_provisional": false,
+  "pbcl": null
+ },
+ "parents": {
+  "novac": "s2_m30_host",
+  "vac": "s2_m30_VA188"
+ },
+ "region_id": "fbd636de95e98e511d96ce0db3ea14f70da91cf483e71d4b4afac2ce0124a425"
+}

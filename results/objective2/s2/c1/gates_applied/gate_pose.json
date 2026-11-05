@@ -1,0 +1,15 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:pose",
+ "gate": "pose",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "pose": {
+   "Cs": "default",
+   "Cl": "default"
+  }
+ },
+ "gate_file_sha256": "2c16c82fd41fa4073e40d4b6a394c0330ff319b8c4d0b0365b6146a2bf21e8f3",
+ "applied": "2026-11-05T07:15:47Z"
+}

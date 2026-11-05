@@ -1,0 +1,41 @@
+{
+ "schema": "s2-ledger-1",
+ "boots": [
+  {
+   "boot_id": "3769b9e1-25a6-473f-964e-95a4eea08c7f",
+   "btime": 1793788559.0,
+   "btime_utc": "2026-11-04T10:35:59Z",
+   "first_heartbeat": 1793790623.1864414,
+   "last_heartbeat": 1793791166.0,
+   "journal_end": 1793791021.540429,
+   "end_used": 1793791226.0,
+   "end_used_utc": "2026-11-04T11:20:26Z",
+   "end_assumed": null,
+   "hours": 0.7408333333333333,
+   "campaigns": [
+    "c1"
+   ],
+   "current": false
+  },
+  {
+   "boot_id": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "btime": 1793791621.0,
+   "btime_utc": "2026-11-04T11:27:01Z",
+   "first_heartbeat": 1793791666.8053017,
+   "last_heartbeat": 1793862936.0,
+   "journal_end": null,
+   "end_used": 1793862952.931566,
+   "end_used_utc": "2026-11-05T07:15:52Z",
+   "end_assumed": null,
+   "hours": 19.814425434999997,
+   "campaigns": [
+    "c1"
+   ],
+   "current": true
+  }
+ ],
+ "H_spent_h": 20.55525876833333,
+ "complete": true,
+ "problems": [],
+ "now_utc": "2026-11-05T07:15:52Z"
+}

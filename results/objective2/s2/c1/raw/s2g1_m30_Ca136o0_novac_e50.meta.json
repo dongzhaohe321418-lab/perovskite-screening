@@ -1,0 +1,112 @@
+{
+ "schema": "s2-qejob-1",
+ "label": "s2g1_m30_Ca136o0_novac_e50",
+ "kind": "sp",
+ "campaign": "c1",
+ "parsed_label": {
+  "label": "s2g1_m30_Ca136o0_novac_e50",
+  "prefix": "s2g1",
+  "kind": "sp",
+  "host": "m30",
+  "cell_kind": "D",
+  "sublattice": "B",
+  "site": 136,
+  "token": "Ca",
+  "k": 0,
+  "leg": "novac",
+  "vacancy": false,
+  "q0": false,
+  "ecut": 50,
+  "ref": null
+ },
+ "cell": {
+  "work_id": null,
+  "atoms_sha256": "c8d742b7cdc81d41394e805a0015fadbd8b726479913e66d88449d3278558b16"
+ },
+ "settings": {
+  "calculation": "scf",
+  "ecutwfc": 50.0,
+  "ecutrho": 400.0,
+  "kpts": "R (1,1,1) offset (1,1,1)",
+  "occupations": "smearing",
+  "smearing": "gaussian",
+  "degauss": 0.005,
+  "nspin": 1,
+  "tot_charge": 0,
+  "nosym": true,
+  "conv_thr": 1e-08,
+  "mixing_beta": 0.3,
+  "electron_maxstep": 200,
+  "tprnfor": true,
+  "tstress": false,
+  "disk_io": "none",
+  "relax": null,
+  "starting_magnetization": null
+ },
+ "composition": {
+  "C": 19,
+  "Ca": 1,
+  "Cs": 1,
+  "H": 95,
+  "I": 60,
+  "N": 38,
+  "Pb": 19
+ },
+ "n_X": 60,
+ "vacancy": false,
+ "electrons": {
+  "z_sum": 1066,
+  "tot_charge": 0,
+  "n_el": 1066,
+  "expected": 1066,
+  "even": true
+ },
+ "pseudopotentials": {
+  "C": {
+   "file": "C.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "1fdd950c42eb37d8afe3dd2f8d12311e"
+  },
+  "Ca": {
+   "file": "Ca.pbe-spn-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": "60745cd19cb7c96ea734fe68ea89a54603d83eaaca19cb8b37deb3fc41fe9b43",
+   "md5_expected": null
+  },
+  "Cs": {
+   "file": "Cs.pbe-spn-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "ce91a30752c48add39cf6ac6342f9330"
+  },
+  "H": {
+   "file": "H.pbe-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "3f4114867bd07edc7f1424d066fc1888"
+  },
+  "I": {
+   "file": "I.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "21b6b539e0050b62c62ace6be4e6e5e0"
+  },
+  "N": {
+   "file": "N.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "ada94e3ed05223de5319d0572dc76806"
+  },
+  "Pb": {
+   "file": "Pb.pbe-dn-rrkjus_psl.1.0.0.UPF",
+   "sha256_expected": null,
+   "md5_expected": "1cf8f5e18580e6a90a35f98a53d336de"
+  }
+ },
+ "starting_magnetization_rewritten": false,
+ "input_sha256": "44da53920c40ff9af4f4bae9184d61b034c8b64175ada90ce2ee69c017991ca1",
+ "input_norm_sha256": "e7077a55c051380e09f8d54f313424bac59b90e87ba963a02181993c14b80c24",
+ "geometry_sha256": "e8481c56569fe22bc36536262579042f5fcef8d3d7a2dccab4210fb7cd47bacc",
+ "ranks_expected": 64,
+ "writer": {
+  "script_sha256": "ace31dd3fb5ca6fe08cfda1172f35f1bddd9933fd7a4d53d8cd4402838532c39",
+  "builder": "s2b-2"
+ },
+ "queue": null,
+ "result": null
+}

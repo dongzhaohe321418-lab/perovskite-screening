@@ -1,0 +1,19 @@
+{
+ "schema": "s2-g1cells-1",
+ "cells": {
+  "Cl138": {
+   "file": "g1/Cl138.extxyz",
+   "sha256": "cd4a582d5b7b0ef8cc6f3642f1a1e9b5f224f1a18ea81cab9614456a04a96817",
+   "centre": 138
+  },
+  "Ca136": {
+   "file": "g1/Ca136.extxyz",
+   "sha256": "c8d742b7cdc81d41394e805a0015fadbd8b726479913e66d88449d3278558b16",
+   "centre": 136
+  }
+ },
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf"
+ }
+}

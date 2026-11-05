@@ -1,0 +1,12 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:throughput",
+ "gate": "throughput",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "a2_layout": "64"
+ },
+ "gate_file_sha256": "13c4ed0f07cdd742b9234d83eb50c9cc5b24b8ab104abd6bb4c329dd59efaeae",
+ "applied": "2026-11-04T13:44:18Z"
+}

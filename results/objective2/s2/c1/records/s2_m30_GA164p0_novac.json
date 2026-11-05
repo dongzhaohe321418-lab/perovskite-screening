@@ -1,0 +1,348 @@
+{
+ "schema": "s2-cell-1",
+ "work_id": "s2_m30_GA164p0_novac",
+ "labels": [
+  "s2_m30_GA164o0_novac"
+ ],
+ "campaign": "c1",
+ "member": "m30",
+ "role": "pilot",
+ "cell_kind": "D",
+ "leg": "novac",
+ "site": 164,
+ "site_cell": 164,
+ "sublattice": "A",
+ "site_roles": [
+  "far",
+  "far4"
+ ],
+ "token": "GA",
+ "start": "p0",
+ "pose_id": "inherit",
+ "is_default_pose": true,
+ "k_min": 0,
+ "region_id": "92d54e25543cee98fef4d4e1f64ba00b7da178d00653e7f4465c650b5704a59f",
+ "free": [
+  3,
+  12,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  48,
+  49,
+  50,
+  53,
+  64,
+  67,
+  88,
+  89,
+  90,
+  91,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98,
+  99,
+  100,
+  101,
+  102,
+  124,
+  125,
+  126,
+  127,
+  128,
+  129,
+  130,
+  131,
+  132,
+  133,
+  134,
+  135,
+  136,
+  137,
+  138,
+  160,
+  161,
+  162,
+  163,
+  164,
+  165,
+  166,
+  167,
+  168,
+  169,
+  170,
+  171,
+  172,
+  173,
+  219,
+  221,
+  222,
+  231,
+  232,
+  233,
+  234
+ ],
+ "n_free": 67,
+ "n_fixed": 168,
+ "parent": {
+  "work_id": "s2_m30_host",
+  "map": "old_to_new"
+ },
+ "pair": "pairs/m30_GA164p0.json",
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+  "partners": "relaxed"
+ },
+ "model": {
+  "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+  "file": "20231203mace128L1_epoch199model",
+  "dtype": "float64",
+  "device": "cpu",
+  "threads": 6,
+  "atomic_numbers_covered": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72,
+   73,
+   74,
+   75,
+   76,
+   77,
+   78,
+   79,
+   80,
+   81,
+   82,
+   83,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94
+  ],
+  "z_required_ok": true,
+  "versions": {
+   "ase": "3.29.0",
+   "numpy": "2.5.4",
+   "python": "3.12.15",
+   "mace": "0.3.16",
+   "torch": "2.14.1+cpu",
+   "e3nn": "0.4.4"
+  }
+ },
+ "relax": {
+  "optimizer": "ASE FIRE, default parameters",
+  "fmax_eVA": 0.01,
+  "steps_cap": 10000,
+  "steps": 231,
+  "converged": true,
+  "fmax_final_free_eVA": 0.009836567408167251,
+  "held_max_dr_A": 0.0,
+  "n_free": 67,
+  "n_fixed": 168,
+  "max_dr_free_A": 0.49174053859848194,
+  "wall_s": 723.3,
+  "E_mace_eV": -1079.3378113187036
+ },
+ "validity": {
+  "checks": {
+   "1": {
+    "passed": true,
+    "steps": 231,
+    "fmax_final_free_eVA": 0.009836567408167251,
+    "strict": true
+   },
+   "2": null,
+   "3": {
+    "passed": true,
+    "centre": 164,
+    "displacement_A": 0.21400273209494733
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 135,
+    "bonds_final": 135,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.6352915306093276,
+    "cn_inorganic_min_A": 3.5327851213961763,
+    "min_pair_A": 1.0147597059210185
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 13,
+     "n_fa": 3,
+     "max_dr_inorganic_A": 0.092627942766635,
+     "max_dr_fa_carbon_A": 0.01781166139919659,
+     "max_rot_fa_deg": 1.8008878863679663,
+     "worst": {
+      "inorganic": {
+       "index": 49,
+       "d_host_A": 7.771015571632824,
+       "dr_A": 0.092627942766635
+      },
+      "fa_carbon": {
+       "carbon": 92,
+       "d_host_A": 6.800495553008941,
+       "dr_carbon_A": 0.01781166139919659,
+       "rot_deg": 1.1097557966129188
+      },
+      "fa_rotation": {
+       "carbon": 128,
+       "d_host_A": 9.194660962040864,
+       "dr_carbon_A": 0.012048176699936913,
+       "rot_deg": 1.8008878863679663
+      }
+     }
+    },
+    "within_6A_reported": {
+     "n_inorganic": 20,
+     "n_fa": 1,
+     "max_dr_inorganic_A": 0.4917405355285014,
+     "max_dr_fa_carbon_A": 0.21400273209494733,
+     "max_rot_fa_deg": 3.8324359741920815,
+     "worst": {
+      "inorganic": {
+       "index": 222,
+       "d_host_A": 4.179013431208661,
+       "dr_A": 0.4917405355285014
+      },
+      "fa_carbon": {
+       "carbon": 164,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.21400273209494733,
+       "rot_deg": 3.8324359741920815
+      },
+      "fa_rotation": {
+       "carbon": 164,
+       "d_host_A": 0.0,
+       "dr_carbon_A": 0.21400273209494733,
+       "rot_deg": 3.8324359741920815
+      }
+     }
+    },
+    "parent": "s2_m30_host",
+    "centre": "site j"
+   }
+  },
+  "valid": true,
+  "failed": []
+ },
+ "files": {
+  "start": "cells/s2_m30_GA164p0_novac/start.extxyz",
+  "relaxed": "cells/s2_m30_GA164p0_novac/relaxed.extxyz"
+ },
+ "sha256": {
+  "start": "82477174d07fe063a43bc2d47e3c596a73700413f1fdcfcfea18737b35ae832a",
+  "relaxed": "2eb78da1f6ac9c24038a473504676cb2beffb4b001ef8a20fd138de22fec52e9"
+ },
+ "geometry_sha256": {
+  "start": "5595c65330538340184c4ba757de44fe28bbc10d755f94381446cf33ec916740",
+  "relaxed": "23fee524c41eec7394a54eae09409e9a49a7d26c85097e3baf52a67ea020bb98"
+ },
+ "attempts": [
+  {
+   "n": 1,
+   "boot": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "started": "2026-11-04T15:23:38Z",
+   "started_epoch": 1793805818.2384896,
+   "pid": 28212
+  }
+ ],
+ "code": {
+  "script_sha256": {
+   "46": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "42": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+  },
+  "git": {
+   "head": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+   "clean": true
+  }
+ },
+ "written": "2026-11-04T15:35:45Z"
+}

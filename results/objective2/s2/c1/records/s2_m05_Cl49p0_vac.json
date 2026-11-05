@@ -1,0 +1,344 @@
+{
+ "schema": "s2-cell-1",
+ "work_id": "s2_m05_Cl49p0_vac",
+ "labels": [
+  "s2_m05_Cl49o0_vac"
+ ],
+ "campaign": "c1",
+ "member": "m05",
+ "role": "pilot",
+ "cell_kind": "DV",
+ "leg": "vac",
+ "site": 49,
+ "site_cell": 49,
+ "sublattice": "X",
+ "site_roles": [
+  "first",
+  "cal"
+ ],
+ "token": "Cl",
+ "start": "p0",
+ "pose_id": "centred",
+ "is_default_pose": true,
+ "k_min": 0,
+ "region_id": "c8122a4b7a7b8d1c7a0224d0c8f4a850d7226004829ce3b7e5361f0d4641a6de",
+ "free": [
+  3,
+  26,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  48,
+  49,
+  50,
+  51,
+  53,
+  90,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98,
+  99,
+  102,
+  115,
+  124,
+  125,
+  126,
+  127,
+  128,
+  129,
+  130,
+  131,
+  132,
+  133,
+  134,
+  135,
+  136,
+  137,
+  211,
+  212,
+  213,
+  214,
+  215,
+  216,
+  217,
+  218,
+  222,
+  223,
+  224,
+  225,
+  226,
+  227,
+  228,
+  229,
+  230,
+  231
+ ],
+ "n_free": 58,
+ "n_fixed": 174,
+ "parent": {
+  "work_id": "s2_m05_VX49",
+  "map": "old_to_new"
+ },
+ "pair": "pairs/m05_Cl49p0.json",
+ "builder": {
+  "BUILDER_VERSION": "s2b-2",
+  "GEOM_SHA": "58ebbd29fdf179417269818f6fc31b7d55622164929a40778c49208e1cdafedf",
+  "partners": "relaxed"
+ },
+ "model": {
+  "sha256": "01bfe22100139f424713cf921144e5509cbe353d67aa9fa1be9c6e1e0ed35845",
+  "file": "20231203mace128L1_epoch199model",
+  "dtype": "float64",
+  "device": "cpu",
+  "threads": 6,
+  "atomic_numbers_covered": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72,
+   73,
+   74,
+   75,
+   76,
+   77,
+   78,
+   79,
+   80,
+   81,
+   82,
+   83,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94
+  ],
+  "z_required_ok": true,
+  "versions": {
+   "ase": "3.29.0",
+   "numpy": "2.5.4",
+   "python": "3.12.15",
+   "mace": "0.3.16",
+   "torch": "2.14.1+cpu",
+   "e3nn": "0.4.4"
+  }
+ },
+ "relax": {
+  "optimizer": "ASE FIRE, default parameters",
+  "fmax_eVA": 0.01,
+  "steps_cap": 10000,
+  "steps": 172,
+  "converged": true,
+  "fmax_final_free_eVA": 0.00944697506020849,
+  "held_max_dr_A": 0.0,
+  "n_free": 58,
+  "n_fixed": 174,
+  "max_dr_free_A": 0.3798906531652542,
+  "wall_s": 531.5,
+  "E_mace_eV": -1065.1214311985423
+ },
+ "validity": {
+  "checks": {
+   "1": {
+    "passed": true,
+    "steps": 172,
+    "fmax_final_free_eVA": 0.00944697506020849,
+    "strict": true
+   },
+   "2": {
+    "passed": true,
+    "min_X_to_v_A": 4.181908569771476,
+    "species": "I",
+    "index": 53
+   },
+   "3": {
+    "passed": true,
+    "centre": 49,
+    "displacement_A": 0.255250110230747
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 133,
+    "bonds_final": 133,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.561027091171925,
+    "cn_inorganic_min_A": 3.571146749526468,
+    "min_pair_A": 1.0148804840153747
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 7,
+     "n_fa": 2,
+     "max_dr_inorganic_A": 0.1090551042134541,
+     "max_dr_fa_carbon_A": 0.01768069223812593,
+     "max_rot_fa_deg": 1.1762993355770806,
+     "worst": {
+      "inorganic": {
+       "index": 125,
+       "d_host_A": 6.529214071273325,
+       "dr_A": 0.1090551042134541
+      },
+      "fa_carbon": {
+       "carbon": 92,
+       "d_host_A": 8.22936977385806,
+       "dr_carbon_A": 0.01768069223812593,
+       "rot_deg": 1.1762993355770806
+      },
+      "fa_rotation": {
+       "carbon": 92,
+       "d_host_A": 8.22936977385806,
+       "dr_carbon_A": 0.01768069223812593,
+       "rot_deg": 1.1762993355770806
+      }
+     }
+    },
+    "within_6A_reported": {
+     "n_inorganic": 11,
+     "n_fa": 3,
+     "max_dr_inorganic_A": 0.3798906504365551,
+     "max_dr_fa_carbon_A": 0.06904280736452209,
+     "max_rot_fa_deg": 2.8091217631293874,
+     "worst": {
+      "inorganic": {
+       "index": 124,
+       "d_host_A": 3.2661012738869717,
+       "dr_A": 0.3798906504365551
+      },
+      "fa_carbon": {
+       "carbon": 223,
+       "d_host_A": 4.648917207454726,
+       "dr_carbon_A": 0.06904280736452209,
+       "rot_deg": 2.8091217631293874
+      },
+      "fa_rotation": {
+       "carbon": 223,
+       "d_host_A": 4.648917207454726,
+       "dr_carbon_A": 0.06904280736452209,
+       "rot_deg": 2.8091217631293874
+      }
+     }
+    },
+    "parent": "s2_m05_VX49",
+    "centre": "site j"
+   }
+  },
+  "valid": true,
+  "failed": []
+ },
+ "files": {
+  "start": "cells/s2_m05_Cl49p0_vac/start.extxyz",
+  "relaxed": "cells/s2_m05_Cl49p0_vac/relaxed.extxyz"
+ },
+ "sha256": {
+  "start": "88f6015f36b20ff33392594f901f772eed71d56275cfbd633dd4948c005f8307",
+  "relaxed": "084128bea7c394ecc015a4f47611c79bb11b2eb4fb19f5a25c6fb5b10102bf66"
+ },
+ "geometry_sha256": {
+  "start": "5e69cc0025c8311c2ff97b7493157cc2a63dc63a645349816836c7c03d98edf5",
+  "relaxed": "838d1216d32953dd443ba14b6a45bf9cf50edb782a25f609e65f3d5dee4fab5d"
+ },
+ "attempts": [
+  {
+   "n": 1,
+   "boot": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "started": "2026-11-04T16:42:31Z",
+   "started_epoch": 1793810551.199212,
+   "pid": 33114
+  }
+ ],
+ "code": {
+  "script_sha256": {
+   "46": "951e6cdfebfdb58595f15c941177dc1e2665d46aaed284d0c37f8aa15e53f9c2",
+   "42": "9acf73ce9b3a04112aad6f5bf54b654f9d92e815558e8d836005782db0cd0ab3",
+   "22": "9886c7ce978dc4c8e3d7460bee4732c1ef0ec541590d19984447b162ef40158a",
+   "29": "9c82e763d681c234d5908919201446e8ab238e84e35173388b6e12ca2f254645",
+   "38": "6c2bc652fad8298d8345d23111a2dcf13db9d4f5e2f488241bdbb613c8fb8a6a"
+  },
+  "git": {
+   "head": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+   "clean": true
+  }
+ },
+ "written": "2026-11-04T16:51:26Z"
+}
