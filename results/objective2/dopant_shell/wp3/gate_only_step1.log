@@ -1,5 +1,5 @@
 cuequivariance or cuequivariance_torch is not available. Cuequivariance acceleration will be disabled.
-Using Materials Project MACE for MACECalculator with /Users/ericdong/.cache/mace/20231203mace128L1_epoch199model
+Using Materials Project MACE for MACECalculator with ~/.cache/mace/20231203mace128L1_epoch199model
 Using float64 for MACECalculator, which is slower but more accurate. Recommended for geometry optimization.
 
 == QE input and output check (input cell and positions within 1e-06 A; complete outputs: one single point, header within 1e-04 A)

@@ -13,7 +13,7 @@ Mac mini
 | 项目 | 实际值 |
 |---|---|
 | 集群名称 | `perovskite-dft` |
-| 集群 ID | `ehpc-sh-j9sajnjxye` |
+| 集群 ID | `<EHPC_CLUSTER_ID>` |
 | 地域 / 可用区 | 华东 2（上海）/ `cn-shanghai-o` |
 | 部署方式 | 精简 |
 | 调度器 | Slurm 22，分区 `comp` |
@@ -21,12 +21,14 @@ Mac mini
 | 登录节点 | `ecs.c7nex.large`，2 vCPU / 4 GB |
 | 计算节点 | `2 x ecs.c7nex.8xlarge`，每台 32 vCPU / 64 GB |
 | 计算资源合计 | 64 vCPU / 128 GB，静态节点 2/2 |
-| 公网 IP | `139.224.62.26` |
+| 公网 IP | `<EHPC_LOGIN_IP>` |
 | 普通用户 | `ericdft` |
-| VPC | `vpc-uf6o7m3zuf0udt3rdflrp` (`Claudescience`) |
-| 交换机 | `vsw-uf6pecwmx53v2s35a0idi` |
+| VPC | `<VPC_ID>` (`Claudescience`) |
+| 交换机 | `<VSWITCH_ID>` |
 | 安全组 | `ehpc-sg` |
-| NAS | `031y61oa5ol6dno1zsz-dbn98.cn-shanghai.nas.aliyuncs.com` |
+| NAS | `<NAS_MOUNT_HOST>` |
+
+公开仓库中，IP、资源 ID 和 NAS 主机名以 `<…>` 占位符代替；实际值见阿里云控制台和本机 `~/.ssh/config`。
 
 原定的单台 `ecs.c7nex.16xlarge` 因上海 O 区无库存而创建失败。最终使用两台
 32 核节点，总核数和总内存保持 64 vCPU / 128 GB。账号原有按量 vCPU 配额为
@@ -47,10 +49,10 @@ Mac mini
 
 ```sshconfig
 Host ehpc
-    HostName 139.224.62.26
+    HostName <EHPC_LOGIN_IP>
     Port 22
     User ericdft
-    IdentityFile /Users/ericdong/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_ed25519
     IdentitiesOnly yes
     ServerAliveInterval 60
     ServerAliveCountMax 3
@@ -70,8 +72,8 @@ ssh ehpc 'whoami; hostname; sinfo'
 实际共享挂载：
 
 ```text
-/home     <- NAS:/ehpc-sh-j9sajnjxye/home
-/opt      <- NAS:/ehpc-sh-j9sajnjxye/opt
+/home     <- NAS:/<EHPC_CLUSTER_ID>/home
+/opt      <- NAS:/<EHPC_CLUSTER_ID>/opt
 /ehpcdata <- NAS:/
 ```
 
