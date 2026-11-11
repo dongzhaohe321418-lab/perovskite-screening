@@ -480,7 +480,8 @@ def plot(src=SRC, out=OUT, formats=("pdf", "svg", "png", "tiff"), audit=True):
     mpl.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
                          "svg.fonttype": "none", "pdf.fonttype": 42, "font.size": 7, "axes.spines.right": False,
                          "axes.spines.top": False, "axes.linewidth": 0.8,
-                         "legend.frameon": False, "xtick.major.width": 0.8, "ytick.major.width": 0.8})
+                         "legend.frameon": False, "xtick.major.width": 0.8, "ytick.major.width": 0.8,
+                         "svg.hashsalt": "fig_s2_c2_a2"})    # fixed SVG ids: reproducible output (2026-11-11)
     rd = lambda fn: list(csv.DictReader(open(os.path.join(src, fn))))
     R, P, S0, G, PJ = (rd("fig_s2_c2_a_relaxations.csv"), rd("fig_s2_c2_a_force.csv"), rd("fig_s2_c2_b_step0.csv"),
                        rd("fig_s2_c2_b_gates.csv"), rd("fig_s2_c2_c_projection.csv"))
@@ -1007,7 +1008,8 @@ def self_test(keep=None):
                 os.makedirs(keep, exist_ok=True)
                 for ext in ("pdf", "svg", "png"):
                     shutil.copy(f"{out}.{ext}", os.path.join(keep, f"selftest_{nm}.{ext}"))
-            blob = "".join(open(os.path.join(src, f)).read() for f in COLUMNS) + open(out + ".svg").read()
+            svg = re.sub(r'(?:id="[^"]*"|#[A-Za-z][\w-]*)', "", open(out + ".svg").read())   # SVG ids and references are
+            blob = "".join(open(os.path.join(src, f)).read() for f in COLUMNS) + svg   # hashes, not data (2026-11-11)
             canaries = (9876.54321, 7654.321, 6543.21, 1111.111, 5432.1)
             near = [x for x in map(float, re.findall(r"\d+(?:\.\d+)?(?:[eE][+-]?\d+)?", blob))
                     if any(abs(x - c) < 0.6 for c in canaries)]
