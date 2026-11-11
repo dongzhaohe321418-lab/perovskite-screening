@@ -1,0 +1,96 @@
+{
+ "schema": "s2-a2-1",
+ "label": "s2r_m30_Sr76o0_novac",
+ "campaign": "c2",
+ "order": 7,
+ "a1_cell": {
+  "work_id": "s2_m30_Sr76p0_novac"
+ },
+ "layout": {
+  "name": "64",
+  "ranks": 64,
+  "copies": 1
+ },
+ "parts": [
+  {
+   "n": 1,
+   "input": "s2r_m30_Sr76o0_novac.p1.in",
+   "restart_mode": null,
+   "nstep": 201,
+   "started": "2026-11-09T02:47:24Z",
+   "ended": "2026-11-09T02:56:46Z",
+   "end": "exit_stop",
+   "k_last": 0,
+   "wall_s": 542.9546120166779
+  },
+  {
+   "n": 2,
+   "input": "s2r_m30_Sr76o0_novac.p2.in",
+   "restart_mode": "restart",
+   "nstep": 200,
+   "started": "2026-11-10T23:41:54Z",
+   "ended": "2026-11-10T23:46:46Z",
+   "end": "exit_stop",
+   "k_last": 1,
+   "wall_s": 274.78754353523254
+  },
+  {
+   "n": 3,
+   "input": "s2r_m30_Sr76o0_novac.p3.in",
+   "restart_mode": "restart",
+   "nstep": 199,
+   "started": "2026-11-10T23:57:28Z",
+   "ended": "2026-11-11T10:37:37Z",
+   "end": "converged",
+   "k_last": 141,
+   "wall_s": 38397.27511072159
+  }
+ ],
+ "reruns_from_zero": 0,
+ "restarts": 2,
+ "interruptions": [
+  {
+   "k": 0,
+   "time": "2026-11-09T02:56:46Z",
+   "boot": "6a72d557-1425-47a7-b520-e5861c23c17b",
+   "cause": "spot-notice",
+   "part": 1
+  },
+  {
+   "k": 1,
+   "time": "2026-11-10T23:46:46Z",
+   "boot": "df73cc9f-b1c6-420a-9bb1-16ab979639de",
+   "cause": "spot-notice",
+   "part": 2
+  }
+ ],
+ "status": "complete",
+ "nstep_first": 201,
+ "k0_seen": true,
+ "n_config": 142,
+ "k_last": 141,
+ "qe_converged": true,
+ "converged_at_k": 141,
+ "end_rule": {
+  "outcome": "accepted_converged",
+  "dF_200_180_meV": null,
+  "end": null,
+  "stop": false,
+  "reason": null
+ },
+ "wall_h": 10.893060351742639,
+ "min_per_config": 4.602701557074354,
+ "final_geometry": {
+  "file": "s2r_m30_Sr76o0_novac.final.extxyz",
+  "k": 141,
+  "sha256": "0945cf3b90317a86ad67c921839ade4cf6e2667742c50353c00030dcdbd3e638"
+ },
+ "validity_final": {
+  "valid": true,
+  "failed": [],
+  "file": "s2r_m30_Sr76o0_novac.validity_final.json",
+  "sha256": "c8d39f41da8c8cb4f83031fe0e36cbceb44b287cb7b7ea95d5438f15ec7dfabe",
+  "parent": "s2r_m30_hostB76",
+  "parent_final": true
+ }
+}

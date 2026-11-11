@@ -1,0 +1,38 @@
+{
+ "schema": "s2-a2validity-1",
+ "label": "s2r_m30_hostB76",
+ "kind": "host",
+ "site": 76,
+ "token": null,
+ "leg": null,
+ "region_id": "014334593fcf05410489aa0bd5ac4af04eb9ae0337b089ee3789a2b16c308b23",
+ "parent_label": null,
+ "validity": {
+  "checks": {
+   "2": null,
+   "3": null,
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 133,
+    "bonds_final": 133,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.6352915306093276,
+    "cn_inorganic_min_A": 3.5927609842262633,
+    "min_pair_A": 1.0160860808886318
+   },
+   "5": null
+  },
+  "valid": true,
+  "failed": []
+ },
+ "geometry_sha256": {
+  "start": "b818a7865ae35a43f681bd9e969b36d5b1a9375bd357452e7118512dfdac75ea",
+  "final": "9c8a2e53cfec650a4ffa0245f9483b4ddd7e14e79e89158b9814861fb4111067",
+  "parent_final": null,
+  "host_relaxed": "fba8b424676d555a2d52a2b0fc093ad2e8e5a472e8409c48c136a76765167f83"
+ },
+ "rule": "S2_PLAN.md section 11: section 5 checks 2-5 on the final geometries (host_R: check 4); partner check between the final geometries of child and parent",
+ "written": "2026-11-08T12:25:32Z"
+}

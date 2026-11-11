@@ -1,0 +1,61 @@
+{
+ "schema": "s2-a2-1",
+ "label": "s2r_m30_VB76",
+ "campaign": "c2",
+ "order": 6,
+ "a1_cell": {
+  "work_id": "s2_m30_VB76"
+ },
+ "layout": {
+  "name": "64",
+  "ranks": 64,
+  "copies": 1
+ },
+ "parts": [
+  {
+   "n": 1,
+   "input": "s2r_m30_VB76.p1.in",
+   "restart_mode": null,
+   "nstep": 201,
+   "started": "2026-11-08T12:25:37Z",
+   "ended": "2026-11-09T02:47:18Z",
+   "end": "converged",
+   "k_last": 192,
+   "wall_s": 51687.915644168854
+  }
+ ],
+ "reruns_from_zero": 0,
+ "restarts": 0,
+ "interruptions": [],
+ "status": "complete",
+ "nstep_first": 201,
+ "k0_seen": true,
+ "n_config": 193,
+ "k_last": 192,
+ "qe_converged": true,
+ "converged_at_k": 192,
+ "end_rule": {
+  "outcome": "accepted_converged",
+  "dF_200_180_meV": null,
+  "end": null,
+  "stop": false,
+  "reason": null
+ },
+ "wall_h": 14.357754345602459,
+ "min_per_config": 4.463550573762423,
+ "final_geometry": {
+  "file": "s2r_m30_VB76.final.extxyz",
+  "k": 192,
+  "sha256": "7cb9fc851855ac66b381b29c739f88b75a714124a3e9d4bd432cd56ea2ff2c59"
+ },
+ "validity_final": {
+  "valid": false,
+  "failed": [
+   5
+  ],
+  "file": "s2r_m30_VB76.validity_final.json",
+  "sha256": "3100e3b0f91b2754ec12152878c0893a285f8772797da5da9b149c6f5cb18bf0",
+  "parent": "s2r_m30_hostB76",
+  "parent_final": true
+ }
+}

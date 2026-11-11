@@ -1,0 +1,401 @@
+{
+ "schema": "s2-graph-1",
+ "campaign": "c2",
+ "phases": [
+  "check",
+  "a2"
+ ],
+ "counts": {
+  "a2": 8,
+  "a2_validate": 8,
+  "gate": 5
+ },
+ "jobs": [
+  {
+   "id": "check:upf",
+   "kind": "check",
+   "phase": "check",
+   "deps": [],
+   "seq": 0,
+   "what": "upf"
+  },
+  {
+   "id": "check:nodescripts",
+   "kind": "check",
+   "phase": "check",
+   "deps": [],
+   "seq": 1,
+   "what": "nodescripts"
+  },
+  {
+   "id": "a2:s2r_m30_VB136",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 2,
+   "label": "s2r_m30_VB136",
+   "order": 1,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "V",
+   "L": "B",
+   "j": 136,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_VB136"
+  },
+  {
+   "id": "a2:s2r_m30_hostB136",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 3,
+   "label": "s2r_m30_hostB136",
+   "order": 2,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "host",
+   "L": "B",
+   "j": 136,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_host"
+  },
+  {
+   "id": "a2:s2r_m30_Sr136o0_novac",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 4,
+   "label": "s2r_m30_Sr136o0_novac",
+   "order": 3,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "D",
+   "L": "B",
+   "j": 136,
+   "token": "Sr",
+   "leg": "novac",
+   "a1": "s2_m30_Sr136p0_novac"
+  },
+  {
+   "id": "a2:s2r_m30_Sr136o0_vac",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 5,
+   "label": "s2r_m30_Sr136o0_vac",
+   "order": 4,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "DV",
+   "L": "B",
+   "j": 136,
+   "token": "Sr",
+   "leg": "vac",
+   "a1": "s2_m30_Sr136p0_vac"
+  },
+  {
+   "id": "a2:s2r_m30_hostB76",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 6,
+   "label": "s2r_m30_hostB76",
+   "order": 5,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "host",
+   "L": "B",
+   "j": 76,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_host"
+  },
+  {
+   "id": "a2:s2r_m30_VB76",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 7,
+   "label": "s2r_m30_VB76",
+   "order": 6,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "V",
+   "L": "B",
+   "j": 76,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_VB76"
+  },
+  {
+   "id": "a2:s2r_m30_Sr76o0_novac",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 8,
+   "label": "s2r_m30_Sr76o0_novac",
+   "order": 7,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "D",
+   "L": "B",
+   "j": 76,
+   "token": "Sr",
+   "leg": "novac",
+   "a1": "s2_m30_Sr76p0_novac"
+  },
+  {
+   "id": "a2:s2r_m30_Sr76o0_vac",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 9,
+   "label": "s2r_m30_Sr76o0_vac",
+   "order": 8,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "DV",
+   "L": "B",
+   "j": 76,
+   "token": "Sr",
+   "leg": "vac",
+   "a1": "s2_m30_Sr76p0_vac"
+  },
+  {
+   "id": "a2v:s2r_m30_VB136",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_VB136",
+    "a2:s2r_m30_hostB136"
+   ],
+   "seq": 10,
+   "label": "s2r_m30_VB136",
+   "parent": "s2r_m30_hostB136",
+   "order": 1,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "V",
+   "L": "B",
+   "j": 136,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_VB136"
+  },
+  {
+   "id": "a2v:s2r_m30_hostB136",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_hostB136"
+   ],
+   "seq": 11,
+   "label": "s2r_m30_hostB136",
+   "parent": null,
+   "order": 2,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "host",
+   "L": "B",
+   "j": 136,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_host"
+  },
+  {
+   "id": "a2v:s2r_m30_Sr136o0_novac",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_Sr136o0_novac",
+    "a2:s2r_m30_hostB136"
+   ],
+   "seq": 12,
+   "label": "s2r_m30_Sr136o0_novac",
+   "parent": "s2r_m30_hostB136",
+   "order": 3,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "D",
+   "L": "B",
+   "j": 136,
+   "token": "Sr",
+   "leg": "novac",
+   "a1": "s2_m30_Sr136p0_novac"
+  },
+  {
+   "id": "a2v:s2r_m30_Sr136o0_vac",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_Sr136o0_vac",
+    "a2:s2r_m30_VB136"
+   ],
+   "seq": 13,
+   "label": "s2r_m30_Sr136o0_vac",
+   "parent": "s2r_m30_VB136",
+   "order": 4,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "DV",
+   "L": "B",
+   "j": 136,
+   "token": "Sr",
+   "leg": "vac",
+   "a1": "s2_m30_Sr136p0_vac"
+  },
+  {
+   "id": "a2v:s2r_m30_hostB76",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_hostB76"
+   ],
+   "seq": 14,
+   "label": "s2r_m30_hostB76",
+   "parent": null,
+   "order": 5,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "host",
+   "L": "B",
+   "j": 76,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_host"
+  },
+  {
+   "id": "a2v:s2r_m30_VB76",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_VB76",
+    "a2:s2r_m30_hostB76"
+   ],
+   "seq": 15,
+   "label": "s2r_m30_VB76",
+   "parent": "s2r_m30_hostB76",
+   "order": 6,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "V",
+   "L": "B",
+   "j": 76,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_VB76"
+  },
+  {
+   "id": "a2v:s2r_m30_Sr76o0_novac",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_Sr76o0_novac",
+    "a2:s2r_m30_hostB76"
+   ],
+   "seq": 16,
+   "label": "s2r_m30_Sr76o0_novac",
+   "parent": "s2r_m30_hostB76",
+   "order": 7,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "D",
+   "L": "B",
+   "j": 76,
+   "token": "Sr",
+   "leg": "novac",
+   "a1": "s2_m30_Sr76p0_novac"
+  },
+  {
+   "id": "a2v:s2r_m30_Sr76o0_vac",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_Sr76o0_vac",
+    "a2:s2r_m30_VB76"
+   ],
+   "seq": 17,
+   "label": "s2r_m30_Sr76o0_vac",
+   "parent": "s2r_m30_VB76",
+   "order": 8,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "DV",
+   "L": "B",
+   "j": 76,
+   "token": "Sr",
+   "leg": "vac",
+   "a1": "s2_m30_Sr76p0_vac"
+  },
+  {
+   "id": "gate:step0@1",
+   "kind": "gate",
+   "phase": "a2",
+   "deps": [
+    "k0:s2r_m30_VB136"
+   ],
+   "seq": 18,
+   "gate": "step0",
+   "cat": "gate",
+   "at": "s2r_m30_VB136"
+  },
+  {
+   "id": "gate:K2",
+   "kind": "gate",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_VB136"
+   ],
+   "seq": 19,
+   "gate": "K2",
+   "cat": "gate"
+  },
+  {
+   "id": "gate:step0@4",
+   "kind": "gate",
+   "phase": "a2",
+   "deps": [
+    "k0:s2r_m30_Sr136o0_vac"
+   ],
+   "seq": 20,
+   "gate": "step0",
+   "cat": "gate",
+   "at": "s2r_m30_Sr136o0_vac"
+  },
+  {
+   "id": "gate:projection@after4",
+   "kind": "gate",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_VB136",
+    "a2:s2r_m30_hostB136",
+    "a2:s2r_m30_Sr136o0_novac",
+    "a2:s2r_m30_Sr136o0_vac"
+   ],
+   "seq": 21,
+   "gate": "projection",
+   "point": "after4",
+   "cat": "gate"
+  },
+  {
+   "id": "gate:K3",
+   "kind": "gate",
+   "phase": "a2",
+   "deps": [
+    "a2v:s2r_m30_VB136",
+    "a2v:s2r_m30_hostB136",
+    "a2v:s2r_m30_Sr136o0_novac",
+    "a2v:s2r_m30_Sr136o0_vac",
+    "a2v:s2r_m30_hostB76",
+    "a2v:s2r_m30_VB76",
+    "a2v:s2r_m30_Sr76o0_novac",
+    "a2v:s2r_m30_Sr76o0_vac"
+   ],
+   "seq": 22,
+   "gate": "K3",
+   "cat": "gate"
+  }
+ ]
+}

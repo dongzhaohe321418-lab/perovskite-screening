@@ -1,0 +1,17 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:step0@1",
+ "gate": "step0",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "step0": {
+   "attempts": 1,
+   "outcome": "pass",
+   "repeat": false,
+   "fix_note": null
+  }
+ },
+ "gate_file_sha256": "8240a16ba5532a7850d5574efed42d56af2e98a231c0062625c90ade2e2a5b7b",
+ "applied": "2026-11-07T01:28:24Z"
+}

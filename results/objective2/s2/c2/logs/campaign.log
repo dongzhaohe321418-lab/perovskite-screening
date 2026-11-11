@@ -1,0 +1,53 @@
+[2026-11-07T01:06:35Z] start c2; boot 4ce8642a; pid 6327; mocked none
+[2026-11-07T01:06:35Z] measured walls loaded: host 2, mace 158, smoke 6, sp 124, sp_g1 3, sp_spin 2, throughput 4
+[2026-11-07T01:06:40Z] check upf: passed
+[2026-11-07T01:06:40Z] check nodescripts: passed
+[2026-11-07T01:06:45Z] pw.x s2r_m30_VB136.p1 started at 64 ranks (pid 6860)
+[2026-11-07T01:12:26Z] spot termination notice recorded: nothing new starts for 1800 s (N-11); exit files for every running A2 part
+[2026-11-07T01:12:26Z] s2r_m30_VB136: exit file created (spot)
+[2026-11-07T01:12:57Z] s2r_m30_VB136: no usable restart data (spot-notice): rerun from k = 0 (1 of 2)
+[2026-11-07T01:22:07Z] start c2; boot 6a72d557; pid 4898; mocked none
+[2026-11-07T01:22:08Z] measured walls loaded: host 2, mace 158, smoke 6, sp 124, sp_g1 3, sp_spin 2, throughput 4
+[2026-11-07T01:22:13Z] pw.x s2r_m30_VB136.p1 started at 64 ranks (pid 5169)
+[2026-11-07T01:28:24Z] gate gate:step0@1: decision {"step0": {"attempts": 1, "fix_note": null, "outcome": "pass", "repeat": false}}
+[2026-11-07T06:53:26Z] s2r_m30_VB136: complete, 79 configurations, end rule accepted_converged
+[2026-11-07T06:53:27Z] gate gate:K2: decision {"K2": "pass"}
+[2026-11-07T06:53:32Z] pw.x s2r_m30_hostB136.p1 started at 64 ranks (pid 17340)
+[2026-11-07T12:44:30Z] s2r_m30_hostB136: complete, 83 configurations, end rule accepted_converged
+[2026-11-07T12:44:31Z] s2r_m30_VB136: section 11 final-geometry checks passed
+[2026-11-07T12:44:37Z] s2r_m30_hostB136: section 11 final-geometry checks passed
+[2026-11-07T12:44:42Z] pw.x s2r_m30_Sr136o0_novac.p1 started at 64 ranks (pid 29141)
+[2026-11-07T18:51:44Z] s2r_m30_Sr136o0_novac: complete, 81 configurations, end rule accepted_converged
+[2026-11-07T18:51:44Z] s2r_m30_Sr136o0_novac: section 11 final-geometry checks passed
+[2026-11-07T18:51:49Z] pw.x s2r_m30_Sr136o0_vac.p1 started at 64 ranks (pid 41291)
+[2026-11-07T18:58:31Z] gate gate:step0@4: decision {"step0": {"attempts": 1, "fix_note": null, "outcome": "pass", "repeat": false}}
+[2026-11-08T00:21:54Z] s2r_m30_Sr136o0_vac: complete, 75 configurations, end rule accepted_converged
+[2026-11-08T00:21:54Z] s2r_m30_Sr136o0_vac: section 11 final-geometry checks passed
+[2026-11-08T00:22:00Z] gate gate:projection@after4: decision {"c4_run": true, "cuts": [], "multi_pose_cut": {}, "n": 8}
+[2026-11-08T00:22:05Z] pw.x s2r_m30_hostB76.p1 started at 64 ranks (pid 56974)
+[2026-11-08T12:25:32Z] s2r_m30_hostB76: complete, 165 configurations, end rule accepted_converged
+[2026-11-08T12:25:32Z] s2r_m30_hostB76: section 11 final-geometry checks passed
+[2026-11-08T12:25:37Z] pw.x s2r_m30_VB76.p1 started at 64 ranks (pid 80924)
+[2026-11-09T02:47:18Z] s2r_m30_VB76: complete, 193 configurations, end rule accepted_converged
+[2026-11-09T02:47:19Z] s2r_m30_VB76: section 11 final-geometry checks FAILED [5]
+[2026-11-09T02:47:24Z] pw.x s2r_m30_Sr76o0_novac.p1 started at 64 ranks (pid 108257)
+[2026-11-09T02:56:25Z] spot termination notice recorded: nothing new starts for 1800 s (N-11); exit files for every running A2 part
+[2026-11-09T02:56:25Z] s2r_m30_Sr76o0_novac: exit file created (spot)
+[2026-11-09T02:56:46Z] s2r_m30_Sr76o0_novac: interrupted at k = 0 (spot-notice); restart part 2 with nstep 200
+[2026-11-10T23:41:48Z] start c2; boot df73cc9f; pid 4941; mocked none
+[2026-11-10T23:41:49Z] measured walls loaded: a2 6, a2_config 6, host 2, mace 158, smoke 6, sp 124, sp_g1 3, sp_spin 2, throughput 4
+[2026-11-10T23:41:54Z] pw.x s2r_m30_Sr76o0_novac.p2 started at 64 ranks (pid 5343)
+[2026-11-10T23:46:24Z] spot termination notice recorded: nothing new starts for 1800 s (N-11); exit files for every running A2 part
+[2026-11-10T23:46:24Z] s2r_m30_Sr76o0_novac: exit file created (spot)
+[2026-11-10T23:46:46Z] s2r_m30_Sr76o0_novac: interrupted at k = 1 (spot-notice); restart part 3 with nstep 199
+[2026-11-10T23:57:22Z] start c2; boot 2a0326db; pid 4870; mocked none
+[2026-11-10T23:57:23Z] measured walls loaded: a2 6, a2_config 6, host 2, mace 158, smoke 6, sp 124, sp_g1 3, sp_spin 2, throughput 4
+[2026-11-10T23:57:28Z] pw.x s2r_m30_Sr76o0_novac.p3 started at 64 ranks (pid 5150)
+[2026-11-11T10:37:37Z] s2r_m30_Sr76o0_novac: complete, 142 configurations, end rule accepted_converged
+[2026-11-11T10:37:38Z] s2r_m30_Sr76o0_novac: section 11 final-geometry checks passed
+[2026-11-11T10:37:43Z] pw.x s2r_m30_Sr76o0_vac.p1 started at 64 ranks (pid 27095)
+[2026-11-11T21:10:25Z] s2r_m30_Sr76o0_vac: complete, 136 configurations, end rule accepted_converged
+[2026-11-11T21:10:26Z] s2r_m30_Sr76o0_vac: section 11 final-geometry checks passed
+[2026-11-11T21:10:32Z] gate gate:K3: decision {"K3": "fail_replan"}
+[2026-11-11T21:10:32Z] A2 stopped (gate gate:K3): running parts stopped by their exit files
+[2026-11-11T21:10:37Z] end: {'done': 23}; CAMPAIGN_DONE; KEEP_ALIVE removed

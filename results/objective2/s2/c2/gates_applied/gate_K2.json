@@ -1,0 +1,12 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:K2",
+ "gate": "K2",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "K2": "pass"
+ },
+ "gate_file_sha256": "ee43b2ea1bc36fdedf79344bd46f5c4af5df8a1a773f5459a5610310e1497941",
+ "applied": "2026-11-07T06:53:27Z"
+}

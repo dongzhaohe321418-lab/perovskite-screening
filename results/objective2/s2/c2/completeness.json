@@ -1,0 +1,40 @@
+{
+ "schema": "s2-completeness-1",
+ "campaign": "c2",
+ "by_category": {
+  "a2": {
+   "done": 8
+  },
+  "a2_validate": {
+   "done": 8
+  },
+  "gate": {
+   "done": 5
+  }
+ },
+ "jobs": {
+  "check:upf": "done",
+  "check:nodescripts": "done",
+  "a2:s2r_m30_VB136": "done",
+  "a2:s2r_m30_hostB136": "done",
+  "a2:s2r_m30_Sr136o0_novac": "done",
+  "a2:s2r_m30_Sr136o0_vac": "done",
+  "a2:s2r_m30_hostB76": "done",
+  "a2:s2r_m30_VB76": "done",
+  "a2:s2r_m30_Sr76o0_novac": "done",
+  "a2:s2r_m30_Sr76o0_vac": "done",
+  "a2v:s2r_m30_VB136": "done",
+  "a2v:s2r_m30_hostB136": "done",
+  "a2v:s2r_m30_Sr136o0_novac": "done",
+  "a2v:s2r_m30_Sr136o0_vac": "done",
+  "a2v:s2r_m30_hostB76": "done",
+  "a2v:s2r_m30_VB76": "done",
+  "a2v:s2r_m30_Sr76o0_novac": "done",
+  "a2v:s2r_m30_Sr76o0_vac": "done",
+  "gate:step0@1": "done",
+  "gate:K2": "done",
+  "gate:step0@4": "done",
+  "gate:projection@after4": "done",
+  "gate:K3": "done"
+ }
+}

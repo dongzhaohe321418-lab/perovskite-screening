@@ -1,0 +1,12 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:K3",
+ "gate": "K3",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "K3": "fail_replan"
+ },
+ "gate_file_sha256": "55e5d2c54b1898c1efe6a3a50bed619a70019330ec666acac150110afbe3bbed",
+ "applied": "2026-11-11T21:10:32Z"
+}

@@ -1,0 +1,116 @@
+{
+ "schema": "s2-gate-1",
+ "gate": "K2",
+ "campaign": "c2",
+ "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+ "attempt": 1,
+ "opened": [
+  {
+   "label": "smoke:c1",
+   "file": "work/s2/c1/smoke.json",
+   "sha256": "69527badc5811b325856f933a5b259e07b9b444885d4e948c753c7bbee647115",
+   "mode": "files"
+  },
+  {
+   "label": "s2r_m30_VB136",
+   "file": "work/s2/c2/a2/s2r_m30_VB136/s2r_m30_VB136.p1.out",
+   "sha256": "5549c832bcbf14e4522b4447ed1c9612d19bf8ff5fac25b8b18782a7ab4563da",
+   "mode": "end_rule"
+  },
+  {
+   "label": "s2_m30_VB136",
+   "file": "work/s2/c1/cells/s2_m30_VB136/record.json",
+   "sha256": "4805861df60a4bd856beec0f2d95a7dfedc8cdbeba69204b4e4f9ec133c5072d",
+   "mode": "records"
+  }
+ ],
+ "inputs_digest": "41a8aed13c06f9429eb0bd461c1183e784ba4497b9c8040e524e020e3a320d09",
+ "result": {
+  "outcome": "accepted_converged",
+  "a1_valid_reported": true,
+  "K2": "pass"
+ },
+ "decision": {
+  "K2": "pass"
+ },
+ "written": "2026-11-07T06:53:27Z",
+ "state_in": {
+  "schema": "s2-state-1",
+  "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+  "campaigns": {
+   "c1": "done",
+   "c2": "running"
+  },
+  "cuts": [],
+  "stage0": {
+   "production_n8": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23"
+   ],
+   "reserves_n8": [
+    "m33",
+    "m13"
+   ],
+   "production_n10": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23",
+    "m33",
+    "m13"
+   ],
+   "reserves_n10": [
+    "m17",
+    "m03"
+   ],
+   "m05_cal": {
+    "B": 124,
+    "A": 28,
+    "X": 49
+   },
+   "pbcl": {
+    "decision": "provisional_2.837",
+    "value_used_A": 2.837,
+    "tag_for_shifted_starts": "[M] starting point",
+    "allow_provisional_required": true
+   }
+  },
+  "a2_layout": "64",
+  "G1": {
+   "Cl": true,
+   "Ca": false
+  },
+  "gateN": {
+   "Sr": true,
+   "Ca": true,
+   "Cl": true,
+   "Cs": true,
+   "GA": true
+  },
+  "sr_stop": false,
+  "n": 8,
+  "pose": {
+   "Cs": "default",
+   "Cl": "default"
+  },
+  "step0": {
+   "attempts": 1,
+   "outcome": "pass",
+   "repeat": false,
+   "fix_note": null
+  }
+ },
+ "inputs_in": {},
+ "c1_in": null,
+ "inputs_opened": []
+}

@@ -1,0 +1,101 @@
+{
+ "schema": "s2-a2validity-1",
+ "label": "s2r_m30_Sr136o0_vac",
+ "kind": "DV",
+ "site": 136,
+ "token": "Sr",
+ "leg": "vac",
+ "region_id": "8c2d544d2f2d09eb4470f5e51a8ca4e7044f09b1777fbf97da6a9bf8d806806a",
+ "parent_label": "s2r_m30_VB136",
+ "validity": {
+  "checks": {
+   "2": {
+    "passed": true,
+    "min_X_to_v_A": 3.9960206936158618,
+    "species": "I",
+    "index": 125
+   },
+   "3": {
+    "passed": true,
+    "centre": 135,
+    "displacement_A": 0.14742786292983234
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 133,
+    "bonds_final": 133,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.6148110829735303,
+    "cn_inorganic_min_A": 3.603902464820457,
+    "min_pair_A": 1.015012973013378
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 6,
+     "n_fa": 1,
+     "max_dr_inorganic_A": 0.02804792541930104,
+     "max_dr_fa_carbon_A": 0.031926982524996886,
+     "max_rot_fa_deg": 2.2874011732364488,
+     "worst": {
+      "inorganic": {
+       "index": 3,
+       "d_host_A": 7.018996122273579,
+       "dr_A": 0.02804792541930104
+      },
+      "fa_carbon": {
+       "carbon": 28,
+       "d_host_A": 6.021229811544116,
+       "dr_carbon_A": 0.031926982524996886,
+       "rot_deg": 2.2874011732364488
+      },
+      "fa_rotation": {
+       "carbon": 28,
+       "d_host_A": 6.021229811544116,
+       "dr_carbon_A": 0.031926982524996886,
+       "rot_deg": 2.2874011732364488
+      }
+     }
+    },
+    "within_6A_reported": {
+     "n_inorganic": 7,
+     "n_fa": 6,
+     "max_dr_inorganic_A": 0.17434395507414555,
+     "max_dr_fa_carbon_A": 0.06695359110010786,
+     "max_rot_fa_deg": 3.8504389074306733,
+     "worst": {
+      "inorganic": {
+       "index": 138,
+       "d_host_A": 3.3371550464662145,
+       "dr_A": 0.17434395507414555
+      },
+      "fa_carbon": {
+       "carbon": 104,
+       "d_host_A": 5.508031236599535,
+       "dr_carbon_A": 0.06695359110010786,
+       "rot_deg": 3.8504389074306733
+      },
+      "fa_rotation": {
+       "carbon": 104,
+       "d_host_A": 5.508031236599535,
+       "dr_carbon_A": 0.06695359110010786,
+       "rot_deg": 3.8504389074306733
+      }
+     }
+    }
+   }
+  },
+  "valid": true,
+  "failed": []
+ },
+ "geometry_sha256": {
+  "start": "09037c745336779960c5d17e3e83a4bc293082845107667cc0048c91c166a371",
+  "final": "822f5fd1feb4eb2f94a1af4613c62e3c2295e688ab1f5bb243a9b8199252fb0b",
+  "parent_final": "7aa2ac5e96512b0b3524a64a7e33b714956b7b850c344ec29def2af336764cb0",
+  "host_relaxed": "fba8b424676d555a2d52a2b0fc093ad2e8e5a472e8409c48c136a76765167f83"
+ },
+ "rule": "S2_PLAN.md section 11: section 5 checks 2-5 on the final geometries (host_R: check 4); partner check between the final geometries of child and parent",
+ "written": "2026-11-08T00:21:54Z"
+}

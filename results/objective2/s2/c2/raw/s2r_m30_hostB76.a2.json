@@ -1,0 +1,59 @@
+{
+ "schema": "s2-a2-1",
+ "label": "s2r_m30_hostB76",
+ "campaign": "c2",
+ "order": 5,
+ "a1_cell": {
+  "work_id": "s2_m30_host"
+ },
+ "layout": {
+  "name": "64",
+  "ranks": 64,
+  "copies": 1
+ },
+ "parts": [
+  {
+   "n": 1,
+   "input": "s2r_m30_hostB76.p1.in",
+   "restart_mode": null,
+   "nstep": 201,
+   "started": "2026-11-08T00:22:05Z",
+   "ended": "2026-11-08T12:25:32Z",
+   "end": "converged",
+   "k_last": 164,
+   "wall_s": 43394.049941301346
+  }
+ ],
+ "reruns_from_zero": 0,
+ "restarts": 0,
+ "interruptions": [],
+ "status": "complete",
+ "nstep_first": 201,
+ "k0_seen": true,
+ "n_config": 165,
+ "k_last": 164,
+ "qe_converged": true,
+ "converged_at_k": 164,
+ "end_rule": {
+  "outcome": "accepted_converged",
+  "dF_200_180_meV": null,
+  "end": null,
+  "stop": false,
+  "reason": null
+ },
+ "wall_h": 12.053902761472596,
+ "min_per_config": 4.383237367808217,
+ "final_geometry": {
+  "file": "s2r_m30_hostB76.final.extxyz",
+  "k": 164,
+  "sha256": "7db0f3fc0945072db1a51019339735c19d204e91cc9c1b763cfe0f2c02b7b147"
+ },
+ "validity_final": {
+  "valid": true,
+  "failed": [],
+  "file": "s2r_m30_hostB76.validity_final.json",
+  "sha256": "dc89dbeb9d7aff07ba4e9416ab4ed836214c9ca3c9614646bc30971964b68ee2",
+  "parent": null,
+  "parent_final": false
+ }
+}

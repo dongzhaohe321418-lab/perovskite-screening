@@ -1,0 +1,15 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:projection@after4",
+ "gate": "projection",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "cuts": [],
+  "n": 8,
+  "multi_pose_cut": {},
+  "c4_run": true
+ },
+ "gate_file_sha256": "af01d2cd99788da949031668b5eb0750931a891b31452188cb2eca9b7d1c717e",
+ "applied": "2026-11-08T00:22:00Z"
+}

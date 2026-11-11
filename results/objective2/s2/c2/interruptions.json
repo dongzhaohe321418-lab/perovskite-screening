@@ -1,0 +1,26 @@
+[
+ {
+  "boot": "4ce8642a-fd0f-4dc1-9061-1e71fecf8e99",
+  "cause": "spot-notice",
+  "k": -1,
+  "kind": "a2",
+  "label": "s2r_m30_VB136",
+  "time": "2026-11-07T01:12:57Z"
+ },
+ {
+  "boot": "6a72d557-1425-47a7-b520-e5861c23c17b",
+  "cause": "spot-notice",
+  "k": 0,
+  "kind": "a2",
+  "label": "s2r_m30_Sr76o0_novac",
+  "time": "2026-11-09T02:56:46Z"
+ },
+ {
+  "boot": "df73cc9f-b1c6-420a-9bb1-16ab979639de",
+  "cause": "spot-notice",
+  "k": 1,
+  "kind": "a2",
+  "label": "s2r_m30_Sr76o0_novac",
+  "time": "2026-11-10T23:46:46Z"
+ }
+]

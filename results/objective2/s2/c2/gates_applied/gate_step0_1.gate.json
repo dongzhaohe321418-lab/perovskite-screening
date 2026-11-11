@@ -1,0 +1,136 @@
+{
+ "schema": "s2-gate-1",
+ "gate": "step0",
+ "campaign": "c2",
+ "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+ "attempt": 1,
+ "opened": [
+  {
+   "label": "smoke:c1",
+   "file": "work/s2/c1/smoke.json",
+   "sha256": "69527badc5811b325856f933a5b259e07b9b444885d4e948c753c7bbee647115",
+   "mode": "files"
+  },
+  {
+   "label": "s2_m30_VB136",
+   "file": "jobs/s2c1/s2_m30_VB136/s2_m30_VB136.out",
+   "sha256": "75bea18aa7cfcd5e314e7129b3f6a36371eccb6b084a77b85227b5a8c818fb33",
+   "mode": "status"
+  },
+  {
+   "label": "s2_m30_VB136",
+   "file": "jobs/s2c1/s2_m30_VB136/s2_m30_VB136.out",
+   "sha256": "75bea18aa7cfcd5e314e7129b3f6a36371eccb6b084a77b85227b5a8c818fb33",
+   "mode": "full"
+  },
+  {
+   "label": "s2r_m30_VB136",
+   "file": "work/s2/c2/a2/s2r_m30_VB136/s2r_m30_VB136.p1.out",
+   "sha256": "01b4e4d414f996b26c45305f6c59961c675757375c5f6197ccc57c83a3f29dbc",
+   "mode": "k0"
+  }
+ ],
+ "inputs_digest": "d1a077558a8ac754fb3b04cff99c908fec88379669731a71f26cddd106e6d98a",
+ "result": {
+  "cells": {
+   "s2_m30_VB136": {
+    "dF_meV": 0.0,
+    "passed": true,
+    "reason": null
+   }
+  },
+  "attempt": 1,
+  "fix_note": null,
+  "outcome": "pass",
+  "tolerance_meV": 0.5
+ },
+ "decision": {
+  "step0": {
+   "attempts": 1,
+   "outcome": "pass",
+   "repeat": false,
+   "fix_note": null
+  }
+ },
+ "written": "2026-11-07T01:28:24Z",
+ "state_in": {
+  "schema": "s2-state-1",
+  "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+  "campaigns": {
+   "c1": "done",
+   "c2": "running"
+  },
+  "cuts": [],
+  "stage0": {
+   "production_n8": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23"
+   ],
+   "reserves_n8": [
+    "m33",
+    "m13"
+   ],
+   "production_n10": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23",
+    "m33",
+    "m13"
+   ],
+   "reserves_n10": [
+    "m17",
+    "m03"
+   ],
+   "m05_cal": {
+    "B": 124,
+    "A": 28,
+    "X": 49
+   },
+   "pbcl": {
+    "decision": "provisional_2.837",
+    "value_used_A": 2.837,
+    "tag_for_shifted_starts": "[M] starting point",
+    "allow_provisional_required": true
+   }
+  },
+  "a2_layout": "64",
+  "G1": {
+   "Cl": true,
+   "Ca": false
+  },
+  "gateN": {
+   "Sr": true,
+   "Ca": true,
+   "Cl": true,
+   "Cs": true,
+   "GA": true
+  },
+  "sr_stop": false,
+  "n": 8,
+  "pose": {
+   "Cs": "default",
+   "Cl": "default"
+  }
+ },
+ "inputs_in": {
+  "cells": [
+   "s2_m30_VB136"
+  ],
+  "attempt": 1,
+  "fix_note": null,
+  "no_error_found": false
+ },
+ "c1_in": null,
+ "inputs_opened": []
+}

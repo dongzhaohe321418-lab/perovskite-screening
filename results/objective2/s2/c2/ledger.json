@@ -1,0 +1,105 @@
+{
+ "schema": "s2-ledger-1",
+ "boots": [
+  {
+   "boot_id": "3769b9e1-25a6-473f-964e-95a4eea08c7f",
+   "btime": 1793788559.0,
+   "btime_utc": "2026-11-04T10:35:59Z",
+   "first_heartbeat": 1793790623.1864414,
+   "last_heartbeat": 1793791166.0,
+   "journal_end": 1793791021.540429,
+   "end_used": 1793791226.0,
+   "end_used_utc": "2026-11-04T11:20:26Z",
+   "end_assumed": null,
+   "hours": 0.7408333333333333,
+   "campaigns": [
+    "c1"
+   ],
+   "current": false
+  },
+  {
+   "boot_id": "686fc703-d090-416a-9e87-cf6cbb3dbc3e",
+   "btime": 1793791621.0,
+   "btime_utc": "2026-11-04T11:27:01Z",
+   "first_heartbeat": 1793791666.8053017,
+   "last_heartbeat": 1793862936.0,
+   "journal_end": 1793863067.220683,
+   "end_used": 1793863067.220683,
+   "end_used_utc": "2026-11-05T07:17:47Z",
+   "end_assumed": null,
+   "hours": 19.846172411971622,
+   "campaigns": [
+    "c1"
+   ],
+   "current": false
+  },
+  {
+   "boot_id": "4ce8642a-fd0f-4dc1-9061-1e71fecf8e99",
+   "btime": 1794013427.0,
+   "btime_utc": "2026-11-07T01:03:47Z",
+   "first_heartbeat": 1794013595.6833835,
+   "last_heartbeat": 1794014257.0,
+   "journal_end": 1794014221.027508,
+   "end_used": 1794014317.0,
+   "end_used_utc": "2026-11-07T01:18:37Z",
+   "end_assumed": null,
+   "hours": 0.24722222222222223,
+   "campaigns": [
+    "c2"
+   ],
+   "current": false
+  },
+  {
+   "boot_id": "6a72d557-1425-47a7-b520-e5861c23c17b",
+   "btime": 1794014484.0,
+   "btime_utc": "2026-11-07T01:21:24Z",
+   "first_heartbeat": 1794014528.2403252,
+   "last_heartbeat": 1794193256.0,
+   "journal_end": 1794193222.49786,
+   "end_used": 1794193316.0,
+   "end_used_utc": "2026-11-09T03:01:56Z",
+   "end_assumed": null,
+   "hours": 49.675555555555555,
+   "campaigns": [
+    "c2"
+   ],
+   "current": false
+  },
+  {
+   "boot_id": "df73cc9f-b1c6-420a-9bb1-16ab979639de",
+   "btime": 1794354065.0,
+   "btime_utc": "2026-11-10T23:41:05Z",
+   "first_heartbeat": 1794354109.1600833,
+   "last_heartbeat": 1794354651.0,
+   "journal_end": 1794354641.887266,
+   "end_used": 1794354711.0,
+   "end_used_utc": "2026-11-10T23:51:51Z",
+   "end_assumed": null,
+   "hours": 0.17944444444444443,
+   "campaigns": [
+    "c2"
+   ],
+   "current": false
+  },
+  {
+   "boot_id": "2a0326db-d628-4ebf-83e3-6ed8953f98f9",
+   "btime": 1794355006.0,
+   "btime_utc": "2026-11-10T23:56:46Z",
+   "first_heartbeat": 1794355043.310407,
+   "last_heartbeat": 1794431380.0,
+   "journal_end": null,
+   "end_used": 1794431437.3549414,
+   "end_used_utc": "2026-11-11T21:10:37Z",
+   "end_assumed": null,
+   "hours": 21.230931928157805,
+   "campaigns": [
+    "c2"
+   ],
+   "current": true
+  }
+ ],
+ "H_spent_h": 91.92015989568498,
+ "complete": true,
+ "problems": [],
+ "now_utc": "2026-11-11T21:10:37Z"
+}
