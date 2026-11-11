@@ -1262,3 +1262,219 @@ reports, are kept off-repository in the private record folder.
 - **Review of D1–D5 (2026-11-03, before commit).** A consistency review and a numbers-and-statistics
   review, without any calculator: 21 findings (11 minor, 10 suggestions, no error); 21 applied, 0
   rejected; none changes D1–D5.
+
+## Amendment 2026-11-11a: K3 failure through a final-geometry check of the far quartet — stop as §11 says, diagnose by geometry only, re-plan in a new pre-registration
+
+**Conventions.** § is a section of this file; P:n is its line n, DEC:n a line of `S2_DECISION.md` and S0:n a line of
+`STAGE0.md`, all at commit `8bff03e`. OPS2: `C2_OPERATIONS.md` at `aeff9fd`; OPS3: `C3_OPERATIONS.md` and
+`D3BJ_AMENDMENT.md` at `6858693`; [46:n]–[50:n]: `scripts/46`–`50` at `8bff03e`. Tags as in the header (P:17-23), plus **[N]**: an observation read on the node during C2, either a D-C2-5
+count or timing or a line of the campaign log. Relaxation numbers follow the C2 order (OPS2 §1): 5 hostB76, 6 VB76,
+7 Sr76o0_novac, 8 Sr76o0_vac (the far quartet, m30, Pb76); 1-4 the hinge quartet (Pb136).
+
+### a. Status and information state
+
+**Status: AMENDMENT, written on 2026-11-11 by the analyst** (an AI assistant to whom the PI delegated the S2 research
+direction on 2026-11-03; DEC, "Who decided"). It is appended, not edited in (P:7-9), and **committed before K3 is
+applied on the node and before `decision.K3` is read**. It is not deployed to the node, whose checkout stays at
+`8bff03e` [50:2356-2377]. If the node applies K3 before the commit, `decision.K3` is not read until the commit is
+made, and the C2 result note records the commit hash and states that no rule was changed after a K3 line was seen.
+Under the code K3's outcome is already fixed by the recorded check (part a, last item); the amendment fixes what
+follows from it before that outcome is formally recorded.
+
+- **Read before writing [N].** Counts and timings under D-C2-5; the gate decisions applied so far (step-0@1 pass,
+  K2 pass, step-0@4 pass, projection after relaxation 4: no cut, n = 8, C4 to run); and the campaign-log lines of the
+  section-11 checks: relaxations 1-5 "passed", relaxation 6 (VB76, 193 configurations, accepted_converged) "FAILED [5]"
+  [50:3992]. At 2026-11-11T01:25Z relaxation 7 was running (status pending; restarts 2, reruns_from_zero 0,
+  interruptions 2, after two spot notices), relaxation 8 had not started, and no check line beyond those of
+  relaxations 1-6 had been written. (If later facts are read before the commit, they are added here, dated.)
+- **Departure, disclosed.** D-C2-5 does not list the check outcomes, and D-C2-10 reads the named failed checks only after
+  CAMPAIGN_DONE and verify. Seeing them in the log during C2 was therefore an early read. The line names only the check
+  number; it carries no energy, force or gate value.
+- **Known values and facts that bear on the choices below** (public before this amendment): E_b^A1(Pb76) = −5.0 meV for
+  the m30 Sr far quartet (gate N; `C1_RESULT.md` §6; exempt in D-C2-10); WP2d's raw Sr hinge E_b, +127.7 meV, a coarse
+  proxy for E_b^A1(Pb136) (OPS2, D-C2-10 "Reason"); the WP2c and WP2d DFT values listed in §0; and the WP2e FA
+  rotations (12 of 18 FA turn their C→N axis by more than 10° in an unconstrained DFT relaxation; P:379-381).
+- **Private record.** Earlier, unpublished drafts of a fuller re-plan, two rounds of review and the analyst's decisions on
+  them preceded this text. They read only the facts above, the code and the S2 documents. Part f says why that re-plan
+  was rejected.
+- **Why K3 will be fail_replan.** VB76 is the V⁺_R cell of the far quartet [49:373-376]. `k3_eval` puts every final
+  geometry with `valid_final` False into `checks_failed` and then returns fail_replan whatever the energies; it still
+  computes and stores both quartet E_b^A2 (`Eb_A2_meV`) and leaves `value_meV` null [49:604-623]. A recorded check is
+  not repeated [50:3920-3921]. K3 is evaluated only after the eight checks [50:1293].
+
+### b. Effect and consequence
+
+1. **Binding from the commit, whatever K3 turns out to be.** C2 runs to its end in the fixed order (P:627-629; OPS2 §1;
+   [50:1293]). Stopping it early would be a deviation, which this amendment does not make, because relaxations 7 and 8
+   carry their own section-11 checks and bear on the cause (part d).
+2. **On `decision.K3` = fail_replan, for any reason.** §11 applies as written: A1 is not admissible as a proxy, and A2
+   and production stop (P:644-648; DEC:231-234). Under this plan S2 delivers no A1 tier and no validated class.
+   - **C3** is started once, in the boot that ends C2, so that it records not_run with the K3 reason [50:2482-2483]
+     (`STAGE0.md` §7, R5-C24-1; OPS3 D-C3-2, "Not_run starts", including its fallback of a separate boot with a manual
+     ledger entry). It runs no job. **C4** is never started.
+   - **The one evaluation is deferred, a departure from §17 items 5-6 and N-F29.** No entry point of `scripts/48` other
+     than `--self-test` on synthetic data is run, and none of its functions is imported, on any S2 archive, until the new
+     pre-registration (part e) fixes how and when. An evaluation root is any directory holding archives of c1, c2 and
+     c3 together; the guard of `scripts/48` opens in a root whose c3 is not_run (S0:601, 960; OPS3:35). The not_run C3
+     is therefore archived privately and verified in a directory without C1 or C2 copies (a not_run c3 has no gate
+     file to re-run), and it is kept out of any evaluation root and out of this repository until then (a departure
+     from the OPS3 D-C3-1 exception, OPS3:35). The lock is technical in this repository and procedural elsewhere.
+   - **Blinding** (part c) and part e, items 1 and 4-7, hold on every fail_replan.
+3. **Part d and part e, items 2-3,** apply when `result.checks_failed` is read under D-C2-10, after CAMPAIGN_DONE and
+   verify, and only if every entry names a far-quartet cell whose failed checks are [5]. If any entry names a hinge
+   cell, or a check 2, 3 or 4, the analyst stops and a new amendment, bound by part c and part e items 1 and 4-7,
+   follows.
+4. **If C2 ends in a final STOP before K3 is recorded** (in relaxation 7 or 8, in a section-11 check job, or in the K3
+   gate), D-C2-3 applies and part e's pre-registration is the new amendment it requires. Because the far quartet is
+   already invalid by the recorded VB76 check, the consequence is that of point 2 (P:644-646): no C3 production, no C4,
+   and no A1 tier or validated class under S2; only part e's pre-registration can admit A1. C3 is not started: it could
+   not record not_run [50:2478-2481] (OPS3:107). K3 is reported as "not reached" (D-C2-10). Part c and part e, items
+   1 and 4-7, apply; part d and part e, items 2-3, apply to the pairs whose records are complete, under the test of
+   point 3 applied to `validity_final.failed` of those records.
+
+### c. What stays blind, what is read
+
+- **Unread:** every item of D-C2-10, "Not read before the one evaluation" (OPS2 §3), and every MACE energy
+  (`E_mace_eV`) and the MACE ledger of §15. They stay unread until a rule of part e's pre-registration, committed
+  before, says otherwise; that pre-registration must then report them, labelled, whatever its outcome (part e, item 7).
+- **Read as already pre-registered:** the C2 result note and figure under D-C2-10 to D-C2-12, after CAMPAIGN_DONE and
+  verify (D-C2-6). K3 is reported as "fail (fail_replan), with `checks_failed`", and the note states from the code, not
+  by opening the field, that the value test was not reached (`value_meV` null [49:620-623]).
+- **Publication** of the C2 archive is unchanged (D-C2-7).
+
+### d. Geometry-only diagnostic of the check-5 failure [M]
+
+**Purpose.** To show how the far pairs failed, so that part e's pre-registration can design a far reference whose test
+has bite. Geometry only.
+
+**When.** Once, after the C2 archive passes verify, with the tools committed in a dated commit with passing self-tests
+before the read. A tool that raises before writing its output is fixed in a dated commit with a self-test that fails on
+the earlier version, and the read is run again once; a second failure ends the diagnostic, and part e's
+pre-registration is written without it.
+
+**Tools.** In `results/objective2/s2/c2_diagnostic/`, outside `scripts/` and `ehpc/`. No plan rule forbids this commit
+(§17 item 6 fixes only the analysis script; N-F29 compares `scripts/46`-`49`). It is never checked out on the node. This
+amendment adds G, for this purpose only, to the readers of raw A2 outputs (OPS2, "Reading rule"), under the conditions
+of the force-only reader (D-C2-11). D5, R46 and G read A2 records and gate files only through the D-C2-12 field guard
+and C1 records only through the blinded loader of `scripts/46`; each asserts that no calculator module is loaded, writes
+no file beyond its printed quantities, and has a self-test showing that access to a withheld field raises.
+- **D5:** an independent recomputation of check 5 (§5, item 5) from the archived final geometries, using none of the map,
+  molecule, minimum-image or Kabsch functions of `scripts/38`, 46 or 50. Self-test: a closed list of synthetic cases with
+  results derived by hand from §5 (displacements 0.249 / 0.251 Å, rotations 19.9 / 20.1°, distances 5.99 / 6.01 Å, an FA
+  whose carbon and nitrogens lie on opposite sides of 6.0 Å, a displacement across the periodic boundary, two exchanged
+  nitrogens, an index after I127, an appended dopant atom).
+- **R46:** a copy of `check_partner` [46:1400-1443] instrumented to return its per-object lists; its self-test asserts
+  that its summary equals `check_partner`'s on the same cases.
+- **G:** a positions reader for raw A2 outputs. It takes k, the part boundaries, the C1 restart mapping and the k = 200 cut
+  from `scripts/47 parse_relax(read="counts")` (markers only); for each counted configuration it reads the positions by
+  the rule of `scripts/47` (the header block at k = 0); it takes the cell from part 1's input. It asserts that its
+  configuration count equals `n_config` and that it parsed no energy or force (READS counters zero). Self-tests on WP2e
+  output and on synthetic restarted and capped outputs built from it.
+- **Why geometry cannot leak δ [I].** An energy difference from positions needs either a calculator, which no tool loads,
+  or full force vectors integrated along the path; the D-C2-11 reader keeps per-configuration force maxima only, and G
+  reads no force.
+
+**Printed, and nothing else.**
+1. **Integrity.** For each of the eight C2 records: `validity_final.valid`, `failed`, `parent`, `parent_final`; the sha256
+   of each final geometry and validity file against the record; each final geometry against G's last configuration
+   (10⁻⁶ Å). A mismatch is reported and ends the diagnostic.
+2. **Agreement.** Pass or fail of check 5 for the six C2 pairs under the record, D5 and R46.
+3. **Per-object table** for every far pair, and for any pair on which the readings disagree: for each gated object, its
+   kind (inorganic element or FA), index, relaxed-host distance from the step's defect (0.01 Å), |Δr| (0.001 Å), FA
+   rotation (0.1°) with and without exchange of the two nitrogens, and pass or fail under check 5 as written and under
+   the permutation-invariant reading of part e, item 2.
+4. **Which cell moved.** For each failing object, its |Δr| and rotation in the child and in the parent against the
+   S2-relaxed MACE host (the A1 V⁺_R76 geometry for the Sr76o0_vac–VB76 pair), and the same quantities between the two
+   cells' k = 0 geometries.
+5. **Trajectory.** For each far pair, the inorganic atom of largest |Δr| and the FA of largest rotation, at every
+   configuration of both cells, read by G.
+
+**Disagreements.** A disagreement between the record, D5 and R46 is reported as unresolved unless a case, added in a
+dated commit, shows which implementation is wrong (it fails on that code and passes on the other); only then is it
+reported as a code error in `scripts/46` or in a tool. A C2 cell that any implementation fails under check 5 as written
+is treated as invalid by part e's pre-registration unless such a case resolves it. C2 cells keep their recorded
+validity in S2b; their permutation-invariant reading (part e, item 2) is reported only and admits no cell. K3 stands as
+recorded in every case.
+
+**Reading [M].** The table is described, not sorted into branches: whether the failing objects are FA only or include
+inorganic atoms; whether one cell or both left the common reference; whether a failure disappears under the nitrogen
+exchange; whether relaxations 7 and 8 show the same pattern; and whether the pattern differs between the charge-contrast
+pair (VB76–hostB76, q = +1 against neutral) and the equal-charge pairs (Sr76o0_novac–hostB76, Sr76o0_vac–VB76).
+
+The tools, their outputs and this reading are published in a short note before part e's pre-registration is written.
+
+### e. The new pre-registration (S2b): what is fixed now
+
+S2b is a separate, dated pre-registration, written after the part-d read and before any item of part c is read.
+
+1. **Every admission route has a gate with bite.** On the values known before this amendment, the K3 value test was close
+   to certain to pass [I]: with E_b^A1(Pb76) = −5.0 meV it fails only if δ_Sr,m30 − δ_far ≤ 20.7 meV − E_b^A1(Pb136),
+   that is about −75 meV for a hinge E_b^A1 at the low end of WP2c's Sr first-shell range (+95.6 meV, P:163) and about
+   −107 meV at WP2d's proxy (+127.7 meV): 2.5-7.6 standard deviations of δ_Sr,m30 − δ_far under the planning s_δ
+   (√2·s_δ ≈ 14-30 meV; P:88-91). The argument rests on the proxy, since E_b^A1(Pb136) is
+   withheld. The operative part of K3 was the validity of the quartets. In S2b, every route to an A1 tier or a
+   validated class passes at least one fail-closed gate on which admission depends, and S2b states that gate's pass
+   probability before any S2b data, from everything then known (the facts of part a and the part-d outputs); it must lie
+   between 0.05 and 0.95.
+2. **Check 5 under exchange of identical atoms, fixed now on physical grounds.** Two configurations that differ only by
+   a permutation of identical atoms (for FA, the exchange of its two nitrogens with their hydrogens) are the same
+   configuration. Check 5 is evaluated invariantly under such permutations in every check first evaluated under S2b,
+   A1 and A2, and both readings are reported. It is not applied to the recorded checks of C2 or C1 (part d,
+   "Disagreements"). No S2b admission rests on a cell whose pass depends on a rule first adopted after the part-d read.
+3. **Reproducibility, not imposed agreement.** A start of a child cell from its partner's final geometry makes check 5
+   start at zero displacement; it then tests only whether the warm region leaves its start. S2b may use such a start only
+   together with a fail-closed gate of reproducibility from an independent start (for example, agreement of the far
+   region between relaxations started from the A1 geometry and from the partner's final), with its tolerance fixed
+   before any warm-start cell runs, and states the bias of the warm start and how it is bounded.
+4. **A far-site reference.** S2b admits no A1 tier without a valid far-site reference test (P:649-651, or a stated
+   successor meeting item 1). An A1 value reported without one is reported only, carries the label "S2 K3 failed (far
+   quartet invalid); A1 not validated against A2 at the far site", receives no class at either tier, and counts as an
+   admission route under item 1 if any class is attached to it.
+5. **Departures named.** A rerun of a C2 cell under other settings departs from P:612-615, P:601-602 and P:919-920; S2b
+   names each departure, defines the kind of cell it applies to (for example, every far-site A2 cell) before stating it,
+   applies it to every cell of that kind, and selects no cell, pair or object class, and no validity bound of a stated
+   departure (for example the check-5 thresholds), by its part-d result. The C2 records and this K3 failure stay on
+   record and are reported beside every later result.
+6. **Information state and budget.** S2b lists every part-d output and every choice made knowing it, including the
+   tolerance of each gate under items 1 and 3, which is fixed before any S2b data. Its compute counts
+   against the 520 node-h cap of §16 together with S2's (about 95-102 node-h at the end of C2 [I, from D-C2-5 timings]),
+   with its own projection and cut order.
+7. **Reporting.** S2b fixes when the part-c values are read, and reports them, labelled, whatever its outcome. It states
+   whether an A1 tier is produced, under which admission, and which of OPS3 and `D3BJ_AMENDMENT.md` it re-adopts.
+   Until then `D3BJ_AMENDMENT.md` has nothing to apply to, because no one evaluation runs; it is neither withdrawn nor
+   re-opened.
+
+### f. Options considered and rejected [I]
+
+- **An in-place re-plan with warm-started far children and a repeated K3** (the private drafts of part a). Rejected:
+  under a warm start check 5 starts at zero displacement, and the repeated value test is predictable from known values
+  (part e, item 1), so admission would have been close to automatic after a validity failure. It also needed a new
+  campaign, a new commit route for the runner and changes in `scripts/46`-`50`, each needing review. Part e keeps the
+  warm start only under a reproducibility gate.
+- **Relaxing the bounds of check 5 after the failure, or gating inorganic atoms only.** Rejected: a rule change after an
+  outcome. The identical-atom reading of part e, item 2, is a correction of what "the same configuration" means, fixed
+  here before the part-d read, and applies to every check from S2b on.
+- **A hinge-only calibration now.** Rejected here: without a valid far quartet C5 fails as written (P:649-651); part e,
+  item 4 fixes what any later admission needs.
+
+### g. Order
+
+1. Commit this amendment (before K3 is applied; review record completed).
+2. C2 ends; in the same boot C3 is started once and records not_run; the node trees are pulled; the node is stopped
+   (§17 item 5).
+3. Archive c2 and, privately, c3; verify c2 (D-C2-6) and c3 (OPS3 O19, without C1 or C2 copies), and record both.
+4. Commit the C2 archive (D-C2-7); the not_run c3 archive stays private (part b, point 2).
+5. C2 result note and figure (D-C2-10 to D-C2-12).
+6. A dated notice appended to OPS3 and to `D3BJ_AMENDMENT.md`, stating the K3 decision, that C3 was started only to
+   record not_run (no job, cell or value), that its archive is held privately until S2b, and the status of each note
+   under part e, item 7. OPS3 provisions used in steps 2-4 (D-C3-2 not_run starts; O19 verify) stay in force, and the
+   disk rule of D-C2-8, as extended by OPS3, keeps the C1, C2 and C3 trees on the node.
+7. Part-d tools (dated commit, self-tests) → part-d read → public diagnostic note.
+8. S2b (dated, reviewed) → whatever S2b fixes.
+
+### h. Review record
+
+| review | findings | applied | changes |
+|---|---|---|---|
+| draft 5, two lenses (science and integrity; procedure and consistency) | 38 (13 major, 25 minor) | 34 in draft 6, 4 completed in draft 7 | draft 6: disclosure of the early read; fail-closed STOP branch; Effect split; identical-atom rule fixed before the read; gate pass band; far-site reference requirement; evaluation deferred as a named departure with the not_run C3 kept out of the evaluation root; G specified and admitted as a reader under guards; disagreement rule; Order completed; citations corrected |
+| draft 6, one verifier | 9 new (1 major, 8 minor); 4 earlier findings partly applied | all | draft 7: C2 cells keep their recorded validity (the invariant reading is reported only); no A1 tier without a far-site reference; part c and part e items 1 and 4-7 hold on every fail_replan and on a STOP; evaluation root defined; gate tolerances listed in S2b's information state; pull before the node stop; commit pins of OPS2 and OPS3; K3 arithmetic corrected; fallback if K3 is applied before the commit; dated information state at commit |
