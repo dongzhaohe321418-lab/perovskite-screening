@@ -1,0 +1,3 @@
+gate,attempt,cell,state,dF_meV,passed,outcome
+step0@1,1,s2_m30_VB136,pass,0.0,True,pass
+step0@4,1,s2_m30_Sr136o0_vac,pass,0.0,True,pass

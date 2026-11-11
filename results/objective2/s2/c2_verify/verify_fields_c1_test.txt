@@ -1,0 +1,11 @@
+verify_fields.py sha256 e27d1126fbeabb57bd3f70dd4329add6d4d7d2c5510b2c4fd51f44bd2a7849e4; C1 test run 2026-11-05T14:03:57Z at repository HEAD fb019bf
+gates/G1.json: gate G1 attempt 1: decision equal; result equal; digest equal
+gates/N.json: gate N attempt 1: decision equal; result equal; digest equal
+gates/nrule.json: gate nrule attempt 1: decision equal; result equal; digest equal
+gates/pose.json: gate pose attempt 1: decision equal; result equal; digest equal
+gates/throughput.json: gate throughput attempt 1: decision equal; result equal; digest equal
+gates_applied/gate_G1.gate.json: gate G1 attempt 1: decision equal; result equal; digest equal
+gates_applied/gate_N.gate.json: gate N attempt 1: decision equal; result equal; digest equal
+gates_applied/gate_nrule.gate.json: gate nrule attempt 1: decision equal; result equal; digest equal
+gates_applied/gate_pose.gate.json: gate pose attempt 1: decision equal; result equal; digest equal
+gates_applied/gate_throughput.gate.json: gate throughput attempt 1: decision equal; result equal; digest equal

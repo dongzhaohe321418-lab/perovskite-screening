@@ -1,0 +1,9 @@
+order,label,site,role,status,line,outcome,end,n_config,k_last,converged_at_k,restarts,reruns_from_zero,interruptions,ranks,wall_h,min_per_config,n_free,n_fixed,part_starts,status_text
+1,s2r_m30_VB136,136,V,complete,complete,accepted_converged,,79,78,78,0,1,1,64,5.516280130611525,4.18957984603407,69,163,,complete
+2,s2r_m30_hostB136,136,host,complete,complete,accepted_converged,,83,82,82,0,0,0,64,5.846151466634538,4.22613359033822,70,163,,complete
+3,s2r_m30_Sr136o0_novac,136,D,complete,complete,accepted_converged,,81,80,80,0,0,0,64,6.112849854893154,4.528036929550485,70,163,,complete
+4,s2r_m30_Sr136o0_vac,136,DV,complete,complete,accepted_converged,,75,74,74,0,0,0,64,5.4972497858603795,4.397799828688304,69,163,,complete
+5,s2r_m30_hostB76,76,host,complete,complete,accepted_converged,,165,164,164,0,0,0,64,12.053902761472596,4.383237367808217,100,133,,complete
+6,s2r_m30_VB76,76,V,complete,complete,accepted_converged,,193,192,192,0,0,0,64,14.357754345602459,4.463550573762423,99,133,,complete
+7,s2r_m30_Sr76o0_novac,76,D,complete,complete,accepted_converged,,142,141,141,2,0,2,64,10.893060351742639,4.602701557074354,100,133,1 2,complete
+8,s2r_m30_Sr76o0_vac,76,DV,complete,complete,accepted_converged,,136,135,135,0,0,0,64,10.540606875154706,4.650267739038841,99,133,,complete

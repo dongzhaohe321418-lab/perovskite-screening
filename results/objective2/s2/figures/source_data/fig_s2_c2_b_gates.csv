@@ -1,0 +1,6 @@
+gate,state,detail,stops_a2
+step0@1,pass,,False
+K2,pass (accepted_converged),accepted_converged,False
+step0@4,pass,,False
+projection,no cut,,False
+K3,fail (fail_replan): checks failed,s2r_m30_VB76: final geometry fails check(s) [5],True

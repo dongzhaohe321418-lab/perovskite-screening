@@ -1,0 +1,6 @@
+OK   c2 K2
+OK   c2 K3
+DIFF c2 projection
+DIFF c2 step0
+verify c2: 4 gate files, 2 differ
+exit 1

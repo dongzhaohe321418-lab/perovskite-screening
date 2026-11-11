@@ -1,0 +1,5 @@
+key,value
+forc_conv_thr_Ry_bohr,0.00078
+forc_conv_thr_eV_A,0.020054606315767096
+k_cap,200
+step0_tol_meV,0.5
