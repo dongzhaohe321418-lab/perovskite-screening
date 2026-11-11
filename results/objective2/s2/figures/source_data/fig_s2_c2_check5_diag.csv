@@ -1,0 +1,1353 @@
+panel,pair,object,cell,label,k,quantity,value,reference
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,0,dr_A,0.029,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,1,dr_A,0.03,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,2,dr_A,0.031,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,3,dr_A,0.033,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,4,dr_A,0.037,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,5,dr_A,0.043,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,6,dr_A,0.047,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,7,dr_A,0.05,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,8,dr_A,0.051,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,9,dr_A,0.053,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,10,dr_A,0.056,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,11,dr_A,0.06,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,12,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,13,dr_A,0.064,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,14,dr_A,0.065,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,15,dr_A,0.067,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,16,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,17,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,18,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,19,dr_A,0.082,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,20,dr_A,0.085,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,21,dr_A,0.089,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,22,dr_A,0.094,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,23,dr_A,0.1,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,24,dr_A,0.103,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,25,dr_A,0.103,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,26,dr_A,0.102,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,27,dr_A,0.101,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,28,dr_A,0.101,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,29,dr_A,0.101,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,30,dr_A,0.101,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,31,dr_A,0.101,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,32,dr_A,0.101,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,33,dr_A,0.1,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,34,dr_A,0.099,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,35,dr_A,0.098,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,36,dr_A,0.097,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,37,dr_A,0.095,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,38,dr_A,0.093,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,39,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,40,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,41,dr_A,0.09,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,42,dr_A,0.09,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,43,dr_A,0.089,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,44,dr_A,0.088,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,45,dr_A,0.087,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,46,dr_A,0.087,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,47,dr_A,0.086,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,48,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,49,dr_A,0.083,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,50,dr_A,0.082,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,51,dr_A,0.081,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,52,dr_A,0.079,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,53,dr_A,0.078,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,54,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,55,dr_A,0.075,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,56,dr_A,0.075,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,57,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,58,dr_A,0.078,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,59,dr_A,0.081,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,60,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,61,dr_A,0.088,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,62,dr_A,0.09,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,63,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,64,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,65,dr_A,0.095,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,66,dr_A,0.098,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,67,dr_A,0.104,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,68,dr_A,0.115,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,69,dr_A,0.114,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,70,dr_A,0.112,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,71,dr_A,0.111,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,72,dr_A,0.111,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,73,dr_A,0.11,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,74,dr_A,0.108,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,75,dr_A,0.105,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,76,dr_A,0.102,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,77,dr_A,0.099,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,78,dr_A,0.097,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,79,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,80,dr_A,0.09,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,81,dr_A,0.089,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,82,dr_A,0.088,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,83,dr_A,0.089,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,84,dr_A,0.09,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,85,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,86,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,87,dr_A,0.094,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,88,dr_A,0.095,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,89,dr_A,0.098,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,90,dr_A,0.103,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,91,dr_A,0.106,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,92,dr_A,0.107,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,93,dr_A,0.108,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,94,dr_A,0.11,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,95,dr_A,0.111,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,96,dr_A,0.114,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,97,dr_A,0.115,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,98,dr_A,0.118,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,99,dr_A,0.118,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,100,dr_A,0.12,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,101,dr_A,0.119,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,102,dr_A,0.12,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,103,dr_A,0.121,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,104,dr_A,0.122,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,105,dr_A,0.124,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,106,dr_A,0.125,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,107,dr_A,0.126,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,108,dr_A,0.127,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,109,dr_A,0.127,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,110,dr_A,0.128,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,111,dr_A,0.128,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,112,dr_A,0.13,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,113,dr_A,0.131,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,114,dr_A,0.132,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,115,dr_A,0.132,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,116,dr_A,0.132,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,117,dr_A,0.132,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,118,dr_A,0.133,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,119,dr_A,0.133,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,120,dr_A,0.134,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,121,dr_A,0.135,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,122,dr_A,0.135,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,123,dr_A,0.135,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,124,dr_A,0.135,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,125,dr_A,0.136,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,126,dr_A,0.136,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,127,dr_A,0.137,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,128,dr_A,0.139,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,129,dr_A,0.141,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,130,dr_A,0.142,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,131,dr_A,0.144,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,132,dr_A,0.146,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,133,dr_A,0.15,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,134,dr_A,0.153,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,135,dr_A,0.156,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,136,dr_A,0.159,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,137,dr_A,0.161,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,138,dr_A,0.164,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,139,dr_A,0.168,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,140,dr_A,0.173,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,141,dr_A,0.179,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,142,dr_A,0.184,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,143,dr_A,0.189,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,144,dr_A,0.193,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,145,dr_A,0.197,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,146,dr_A,0.201,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,147,dr_A,0.204,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,148,dr_A,0.208,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,149,dr_A,0.212,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,150,dr_A,0.216,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,151,dr_A,0.22,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,152,dr_A,0.225,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,153,dr_A,0.23,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,154,dr_A,0.237,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,155,dr_A,0.242,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,156,dr_A,0.252,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,157,dr_A,0.258,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,158,dr_A,0.269,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,159,dr_A,0.274,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,160,dr_A,0.28,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,161,dr_A,0.286,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,162,dr_A,0.291,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,163,dr_A,0.298,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,164,dr_A,0.301,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,165,dr_A,0.31,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,166,dr_A,0.312,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,167,dr_A,0.321,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,168,dr_A,0.324,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,169,dr_A,0.327,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,170,dr_A,0.332,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,171,dr_A,0.339,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,172,dr_A,0.346,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,173,dr_A,0.347,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,174,dr_A,0.35,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,175,dr_A,0.35,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,176,dr_A,0.353,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,177,dr_A,0.355,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,178,dr_A,0.361,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,179,dr_A,0.367,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,180,dr_A,0.374,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,181,dr_A,0.378,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,182,dr_A,0.382,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,183,dr_A,0.381,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,184,dr_A,0.381,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,185,dr_A,0.379,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,186,dr_A,0.379,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,187,dr_A,0.38,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,188,dr_A,0.382,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,189,dr_A,0.385,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,190,dr_A,0.388,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,191,dr_A,0.391,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,child,s2r_m30_VB76,192,dr_A,0.393,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,0,dr_A,0.0,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,1,dr_A,0.001,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,2,dr_A,0.002,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,3,dr_A,0.004,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,4,dr_A,0.009,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,5,dr_A,0.015,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,6,dr_A,0.019,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,7,dr_A,0.024,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,8,dr_A,0.025,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,9,dr_A,0.028,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,10,dr_A,0.032,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,11,dr_A,0.035,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,12,dr_A,0.038,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,13,dr_A,0.041,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,14,dr_A,0.041,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,15,dr_A,0.043,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,16,dr_A,0.045,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,17,dr_A,0.049,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,18,dr_A,0.055,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,19,dr_A,0.06,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,20,dr_A,0.064,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,21,dr_A,0.068,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,22,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,23,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,24,dr_A,0.083,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,25,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,26,dr_A,0.083,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,27,dr_A,0.083,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,28,dr_A,0.082,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,29,dr_A,0.082,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,30,dr_A,0.081,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,31,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,32,dr_A,0.078,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,33,dr_A,0.077,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,34,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,35,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,36,dr_A,0.075,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,37,dr_A,0.075,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,38,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,39,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,40,dr_A,0.07,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,41,dr_A,0.069,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,42,dr_A,0.068,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,43,dr_A,0.067,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,44,dr_A,0.066,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,45,dr_A,0.065,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,46,dr_A,0.065,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,47,dr_A,0.065,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,48,dr_A,0.066,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,49,dr_A,0.067,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,50,dr_A,0.068,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,51,dr_A,0.068,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,52,dr_A,0.067,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,53,dr_A,0.068,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,54,dr_A,0.069,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,55,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,56,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,57,dr_A,0.078,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,58,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,59,dr_A,0.081,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,60,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,61,dr_A,0.087,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,62,dr_A,0.09,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,63,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,64,dr_A,0.089,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,65,dr_A,0.089,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,66,dr_A,0.088,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,67,dr_A,0.086,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,68,dr_A,0.086,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,69,dr_A,0.085,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,70,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,71,dr_A,0.082,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,72,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,73,dr_A,0.079,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,74,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,75,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,76,dr_A,0.07,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,77,dr_A,0.069,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,78,dr_A,0.067,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,79,dr_A,0.066,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,80,dr_A,0.064,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,81,dr_A,0.063,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,82,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,83,dr_A,0.061,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,84,dr_A,0.061,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,85,dr_A,0.061,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,86,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,87,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,88,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,89,dr_A,0.063,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,90,dr_A,0.063,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,91,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,92,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,93,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,94,dr_A,0.062,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,95,dr_A,0.064,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,96,dr_A,0.065,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,97,dr_A,0.066,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,98,dr_A,0.066,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,99,dr_A,0.066,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,100,dr_A,0.066,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,101,dr_A,0.067,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,102,dr_A,0.068,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,103,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,104,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,105,dr_A,0.074,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,106,dr_A,0.075,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,107,dr_A,0.077,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,108,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,109,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,110,dr_A,0.088,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,111,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,112,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,113,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,114,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,115,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,116,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,117,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,118,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,119,dr_A,0.092,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,120,dr_A,0.091,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,121,dr_A,0.089,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,122,dr_A,0.088,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,123,dr_A,0.087,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,124,dr_A,0.086,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,125,dr_A,0.085,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,126,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,127,dr_A,0.082,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,128,dr_A,0.079,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,129,dr_A,0.078,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,130,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,131,dr_A,0.075,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,132,dr_A,0.074,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,133,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,134,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,135,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,136,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,137,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,138,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,139,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,140,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,141,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,142,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,143,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,144,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,145,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,146,dr_A,0.071,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,147,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,148,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,149,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,150,dr_A,0.072,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,151,dr_A,0.073,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,152,dr_A,0.074,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,153,dr_A,0.075,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,154,dr_A,0.076,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,155,dr_A,0.078,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,156,dr_A,0.079,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,157,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,158,dr_A,0.08,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,159,dr_A,0.081,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,160,dr_A,0.082,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,161,dr_A,0.083,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,162,dr_A,0.084,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,163,dr_A,0.086,S2-relaxed MACE host
+a,VB76 vs hostB76,I host 209,parent,s2r_m30_hostB76,164,dr_A,0.087,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,0,rotation_deg,0.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,1,rotation_deg,0.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,2,rotation_deg,0.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,3,rotation_deg,0.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,4,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,5,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,6,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,7,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,8,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,9,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,10,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,11,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,12,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,13,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,14,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,15,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,16,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,17,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,18,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,19,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,20,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,21,rotation_deg,1.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,22,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,23,rotation_deg,1.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,24,rotation_deg,1.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,25,rotation_deg,1.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,26,rotation_deg,1.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,27,rotation_deg,1.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,28,rotation_deg,2.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,29,rotation_deg,2.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,30,rotation_deg,2.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,31,rotation_deg,2.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,32,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,33,rotation_deg,2.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,34,rotation_deg,2.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,35,rotation_deg,2.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,36,rotation_deg,3.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,37,rotation_deg,3.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,38,rotation_deg,3.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,39,rotation_deg,3.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,40,rotation_deg,3.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,41,rotation_deg,3.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,42,rotation_deg,3.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,43,rotation_deg,3.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,44,rotation_deg,3.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,45,rotation_deg,3.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,46,rotation_deg,4.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,47,rotation_deg,4.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,48,rotation_deg,4.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,49,rotation_deg,4.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,50,rotation_deg,4.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,51,rotation_deg,4.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,52,rotation_deg,4.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,53,rotation_deg,4.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,54,rotation_deg,4.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,55,rotation_deg,4.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,56,rotation_deg,4.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,57,rotation_deg,4.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,58,rotation_deg,5.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,59,rotation_deg,5.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,60,rotation_deg,5.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,61,rotation_deg,5.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,62,rotation_deg,5.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,63,rotation_deg,5.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,64,rotation_deg,5.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,65,rotation_deg,5.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,66,rotation_deg,5.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,67,rotation_deg,5.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,68,rotation_deg,6.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,69,rotation_deg,6.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,70,rotation_deg,6.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,71,rotation_deg,6.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,72,rotation_deg,6.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,73,rotation_deg,6.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,74,rotation_deg,6.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,75,rotation_deg,6.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,76,rotation_deg,7.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,77,rotation_deg,7.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,78,rotation_deg,7.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,79,rotation_deg,7.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,80,rotation_deg,7.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,81,rotation_deg,7.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,82,rotation_deg,7.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,83,rotation_deg,7.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,84,rotation_deg,7.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,85,rotation_deg,7.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,86,rotation_deg,7.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,87,rotation_deg,7.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,88,rotation_deg,7.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,89,rotation_deg,8.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,90,rotation_deg,8.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,91,rotation_deg,8.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,92,rotation_deg,8.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,93,rotation_deg,8.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,94,rotation_deg,8.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,95,rotation_deg,8.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,96,rotation_deg,9.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,97,rotation_deg,9.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,98,rotation_deg,9.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,99,rotation_deg,9.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,100,rotation_deg,9.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,101,rotation_deg,9.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,102,rotation_deg,9.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,103,rotation_deg,9.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,104,rotation_deg,9.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,105,rotation_deg,9.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,106,rotation_deg,10.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,107,rotation_deg,10.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,108,rotation_deg,10.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,109,rotation_deg,10.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,110,rotation_deg,10.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,111,rotation_deg,10.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,112,rotation_deg,10.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,113,rotation_deg,10.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,114,rotation_deg,10.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,115,rotation_deg,10.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,116,rotation_deg,10.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,117,rotation_deg,10.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,118,rotation_deg,10.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,119,rotation_deg,10.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,120,rotation_deg,10.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,121,rotation_deg,10.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,122,rotation_deg,11.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,123,rotation_deg,11.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,124,rotation_deg,11.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,125,rotation_deg,11.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,126,rotation_deg,11.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,127,rotation_deg,11.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,128,rotation_deg,11.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,129,rotation_deg,11.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,130,rotation_deg,11.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,131,rotation_deg,11.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,132,rotation_deg,12.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,133,rotation_deg,12.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,134,rotation_deg,12.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,135,rotation_deg,12.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,136,rotation_deg,12.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,137,rotation_deg,12.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,138,rotation_deg,12.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,139,rotation_deg,12.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,140,rotation_deg,12.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,141,rotation_deg,13.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,142,rotation_deg,13.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,143,rotation_deg,13.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,144,rotation_deg,13.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,145,rotation_deg,13.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,146,rotation_deg,14.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,147,rotation_deg,14.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,148,rotation_deg,14.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,149,rotation_deg,14.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,150,rotation_deg,14.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,151,rotation_deg,14.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,152,rotation_deg,14.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,153,rotation_deg,15.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,154,rotation_deg,15.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,155,rotation_deg,15.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,156,rotation_deg,16.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,157,rotation_deg,16.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,158,rotation_deg,16.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,159,rotation_deg,17.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,160,rotation_deg,17.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,161,rotation_deg,17.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,162,rotation_deg,17.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,163,rotation_deg,18.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,164,rotation_deg,18.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,165,rotation_deg,18.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,166,rotation_deg,18.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,167,rotation_deg,19.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,168,rotation_deg,19.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,169,rotation_deg,19.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,170,rotation_deg,19.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,171,rotation_deg,19.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,172,rotation_deg,20.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,173,rotation_deg,20.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,174,rotation_deg,20.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,175,rotation_deg,20.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,176,rotation_deg,20.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,177,rotation_deg,20.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,178,rotation_deg,20.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,179,rotation_deg,20.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,180,rotation_deg,21.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,181,rotation_deg,21.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,182,rotation_deg,21.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,183,rotation_deg,21.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,184,rotation_deg,21.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,185,rotation_deg,21.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,186,rotation_deg,21.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,187,rotation_deg,21.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,188,rotation_deg,21.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,189,rotation_deg,21.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,190,rotation_deg,21.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,191,rotation_deg,21.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,child,s2r_m30_VB76,192,rotation_deg,21.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,0,rotation_deg,0.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,1,rotation_deg,0.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,2,rotation_deg,0.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,3,rotation_deg,0.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,4,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,5,rotation_deg,0.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,6,rotation_deg,0.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,7,rotation_deg,0.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,8,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,9,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,10,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,11,rotation_deg,0.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,12,rotation_deg,0.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,13,rotation_deg,0.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,14,rotation_deg,0.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,15,rotation_deg,0.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,16,rotation_deg,0.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,17,rotation_deg,0.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,18,rotation_deg,0.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,19,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,20,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,21,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,22,rotation_deg,0.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,23,rotation_deg,0.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,24,rotation_deg,0.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,25,rotation_deg,0.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,26,rotation_deg,0.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,27,rotation_deg,0.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,28,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,29,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,30,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,31,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,32,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,33,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,34,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,35,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,36,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,37,rotation_deg,0.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,38,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,39,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,40,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,41,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,42,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,43,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,44,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,45,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,46,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,47,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,48,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,49,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,50,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,51,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,52,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,53,rotation_deg,0.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,54,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,55,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,56,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,57,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,58,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,59,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,60,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,61,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,62,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,63,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,64,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,65,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,66,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,67,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,68,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,69,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,70,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,71,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,72,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,73,rotation_deg,0.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,74,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,75,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,76,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,77,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,78,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,79,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,80,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,81,rotation_deg,1.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,82,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,83,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,84,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,85,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,86,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,87,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,88,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,89,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,90,rotation_deg,1.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,91,rotation_deg,1.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,92,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,93,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,94,rotation_deg,1.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,95,rotation_deg,1.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,96,rotation_deg,1.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,97,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,98,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,99,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,100,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,101,rotation_deg,1.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,102,rotation_deg,1.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,103,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,104,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,105,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,106,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,107,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,108,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,109,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,110,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,111,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,112,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,113,rotation_deg,1.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,114,rotation_deg,1.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,115,rotation_deg,1.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,116,rotation_deg,1.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,117,rotation_deg,1.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,118,rotation_deg,1.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,119,rotation_deg,1.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,120,rotation_deg,1.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,121,rotation_deg,1.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,122,rotation_deg,1.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,123,rotation_deg,1.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,124,rotation_deg,1.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,125,rotation_deg,1.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,126,rotation_deg,1.9,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,127,rotation_deg,2.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,128,rotation_deg,2.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,129,rotation_deg,2.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,130,rotation_deg,2.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,131,rotation_deg,2.0,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,132,rotation_deg,2.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,133,rotation_deg,2.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,134,rotation_deg,2.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,135,rotation_deg,2.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,136,rotation_deg,2.1,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,137,rotation_deg,2.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,138,rotation_deg,2.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,139,rotation_deg,2.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,140,rotation_deg,2.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,141,rotation_deg,2.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,142,rotation_deg,2.2,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,143,rotation_deg,2.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,144,rotation_deg,2.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,145,rotation_deg,2.3,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,146,rotation_deg,2.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,147,rotation_deg,2.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,148,rotation_deg,2.4,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,149,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,150,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,151,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,152,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,153,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,154,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,155,rotation_deg,2.5,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,156,rotation_deg,2.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,157,rotation_deg,2.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,158,rotation_deg,2.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,159,rotation_deg,2.6,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,160,rotation_deg,2.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,161,rotation_deg,2.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,162,rotation_deg,2.7,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,163,rotation_deg,2.8,S2-relaxed MACE host
+b,VB76 vs hostB76,FA host 212,parent,s2r_m30_hostB76,164,rotation_deg,2.8,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,0,dr_A,0.004,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,1,dr_A,0.004,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,2,dr_A,0.004,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,3,dr_A,0.01,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,4,dr_A,0.019,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,5,dr_A,0.031,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,6,dr_A,0.039,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,7,dr_A,0.048,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,8,dr_A,0.051,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,9,dr_A,0.055,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,10,dr_A,0.063,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,11,dr_A,0.071,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,12,dr_A,0.077,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,13,dr_A,0.083,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,14,dr_A,0.084,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,15,dr_A,0.087,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,16,dr_A,0.096,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,17,dr_A,0.107,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,18,dr_A,0.119,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,19,dr_A,0.127,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,20,dr_A,0.134,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,21,dr_A,0.145,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,22,dr_A,0.162,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,23,dr_A,0.183,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,24,dr_A,0.191,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,25,dr_A,0.192,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,26,dr_A,0.192,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,27,dr_A,0.193,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,28,dr_A,0.197,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,29,dr_A,0.204,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,30,dr_A,0.216,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,31,dr_A,0.225,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,32,dr_A,0.229,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,33,dr_A,0.23,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,34,dr_A,0.23,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,35,dr_A,0.231,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,36,dr_A,0.234,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,37,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,38,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,39,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,40,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,41,dr_A,0.234,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,42,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,43,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,44,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,45,dr_A,0.236,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,46,dr_A,0.237,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,47,dr_A,0.238,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,48,dr_A,0.239,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,49,dr_A,0.237,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,50,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,51,dr_A,0.234,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,52,dr_A,0.232,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,53,dr_A,0.23,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,54,dr_A,0.229,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,55,dr_A,0.227,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,56,dr_A,0.228,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,57,dr_A,0.229,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,58,dr_A,0.233,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,59,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,60,dr_A,0.238,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,61,dr_A,0.232,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,62,dr_A,0.221,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,63,dr_A,0.217,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,64,dr_A,0.215,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,65,dr_A,0.215,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,66,dr_A,0.214,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,67,dr_A,0.214,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,68,dr_A,0.212,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,69,dr_A,0.211,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,70,dr_A,0.209,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,71,dr_A,0.207,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,72,dr_A,0.208,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,73,dr_A,0.205,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,74,dr_A,0.204,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,75,dr_A,0.203,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,76,dr_A,0.202,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,77,dr_A,0.201,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,78,dr_A,0.199,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,79,dr_A,0.196,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,80,dr_A,0.192,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,81,dr_A,0.189,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,82,dr_A,0.185,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,83,dr_A,0.18,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,84,dr_A,0.179,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,85,dr_A,0.179,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,86,dr_A,0.18,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,87,dr_A,0.18,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,88,dr_A,0.18,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,89,dr_A,0.18,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,90,dr_A,0.178,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,91,dr_A,0.18,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,92,dr_A,0.182,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,93,dr_A,0.187,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,94,dr_A,0.195,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,95,dr_A,0.198,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,96,dr_A,0.198,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,97,dr_A,0.198,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,98,dr_A,0.196,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,99,dr_A,0.198,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,100,dr_A,0.198,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,101,dr_A,0.2,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,102,dr_A,0.203,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,103,dr_A,0.208,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,104,dr_A,0.216,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,105,dr_A,0.222,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,106,dr_A,0.225,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,107,dr_A,0.229,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,108,dr_A,0.23,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,109,dr_A,0.231,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,110,dr_A,0.232,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,111,dr_A,0.236,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,112,dr_A,0.241,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,113,dr_A,0.246,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,114,dr_A,0.251,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,115,dr_A,0.255,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,116,dr_A,0.255,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,117,dr_A,0.254,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,118,dr_A,0.253,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,119,dr_A,0.255,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,120,dr_A,0.257,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,121,dr_A,0.261,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,122,dr_A,0.265,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,123,dr_A,0.266,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,124,dr_A,0.265,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,125,dr_A,0.263,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,126,dr_A,0.261,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,127,dr_A,0.259,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,128,dr_A,0.259,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,129,dr_A,0.26,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,130,dr_A,0.259,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,131,dr_A,0.258,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,132,dr_A,0.255,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,133,dr_A,0.251,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,134,dr_A,0.25,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,135,dr_A,0.248,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,136,dr_A,0.248,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,137,dr_A,0.247,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,138,dr_A,0.246,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,139,dr_A,0.243,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,140,dr_A,0.24,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,child,s2r_m30_Sr76o0_novac,141,dr_A,0.237,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,0,dr_A,0.0,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,1,dr_A,0.001,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,2,dr_A,0.003,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,3,dr_A,0.006,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,4,dr_A,0.014,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,5,dr_A,0.025,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,6,dr_A,0.033,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,7,dr_A,0.041,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,8,dr_A,0.043,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,9,dr_A,0.047,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,10,dr_A,0.054,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,11,dr_A,0.061,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,12,dr_A,0.066,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,13,dr_A,0.07,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,14,dr_A,0.072,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,15,dr_A,0.074,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,16,dr_A,0.079,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,17,dr_A,0.087,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,18,dr_A,0.099,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,19,dr_A,0.109,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,20,dr_A,0.117,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,21,dr_A,0.127,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,22,dr_A,0.14,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,23,dr_A,0.159,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,24,dr_A,0.166,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,25,dr_A,0.17,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,26,dr_A,0.171,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,27,dr_A,0.171,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,28,dr_A,0.173,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,29,dr_A,0.177,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,30,dr_A,0.182,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,31,dr_A,0.191,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,32,dr_A,0.202,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,33,dr_A,0.205,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,34,dr_A,0.204,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,35,dr_A,0.204,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,36,dr_A,0.205,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,37,dr_A,0.206,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,38,dr_A,0.209,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,39,dr_A,0.212,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,40,dr_A,0.215,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,41,dr_A,0.216,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,42,dr_A,0.216,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,43,dr_A,0.217,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,44,dr_A,0.219,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,45,dr_A,0.222,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,46,dr_A,0.224,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,47,dr_A,0.228,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,48,dr_A,0.233,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,49,dr_A,0.236,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,50,dr_A,0.239,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,51,dr_A,0.239,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,52,dr_A,0.238,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,53,dr_A,0.237,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,54,dr_A,0.236,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,55,dr_A,0.238,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,56,dr_A,0.242,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,57,dr_A,0.245,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,58,dr_A,0.248,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,59,dr_A,0.251,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,60,dr_A,0.254,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,61,dr_A,0.257,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,62,dr_A,0.255,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,63,dr_A,0.253,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,64,dr_A,0.243,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,65,dr_A,0.241,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,66,dr_A,0.238,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,67,dr_A,0.236,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,68,dr_A,0.234,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,69,dr_A,0.233,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,70,dr_A,0.232,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,71,dr_A,0.229,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,72,dr_A,0.228,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,73,dr_A,0.226,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,74,dr_A,0.225,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,75,dr_A,0.223,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,76,dr_A,0.219,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,77,dr_A,0.22,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,78,dr_A,0.215,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,79,dr_A,0.212,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,80,dr_A,0.204,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,81,dr_A,0.198,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,82,dr_A,0.19,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,83,dr_A,0.181,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,84,dr_A,0.179,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,85,dr_A,0.181,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,86,dr_A,0.182,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,87,dr_A,0.182,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,88,dr_A,0.181,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,89,dr_A,0.177,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,90,dr_A,0.174,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,91,dr_A,0.169,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,92,dr_A,0.165,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,93,dr_A,0.166,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,94,dr_A,0.167,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,95,dr_A,0.175,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,96,dr_A,0.178,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,97,dr_A,0.181,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,98,dr_A,0.182,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,99,dr_A,0.183,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,100,dr_A,0.183,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,101,dr_A,0.183,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,102,dr_A,0.184,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,103,dr_A,0.187,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,104,dr_A,0.189,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,105,dr_A,0.191,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,106,dr_A,0.193,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,107,dr_A,0.197,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,108,dr_A,0.204,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,109,dr_A,0.211,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,110,dr_A,0.217,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,111,dr_A,0.223,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,112,dr_A,0.223,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,113,dr_A,0.223,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,114,dr_A,0.223,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,115,dr_A,0.224,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,116,dr_A,0.227,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,117,dr_A,0.232,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,118,dr_A,0.235,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,119,dr_A,0.24,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,120,dr_A,0.246,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,121,dr_A,0.248,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,122,dr_A,0.249,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,123,dr_A,0.25,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,124,dr_A,0.252,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,125,dr_A,0.254,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,126,dr_A,0.257,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,127,dr_A,0.258,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,128,dr_A,0.257,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,129,dr_A,0.256,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,130,dr_A,0.253,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,131,dr_A,0.251,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,132,dr_A,0.25,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,133,dr_A,0.251,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,134,dr_A,0.253,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,135,dr_A,0.254,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,136,dr_A,0.255,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,137,dr_A,0.254,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,138,dr_A,0.252,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,139,dr_A,0.248,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,140,dr_A,0.246,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,141,dr_A,0.241,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,142,dr_A,0.24,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,143,dr_A,0.24,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,144,dr_A,0.237,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,145,dr_A,0.233,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,146,dr_A,0.23,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,147,dr_A,0.226,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,148,dr_A,0.222,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,149,dr_A,0.22,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,150,dr_A,0.219,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,151,dr_A,0.219,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,152,dr_A,0.219,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,153,dr_A,0.217,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,154,dr_A,0.215,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,155,dr_A,0.211,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,156,dr_A,0.206,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,157,dr_A,0.201,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,158,dr_A,0.198,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,159,dr_A,0.196,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,160,dr_A,0.194,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,161,dr_A,0.193,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,162,dr_A,0.192,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,163,dr_A,0.191,S2-relaxed MACE host
+c,Sr76o0_novac vs hostB76,I host 53,parent,s2r_m30_hostB76,164,dr_A,0.19,S2-relaxed MACE host
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,0,dr_A,0.003,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,1,dr_A,0.004,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,2,dr_A,0.003,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,3,dr_A,0.005,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,4,dr_A,0.008,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,5,dr_A,0.014,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,6,dr_A,0.017,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,7,dr_A,0.019,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,8,dr_A,0.019,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,9,dr_A,0.019,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,10,dr_A,0.02,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,11,dr_A,0.023,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,12,dr_A,0.025,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,13,dr_A,0.027,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,14,dr_A,0.027,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,15,dr_A,0.028,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,16,dr_A,0.032,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,17,dr_A,0.036,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,18,dr_A,0.041,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,19,dr_A,0.045,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,20,dr_A,0.049,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,21,dr_A,0.057,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,22,dr_A,0.071,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,23,dr_A,0.082,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,24,dr_A,0.089,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,25,dr_A,0.091,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,26,dr_A,0.093,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,27,dr_A,0.098,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,28,dr_A,0.111,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,29,dr_A,0.136,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,30,dr_A,0.143,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,31,dr_A,0.147,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,32,dr_A,0.154,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,33,dr_A,0.163,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,34,dr_A,0.173,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,35,dr_A,0.188,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,36,dr_A,0.208,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,37,dr_A,0.209,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,38,dr_A,0.207,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,39,dr_A,0.208,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,40,dr_A,0.215,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,41,dr_A,0.226,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,42,dr_A,0.236,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,43,dr_A,0.248,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,44,dr_A,0.259,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,45,dr_A,0.261,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,46,dr_A,0.261,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,47,dr_A,0.259,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,48,dr_A,0.259,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,49,dr_A,0.262,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,50,dr_A,0.27,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,51,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,52,dr_A,0.294,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,53,dr_A,0.299,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,54,dr_A,0.302,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,55,dr_A,0.304,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,56,dr_A,0.304,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,57,dr_A,0.307,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,58,dr_A,0.31,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,59,dr_A,0.314,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,60,dr_A,0.325,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,61,dr_A,0.32,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,62,dr_A,0.33,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,63,dr_A,0.342,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,64,dr_A,0.357,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,65,dr_A,0.356,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,66,dr_A,0.36,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,67,dr_A,0.342,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,68,dr_A,0.346,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,69,dr_A,0.348,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,70,dr_A,0.352,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,71,dr_A,0.353,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,72,dr_A,0.357,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,73,dr_A,0.361,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,74,dr_A,0.36,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,75,dr_A,0.364,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,76,dr_A,0.369,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,77,dr_A,0.371,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,78,dr_A,0.371,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,79,dr_A,0.367,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,80,dr_A,0.364,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,81,dr_A,0.36,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,82,dr_A,0.359,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,83,dr_A,0.358,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,84,dr_A,0.359,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,85,dr_A,0.359,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,86,dr_A,0.359,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,87,dr_A,0.358,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,88,dr_A,0.356,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,89,dr_A,0.348,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,90,dr_A,0.349,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,91,dr_A,0.345,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,92,dr_A,0.343,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,93,dr_A,0.34,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,94,dr_A,0.335,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,95,dr_A,0.331,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,96,dr_A,0.329,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,97,dr_A,0.33,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,98,dr_A,0.332,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,99,dr_A,0.332,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,100,dr_A,0.33,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,101,dr_A,0.327,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,102,dr_A,0.32,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,103,dr_A,0.314,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,104,dr_A,0.31,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,105,dr_A,0.31,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,106,dr_A,0.31,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,107,dr_A,0.31,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,108,dr_A,0.31,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,109,dr_A,0.306,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,110,dr_A,0.303,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,111,dr_A,0.298,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,112,dr_A,0.295,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,113,dr_A,0.294,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,114,dr_A,0.294,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,115,dr_A,0.294,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,116,dr_A,0.294,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,117,dr_A,0.293,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,118,dr_A,0.292,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,119,dr_A,0.29,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,120,dr_A,0.288,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,121,dr_A,0.287,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,122,dr_A,0.286,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,123,dr_A,0.286,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,124,dr_A,0.286,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,125,dr_A,0.286,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,126,dr_A,0.285,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,127,dr_A,0.284,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,128,dr_A,0.283,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,129,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,130,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,131,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,132,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,133,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,134,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,child,s2r_m30_Sr76o0_vac,135,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,0,dr_A,0.0,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,1,dr_A,0.004,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,2,dr_A,0.003,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,3,dr_A,0.005,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,4,dr_A,0.009,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,5,dr_A,0.015,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,6,dr_A,0.019,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,7,dr_A,0.02,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,8,dr_A,0.019,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,9,dr_A,0.019,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,10,dr_A,0.02,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,11,dr_A,0.022,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,12,dr_A,0.024,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,13,dr_A,0.025,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,14,dr_A,0.026,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,15,dr_A,0.027,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,16,dr_A,0.031,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,17,dr_A,0.035,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,18,dr_A,0.04,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,19,dr_A,0.043,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,20,dr_A,0.047,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,21,dr_A,0.054,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,22,dr_A,0.066,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,23,dr_A,0.08,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,24,dr_A,0.087,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,25,dr_A,0.089,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,26,dr_A,0.091,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,27,dr_A,0.096,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,28,dr_A,0.101,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,29,dr_A,0.109,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,30,dr_A,0.12,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,31,dr_A,0.136,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,32,dr_A,0.157,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,33,dr_A,0.165,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,34,dr_A,0.172,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,35,dr_A,0.179,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,36,dr_A,0.189,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,37,dr_A,0.205,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,38,dr_A,0.215,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,39,dr_A,0.221,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,40,dr_A,0.22,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,41,dr_A,0.221,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,42,dr_A,0.227,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,43,dr_A,0.235,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,44,dr_A,0.248,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,45,dr_A,0.257,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,46,dr_A,0.263,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,47,dr_A,0.269,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,48,dr_A,0.276,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,49,dr_A,0.276,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,50,dr_A,0.276,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,51,dr_A,0.277,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,52,dr_A,0.279,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,53,dr_A,0.284,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,54,dr_A,0.292,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,55,dr_A,0.301,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,56,dr_A,0.311,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,57,dr_A,0.321,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,58,dr_A,0.327,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,59,dr_A,0.339,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,60,dr_A,0.343,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,61,dr_A,0.339,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,62,dr_A,0.341,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,63,dr_A,0.339,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,64,dr_A,0.34,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,65,dr_A,0.341,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,66,dr_A,0.346,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,67,dr_A,0.347,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,68,dr_A,0.365,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,69,dr_A,0.351,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,70,dr_A,0.355,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,71,dr_A,0.357,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,72,dr_A,0.362,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,73,dr_A,0.366,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,74,dr_A,0.37,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,75,dr_A,0.376,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,76,dr_A,0.378,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,77,dr_A,0.382,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,78,dr_A,0.384,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,79,dr_A,0.382,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,80,dr_A,0.381,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,81,dr_A,0.377,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,82,dr_A,0.369,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,83,dr_A,0.368,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,84,dr_A,0.361,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,85,dr_A,0.359,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,86,dr_A,0.355,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,87,dr_A,0.357,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,88,dr_A,0.356,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,89,dr_A,0.356,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,90,dr_A,0.353,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,91,dr_A,0.353,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,92,dr_A,0.353,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,93,dr_A,0.352,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,94,dr_A,0.352,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,95,dr_A,0.349,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,96,dr_A,0.345,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,97,dr_A,0.339,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,98,dr_A,0.334,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,99,dr_A,0.329,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,100,dr_A,0.33,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,101,dr_A,0.333,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,102,dr_A,0.333,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,103,dr_A,0.332,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,104,dr_A,0.329,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,105,dr_A,0.322,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,106,dr_A,0.314,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,107,dr_A,0.31,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,108,dr_A,0.308,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,109,dr_A,0.306,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,110,dr_A,0.304,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,111,dr_A,0.302,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,112,dr_A,0.297,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,113,dr_A,0.294,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,114,dr_A,0.291,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,115,dr_A,0.29,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,116,dr_A,0.29,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,117,dr_A,0.291,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,118,dr_A,0.292,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,119,dr_A,0.293,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,120,dr_A,0.293,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,121,dr_A,0.293,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,122,dr_A,0.293,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,123,dr_A,0.291,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,124,dr_A,0.289,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,125,dr_A,0.287,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,126,dr_A,0.286,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,127,dr_A,0.283,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,128,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,129,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,130,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,131,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,132,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,133,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,134,dr_A,0.284,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,135,dr_A,0.284,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,136,dr_A,0.284,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,137,dr_A,0.283,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,138,dr_A,0.282,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,139,dr_A,0.28,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,140,dr_A,0.278,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,141,dr_A,0.275,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,142,dr_A,0.276,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,143,dr_A,0.275,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,144,dr_A,0.276,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,145,dr_A,0.277,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,146,dr_A,0.278,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,147,dr_A,0.278,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,148,dr_A,0.28,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,149,dr_A,0.281,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,150,dr_A,0.283,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,151,dr_A,0.285,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,152,dr_A,0.288,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,153,dr_A,0.289,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,154,dr_A,0.289,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,155,dr_A,0.289,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,156,dr_A,0.287,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,157,dr_A,0.287,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,158,dr_A,0.285,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,159,dr_A,0.286,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,160,dr_A,0.286,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,161,dr_A,0.287,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,162,dr_A,0.288,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,163,dr_A,0.289,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,164,dr_A,0.29,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,165,dr_A,0.291,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,166,dr_A,0.292,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,167,dr_A,0.292,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,168,dr_A,0.292,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,169,dr_A,0.293,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,170,dr_A,0.294,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,171,dr_A,0.296,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,172,dr_A,0.298,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,173,dr_A,0.298,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,174,dr_A,0.298,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,175,dr_A,0.298,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,176,dr_A,0.298,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,177,dr_A,0.299,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,178,dr_A,0.3,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,179,dr_A,0.302,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,180,dr_A,0.304,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,181,dr_A,0.305,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,182,dr_A,0.305,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,183,dr_A,0.304,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,184,dr_A,0.303,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,185,dr_A,0.301,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,186,dr_A,0.301,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,187,dr_A,0.301,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,188,dr_A,0.302,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,189,dr_A,0.304,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,190,dr_A,0.306,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,191,dr_A,0.307,A1 V (q = +1) geometry at Pb76
+d,Sr76o0_vac vs VB76,FA host 92,parent,s2r_m30_VB76,192,dr_A,0.307,A1 V (q = +1) geometry at Pb76
