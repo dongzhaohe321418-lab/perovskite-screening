@@ -86,3 +86,10 @@ One plan rule sets the time for the analysis script. Section 17 item 6 commits i
 - The original dftd3 program of the Grimme group, V3.1 Rev 1 by its banner, in the public copy at tag v3.2.0 of the loriab/dftd3 repository, for the unit of a2.
 - The CODATA 2018 values of the hartree energy in eV and of the bohr radius (NIST).
 - The PBE values above were checked against the simple-dftd3 parameter table, whose PBE entries cite these two papers, and against the D3 parameter lists of the Grimme group. The papers' own tables were not read. The table gives a2 without a unit. It is in bohr: the original dftd3 program uses a2 without conversion, on coordinates in bohr, and simple-dftd3 takes lengths in bohr [S]. Each source above was read at the version named.
+
+## Dated notice (2026-11-11)
+
+Appended under amendment 2026-11-11a of `S2_PLAN.md` (commit `1f8e496`, part g, step 6). The text above is not edited.
+
+- On 2026-11-11 at 21:10:32 UTC the node recorded K3 = fail_replan (`C2_RESULT.md` §4). C3 recorded not_run at 21:12:09 UTC, with no job, cell or value; its archive is held privately until S2b.
+- No one evaluation runs under the plan as it stands (amendment 2026-11-11a, part b). This note therefore has nothing to apply to. It is neither withdrawn nor re-opened; S2b states whether it is re-adopted (part e, item 7).

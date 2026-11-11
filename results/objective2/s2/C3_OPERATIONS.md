@@ -134,3 +134,12 @@ Code is cited at `8bff03e` as [file:line]: [46] `scripts/46_s2_cells.py`, [47] `
     - **Archive.** The archive counts and the verify lines; the archive stays private (D-C3-1).
   - **Not read before the one evaluation (§17).** Every field and line that D-C3-7 excludes, and every `E_mace_eV`; any line of a C3 single-point output other than the three header lines that name the program version, the MPI process count and the input file; any E_b, Y_h or δ of a production host, by DFT or by zero-shot MACE, and the MACE ledger of §15; and the C2 values that D-C2-10 withholds.
     - **Note statement.** The note says that the raw production outputs and every MACE energy stay unopened in the private archive until the one evaluation; the blinding rests on not opening them and not combining the raw energies.
+
+## 5. Dated notice (2026-11-11): K3 fail_replan; C3 recorded not_run
+
+Appended under amendment 2026-11-11a of `S2_PLAN.md` (commit `1f8e496`, part g, step 6). The text above is not edited.
+
+- **K3.** On 2026-11-11 at 21:10:32 UTC the node recorded K3 = fail_replan, with `checks_failed` naming one cell, s2r_m30_VB76, whose final geometry fails check 5 (`C2_RESULT.md` §4). A2 and production stop and S2 is re-planned (§11).
+- **C3.** C3 was started once, at 21:12:09 UTC in the boot that ended C2, only to record not_run (D-C3-2, "Not_run starts"). It logged "c3 not run: K3 failed: A2 and production stop; S2 is re-planned (section 11) (N-D11)". It ran no job, built no cell and produced no value.
+- **Its archive** (three JSON files, no label) is held in the private record until S2b, in a directory without C1 or C2 copies. Its verify printed 0 gate files and exited 1, the expected O19 case. It is not committed under the exception of D-C3-1: amendment 2026-11-11a, part b, point 2, keeps it out of any evaluation root and out of this repository.
+- **Status of this note.** Its provisions for the production campaign C3 are not in force unless the new pre-registration S2b re-adopts them (amendment 2026-11-11a, part e, item 7). The provisions used to end C2 stay in force: D-C3-2 (not_run starts), O19 (verify), and D-C2-8 as extended in section 2, which keeps the C1, C2 and C3 trees on the node.
