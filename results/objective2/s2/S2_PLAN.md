@@ -1478,3 +1478,9 @@ S2b is a separate, dated pre-registration, written after the part-d read and bef
 |---|---|---|---|
 | draft 5, two lenses (science and integrity; procedure and consistency) | 38 (13 major, 25 minor) | 34 in draft 6, 4 completed in draft 7 | draft 6: disclosure of the early read; fail-closed STOP branch; Effect split; identical-atom rule fixed before the read; gate pass band; far-site reference requirement; evaluation deferred as a named departure with the not_run C3 kept out of the evaluation root; G specified and admitted as a reader under guards; disagreement rule; Order completed; citations corrected |
 | draft 6, one verifier | 9 new (1 major, 8 minor); 4 earlier findings partly applied | all | draft 7: C2 cells keep their recorded validity (the invariant reading is reported only); no A1 tier without a far-site reference; part c and part e items 1 and 4-7 hold on every fail_replan and on a STOP; evaluation root defined; gate tolerances listed in S2b's information state; pull before the node stop; commit pins of OPS2 and OPS3; K3 arithmetic corrected; fallback if K3 is applied before the commit; dated information state at commit |
+
+## Notice (2026-11-12): S2b
+
+S2b, the new pre-registration that amendment 2026-11-11a part e requires, is [`S2B_PLAN.md`](S2B_PLAN.md) (the commit that
+adds it). Where it differs from this file, it governs S2b. Its departures from this file are listed in its §10 (X1-X17).
+This file is otherwise unchanged.

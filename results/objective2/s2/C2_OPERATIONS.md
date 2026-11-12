@@ -212,3 +212,14 @@ These two decisions fix in advance what the C2 result note reads, reports and pl
     - Cells are labelled host, V, D and D+V, with "V: iodide vacancy, q = +1" in the legend title. Mathtext sub- and superscripts would fall below 5 pt, and Arial has no superscript plus.
     - The threshold is labelled 0.00078 Ry/bohr = 0.02005 eV/Å, from the `scripts/47` constants that `--build` writes into the source data.
     - The end-glyph legend sits under panel a.
+
+## Dated notice (2026-11-12): status under S2b
+
+Appended under `S2B_PLAN.md` (the commit that adds it), §1. The text above is not edited.
+- **For the S2b A2 campaigns `fr` and `c4b`,** this note is re-adopted in substance through the operations note
+  committed before each campaign. Those notes cannot change any rule of `S2B_PLAN.md`.
+- **D-C2-10 and the Reading rule** lapse at the S2b evaluation E for its blocks 1-3: the far quartet, FR, and MACE with
+  the deferred C1 items. They stay in force for the hinge-block items (relaxations 1-4, E_b^A1/A2(Pb136), δ_Sr,m30, the
+  step-0 reference F, the Pb136 MACE items) until that block is read (`S2B_PLAN.md` §7).
+- **D-C2-8 (disk)** ends only when E has run, its archives have been re-verified, and the hinge block has been read or
+  a later pre-registration has taken custody of the C2 tree (`S2B_PLAN.md` §9 step 9).

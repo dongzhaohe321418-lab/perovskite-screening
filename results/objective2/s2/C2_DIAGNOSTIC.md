@@ -138,3 +138,13 @@ At the final geometries the child − parent values are only 0.078 Å and 0.038 
   δ_Sr,m30 and δ_far, every relaxation energy and F(k), E_b^A1(Pb136) and the plateau differences.
 - **Status of these outputs.** They are part-d outputs. S2b must list them, and every choice made knowing them
   (part e, item 6).
+
+## Erratum (2026-11-12)
+
+**§4, the line "FA 212 exceeds 20° from k = 158".** The part-d output (`c2_diagnostic/part_d_read_output.txt`, item 5)
+shows two separate crossings:
+- the FA 212 carbon exceeds 0.25 Å from the reference from k = 158;
+- its rotation exceeds 20° from k = 172.
+
+Figure S2-C2-D panel b plots the rotation correctly. No other statement of this note changes. The error was found by a
+reviewer of the S2b drafts.

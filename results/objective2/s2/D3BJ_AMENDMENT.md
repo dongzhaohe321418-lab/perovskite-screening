@@ -93,3 +93,12 @@ Appended under amendment 2026-11-11a of `S2_PLAN.md` (commit `1f8e496`, part g, 
 
 - On 2026-11-11 at 21:10:32 UTC the node recorded K3 = fail_replan (`C2_RESULT.md` §4). C3 recorded not_run at 21:12:09 UTC, with no job, cell or value; its archive is held privately until S2b.
 - No one evaluation runs under the plan as it stands (amendment 2026-11-11a, part b). This note therefore has nothing to apply to. It is neither withdrawn nor re-opened; S2b states whether it is re-adopted (part e, item 7).
+
+## Dated notice (2026-11-12): S2b
+
+Appended under `S2B_PLAN.md` (the commit that adds it), §1. The text above is not edited.
+- This note stays in force in substance: the D3(BJ) row is not reported.
+- Its sensitivity study runs after the S2b evaluation E has written its output. It uses E's printed tables and their
+  sha256 digest in place of `s2_eval.json`. Classes and controls are recomputed with E's own functions, never by
+  `scripts/48` assemble (`S2B_PLAN.md` X16).
+- If no A1 tier is produced, the study has nothing to apply to.

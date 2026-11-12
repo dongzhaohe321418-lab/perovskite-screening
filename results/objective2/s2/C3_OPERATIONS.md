@@ -143,3 +143,12 @@ Appended under amendment 2026-11-11a of `S2_PLAN.md` (commit `1f8e496`, part g, 
 - **C3.** C3 was started once, at 21:12:09 UTC in the boot that ended C2, only to record not_run (D-C3-2, "Not_run starts"). It logged "c3 not run: K3 failed: A2 and production stop; S2 is re-planned (section 11) (N-D11)". It ran no job, built no cell and produced no value.
 - **Its archive** (three JSON files, no label) is held in the private record until S2b, in a directory without C1 or C2 copies. Its verify printed 0 gate files and exited 1, the expected O19 case. It is not committed under the exception of D-C3-1: amendment 2026-11-11a, part b, point 2, keeps it out of any evaluation root and out of this repository.
 - **Status of this note.** Its provisions for the production campaign C3 are not in force unless the new pre-registration S2b re-adopts them (amendment 2026-11-11a, part e, item 7). The provisions used to end C2 stay in force: D-C3-2 (not_run starts), O19 (verify), and D-C2-8 as extended in section 2, which keeps the C1, C2 and C3 trees on the node.
+
+## 6. Dated notice (2026-11-12): re-adoption for c3b
+
+Appended under `S2B_PLAN.md` (the commit that adds it), §1. The text above is not edited.
+- **C3b.** This note is re-adopted in substance for the production campaign `c3b`, which runs only if gate FR passes.
+  This is done through an operations note committed before c3b, which states what is kept, adapted or superseded and
+  cannot change any rule of `S2B_PLAN.md`.
+- **The not_run c3 archive** stays private (`S2B_PLAN.md` X14).
+- **`scripts/48`.** No entry point of `scripts/48` is run on S2 data (X7).
