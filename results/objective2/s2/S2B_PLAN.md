@@ -896,3 +896,228 @@ No C2 cell is rerun. The settings, regions, check bounds, end rule and cap are u
 3. **A reported-only production after an FR failure** is declined as the analyst's choice, for the reason given in §2.
 4. **The FA188 successor itself.** The round-2 DA3 and DA4 verifiers advised against an FA188 successor. R3 adopted it
    as the analyst's judgement, for the reasons given in §2.
+
+## Amendment 2026-11-12a: E's code (allow-lists, readers, routes and attempts)
+
+**Written** on 2026-11-12 by the analyst, after G2 (`4d27d2d`) and before E's code and the fr code are committed. Items
+12-15 were added between 2026-11-12 and 2026-11-14, after the integration reviews of the four S2b tools and still
+before that commit. No fr cell has run. No value that any item below affects has been read: the C2 part-c values, the
+C1 MACE values and every fr value are unread.
+- **Why.** The implementation specification of E and its three reviews found places where §7 conflicts with itself or
+  with the code at `8bff03e`, or leaves a choice open. Items 1-11 settle these. The integration reviews of the four
+  S2b tools (the runner, the §6b read, the FR figure and E) found the same for §§1, 2, 6b and 11, as the readers of fr
+  apply them. Items 12-15 settle these; the rulings behind them, IX-1 to IX-26, are published under
+  `results/objective2/s2/s2b/records/`. No item selects a cell, a reading, a tolerance, a gate or a label by a value.
+  None widens what is read beyond non-energy leaves, except item 3, which names the step-0 values E prints.
+- **Precedence.** Where an item and §§1, 2, 6b, 7 or 11 differ, the item governs.
+
+1. **Pb136 residual forces.** They are printed in block 5, not block 3. No `c1/raw` output of a Pb136 cell is opened
+   outside block 5, by any reader. (§7 block 3 says "Pb136 cells included", which conflicts with the C1 side of the
+   hinge deferral; the deferral governs.)
+2. **Allow-lists.** These leaves are added, all non-energy:
+   - on the records of relaxations 1-8 (far mode): `layout.ranks`, `validity_final.valid`, `validity_final.failed` and
+     `end_rule.end`;
+   - on the FR records: the same, and `validity_final.check5_reading`, `.valid_as_written`, `.failed_as_written` and
+     `.invariant_only`;
+   - from the FR gate files: the explicit leaves of `decision.FR` and `decision.fr_step0` (replacing `decision.*`), and
+     `result.invariant_only`;
+   - from `fr/campaign.json` and `fr/state_end.json`: the status, commit, outcome and stop leaves; from
+     `c2/campaign.json`: `commit` and `status`;
+   - from `gate_K3.json`, §7's `decision` is read as the leaf `decision.K3`.
+
+   `result.FR2.Eb_A2_meV` is the one listed leaf whose last segment is in the module-level WITHHELD (§7 names it "under
+   its exact field name").
+3. **Step-0 values.** Each step-0 gate file holds one cell. Block 2 prints, for each fr step-0 evaluation that ran, the
+   gate-recorded `result.cells.<SP>.dF_meV` and `.passed` from that evaluation's own gate copy (`s2_m30_VA188` from
+   @2, `s2_m30_Cs188o0_vac` from @4), labelled "recorded by gate code". Where the cell is complete, E also prints its
+   own recompute with a cross-check. A cell killed by the step-0 gate is labelled "cell killed by the step-0 gate;
+   output set aside, not archived". Block 5 does the same for the C2 step-0 references (`s2_m30_VB136` from @1,
+   `s2_m30_Sr136o0_vac` from @4), in hinge mode only.
+4. **Header and labels.**
+   - The FR alternatives of the header add "fail (step-0 final; gate not evaluated)".
+   - "Valid far references: k of 2" counts valid far quartets (FR-1 for FA188). An FR-2 failure gives 1 of 2.
+   - The FR-1 label has an end-rule variant, "FR quartet invalid (end rule <outcome>, <cell>); reported only; not
+     valid", and a not-run variant, "FR quartet incomplete (<cell> <kind>); reported only; not valid".
+5. **Per-relaxation items for FR and short relaxations.**
+   - FR cells are checked against their records only.
+   - ΔF_tail is F(k_last − 36) − F(final), with block 1's label, and "not formed (k_last < 36)" below that.
+   - k_last is the record's `k_last`, which covers unconverged_early.
+   - A relaxation with no configuration, or fewer than two, prints "not formed" for each item that needs them.
+6. **Path work by shell** uses minimum-image distances to the site. Lattice images of the site are passed as centres
+   to the unchanged `path_work`, and only that version is printed.
+7. **Imports and C1 rows.**
+   - E also uses, from `scripts/47` at `8bff03e`, `parse_sp`, `sp_status`, `end_rule` and `upf_md5_extra`, for the
+     C1 single points and the end-rule cross-check. From `scripts/46` it uses `load_record`, and `write_cell` in
+     self-tests only.
+   - The `scripts/49` constants it needs (label grammar, K3_QUARTETS, STEP0_PAIRS, the RULES values, the far4,
+     calibration and pose tables) are restated as literals and asserted equal to the `8bff03e` objects.
+   - The start-set A1 E_b beside MACE in block 3 is printed "no A1 DFT value", since C1's single points form none.
+   - The q = +1 comparator of a q = 0 row uses the same F sources as that row.
+   - E_b^A1(Pb76) is printed with its difference to the literal −5.0 meV and to gate N's unrounded value.
+8. **Routes, commits and attempts.**
+   - A final STOP is shown by a committed, dated note that states it.
+   - The commits check compares with the last S2b campaign commit and prints every consecutive diff.
+   - E's files must exist at the fr campaign commit, and block 4 with its implementation at the c3b campaign commit.
+     This is not waivable by amendment.
+   - A code error found after output allows one rerun (attempt 2). If that rerun fails before output, attempt 1's
+     output stands, the failure report is archived, and the S2b result note lists the error, its cause and the diff.
+   - The item-7 fallback applies only when attempts 1 and 2 both fail before output. Its one further run writes
+     `E_output_attempt3.txt`, and a fourth attempt is refused.
+   - A rerun of the deferred hinge run writes `E_hinge_output_attempt2.txt`. There is no third.
+9. **The deferred hinge read.**
+   - "A later pre-registration" is a committed file, added in a commit after the commit of E's output and dated
+     before 2027-06-30 by its commit. It carries a PLAN status and names `E_hinge_output.txt` as data. It is not this
+     file, `S2_PLAN.md`, an S2 operations, diagnostic or result note, or an E output.
+   - Its evaluation is shown by a committed record, added after it, that names it.
+   - The 2027-06-30 backstop uses the real UTC date. It is refused once a later pre-registration has replaced it.
+10. **Integrity references and outputs.**
+    - "The verified archive" means the archive-commit blobs for c1, c2 and fr, and committed manifests for c3b and c4b.
+    - The extracted `8bff03e` files are checked against their blobs, and tracked notes and verify records against
+      HEAD.
+    - The fr verify record is `results/objective2/s2/fr_verify/verify_fr.txt`.
+    - E writes the figure's source data itself. On routes with private c3b or c4b data, E's outputs are committed
+      privately until the S2b result note.
+11. **Rulings after E's review (no value read).**
+    - A final STOP in fr before the node accepts the fr campaign commit is not evaluated: E refuses and writes
+      nothing. A dated amendment decides should that route become final.
+    - The hinge run on an FR-STOP route names the same stop note (`--stop-note`). The stop note states "the fr STOP is
+      final".
+    - Admission (route, stop note, block 4, verify records, hinge preconditions, commits, rerun cause) runs before
+      E's imports and integrity checks, so a refusal writes nothing.
+    - A rerun cause (item 8) is a self-test case that passes on the fixed code and fails on the earlier code with an
+      assertion or integrity failure, through interfaces present in the earlier code. E's files must differ between
+      the two. A harness error is not a cause.
+    - `commit_history[].to` is read (non-energy). E's files must exist at `start_commit`, at `commit`, and at the
+      `to` of every entry from the one that reached `start_commit` onward.
+    - Item 3 reads "each step-0 evaluation in force". After a repeat, attempt 1's files under `fr/step0_attempt1/`
+      are never opened. E lists their names to show the set-aside, and prints attempt 1 through
+      `decision.fr_step0.attempt1.*` only.
+    - Further fixed strings:
+      - L_FR1 gains "FR quartet invalid (no final-geometry check, <cell>); reported only; not valid", and its not-run
+        variant gains the kinds "not started" and "no configuration".
+      - After a final STOP before gate FR, a complete FA188 quartet carries "gate FR not evaluated (final STOP in fr);
+        reported only; not valid".
+      - A STOP header reads "stopped at <first FR cell not complete> (<stop reason>)".
+    - The item-4 label also covers block 3's C1 gate statistics of A1 E_b: gate N's σ_far, and the pose gate's
+      a_pose and Δ_pose, with their cross-checks. On an FR-pass route, a value labelled "far quartet invalid (check 5,
+      VB76); …" does not also carry "far-site reference: FR, m30 FA188, valid".
+    - The item-7 fallback adds the labels that blocks 1-2 attach to the same values.
+    - The deferred hinge run prints every failed block 1-3 cross-check in full.
+    - The E figure reads E's output text for its build assertions only, and draws only from the CSVs E writes.
+12. **One final STOP for every reader of fr (no value read).**
+    - The §6b geometry read, the FR figure and E use the same test of a final STOP: the stop note of items 8 and 11.
+      The note is the one file `results/objective2/s2/FR_STOP_NOTE.md`. It must be committed and clean, and its text
+      is read from HEAD as a blob. It must be dated and must state that the STOP of fr is final, in the fixed phrase
+      of the operations note.
+    - On every route the order is verify, the §6b read, the FR figure, then E. On a STOP the note is committed
+      first, and the same note is named to all three.
+    - Without the note, each reader refuses on a stopped campaign and writes nothing. Each also refuses a note on a
+      completed campaign, and any other path.
+    - The §6b read and the FR figure record the note's path and sha256, as E does.
+13. **A final STOP after a recorded FR outcome (no value read).** §1 counts a final STOP in fr as "FR fails",
+    whatever gate FR recorded before it.
+    - On such a route E prints the item-4 label, and FR is not a valid far reference.
+    - If gate FR or the step-0 final was recorded before the STOP, the header names that decision, then "; then a
+      final STOP (<reason>)". A pass is named "pass at gate FR" and adds "; counted as FR fails (S2B §1)". The other
+      decisions are named in the words of §7 and item 4.
+    - The FR figure draws the same text.
+    - A STOP whose cause can be cleared is relaunched to CAMPAIGN_DONE rather than made final.
+    - **`fr_outcome` at a STOP.** At every STOP of fr the runner records `fr_outcome` in `fr/campaign.json`. It holds
+      the outcome that the recorded decisions already fix (gate FR applied, or the step-0 final), and null otherwise.
+      It is a decision label, not a value. E and the FR figure read it as a listed non-energy leaf and check it against
+      the decisions.
+    - **The label L_FRSTOP.** It applies on a final STOP after a recorded pass at gate FR. Each FR-quartet value E
+      prints that carries no item-4 label carries "gate FR passed, then a final STOP in fr (S2B section 1); reported
+      only; not valid". These are E_b^A2(FA188) in block 2 and `result.FR2.Eb_A2_meV` wherever E prints it: in XC-FR2
+      for both gate-FR files, and in the item-7 fallback. The A1 values and δ keep the item-4 label, including
+      `result.FR2.Eb_A1_meV` and `result.FR2.delta_far_meV`.
+14. **Routes the readers refuse, and STOPs that are not evaluated (no value read).**
+    - **A STOP before the fr campaign commit.** In `fr/campaign.json`, `start_commit` and `commit` are null. E, the
+      §6b read and the FR figure each refuse it before the stop note is read and write nothing (item 11). Its cause is
+      removed and fr is relaunched.
+    - **A "not applied" STOP.** `scripts/49` wrote a gate file, and the runner stopped before applying it (N-FR4,
+      N-FR8). This can happen at gate FR or at either fr_step0 gate. It shows that the runner and the gate disagree.
+      - **It is not evaluated at this commit.** There is no relaunch and no stop note, no fr archive is committed, and
+        none of the three readers runs.
+      - **FR stays unevaluated.** This is a state of §1 in which no route applies and E may not run. Only a dated
+        amendment of this plan, written before any fr value is read, ends it, and that amendment may do one of two
+        things only:
+        - **Admit a fix.** It admits a fix commit and a runner route that relaunches fr at it. The fix is shown by a
+          synthetic self-test case that fails on the campaign-commit code and passes on the fix, through interfaces
+          present at the campaign commit, as item 11 requires of E's reruns. Which side has the defect, the runner
+          or the gate, is decided by §§1-2, amendment 2026-11-12a and the code's specification as committed at the
+          campaign commit. It is never decided by the FR outcome either choice would give, which the STOP reason
+          may name. The relaunch evaluates the gate
+          again, and that decision stands.
+        - **Or make the STOP final**, and FR fails (§1).
+      - **Backstop.** If neither has been committed 60 days after the STOP (UTC), the STOP is final and FR fails
+        (§1). The readers' refusal by name then stands until a reviewed change admits the archive on the FR-STOP
+        route. That change selects no cell, reading, tolerance, gate or label.
+      - **At gate FR**, the three readers refuse it by name (`gates/FR.json` without
+        `gates_applied/gate_FR.gate.json`), before the stop note is read and with nothing written.
+      - **At an fr_step0 gate** they do not refuse it by name.
+        - At @4, a step-0 gate that did not complete leaves the same names
+          (`gates_applied/gate_fr_step0_4.inputs.json` without its `.gate.json`). A refusal by name would also bar
+          that STOP from being made final.
+        - At @2, a "not applied" STOP leaves `gates/fr_step0.json` without the @2 marker. E already fails this as an
+          integrity error (RF-12), and the @2 case is left to the analyst's check, so that both cells are treated
+          alike.
+      - **The analyst's check.** Before any stop note is written, the analyst lists the gate files and markers by
+        name only. The analyst also reads the stop reason through the operations note's filter. A "not applied"
+        reason, at any gate, is never made final except as above.
+    - **A step-0 repeat prepared but not recorded**, at @2 or @4. E and the FR figure accept it on the same conditions
+      and show "repeat prepared, not recorded". It is relaunched, and so is a step-0 STOP. Either is made final only
+      when its cause cannot be cleared, with the reason in the stop note.
+    - **One further operator read.** On a held end-rule STOP, after verify, the operator may read `end_rule.stop` and
+      `end_rule.stop_raised` of the failing cell's A2 record through GuardedS2b. Both are booleans. They show that the
+      runner rewrote that record after gate FR read it, which is the expected digest difference of gate FR in verify.
+15. **Fixed strings added after item 11 (no value read).** The texts below are verbatim; braces mark fields that the
+    code fills.
+    - **E** (`s2b/e_eval.py`):
+      - the label L_FRSTOP of item 13;
+      - the STOP headers (`Run.header_fr_part`):
+        - "stopped at {cell} ({reason})";
+        - "pass at gate FR; then a final STOP ({reason}); counted as FR fails (S2B §1)";
+        - "{decision}; then a final STOP ({reason})", where {decision} is the header text of item 4 for the decision
+          recorded before the STOP;
+      - the route rows (`Run.stop_decision`), printed with a two-space indent: "fr_outcome at the STOP {outcome}: no FR
+        outcome recorded before the STOP", or "fr_outcome at the STOP {outcome}: recorded before the STOP:
+        {decision}";
+      - the STOP variant of the row B2.step0.no_error: "fr_step0{cell}: final, no writer or input error found
+        (fr/campaign.json fr_outcome at the STOP: fail (step-0 final; gate not evaluated), recorded by W 50
+        begin_stop; fr/STEP0_NO_ERROR, W 50 preconditions); the gate files keep attempt 1's decision
+        fail_pending_fix". Here "W 50" is `scripts/50_s2_campaign.py` at the S2b campaign commit;
+      - the done variant of the same row: "fr_step0{cell}: final, no writer or input error found (fr/state_end.json
+        fr_step0: outcome fail_final, no_error_found True; fr/STEP0_NO_ERROR, W 50 preconditions); the gate files keep
+        attempt 1's decision fail_pending_fix";
+      - in the item-7 fallback (`Run.fallback`):
+        - the line "c2/{file} result.Eb_A2_meV.far = {value} meV -- {L_FALLBACK}; {L_FAR}", printed with a two-space
+          indent, for each of the two K3 gate files;
+        - after "-- {L_FALLBACK}" on each `fr/gates/FR.json result.FR2.{leaf}` line, the labels of item 13. When gate
+          FR records the FR-2 failure, "; {L_FR2}" follows on all three lines.
+    - **The FR figure** (`figures/fig_s2b_fr.py`):
+      - the gate-FR rows: "pass at gate FR"; "fail (FR-1, {role}, {reason})"; "{decision}; then a final STOP
+        ({reason})". After a pass the state adds "; counted as FR fails (S2B section 1)". On every final STOP the row's
+        detail adds "; the STOP is final by the stop note {path}";
+      - the step-0 row "repeat prepared, not recorded (attempt 1 at {role}: fail_pending_fix; its files set aside
+        unread; no STEP0_FIX entry)";
+      - the suffix "; neither fr/STEP0_FIX nor fr/STEP0_NO_ERROR before the final STOP".
+    - **The §6b read** (`c2_diagnostic/fr_geom_read.py`): the header suffix " (final STOP: stop note {path} sha256
+      {sha256})".
+    - **Not listed here.** These are the refusal, Stop, need() and log texts added in:
+      - E (`Run.route_admit`, `gate_fr_unapplied`, and the integrity keys of `Run.stop_decision`);
+      - the FR figure (`a2_stop_state`, `stop_note`);
+      - the §6b read (`when_ok`, `note_path_ok`);
+      - `scripts/50` (`run_gate`, `s2b_decision_check`, `archive_out_refusal`, `NOTES`).
+
+      They name no result. The S2b campaign commit fixes them, and it comes before every fr value.
+    - **Ruling codes.** The S2b code cites rulings by code: IX-, OP-, RF-, ER2-, FG- and R3- to R5-. These are defined
+      in the design records committed under `results/objective2/s2/s2b/records/`.
+      - In `scripts/50`, the S2b R3- to R5- codes are cited as "FR_IMPL_DECISIONS_R<n> R<n>-<m>" or bare in the fr
+        code and its cases. Citations written "round-3 R3-<m>" or "round-5 R5-<m>" are older: they come from the
+        reviews of the C1 runner and appear in its N-F notes and in cases z1 to z28.
+      - The D-C2- codes are those of `C2_OPERATIONS.md` (OPS2), as `FR_OPERATIONS.md` §2 keeps, adapts or supersedes
+        them for fr.
+      - Ids of review findings, mutants and code maps in the self-tests and docstrings (such as M3, G07, R-1, F01 or
+        "map 2") label test cases. They are defined in the private review reports, and each test states what it
+        checks.
