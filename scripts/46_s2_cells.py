@@ -217,6 +217,12 @@ NOTES = {
              "names); sources are cited by reference and DOI",
     "N-A14": "labels: o0 always names the p0 cell (single-start tokens and default-pose production get o0 at once); "
              "in a multi-start leg o0 is a kept minimum only if p0 is valid (I-8)",
+    "S2B-X4": "S2B_PLAN.md section 2 and X4: check 5 of validate-a2 read invariantly under the exchange of identical "
+              "atoms is an opt-in (check5_reading 'invariant', set by scripts/50 for campaign fr only): the FA "
+              "rotation is the minimum over the two nitrogens (with their hydrogens) exchanged, as D5 "
+              "(c2_diagnostic/check5_diag.py at 966aa75); carbon, dopant and inorganic displacements as written; both "
+              "readings are recorded and a pass that needs the invariant reading is flagged; the default reading "
+              "'as_written' gives the 8bff03e output without a new key",
 }
 
 
@@ -1397,10 +1403,16 @@ def _rel_skeleton(P, idx, cell):
     return find_mic(P[idx] - P[idx[0]], cell, pbc=True)[0]
 
 
-def check_partner(child, parent, child_to_parent, *, host_relaxed, child_to_host, centre_host, free_child):
+def check_partner(child, parent, child_to_parent, *, host_relaxed, child_to_host, centre_host, free_child,
+                  exchange_n=False):
     """Check 5: every free child atom more than 6.0 A from the defect of this step (its relaxed-host position, an
     organic atom by its molecule's carbon, I-5) stays near its parent position: inorganic |dr| < 0.25 A; FA carbon
-    |dr| < 0.25 A and Kabsch rotation of C-N-N < 20 deg (scripts/38). Within 6.0 A the same measures are reported."""
+    |dr| < 0.25 A and Kabsch rotation of C-N-N < 20 deg (scripts/38). Within 6.0 A the same measures are reported.
+    exchange_n (S2B-X4): every FA row also gets the rotation with the two nitrogens exchanged (D5's Qc[[0, 2, 1]]),
+    'passed' is the invariant reading (min of the two rotations) and 'passed_as_written' the reading above; the gated
+    and within-6 A summaries also give the invariant rotation, max_rot_fa_invariant_deg, with its worst FA row
+    (worst.fa_rotation_invariant: the carbon, rot_deg and rot_exchanged_deg); without it the output is that of
+    8bff03e."""
     cell = child.cell.array
     cs, ps = _syms(child), _syms(parent)
     free = set(int(i) for i in free_child)
@@ -1425,8 +1437,11 @@ def check_partner(child, parent, child_to_parent, *, host_relaxed, child_to_host
         d_h = float(dh[child_to_host[cc[0]]])
         dr = mic_norm(child.positions[cc[0]] - parent.positions[sk[0]], cell)
         rot = a38.kabsch_deg(_rel_skeleton(parent.positions, sk, cell), _rel_skeleton(child.positions, cc, cell))
-        acc["gated" if d_h > PARTNER_CUT_A else "within_6A_reported"]["fa"].append(
-            {"carbon": cc[0], "d_host_A": d_h, "dr_carbon_A": dr, "rot_deg": rot})
+        row = {"carbon": cc[0], "d_host_A": d_h, "dr_carbon_A": dr, "rot_deg": rot}
+        if exchange_n:                                 # S2B-X4: the two nitrogens exchanged (D5 [0, 2, 1])
+            row["rot_exchanged_deg"] = a38.kabsch_deg(_rel_skeleton(parent.positions, sk, cell),
+                                                      _rel_skeleton(child.positions, [cc[0], cc[2], cc[1]], cell))
+        acc["gated" if d_h > PARTNER_CUT_A else "within_6A_reported"]["fa"].append(row)
 
     def summary(g):
         mi = max(g["inorganic"], key=lambda r: r["dr_A"], default=None)
@@ -1440,7 +1455,22 @@ def check_partner(child, parent, child_to_parent, *, host_relaxed, child_to_host
     g = summary(acc["gated"])
     ok = (all(r["dr_A"] < PARTNER_DR_A for r in acc["gated"]["inorganic"])
           and all(r["dr_carbon_A"] < PARTNER_DR_A and r["rot_deg"] < PARTNER_ROT_DEG for r in acc["gated"]["fa"]))
-    return {"passed": bool(ok), "gated": g, "within_6A_reported": summary(acc["within_6A_reported"])}
+    if not exchange_n:
+        return {"passed": bool(ok), "gated": g, "within_6A_reported": summary(acc["within_6A_reported"])}
+    rot_inv = lambda r: min(r["rot_deg"], r["rot_exchanged_deg"])
+
+    def summary_inv(g_, s):                            # S2B-X4: the invariant rotation and its worst FA row
+        mv = max(g_["fa"], key=rot_inv, default=None)
+        s["max_rot_fa_invariant_deg"] = None if mv is None else rot_inv(mv)
+        s["worst"]["fa_rotation_invariant"] = mv
+        return s
+    fa_inv = lambda r: r["dr_carbon_A"] < PARTNER_DR_A and rot_inv(r) < PARTNER_ROT_DEG
+    inv = (all(r["dr_A"] < PARTNER_DR_A for r in acc["gated"]["inorganic"]) and all(fa_inv(r) for r in acc["gated"]["fa"]))
+    need = [r["carbon"] for r in acc["gated"]["fa"] if fa_inv(r) and not r["rot_deg"] < PARTNER_ROT_DEG]
+    return {"passed": bool(inv), "gated": summary_inv(acc["gated"], g),
+            "within_6A_reported": summary_inv(acc["within_6A_reported"], summary(acc["within_6A_reported"])),
+            "passed_as_written": bool(ok), "reading": "invariant (D5, check5_diag.py 966aa75)",
+            "fa_needs_exchange": need}
 
 
 def _centre_host(region, kind):
@@ -1473,10 +1503,17 @@ def validity(kind, *, relax_rec, start, final, region, host_relaxed, parent=None
     return {"checks": c, "valid": not failed, "failed": failed}
 
 
-def validity_a2(kind, *, start, final, region, host_relaxed, parent_final=None, built=None):
+CHECK5_READINGS = ("as_written", "invariant")         # S2B-X4: 'invariant' only for campaign fr (scripts/50)
+
+
+def validity_a2(kind, *, start, final, region, host_relaxed, parent_final=None, built=None, check5_reading="as_written"):
     """Section 11: checks 2-5 on A2 final geometries (host_R: check 4 only), partner check between the final
     geometries of child and parent (D vs host_R, V+ vs host_R, D+V vs V+_R); start = the start of the cell's A1
-    relaxation (I-A4)."""
+    relaxation (I-A4). check5_reading 'invariant' (S2B-X4): check 5 decides by its invariant reading, and the output
+    adds check5_reading, valid_as_written, failed_as_written and invariant_only; 'as_written' is the 8bff03e output."""
+    if check5_reading not in CHECK5_READINGS:
+        raise S2Error(f"validity_a2: check-5 reading {check5_reading!r} (one of {CHECK5_READINGS})")
+    inv = check5_reading == "invariant"
     if kind == "host":
         c = {"2": None, "3": None, "4": check_topology(start, final), "5": None}
     else:
@@ -1488,9 +1525,13 @@ def validity_a2(kind, *, start, final, region, host_relaxed, parent_final=None, 
              "3": check_dopant_on_site(start, final, _leg_maps(built)[2]) if kind in ("D", "DV") else None,
              "4": check_topology(start, final),
              "5": check_partner(final, parent_final, c2p, host_relaxed=host_relaxed, child_to_host=c2h,
-                                centre_host=_centre_host(region, kind), free_child=free)}
+                                centre_host=_centre_host(region, kind), free_child=free, exchange_n=inv)}
     failed = [int(k) for k, x in c.items() if x is not None and not x["passed"]]
-    return {"checks": c, "valid": not failed, "failed": failed}
+    if not inv:
+        return {"checks": c, "valid": not failed, "failed": failed}
+    fw = [int(k) for k, x in c.items() if x is not None and not (x["passed_as_written"] if k == "5" else x["passed"])]
+    return {"checks": c, "valid": not failed, "failed": failed, "check5_reading": check5_reading,
+            "valid_as_written": not fw, "failed_as_written": fw, "invariant_only": not failed and bool(fw)}
 
 
 def atoms_with_positions(template, positions):
@@ -1572,7 +1613,7 @@ class Layout:
         self.work = os.path.join(self.root, "work", "s2") if kind == "node" else self.root
 
     def _c(self, c):
-        if c not in ("c1", "c2", "c3", "c4"):
+        if c not in ("c1", "c2", "c3", "c4", "fr"):                 # fr: S2b far-site reference (S2B_PLAN.md section 2)
             raise S2Error(f"campaign {c!r}")
         return os.path.join(self.work, c)
 
@@ -2034,8 +2075,11 @@ def job_validate_a2(job):
     invalid through the missing partner (round-2 R2V-1). Writes the s2-a2validity-1 record to job["out"]."""
     f = job["files"]
     kind, label = job["kind"], job["label"]
+    reading = job.get("check5_reading", "as_written")                  # S2B-X4: 'invariant' for campaign fr only
     if kind not in ("host", "V", "D", "DV"):
         raise S2Error(f"validate-a2: kind {kind!r}")
+    if reading not in CHECK5_READINGS:
+        raise S2Error(f"validate-a2: check-5 reading {reading!r} (one of {CHECK5_READINGS})")
     reg = check_region_record(load_record(f["region"]))
     host = read_cell(f["host_relaxed"])
     if reg["host_source"]["sha256"] != sha256_atoms(host):
@@ -2058,7 +2102,8 @@ def job_validate_a2(job):
         # recorded failure): the caller must not run the job, and the quartet is invalid through the missing partner
         raise S2Error(f"{label}: validate-a2 of kind {kind} needs the section 11 partner's final geometry "
                       "(check 5 cannot be evaluated without it)")
-    val = validity_a2(kind, start=start, final=final, region=reg, host_relaxed=host, parent_final=parent, built=built)
+    val = validity_a2(kind, start=start, final=final, region=reg, host_relaxed=host, parent_final=parent, built=built,
+                      check5_reading=reading)
     out = {"schema": RECORD_SCHEMAS["a2validity"], "label": label, "kind": kind, "site": int(job["site"]),
            "token": job.get("token"), "leg": job.get("leg"), "region_id": reg["region_id"],
            "parent_label": job.get("parent_label"), "validity": val,
@@ -2066,7 +2111,9 @@ def job_validate_a2(job):
                                "parent_final": None if parent is None else sha256_atoms(parent),
                                "host_relaxed": sha256_atoms(host)},
            "rule": "S2_PLAN.md section 11: section 5 checks 2-5 on the final geometries (host_R: check 4); partner "
-                   "check between the final geometries of child and parent", "written": now()}
+                   "check between the final geometries of child and parent" +
+                   ("; check 5 read invariantly under the exchange of the two FA nitrogens (S2B_PLAN.md section 2, "
+                    "X4; D5 at 966aa75)" if reading == "invariant" else ""), "written": now()}
     dump_public(out, job["out"])
     return out
 
@@ -2750,6 +2797,7 @@ def self_test(work=None):
         except S2Error:
             pass
         del mf
+        inv = t_check5_invariant(base, Ly, cf, outd)
         # guards: a mock never on a pool member; MACE never off the node root; derived keys must agree
         for bad in (dict(base, member="m30", action="relax-host", work_id="s2_m30_host"),
                     dict(base, calc="mace", action="relax-host", work_id="s2_ref233_host"),
@@ -2764,8 +2812,151 @@ def self_test(work=None):
         assert not os.path.exists(Ly.record("c1", "s2_m30_host"))
         return (f"mock pipeline on ref233: host, 2 regions, 2 V+, 3 pairs (6 cells), validate, distinct "
                 f"{d['map']}; validate-a2 (host, V, D, D+V pass; far atom moved 0.30 A fails check 5; V, D, D+V "
-                f"without the partner refused, no record; other atoms refused); MACE energies blinded; pool member "
-                f"and off-node MACE refused")
+                f"without the partner refused, no record; other atoms refused); {inv}; MACE energies blinded; pool "
+                f"member and off-node MACE refused")
+
+    def t_check5_invariant(base, Ly, cf, outd):
+        """S2B-X4 on the Cs128 D and D+V legs of the reference pipeline (an A-site substitution map: FA128 deleted, Cs
+        added): the default reading equals 'as_written' and adds no key; the exchanged nitrogens fail as written and
+        pass invariantly (invariant_only); 20.1 deg fails and 19.9 deg passes both readings; a carbon moved 0.26 A or
+        0.30 A with the exchange, a rotation of 25 deg (above 20 deg as written and exchanged) and an inorganic atom
+        moved 0.30 A fail both; fa_needs_exchange lists the exchanged FA only (never one failing both readings); D5
+        (check5_diag.d5_check) gives passed_exchanged equal to the invariant reading and passed equal to the reading as
+        written; an unknown reading is refused."""
+        sp = importlib.util.spec_from_file_location(
+            "check5_diag", os.path.join(ROOT, "results", "objective2", "s2", "c2_diagnostic", "check5_diag.py"))
+        d5 = importlib.util.module_from_spec(sp); sp.loader.exec_module(d5)
+        va = dict(base, action="validate-a2", campaign="fr")
+        hw, vw = "s2_ref233_host", "s2_ref233_VA128"
+        reg = load_record(Ly.region("c1", "ref233", "A", 128))
+        pr = load_record(Ly.pair("c1", "ref233", "Cs", 128, 0))
+        host = read_cell(cf(hw, "relaxed"))
+        cell = host.cell.array
+        u = np.array([1.0, 0.0, 0.0])
+        n_case, n_sum, legs = 0, 0, []
+        for kind, leg, w, par_w in (("D", "novac", "s2_ref233_Cs128p0_novac", hw), ("DV", "vac", "s2_ref233_Cs128p0_vac", vw)):
+            built = pr["legs"][leg]
+            child0, parent = read_cell(cf(w, "relaxed")), read_cell(cf(par_w, "relaxed"))
+            free = free_in_cell(reg, kind, built=built)
+            c2h, c2p = cell_maps(kind, built=built, n_host=len(host))
+            p2c = {int(p): int(c) for c, p in c2p.items()}
+            dh = dist_to(host, np.array(reg["centres"]["site"], float))
+            ps = _syms(parent)
+            fa = [int(cp) for cp in np.flatnonzero(ps == "C") if len(a38.molecule(parent, int(cp), ps, cell)[1]) == 2
+                  and int(cp) in p2c and p2c[int(cp)] in free and dh[c2h[p2c[int(cp)]]] > PARTNER_CUT_A + 0.3]
+            ino = [i for i in free if _syms(child0)[i] in HOST_INORGANIC and i in c2p and dh[c2h[i]] > PARTNER_CUT_A + 0.3]
+            assert fa and ino, f"{kind}: no gated FA or inorganic atom beyond 6.3 A of the site"
+            cp = fa[0]
+            mol, ns = a38.molecule(parent, cp, ps, cell)
+            rel = {x: find_mic(parent.positions[x] - parent.positions[cp], cell, pbc=True)[0] for x in mol}
+            hs = lambda nn: [x for x in mol if ps[x] == "H" and np.linalg.norm(rel[x] - rel[nn]) < 1.25]
+            grp = [[ns[0]] + hs(ns[0]), [ns[1]] + hs(ns[1])]
+            assert len(grp[0]) == len(grp[1]) == 3, "FA amino groups"
+
+            def fa_case(deg=0.0, exchange=False, shift=0.0):
+                """The child with this FA set from its parent: rotated rigidly about the carbon, the two amino groups
+                exchanged, translated (exact values, independent of the mock relaxation)."""
+                ch = child0.copy()
+                pos = {x: parent.positions[cp] + rel[x] for x in mol}
+                if exchange:
+                    for a_, b_ in zip(grp[0], grp[1]):
+                        pos[a_], pos[b_] = pos[b_].copy(), pos[a_].copy()
+                P = np.array([pos[x] for x in mol])
+                if deg:
+                    P = _rotate_about(P, parent.positions[cp], (0.3, 0.5, 0.81), deg)
+                for x, q in zip(mol, P):
+                    ch.positions[p2c[x]] = q + shift * u
+                return ch
+
+            def ino_case(dr):
+                ch = child0.copy()
+                ch.positions[ino[0]] = parent.positions[c2p[ino[0]]] + dr * u
+                return ch
+
+            def run(nm, child, reading):
+                fp = write_cell(os.path.join(outd, f"inv_{kind}_{nm}.extxyz"), child)
+                job = dict(va, label=f"s2r_m30_Cs188o0_{leg}", kind=kind, site=128, token="Cs", leg=leg,
+                           out=os.path.join(outd, f"inv_{kind}_{nm}_{reading}.json"),
+                           files={"host_relaxed": cf(hw, "relaxed"), "region": Ly.region("c1", "ref233", "A", 128),
+                                  "pair": Ly.pair("c1", "ref233", "Cs", 128, 0), "start": cf(w, "start"),
+                                  "final": os.path.join(outd, f"inv_{kind}_{nm}.extxyz"), "parent_final": cf(par_w, "relaxed")})
+                if reading is not None:
+                    job["check5_reading"] = reading
+                return run_job(job), fp
+
+            cases = (("unperturbed", child0, True, True), ("fa_base", fa_case(), True, True),
+                     ("exchanged", fa_case(exchange=True), False, True), ("rot20.1", fa_case(20.1), False, False),
+                     ("rot19.9", fa_case(19.9), True, True), ("carbon0.26_exchanged", fa_case(exchange=True, shift=0.26),
+                                                               False, False),
+                     ("carbon0.30_exchanged", fa_case(exchange=True, shift=0.30), False, False),
+                     ("rot25", fa_case(25.0), False, False), ("inorganic0.30", ino_case(0.30), False, False))
+            for nm, child, want_w, want_i in cases:
+                o_def, fp = run(nm, child, None)
+                o_w, _ = run(nm, child, "as_written")
+                o_i, _ = run(nm, child, "invariant")
+                vd, vw_, vi = o_def["validity"], o_w["validity"], o_i["validity"]
+                assert canon(vd) == canon(vw_) and canon({**o_def, "written": 0, "out": 0}) == \
+                    canon({**o_w, "written": 0, "out": 0}), f"{kind} {nm}: the default is not 'as_written'"
+                for k_ in ("check5_reading", "passed_as_written", "rot_exchanged_deg", "invariant_only", "fa_needs_exchange",
+                           "max_rot_fa_invariant_deg", "fa_rotation_invariant"):
+                    assert k_ not in json.dumps(vd), f"{kind} {nm}: the default output has {k_}"
+                c5 = vi["checks"]["5"]
+                assert vd["checks"]["5"]["passed"] is want_w and c5["passed_as_written"] is want_w, (kind, nm, "as written")
+                assert c5["passed"] is want_i and vi["valid"] is want_i and vi["valid_as_written"] is want_w and \
+                    vd["valid"] is want_w, (kind, nm, vi["failed"], vi["failed_as_written"])
+                assert vi["check5_reading"] == "invariant" and "check 5 read invariantly" in o_i["rule"]
+                assert vi["invariant_only"] is (want_i and not want_w), (kind, nm, vi["invariant_only"])
+                assert (5 in vi["failed"]) is (not want_i) and (5 in vi["failed_as_written"]) is (not want_w), (kind, nm)
+                # fa_needs_exchange: the FAs passing check 5 invariantly only, never one failing both readings
+                assert c5["fa_needs_exchange"] == ([p2c[cp]] if nm == "exchanged" else []), \
+                    (kind, nm, c5["fa_needs_exchange"])
+                if nm == "carbon0.30_exchanged":         # the exchange alone would pass it: the carbon fails it
+                    wc = c5["gated"]["worst"]["fa_carbon"]
+                    assert wc["carbon"] == p2c[cp] and wc["dr_carbon_A"] >= PARTNER_DR_A and \
+                        wc["rot_deg"] >= PARTNER_ROT_DEG and wc["rot_exchanged_deg"] < 1e-4, wc
+                if nm == "rot25":                        # above the bound as written and exchanged
+                    wv = c5["gated"]["worst"]["fa_rotation_invariant"]
+                    assert wv["carbon"] == p2c[cp] and wv["rot_deg"] >= PARTNER_ROT_DEG and \
+                        wv["rot_exchanged_deg"] >= PARTNER_ROT_DEG, wv
+                if nm == "exchanged":
+                    assert c5["fa_needs_exchange"] == [p2c[cp]] and vi["valid"] and not vi["valid_as_written"], c5
+                    row = [r for r in (c5["gated"]["worst"]["fa_rotation"],) if r][0]
+                    assert row["rot_deg"] > 90 and row["rot_exchanged_deg"] < 1e-4, row      # positions to 1e-8 A
+                r5 = d5.d5_check(kind, fp, parent, host, reg, built)       # the read-back final
+                assert r5["passed"] is want_w and r5["passed_exchanged"] is want_i, (kind, nm, r5["passed"],
+                                                                                    r5["passed_exchanged"])
+                for part, gflag in (("gated", True), ("within_6A_reported", False)):     # the invariant rotation summary
+                    s5, d5r = c5[part], [r for r in r5["rows"] if r["kind"] == "FA" and r["gated"] is gflag]
+                    wr = s5["worst"]["fa_rotation_invariant"]
+                    if not d5r:
+                        assert s5["max_rot_fa_invariant_deg"] is None and wr is None, (kind, nm, part)
+                        continue
+                    want = max(min(r["rot_deg"], r["rot_exchanged_deg"]) for r in d5r)
+                    assert abs(s5["max_rot_fa_invariant_deg"] - want) < 1e-3 and wr["carbon"] in {r["child"] for r in d5r} \
+                        and s5["max_rot_fa_invariant_deg"] == min(wr["rot_deg"], wr["rot_exchanged_deg"]), (kind, nm, part)
+                    n_sum += 1
+                n_case += 1
+            legs.append(f"{kind} (FA C{p2c[cp]}, I/Pb {ino[0]})")
+        for bad in ("bogus", None, ""):
+            try:
+                validity_a2("V", start=host, final=host, region=reg, host_relaxed=host, parent_final=host,
+                            check5_reading=bad)
+                raise AssertionError(f"check-5 reading {bad!r} accepted")
+            except S2Error:
+                pass
+        try:
+            run_job(dict(va, label="s2r_m30_VA188", kind="host", site=128, out=os.path.join(outd, "bad_reading.json"),
+                         check5_reading="exchange", files={"host_relaxed": cf(hw, "relaxed"),
+                                                           "region": Ly.region("c1", "ref233", "A", 128),
+                                                           "start": cf(hw, "start"), "final": cf(hw, "relaxed")}))
+            raise AssertionError("validate-a2 with an unknown reading was run")
+        except S2Error:
+            assert not os.path.exists(os.path.join(outd, "bad_reading.json"))
+        return (f"check 5 invariant reading (S2B-X4) on {', '.join(legs)}: {n_case} cases x 3 readings; default == "
+                f"as_written without a new key; exchanged nitrogens fail as written, pass invariantly (invariant_only); "
+                f"20.1 deg / 25 deg / carbon 0.26 A and 0.30 A / inorganic 0.30 A fail both (none in fa_needs_exchange, "
+                f"invariant_only False), 19.9 deg passes both; D5 agrees on every case, and on the invariant rotation "
+                f"summary ({n_sum} gated and within-6 A maxima); unknown readings refused")
 
     def t_hygiene():
         sl = "/"

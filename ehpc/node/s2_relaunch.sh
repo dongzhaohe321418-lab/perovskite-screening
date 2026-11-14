@@ -15,6 +15,7 @@
 # start (no /data/work/s2) it refuses with that reason (round 4).
 set -euo pipefail
 W=/data/work/s2; R=/data/work/ps_s2
+CAMPS="c1 c2 c3 c4 fr"                  # every S2 and S2b campaign id (S2B_PLAN.md section 9; N-FR1)
 KA=${W%/work/s2}/KEEP_ALIVE
 stale_ka(){
   local bt m
@@ -34,7 +35,10 @@ for p in $(pgrep -f '50_s2_campaign\.py|46_s2_cells\.py|49_s2_gates\.py|s2-spot-
   [ "$p" = "$$" ] || [ "$p" = "$PPID" ] || busy="$busy $p"
 done
 [ -z "$busy" ] || refuse "alive:$busy: nothing started"
-stopped=$(ls -d $W/c?/CAMPAIGN_STOPPED 2>/dev/null || true)
+stopped=""
+for c in $CAMPS; do
+  if [ -e "$W/$c/CAMPAIGN_STOPPED" ]; then stopped="$stopped $W/$c/CAMPAIGN_STOPPED"; fi
+done
 if [ -n "$stopped" ]; then
   echo "stopped for a human; act on every reason, then start s2_campaign.sh directly:"
   for f in $stopped; do echo "$f: $(cat "$f")"; done
@@ -42,7 +46,7 @@ if [ -n "$stopped" ]; then
   exit 1
 fi
 run=""
-for c in c1 c2 c3 c4; do
+for c in $CAMPS; do
   [ -e "$W/$c/campaign.json" ] || continue
   [ -e "$W/$c/CAMPAIGN_DONE" ] && continue
   grep -q '"status": "running"' "$W/$c/campaign.json" && run="$run $c"

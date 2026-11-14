@@ -19,6 +19,11 @@ node driver (scripts/50) or the laptop evaluates before the next stage starts (S
   projection  P = H_spent + N_relax c_bar tau_bar + N_SP tau_SP + H_MACE and the cut order 1-8 (§16) with its
               timing restrictions; the hard-cap job-start rule; the expected job durations; the throughput row.
   c3_complete, c4_end   completeness (§§12, 13) in status mode, and the end rule of every C4 relaxation.
+  fr_step0, FR  S2b (results/objective2/s2/S2B_PLAN.md §2, binding from commit 0e846cc): the step-0 check of the
+              far-site reference FR at V+_R(A188) and Cs D+V+(A188) (state key fr_step0), and gate FR at its end:
+              FR-1, the four FR cells accepted and valid under the invariant reading of check 5 (X4), in the FR order
+              with the early stop (fr_progress, shared with scripts/50); FR-2, |delta_far(FA188)| <= 50 meV, read
+              only after FR-1 passes (state key FR).
 
 Blinding (§17). Every gate opens its inputs through a Reader built from allow_list(gate): a label outside the list,
 or an energy read mode (full, k0, final) on a production-host (C3) or A2-II (C4) label, raises Blinded before any
@@ -229,6 +234,29 @@ NOTES = {
     "I-C7b": "§16 projection: the C1 MACE time per frozen relaxation is its mean wall / 10 concurrent relaxations "
              "(the §16 unit-cost reading, '17-27 min at 6 threads with 10 concurrent' = about 2 min of node time); a "
              "host-relaxation wave costs the longest C1 host wall (both hosts run concurrently)",
+    "S2B-1": "S2B_PLAN.md §§1, 2: the gates fr_step0 and FR are evaluated only for campaign fr, and campaign fr only "
+             "for those two gates; any other pairing is a refusal before anything is read or written (evaluate_gate, "
+             "the run CLI and hence verify --campaign fr)",
+    "S2B-2": "S2B_PLAN.md §2: the FR cells (FR_QUARTET, in FR_ORDER) belong to campaign fr (label_campaign) and are "
+             "not blinded to the gate code (the fr archive is public, S2B §1; the analyst's blinding is the S2b guard, "
+             "results/objective2/s2/s2b/guard.py); one pure function, fr_progress, decides the order and the early "
+             "stop for the runner (every tick) and for gate FR (at the end, on the same record fields): the first "
+             "cell that is not complete, has an end rule outside END_ACCEPTED, has no final-geometry check or fails "
+             "it ends FR; the end rule is taken from the A2 records, as for K3; the step-0 check of FR is the gate "
+             "fr_step0 (cells FR_STEP0_PAIRS, state key fr_step0; the C2 key step0 is never written), with one repeat "
+             "for FR as a whole (I-F3 carry-over), the repeat being the attempt 2 of every later fr_step0",
+    "S2B-X3": "S2B_PLAN.md X3: K3 is retired for S2b; gate FR replaces it: FR-1 (every FR cell accepted and valid, "
+              "fr_progress final) and, only after FR-1 passes, FR-2 |delta_far(FA188)| <= 50 meV (S2B_PINS), "
+              "delta_far = E_b^A2 - E_b^A1 with E_b^A1 from the k = 0 F (P:618-621); no relaxation output is opened "
+              "when FR-1 fails; a missing FR-2 value is a refusal (STOP); FR-2 needs the fr_step0 pass at D+V+; the "
+              "decision {FR: outcome, FR1, FR2, part, cell, kind} holds no value, no check list and no validity "
+              "leaf (the invariant_only labels are in result.invariant_only, read by E after verify; S2B §2)",
+    "S2B-X4": "S2B_PLAN.md X4: gate FR reads only validity_final records of the invariant check-5 reading "
+              "(scripts/46 validate-a2 check5_reading 'invariant'; another reading is a refusal) and lists the cells "
+              "valid only under that reading (result.invariant_only; not in the decision)",
+    "S2B-X6": "S2B_PLAN.md X6: a final step-0 failure (including 'no error found') ends FR as failed: gate FR is "
+              "not evaluated after fr_step0 fail_pending_fix or fail_final (refused; scripts/50 skips gate:FR at "
+              "fail_final)",
 }
 
 
@@ -374,6 +402,13 @@ K3_QUARTETS = {"hinge": {"host": "s2r_m30_hostB136", "V": "s2r_m30_VB136",
                          "D": "s2r_m30_Sr136o0_novac", "DV": "s2r_m30_Sr136o0_vac"},
                "far": {"host": "s2r_m30_hostB76", "V": "s2r_m30_VB76",
                        "D": "s2r_m30_Sr76o0_novac", "DV": "s2r_m30_Sr76o0_vac"}}
+# S2b far-site reference FR (S2B_PLAN.md §2): Cs at m30 FA188, default pose, in the probe-first order (S2B-2)
+FR_QUARTET = {"host": "s2r_m30_hostA188", "V": "s2r_m30_VA188", "D": "s2r_m30_Cs188o0_novac", "DV": "s2r_m30_Cs188o0_vac"}
+FR_ORDER = tuple(FR_QUARTET[r] for r in ("host", "V", "D", "DV"))
+FR_STEP0_PAIRS = {"s2_m30_VA188": "s2r_m30_VA188", "s2_m30_Cs188o0_vac": "s2r_m30_Cs188o0_vac"}   # SP -> A2 (S2B §2)
+STEP0_GATES = {"step0": ("step0", STEP0_PAIRS), "fr_step0": ("fr_step0", FR_STEP0_PAIRS)}         # gate -> (key, pairs)
+FR_ENERGY_FIELDS = ("Eb_A1_meV", "Eb_A2_meV", "delta_far_meV", "dF_meV")   # every energy-valued leaf of FR, fr_step0
+RULES["FR2_MAX_MEV"] = 50.0                 # S2B §2 FR-2: |delta_far(FA188)| <= 50 meV (C5's admission bound, P:771)
 
 
 def a1_start_of(label):
@@ -391,6 +426,8 @@ def label_campaign(label):
     if label.startswith(("s2g1_", "s2spin_", "s2tp_", "s2smoke_")):
         return "c1"
     if label.startswith("s2r_"):
+        if label in FR_ORDER:
+            return "fr"                        # S2b far-site reference (S2B_PLAN.md §2; S2B-2)
         c = a2_cell(label)                     # C2: the m30 B regions (Pb136, Pb76); C4: every other A2 cell (§11)
         return "c2" if c["pilot"] == "m30" and c["L"] == "B" else "c4"
     m = re.match(r"s2_(m\d\d|ref233)_", label)
@@ -550,11 +587,11 @@ def pose_eval(t):
 
 
 # ---------------------------------------------------------------- step-0, K2, K3, separability (§11)
-def step0_eval(t, attempt, fix_note=None, *, no_error_found=False):
+def step0_eval(t, attempt, fix_note=None, *, no_error_found=False, pairs=STEP0_PAIRS):
     """t: {SP label: {"F_sp_eV": F | None, "F_k0_eV": F | None}} for the cells whose k = 0 configuration exists.
     pass iff every |F(k = 0) - F(SP)| <= the scripts/47 tolerance; attempt 1 fail -> fail_pending_fix (A2 stops
     before the next relaxation), or fail_final when no error was found; attempt 2 needs the fix note of the dated
-    note and fails finally (I-C4)."""
+    note and fails finally (I-C4). pairs: STEP0_PAIRS (§11), or FR_STEP0_PAIRS for gate fr_step0 (S2B-2)."""
     if attempt not in (1, 2):
         raise GateRefused(f"step-0 attempt {attempt}: the check is repeated at most once (§11)")
     if attempt == 2 and not (isinstance(fix_note, str) and fix_note.strip()):
@@ -564,8 +601,8 @@ def step0_eval(t, attempt, fix_note=None, *, no_error_found=False):
     q47 = dep("q47")
     cells, ok = {}, True
     for sp, v in sorted(t.items()):
-        if sp not in STEP0_PAIRS:
-            raise GateRefused(f"step-0 cell outside §11: {sp}")
+        if sp not in pairs:
+            raise GateRefused(f"step-0 cell outside {'§11' if pairs is STEP0_PAIRS else 'S2B_PLAN.md §2'}: {sp}")
         if v.get("F_sp_eV") is None or v.get("F_k0_eV") is None:
             cells[sp] = {"dF_meV": None, "passed": False, "reason": "SP or k = 0 value missing (I-C4)"}
         else:
@@ -642,6 +679,98 @@ def separability(delta_far, s_delta, df_delta):
     fired = abs(delta_far) > thr
     return {"c5_far": True, "a_far_meV": abs(delta_far) if fired else 0.0, "fired": fired, "threshold_meV": thr,
             "reason": None}
+
+
+FR_KINDS = ("end_rule", "check", "check_not_evaluated", "missing", "not_started_cap", "killed_by_gate", "not_run_gate")
+
+
+def fr_progress(rows, *, final=False):
+    """Order and early stop of FR (S2B_PLAN.md §2; S2B-2), a pure function. rows: one per FR cell in FR_ORDER,
+    {"label", "status" (A2 record status or None), "end_rule" (outcome or None), "check" (the a2v job state or None),
+    "valid" (validity_final.valid or None)}. The first cell that has not ended is the next one to run (final: a
+    refusal); the first cell that ended without acceptance, without a final-geometry check or with a failed check ends
+    FR. Returns {first_failure: None | {cell, kind, end_rule}, next, cells_not_run, passed}."""
+    labs = [(r or {}).get("label") for r in rows]
+    if labs != list(FR_ORDER):
+        raise GateRefused(f"FR rows {labs} are not the FR cells in their order {list(FR_ORDER)} (S2B §2)")
+    for i, r in enumerate(rows):
+        lab, st = r["label"], r.get("status")
+        kind = None
+        if st is None or st == "pending":
+            if final:
+                raise GateRefused(f"FR: {lab} has not ended (status {st}); gate FR is evaluated at the end (S2B §2)")
+            return {"first_failure": None, "next": lab, "cells_not_run": [], "passed": None}
+        if st != "complete":
+            kind = st
+        elif r.get("end_rule") not in RULES["END_ACCEPTED"]:
+            kind = "end_rule"
+        elif r.get("valid") is None:
+            if not final and r.get("check") in (None, "pending"):
+                return {"first_failure": None, "next": None, "cells_not_run": [], "passed": None}   # the check waits
+            kind = "check_not_evaluated"
+        elif r.get("valid") is not True:
+            kind = "check"
+        if kind is not None:
+            if kind not in FR_KINDS:
+                raise GateRefused(f"FR: {lab} has the unknown A2 status {st!r}")
+            return {"first_failure": {"cell": lab, "kind": kind, "end_rule": r.get("end_rule")}, "next": None,
+                    "cells_not_run": list(FR_ORDER[i + 1:]), "passed": False}
+    return {"first_failure": None, "next": None, "cells_not_run": [], "passed": True}
+
+
+def fr_eval(t):
+    """FR-1 (S2B_PLAN.md §2; S2B-X3, X4). t: {label: {"status", "end_rule" (outcome), "validity_final" (the record's
+    leaves or None), "a1_valid"}} for the FR cells. A validity_final of another check-5 reading is a refusal. Returns
+    {cells, first_failure, end_rule_failed, checks_failed (K3-style reasons), cells_not_run, invariant_only (labels),
+    a1_invalid_reported, FR1}; the A1 validity of the start cells is reported only (I-11)."""
+    rows, inv_only = [], []
+    for lab in FR_ORDER:
+        c = t.get(lab) or {}
+        vf = c.get("validity_final")
+        if vf is not None and vf.get("check5_reading") != "invariant":
+            raise GateRefused(f"FR: {lab} has a final-geometry check without the invariant reading of check 5 "
+                              f"(check5_reading {vf.get('check5_reading')!r}; S2B §2, X4)")
+        rows.append({"label": lab, "status": c.get("status"), "end_rule": c.get("end_rule"),
+                     "check": "done" if vf is not None else None,
+                     "valid": None if vf is None else vf.get("valid") is True})
+        if vf is not None and vf.get("invariant_only") is True:
+            inv_only.append(lab)
+    pr = fr_progress(rows, final=True)
+    ff, end_bad, checks_bad = pr["first_failure"], [], []
+    if ff is not None:
+        c = t.get(ff["cell"]) or {}
+        if ff["kind"] == "check":
+            checks_bad.append(f"{ff['cell']}: final geometry fails check(s) {(c.get('validity_final') or {}).get('failed')}")
+        elif ff["kind"] == "check_not_evaluated":
+            end_bad.append(f"{ff['cell']}: no final-geometry check")
+        else:
+            end_bad.append(f"{ff['cell']}: end rule {c.get('end_rule')} (status {c.get('status')})")
+    return {"cells": t, "first_failure": ff, "end_rule_failed": end_bad, "checks_failed": checks_bad,
+            "cells_not_run": pr["cells_not_run"], "invariant_only": inv_only,
+            "a1_invalid_reported": [lab for lab in FR_ORDER if (t.get(lab) or {}).get("a1_valid") is not True],
+            "FR1": pr["passed"] is True}
+
+
+def fr2_decide(delta_meV):
+    """FR-2 (S2B_PLAN.md §2): |delta_far(FA188)| <= 50 meV; a missing value fails."""
+    return delta_meV is not None and abs(delta_meV) <= RULES["FR2_MAX_MEV"]
+
+
+def fr2_eval(F):
+    """F: {label: {"F_k0_eV", "F_final_eV"}} of the FR cells. delta_far = E_b^A2 - E_b^A1 with E_b^A1 from the k = 0 F
+    and E_b^A2 from the final F (P:618-621); a missing value is a refusal (S2B-X3), whose text names the cell and the
+    configuration (k = 0 or final), never an energy field name or a value (the run CLI prints it to gates.log)."""
+    miss = [f"{lab} {'k = 0' if k == 'F_k0_eV' else 'final'} F" for lab in FR_ORDER for k in ("F_k0_eV", "F_final_eV")
+            if (F.get(lab) or {}).get(k) is None]
+    if miss:
+        raise GateRefused(f"FR-2: values missing ({', '.join(miss)}): FR-2 cannot be evaluated (S2B §2)")
+    k0 = {r: F[lab]["F_k0_eV"] for r, lab in FR_QUARTET.items()}
+    fin = {r: F[lab]["F_final_eV"] for r, lab in FR_QUARTET.items()}
+    a1 = eb_meV(k0["DV"], k0["D"], k0["V"], k0["host"])
+    a2 = eb_meV(fin["DV"], fin["D"], fin["V"], fin["host"])
+    d = a2 - a1
+    return {"Eb_A1_meV": a1, "Eb_A2_meV": a2, "delta_far_meV": d, "bound_meV": RULES["FR2_MAX_MEV"],
+            "passed": fr2_decide(d)}
 
 
 # ---------------------------------------------------------------- budget (§16)
@@ -1060,7 +1189,8 @@ def noise_cells(p):
 
 
 # every gate name (scripts/50 graph gates and the CLI); no two fold to the same lower-case string (N-F15)
-GATE_NAMES = ("G1", "N", "nrule", "pose", "step0", "K2", "projection", "K3", "throughput", "c3_complete", "c4_end")
+GATE_NAMES = ("G1", "N", "nrule", "pose", "step0", "K2", "projection", "K3", "throughput", "c3_complete", "c4_end",
+              "fr_step0", "FR")                                                         # S2b (S2B-2, S2B-X3)
 
 
 def allow_list(gate, state=None, c1=None):
@@ -1093,9 +1223,10 @@ def allow_list(gate, state=None, c1=None):
                         A["records"].add(wid_dop("m30", tok, j, leg, k))
     elif gate == "throughput":
         A["files"].add("throughput:c1")
-    elif gate == "step0":
-        A["full"] |= set(STEP0_PAIRS)
-        A["k0"] |= set(STEP0_PAIRS.values())
+    elif gate in STEP0_GATES:
+        pairs = STEP0_GATES[gate][1]
+        A["full"] |= set(pairs)
+        A["k0"] |= set(pairs.values())
         A["files"].add("smoke:c1")
     elif gate == "K2":
         A["end_rule"].add("s2r_m30_VB136")
@@ -1108,6 +1239,13 @@ def allow_list(gate, state=None, c1=None):
                 A["final"].add(lab)
                 A["records"].add(a1_start_of(lab))
                 A["files"].add(f"a2:{lab}")
+    elif gate == "FR":
+        A["files"].add("smoke:c1")
+        for lab in FR_ORDER:
+            A["files"].add(f"a2:{lab}")
+            A["records"].add(a1_start_of(lab))
+            A["k0"].add(lab)
+            A["final"].add(lab)
     elif gate == "projection":
         for c, labs in build_a2_order(_m05_cal(state)).items():
             for lab in labs:
@@ -1221,10 +1359,10 @@ def gather_pose(reader):
     return t
 
 
-def gather_step0(reader, cells=None):
+def gather_step0(reader, cells=None, *, pairs=STEP0_PAIRS):
     """The step-0 pairs to check: `cells` (SP labels), else those whose A2 relaxation has an output part."""
     t = {}
-    for sp, a2 in STEP0_PAIRS.items():
+    for sp, a2 in pairs.items():
         if cells is not None and sp not in cells:
             continue
         if cells is None and not reader.layout.a2_parts(label_campaign(a2), a2):
@@ -1252,6 +1390,27 @@ def gather_k3(reader):
                       "failed_checks": None if vf is None else vf.get("failed"),
                       "a1_valid": _valid(reader.record(a1_start_of(lab))), "status": a2.get("status")}
     return t
+
+
+def gather_fr(reader):
+    """FR-1 inputs in the K3 pattern (S2B-X3): from each FR A2 record its status, end-rule outcome and validity_final
+    leaves (no energy), and the A1 validity of its start cell (reported only)."""
+    t = {}
+    for lab in FR_ORDER:
+        a2 = reader.json_file(f"a2:{lab}") or {}
+        vf = a2.get("validity_final")
+        t[lab] = {"status": a2.get("status"), "end_rule": (a2.get("end_rule") or {}).get("outcome"),
+                  "validity_final": None if vf is None else
+                  {k: vf.get(k) for k in ("valid", "failed", "check5_reading", "valid_as_written", "failed_as_written",
+                                          "invariant_only")},
+                  "a1_valid": _valid(reader.record(a1_start_of(lab)))}
+    return t
+
+
+def gather_fr_F(reader):
+    """FR-2 inputs: the k = 0 and final F of the FR cells (read only after FR-1 passes; S2B-X3)."""
+    return {lab: {"F_k0_eV": _relax_value(reader.relax(lab, "k0"), "k0"),
+                  "F_final_eV": _relax_value(reader.relax(lab, "final"), "final")} for lab in FR_ORDER}
 
 
 def gather_a2_timings(reader, state=None):
@@ -1298,10 +1457,11 @@ def derive_inputs(gate, layout, state, inputs=None, *, reader_kw=None):
     inp = dict(inputs or {})
     ctx = (state or {}).get("gate_context") or {}
     opened = []
-    if gate == "step0":
+    if gate in STEP0_GATES:
+        key, pairs = STEP0_GATES[gate]
         if "cells" not in inp and ctx.get("at"):
-            inp["cells"] = [sp for sp, a2 in STEP0_PAIRS.items() if a2 == ctx["at"]]
-        s0 = (state or {}).get("step0") or {}
+            inp["cells"] = [sp for sp, a2 in pairs.items() if a2 == ctx["at"]]
+        s0 = (state or {}).get(key) or {}
         if s0.get("outcome") == "fail_final":
             raise GateRefused("step-0 failed finally: A2 has stopped (§11)")
         fix = inp.get("fix_note") or s0.get("fix_note")
@@ -1383,11 +1543,22 @@ def _git_head():
         return None
 
 
+S2B_GATES = ("fr_step0", "FR")                                     # the gates of campaign fr (S2B-1)
+
+
+def gate_campaign_check(gate, campaign):
+    """S2B-1: fr_step0 and FR only for campaign fr, and campaign fr only for those two gates (GateRefused)."""
+    if (gate in S2B_GATES) != (campaign == "fr"):
+        raise GateRefused(f"gate {gate} is not evaluated for campaign {campaign}: the gates {', '.join(S2B_GATES)} "
+                          f"belong to campaign fr only, and fr has no other gate (S2B §§1, 2)")
+
+
 def evaluate_gate(gate, layout, campaign, state, *, attempt=1, inputs=None, c1=None, reader_kw=None):
     """Read the gate's inputs through a Reader, evaluate it and return the s2-gate-1 record (not written)."""
+    gate_campaign_check(gate, campaign)                    # S2B-1: before anything is read
     inputs = inputs or {}
     rd = Reader(layout, campaign, allow_list(gate, state, c1), **(reader_kw or {}))
-    if gate in ("step0", "K2", "K3", "c4_end"):            # the C1 smoke-test mapping of restarts (X-3)
+    if gate in ("step0", "K2", "K3", "c4_end", "fr_step0", "FR"):   # the C1 smoke-test mapping of restarts (X-3)
         rd.mapping = (rd.json_file("smoke:c1") or {}).get("mapping")
     if gate == "G1":
         res = g1_eval(gather_g1(rd))
@@ -1419,6 +1590,37 @@ def evaluate_gate(gate, layout, campaign, state, *, attempt=1, inputs=None, c1=N
         # repeat and the second cell is evaluated as attempt 2 as well (I-F3, review-2 F3)
         dec = {"step0": {**prev, "attempts": attempt, "outcome": res["outcome"], "repeat": attempt == 2,
                          "fix_note": fix if attempt == 2 else prev.get("fix_note")}}
+    elif gate == "fr_step0":
+        # S2B-2: the step-0 check of FR, written only as fr_step0 (the C2 key step0 is untouched); one SP per call;
+        # one repeat for FR as a whole (after a repeat every later fr_step0 is attempt 2, I-F3)
+        attempt = int(inputs.get("attempt", attempt))
+        cells = inputs.get("cells")
+        if not isinstance(cells, list) or len(cells) != 1 or cells[0] not in FR_STEP0_PAIRS:
+            raise GateRefused(f"fr_step0 needs exactly one SP of {sorted(FR_STEP0_PAIRS)}, not {cells!r} (S2B §2)")
+        prev = dict((state or {}).get("fr_step0") or {})
+        fix = inputs.get("fix_note") or prev.get("fix_note")
+        res = step0_eval(gather_step0(rd, cells, pairs=FR_STEP0_PAIRS), attempt, fix,
+                         no_error_found=bool(inputs.get("no_error_found")), pairs=FR_STEP0_PAIRS)
+        dec = {"fr_step0": {**prev, "attempts": attempt, "outcome": res["outcome"], "repeat": attempt == 2,
+                            "fix_note": fix if attempt == 2 else prev.get("fix_note"), "cell": FR_STEP0_PAIRS[cells[0]]}}
+    elif gate == "FR":
+        # S2B-X3, X6: not evaluated after a failed FR step-0; FR-2's energies are opened only after FR-1 passes
+        s0 = (state or {}).get("fr_step0") or {}
+        if s0.get("outcome") in ("fail_pending_fix", "fail_final"):
+            raise GateRefused(f"gate FR: the FR step-0 check is {s0.get('outcome')}; FR is not evaluated (S2B §2, X6)")
+        res = fr_eval(gather_fr(rd))
+        res["FR2"] = None
+        if res["FR1"]:
+            if s0.get("outcome") != "pass" or s0.get("cell") != FR_QUARTET["DV"]:
+                raise GateRefused(f"gate FR: FR-1 passed without the step-0 pass at {FR_QUARTET['DV']} (fr_step0 "
+                                  f"{s0.get('outcome')} at {s0.get('cell')}; S2B §2)")
+            res["FR2"] = fr2_eval(gather_fr_F(rd))
+        ff = res["first_failure"]
+        fr2 = None if res["FR2"] is None else res["FR2"]["passed"]
+        ok = res["FR1"] and fr2 is True
+        dec = {"FR": {"outcome": "pass" if ok else "fail", "FR1": res["FR1"], "FR2": fr2,
+                      "part": None if ok else ("FR-1" if not res["FR1"] else "FR-2"),
+                      "cell": ff["cell"] if ff else None, "kind": ff["kind"] if ff else None}}
     elif gate == "K2":
         g = gather_k2(rd)
         res = k2_eval(g["end_rule"], g["a1_valid"])
@@ -1497,18 +1699,19 @@ def main(argv=None):
     r.add_argument("--gate", required=True, choices=list(GATE_NAMES))
     r.add_argument("--root", default="/data")
     r.add_argument("--kind", default="node", choices=["node", "archive"])
-    r.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4"])
+    r.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4", "fr"])
     r.add_argument("--state", default=None, help="state.json (default: the layout's state file)")
     r.add_argument("--inputs", default=None, help="JSON of the non-energy inputs (projection timings, step-0 note)")
     r.add_argument("--attempt", type=int, default=1)
     v = sub.add_parser("verify")
     v.add_argument("--archive", required=True)
-    v.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4"])
+    v.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4", "fr"])
     a = ap.parse_args(argv)
     if a.self_test:
         return self_test()
     try:
         if a.cmd == "run":
+            gate_campaign_check(a.gate, a.campaign)            # S2B-1: before the state or any input is read
             c46 = dep("c46")
             lay = c46.Layout(kind=a.kind, root=a.root)
             sp = a.state or lay.state()
@@ -1537,6 +1740,7 @@ PLAN_PINS = {"K_BT_MEV": 25.7, "Q_STAR": 0.99375, "Q_SITE": 0.975, "Q_RANK": 0.9
              "N_BASE": 8, "N_RAISED": 10, "POSE_MAX_MEV": 10.0, "K3_MIN_MEV": 25.7, "C2_SD_MAX_MEV": 25.0,
              "C2_MEAN_MAX_MEV": 15.0, "DELTA_BAR_MAX_MEV": 50.0, "HARD_CAP_H": 520.0, "TP_GAIN_MIN": 0.15,
              "PLATEAU_MEV": 3.0, "VALID_HOST_MIN": {"B": 2, "A": 2, "X": 6}, "FIRST_SHELL_SIZE": {"B": 2, "A": 3, "X": 8}}
+S2B_PINS = {"FR2_MAX_MEV": 50.0}            # S2B_PLAN.md §§0, 2 (tolerances fixed): FR-2 at 50 meV
 # §12 per production host: "75 frozen relaxations (19 V+_Rj; Sr and Ca at the 4 B sites, Cs and GA at the 5 A sites,
 # Cl at the 10 X sites: 56 dopant cells), then 76 single points (host 1, V+ 19, Sr 8, Ca 8, Cs 10, GA 10, Cl 20)"
 C3_PLAN_LIST = {"V": 19, "Sr": 8, "Ca": 8, "Cs": 10, "GA": 10, "Cl": 20, "V_X": 10, "host_sp": 1}
@@ -2254,6 +2458,486 @@ def self_test():
                 "gate names unique after lower-casing, the old name 'n' refused; digest independent of the root; "
                 "verify reproduces (and detects a changed output)")
 
+    def t_fr():
+        """S2b (S2B_PLAN.md §2; S2B-2, X3, X4, X6): the FR labels, fr_progress, fr_step0 and gate FR on a synthetic
+        archive, the energy-name canary, the run CLI's printed output (decision only, also for a failing decision and
+        for each refusal) and verify
+        --campaign fr."""
+        out = []
+        # labels and pins
+        a1 = {"host": "s2_m30_host", "V": "s2_m30_VA188", "D": "s2_m30_Cs188p0_novac", "DV": "s2_m30_Cs188p0_vac"}
+        for r, lab in FR_QUARTET.items():
+            assert label_campaign(lab) == "fr" and not is_blinded(lab) and a1_start_of(lab) == a1[r], lab
+            assert lab not in A2_ORDER["c2"] + A2_ORDER["c4"], lab
+        assert FR_ORDER == tuple(FR_QUARTET[r] for r in ("host", "V", "D", "DV")) and len(set(FR_ORDER)) == 4
+        assert set(FR_STEP0_PAIRS.values()) == {FR_QUARTET["V"], FR_QUARTET["DV"]}
+        assert all(label_campaign(sp) == "c1" for sp in FR_STEP0_PAIRS) and not set(FR_STEP0_PAIRS) & set(STEP0_PAIRS)
+        for k, v in S2B_PINS.items():
+            assert RULES[k] == v, (k, RULES[k], v)
+        assert not set(S2B_PINS) & set(PLAN_PINS)
+        try:
+            c46 = dep("c46")
+            if hasattr(c46, "LABEL_RE"):
+                for lab in list(FR_ORDER) + list(FR_STEP0_PAIRS):
+                    assert c46.LABEL_RE.fullmatch(lab), lab
+        except MissingDependency:
+            pass
+        out.append("FR labels: campaign fr, not blinded, outside A2_ORDER, LABEL_RE, A1 starts; S2B_PINS")
+
+        # fr_progress: every kind at every position, cells_not_run, the waiting cases, a wrong order
+        def rows(**over):
+            rs = [{"label": lab, "status": "complete", "end_rule": "accepted_converged", "check": "done", "valid": True}
+                  for lab in FR_ORDER]
+            for i, upd in over.items():
+                rs[int(i[1:])].update(upd)
+            return rs
+        assert fr_progress(rows()) == fr_progress(rows(), final=True) == \
+            {"first_failure": None, "next": None, "cells_not_run": [], "passed": True}
+        fails = {"missing": {"status": "missing"}, "not_started_cap": {"status": "not_started_cap"},
+                 "killed_by_gate": {"status": "killed_by_gate"}, "not_run_gate": {"status": "not_run_gate"},
+                 "end_rule": {"end_rule": "unconverged_cap"}, "check": {"valid": False},
+                 "check_not_evaluated": {"valid": None, "check": "skipped"}}
+        assert set(fails) == set(FR_KINDS)
+        n = 0
+        for i, lab in enumerate(FR_ORDER):
+            for kind, upd in fails.items():
+                later = {f"r{k}": {"status": None, "end_rule": None, "check": None, "valid": None}
+                         for k in range(i + 1, 4)}
+                for final in (False, True):
+                    if final:
+                        later = {f"r{k}": {"status": "not_run_gate", "end_rule": None, "check": "skipped", "valid": None}
+                                 for k in range(i + 1, 4)}
+                    pr = fr_progress(rows(**{f"r{i}": dict(upd)}, **later), final=final)
+                    assert pr["first_failure"] == {"cell": lab, "kind": kind, "end_rule": "unconverged_cap" if
+                                                   kind == "end_rule" else "accepted_converged"}, (lab, kind, pr)
+                    assert pr["cells_not_run"] == list(FR_ORDER[i + 1:]) and pr["passed"] is False and pr["next"] is None
+                    n += 1
+            # waiting: not ended (next), check pending (nothing starts); at the end both are refusals
+            for st in (None, "pending"):
+                pr = fr_progress(rows(**{f"r{k}": {"status": st} for k in range(i, 4)}))
+                assert pr == {"first_failure": None, "next": lab, "cells_not_run": [], "passed": None}, pr
+                refused(lambda s=st, i_=i: fr_progress(rows(**{f"r{k}": {"status": s} for k in range(i_, 4)}), final=True))
+            for chk in (None, "pending"):
+                pr = fr_progress(rows(**{f"r{i}": {"valid": None, "check": chk}},
+                                      **{f"r{k}": {"status": None} for k in range(i + 1, 4)}))
+                assert pr == {"first_failure": None, "next": None, "cells_not_run": [], "passed": None}, pr
+                pr = fr_progress(rows(**{f"r{i}": {"valid": None, "check": chk}}), final=True)
+                assert pr["first_failure"]["kind"] == "check_not_evaluated" and pr["first_failure"]["cell"] == lab
+        refused(lambda: fr_progress(rows()[::-1]))
+        refused(lambda: fr_progress(rows()[:3]))
+        refused(lambda: fr_progress(rows() + [{"label": "s2r_m30_VB76", "status": "complete"}]))
+        refused(lambda: fr_progress(rows(r1={"status": "running"})))
+        out.append(f"fr_progress: {n} failure cases (7 kinds x 4 cells, runner and gate), cells_not_run, waiting "
+                   "cases, wrong order refused")
+
+        # fr_step0 (rules)
+        sp_v, sp_dv = "s2_m30_VA188", "s2_m30_Cs188o0_vac"
+        assert step0_eval({sp_v: {"F_sp_eV": 0.0, "F_k0_eV": 0.0005}}, 1, pairs=FR_STEP0_PAIRS)["outcome"] == "pass"
+        assert step0_eval({sp_v: {"F_sp_eV": 0.0, "F_k0_eV": 0.0005001}}, 1, pairs=FR_STEP0_PAIRS)["outcome"] == \
+            "fail_pending_fix"
+        refused(lambda: step0_eval({"s2_m30_VB136": {"F_sp_eV": 0.0, "F_k0_eV": 0.0}}, 1, pairs=FR_STEP0_PAIRS))
+        refused(lambda: step0_eval({sp_v: {"F_sp_eV": 0.0, "F_k0_eV": 0.0}}, 1))
+        assert allow_list("fr_step0")["full"] == set(FR_STEP0_PAIRS) and allow_list("fr_step0")["k0"] == \
+            set(FR_STEP0_PAIRS.values()) and allow_list("step0")["full"] == set(STEP0_PAIRS)
+
+        # gate files on a synthetic fr archive
+        lay = _TestLayout(os.path.join(work, "arch_fr"))
+        Fb = {"host": -80000.0, "V": -79996.5, "D": -79990.25, "DV": -79986.75}
+
+        def plant(delta_meV, *, jitter=None, jitter_final=None, vf=None, a2=None):
+            """A2 parts (F0, F_final) and records of the four FR cells: E_b^A1 = 0, E_b^A2 = delta (meV) without the
+            jitters (eV, added to both F or to the final F only)."""
+            for r, lab in FR_QUARTET.items():
+                j_ = (jitter or {}).get(r, 0.0)
+                put_a2(lay, lab, Fb[r] + j_, Fb[r] + j_ + (jitter_final or {}).get(r, 0.0) +
+                       (delta_meV / 1000.0 if r == "DV" else 0.0))
+                rec = json.load(open(logical_path(lay, f"a2:{lab}")))
+                rec["validity_final"] = {"valid": True, "failed": [], "check5_reading": "invariant",
+                                         "valid_as_written": True, "failed_as_written": [], "invariant_only": False}
+                rec["validity_final"].update((vf or {}).get(r, {}))
+                rec.update((a2 or {}).get(r, {}))
+                if rec.get("validity_final", 0) is None:
+                    rec.pop("validity_final")
+                json.dump(rec, open(logical_path(lay, f"a2:{lab}"), "w"))
+                put_rec(lay, a1_start_of(lab))
+        put_sp(lay, sp_v, Fb["V"] + 0.0004)
+        put_sp(lay, sp_dv, Fb["DV"] - 0.0005)
+        plant(49.0)
+        planted = {"step0": {"attempts": 1, "outcome": "pass", "repeat": False, "fix_note": None}, "K3": "fail_replan"}
+        st = copy.deepcopy(planted)
+        g0 = evaluate_gate("fr_step0", lay, "fr", st, inputs={"cells": [sp_v], "attempt": 1}, reader_kw=kw)
+        assert set(g0["decision"]) == {"fr_step0"} and st == planted, g0["decision"]
+        assert g0["decision"]["fr_step0"]["outcome"] == "pass" and g0["decision"]["fr_step0"]["cell"] == FR_QUARTET["V"]
+        assert abs(g0["result"]["cells"][sp_v]["dF_meV"] + 0.4) < 1e-6              # F(k = 0) - F(SP)
+        st.update(copy.deepcopy(g0["decision"]))
+        g1 = evaluate_gate("fr_step0", lay, "fr", st, inputs={"cells": [sp_dv], "attempt": 1}, reader_kw=kw)
+        assert g1["decision"]["fr_step0"]["outcome"] == "pass" and g1["decision"]["fr_step0"]["cell"] == FR_QUARTET["DV"]
+        assert st["step0"] == planted["step0"] and "step0" not in g1["decision"]
+        put_sp(lay, sp_dv, Fb["DV"] - 0.0006)                                   # |dF| = 0.6 meV: fails
+        gf = evaluate_gate("fr_step0", lay, "fr", st, inputs={"cells": [sp_dv], "attempt": 1}, reader_kw=kw)
+        assert gf["decision"]["fr_step0"]["outcome"] == "fail_pending_fix", gf["decision"]
+        put_sp(lay, sp_dv, Fb["DV"] - 0.0005)
+        no_e = set(FR_ENERGY_FIELDS) | {"F_sp_eV", "F_k0_eV", "F_final_eV", "value_meV", "dF_200_180_meV"}
+        for g_ in (g0, g1, gf):                                 # the fr_step0 decision holds no dF and no F (S2B §1)
+            ks = set(re.findall(r'"([^"]+)":', json.dumps(g_["decision"])))
+            assert not ks & no_e and set(g_["decision"]["fr_step0"]) <= \
+                {"attempts", "outcome", "repeat", "fix_note", "cell", "attempt1", "no_error_found", "note"}, ks
+        for bad in (["s2_m30_VB136"], [sp_v, sp_dv], [], None, sp_v):
+            refused(lambda b=bad: evaluate_gate("fr_step0", lay, "fr", st, inputs={"cells": b}, reader_kw=kw))
+        refused(lambda: evaluate_gate("step0", lay, "fr", st, inputs={"cells": [sp_v]}, reader_kw=kw))   # no C2 cell
+        # one repeat for FR as a whole: after the repeat every later fr_step0 is attempt 2 (I-F3)
+        st_rep = {"fr_step0": {"attempts": 1, "outcome": "repeat_pending", "repeat": True, "fix_note": "2026-11-20 fix",
+                               "cell": FR_QUARTET["V"]}, "gate_context": {"at": FR_QUARTET["V"]}}
+        inp, _ = derive_inputs("fr_step0", lay, st_rep, reader_kw=kw)
+        assert inp["attempt"] == 2 and inp["cells"] == [sp_v] and inp["fix_note"] == "2026-11-20 fix", inp
+        gr = evaluate_gate("fr_step0", lay, "fr", st_rep, inputs=inp, reader_kw=kw)
+        st_rep.update(copy.deepcopy(gr["decision"])); st_rep["gate_context"] = {"at": FR_QUARTET["DV"]}
+        inp2, _ = derive_inputs("fr_step0", lay, st_rep, reader_kw=kw)
+        assert inp2["attempt"] == 2 and inp2["cells"] == [sp_dv] and gr["decision"]["fr_step0"]["repeat"], inp2
+        refused(lambda: derive_inputs("fr_step0", lay, {"fr_step0": {"outcome": "fail_final"}}, reader_kw=kw))
+        assert derive_inputs("step0", lay, {"fr_step0": {"outcome": "fail_final"}, "step0": {"outcome": "pass"}},
+                             reader_kw=kw)[0]["attempt"] == 1                          # the C2 key is its own
+        out.append("fr_step0: 0.5000 / 0.5001 meV, cross-set SPs refused both ways, only fr_step0 written (planted "
+                   "step0 unchanged; no dF or F in a pass or fail decision), attempt 2 after the repeat")
+
+        # S2B-1: gates bound to campaigns, refused before anything is read (a layout that cannot be touched) or written
+        class _NoRead:
+            def __getattr__(self, k):
+                raise AssertionError(f"the layout was used ({k}) before the gate-campaign refusal")
+        nb = 0
+        for gate, camp in [(g_, c_) for g_ in S2B_GATES for c_ in ("c1", "c2", "c3", "c4")] + \
+                          [(g_, "fr") for g_ in GATE_NAMES if g_ not in S2B_GATES]:
+            refused(lambda g_=gate, c_=camp: evaluate_gate(g_, _NoRead(), c_, None))
+            nb += 1
+        import contextlib, io
+        cli = os.path.join(work, "cli_fr"); os.makedirs(cli)
+        g_ = globals()                                  # the CLI refuses before scripts/46, the state or derive_inputs
+        saved = {k: g_[k] for k in ("dep", "derive_inputs")}
+
+        def _no_input(*a_, **k_):
+            raise AssertionError("the run CLI reached its inputs before the gate-campaign refusal (S2B-1)")
+        try:
+            g_.update(dep=_no_input, derive_inputs=_no_input)
+            for args in (["--gate", "FR", "--campaign", "c2"], ["--gate", "fr_step0", "--campaign", "c1"],
+                         ["--gate", "K3", "--campaign", "fr"], ["--gate", "step0", "--campaign", "fr"],
+                         ["--gate", "projection", "--campaign", "fr"]):
+                err = io.StringIO()
+                with contextlib.redirect_stderr(err):
+                    rc = main(["run", "--root", cli, "--kind", "archive", "--state", os.path.join(cli, "none.json")] + args)
+                assert rc == 3 and "S2B" in err.getvalue() and not os.listdir(cli), (args, rc, err.getvalue())
+        finally:
+            g_.update(saved)
+        os.makedirs(os.path.dirname(lay.gate("fr", "K3")), exist_ok=True)
+        json.dump({"gate": "K3", "state_in": {}, "inputs_in": {}}, open(lay.gate("fr", "K3"), "w"))
+        refused(lambda: verify(lay.root, "fr", layout=lay, reader_kw=kw))       # verify --campaign fr follows
+        os.remove(lay.gate("fr", "K3"))
+        out.append(f"gates bound to campaigns: {nb} pairings refused before the layout is touched; the run CLI exits 3 "
+                   f"before scripts/46, the state or derive_inputs is reached (projection/fr among its 5 pairings) and "
+                   f"writes nothing; verify --campaign fr refuses a K3 file")
+
+        # gate FR
+        s_ok = {"fr_step0": {"outcome": "pass", "cell": FR_QUARTET["DV"]}, "K3": "fail_replan"}
+        gp = evaluate_gate("FR", lay, "fr", s_ok, reader_kw=kw)
+        d = gp["decision"]["FR"]
+        assert d == {"outcome": "pass", "FR1": True, "FR2": True, "part": None, "cell": None, "kind": None}, d
+        assert abs(gp["result"]["FR2"]["delta_far_meV"] - 49.0) < 1e-6 and abs(gp["result"]["FR2"]["Eb_A1_meV"]) < 1e-6
+        assert {o["mode"] for o in gp["opened"]} == {"files", "records", "k0", "final"}
+        plant(51.0)
+        d = evaluate_gate("FR", lay, "fr", s_ok, reader_kw=kw)["decision"]["FR"]
+        assert d["outcome"] == "fail" and d["part"] == "FR-2" and d["FR1"] is True and d["FR2"] is False and \
+            d["cell"] is None, d
+        assert fr2_decide(50.0) and fr2_decide(-50.0) and not fr2_decide(50.001) and not fr2_decide(-50.001) and \
+            not fr2_decide(None)
+        nf = 0
+        for i, (r, lab) in enumerate(FR_QUARTET.items()):
+            for kind, upd in fails.items():
+                a2u = {r: {"status": upd["status"]} if "status" in upd else
+                       {"end_rule": {"outcome": "unconverged_cap"}} if kind == "end_rule" else {}}
+                # the readings differ: check 4 fails invariantly, checks 4 and 5 as written (checks_failed names [4])
+                vfu = {r: {"valid": False, "failed": [4], "valid_as_written": False, "failed_as_written": [4, 5]}}
+                if "status" in upd or kind == "check_not_evaluated":
+                    a2u[r]["validity_final"] = None
+                for r2 in list(FR_QUARTET)[i + 1:]:
+                    a2u[r2] = {"status": "not_run_gate", "validity_final": None}
+                plant(10.0, a2=a2u, vf=vfu if kind == "check" else None)
+                for s_ in (s_ok, {}):
+                    g = evaluate_gate("FR", lay, "fr", s_, reader_kw=kw)
+                    d = g["decision"]["FR"]
+                    assert d == {"outcome": "fail", "FR1": False, "FR2": None, "part": "FR-1", "cell": lab,
+                                 "kind": kind}, (lab, kind, d)
+                    assert {o["mode"] for o in g["opened"]} <= {"files", "records"}, g["opened"]   # no energy opened
+                    res = g["result"]
+                    assert res["cells_not_run"] == list(FR_ORDER[i + 1:]) and res["FR2"] is None
+                    if kind == "check":                 # the reason texts, exactly (E reads them; S2B section 1)
+                        want = ([f"{lab}: final geometry fails check(s) [4]"], [])
+                    elif kind == "check_not_evaluated":
+                        want = ([], [f"{lab}: no final-geometry check"])
+                    elif kind == "end_rule":
+                        want = ([], [f"{lab}: end rule unconverged_cap (status complete)"])
+                    else:
+                        want = ([], [f"{lab}: end rule accepted_converged (status {kind})"])
+                    assert (res["checks_failed"], res["end_rule_failed"]) == want, (lab, kind, res["checks_failed"],
+                                                                                   res["end_rule_failed"])
+                nf += 1
+        plant(10.0, vf={"V": {"invariant_only": True, "valid_as_written": False, "failed_as_written": [5]}})
+        g = evaluate_gate("FR", lay, "fr", s_ok, reader_kw=kw)
+        assert "invariant_only" not in json.dumps(g["decision"]) and g["result"]["invariant_only"] == [FR_QUARTET["V"]]
+        assert g["decision"]["FR"]["outcome"] == "pass"                         # no validity leaf in the decision
+        for bad in ({"check5_reading": None}, {"check5_reading": "as_written"}):
+            plant(10.0, vf={"D": bad})
+            refused(lambda: evaluate_gate("FR", lay, "fr", s_ok, reader_kw=kw))
+        plant(10.0)
+        for s_ in ({"fr_step0": {"outcome": "fail_pending_fix", "cell": FR_QUARTET["V"]}},
+                   {"fr_step0": {"outcome": "fail_final", "cell": FR_QUARTET["DV"]}},
+                   {"fr_step0": {"outcome": "pass", "cell": FR_QUARTET["V"]}}, {}):
+            refused(lambda s=s_: evaluate_gate("FR", lay, "fr", s, reader_kw=kw))
+        # a failed step-0 refuses gate FR by itself (X6), also when FR-1 fails (D+V killed after a step-0 failure at
+        # @4), where the FR-2 precondition does not apply
+        plant(10.0, a2={"DV": {"status": "killed_by_gate", "validity_final": None}})
+        for outc in ("fail_pending_fix", "fail_final"):
+            try:
+                evaluate_gate("FR", lay, "fr", {"fr_step0": {"outcome": outc, "cell": FR_QUARTET["DV"]}}, reader_kw=kw)
+                raise AssertionError(f"gate FR evaluated at fr_step0 {outc}")
+            except GateRefused as e:
+                assert "X6" in str(e) and outc in str(e), e
+        plant(10.0)
+        os.remove(lay.a2_parts("fr", FR_QUARTET["D"])[0])                          # FR-2 value missing: a STOP
+        refused(lambda: evaluate_gate("FR", lay, "fr", s_ok, reader_kw=kw))
+        out.append(f"gate FR: delta 49 pass, 51 fails FR-2, FR-1 fails for {nf} cell x kind cases with no relaxation "
+                   "opened and the exact reason texts (checks_failed from the invariant failed list), invariant_only in "
+                   "the result only, a missing or other reading, a failed step-0 (X6, also with FR-1 failing) and FR-1 "
+                   "without the step-0 pass at D+V refused, a missing FR-2 value refused; fr2_decide +-50.000 / +-50.001")
+
+        # energy-name canary: two evaluations with F perturbed non-uniformly; every changed leaf is an FR energy field
+        def leaves(x, path=()):
+            if isinstance(x, dict):
+                for k, v in x.items():
+                    yield from leaves(v, path + (str(k),))
+            elif isinstance(x, list):
+                for i_, v in enumerate(x):
+                    yield from leaves(v, path + (f"[{i_}]",))
+            else:
+                yield path, x
+        skip = ("opened", "inputs_digest", "written", "commit")
+        changed = set()
+        for gate, inp_, pert in (("FR", {}, {"host": 0.0011, "V": -0.0023, "D": 0.0007, "DV": 0.0041}),
+                                 ("fr_step0", {"cells": [sp_v]}, {"V": 0.0001})):
+            plant(10.0)
+            put_sp(lay, sp_v, Fb["V"] + 0.0004)
+            a_ = evaluate_gate(gate, lay, "fr", s_ok, inputs=inp_, reader_kw=kw)
+            plant(10.0, jitter=pert, jitter_final={"host": -0.0009, "D": 0.0017})
+            put_sp(lay, sp_v, Fb["V"] + 0.0004 - 0.00005)
+            b_ = evaluate_gate(gate, lay, "fr", s_ok, inputs=inp_, reader_kw=kw)
+            A_ = dict(leaves({k: v for k, v in a_.items() if k not in skip}))
+            B_ = dict(leaves({k: v for k, v in b_.items() if k not in skip}))
+            assert set(A_) == set(B_), gate
+            diff = [p for p in A_ if A_[p] != B_[p]]
+            assert diff and all(p[-1] in FR_ENERGY_FIELDS for p in diff), (gate, diff)
+            changed |= {p[-1] for p in diff}
+            assert a_["decision"] == b_["decision"], gate
+        assert changed == set(FR_ENERGY_FIELDS), changed
+        out.append(f"canary: the changed result leaves are {sorted(changed)} = FR_ENERGY_FIELDS")
+
+        # the run CLI's output (gates_applied/gates.log on the node, which the runner's STOP sends the operator to)
+        # holds the decision only: fr_step0 and FR records, passing and failing, whose result holds every withheld field
+        # (s2b/guard.py WITHHELD_S2B: FR_ENERGY_FIELDS, the step-0 and FR-2 F and the D-C2-12 list) with a sentinel
+        # value, the gate file written under a temporary root; and each GateRefused path of fr_step0 and FR (FR-2
+        # included, also with one F of a cell missing and the other a sentinel) reached through the CLI with sentinel F
+        # planted; no withheld name and no sentinel value is printed (S2B sections 0, 1)
+        import contextlib, io
+        names = set(no_e)
+        sent = {f: -987654.25 - 1000.0 * i for i, f in enumerate(sorted(names))}
+        res_s = dict(sent, cells={sp_v: dict(sent, passed=True), sp_dv: dict(sent, passed=True)},
+                     FR2=dict(sent, passed=True), rows=[dict(sent)])
+        F_s = {r: (-977654.25 - 1000.0 * i, -967654.25 - 1000.0 * i) for i, r in enumerate(FR_QUARTET)}  # k = 0, final
+        SP_s = {sp_v: -957654.25, sp_dv: -956654.25}
+        vals = list(sent.values()) + [v for p_ in F_s.values() for v in p_] + list(SP_s.values())
+        words = sorted(names) + [repr(v) for v in vals] + [str(int(abs(v))) for v in vals]
+
+        def plant_s(**kw_):
+            """The FR cells and the two step-0 SPs with the sentinel F (k = 0, final, SP), exactly."""
+            plant(0.0, jitter={r: F_s[r][0] - Fb[r] for r in FR_QUARTET},
+                  jitter_final={r: F_s[r][1] - F_s[r][0] for r in FR_QUARTET}, **kw_)
+            for sp_, F_ in SP_s.items():
+                put_sp(lay, sp_, F_)
+        cli2 = os.path.join(work, "cli_fr_out"); os.makedirs(cli2)
+        g_ = globals()
+        saved = {k: g_[k] for k in ("evaluate_gate", "derive_inputs")}
+        mode = {"result": None}
+
+        def eval_cli(gate, layout_, campaign, state, **k_):
+            k_.pop("reader_kw", None)                   # the synthetic fr archive and its parsers
+            rec = saved["evaluate_gate"](gate, lay, campaign, state, reader_kw=kw, **k_)
+            if mode["result"] is not None:
+                rec["result"] = copy.deepcopy(mode["result"])
+            return rec
+
+        def derive_cli(gate, layout_, state, inputs=None, **k_):
+            return saved["derive_inputs"](gate, lay, state, inputs, reader_kw=kw)
+
+        def cli(gate, state, inputs=None):
+            stp, inp_p = os.path.join(work, "cli_state.json"), os.path.join(work, "cli_inputs.json")
+            json.dump(state, open(stp, "w")); json.dump(inputs or {}, open(inp_p, "w"))
+            so, se = io.StringIO(), io.StringIO()
+            with contextlib.redirect_stdout(so), contextlib.redirect_stderr(se):
+                rc = main(["run", "--gate", gate, "--campaign", "fr", "--root", cli2, "--kind", "archive", "--state", stp,
+                           "--inputs", inp_p])
+            text = so.getvalue() + se.getvalue()
+            leak = sorted({w for w in words if w in text})
+            assert not leak, (gate, state, leak, text)
+            return rc, text
+        n_ok, n_ref = 0, 0
+        try:
+            g_.update(evaluate_gate=eval_cli, derive_inputs=derive_cli)
+            try:
+                c46_cli = dep("c46")
+            except MissingDependency:
+                c46_cli = None
+            if c46_cli is not None and hasattr(c46_cli, "Layout"):
+                mode["result"] = res_s
+                ctx0 = {"gate_context": {"at": FR_QUARTET["V"]}}
+                rep0 = {**ctx0, "fr_step0": {"attempts": 1, "outcome": "repeat_pending", "repeat": True,
+                                             "fix_note": "2026-11-20 fix", "cell": FR_QUARTET["V"]}}
+                bad_d = {"vf": {"D": {"valid": False, "failed": [4], "valid_as_written": False,
+                                      "failed_as_written": [4, 5]}},
+                         "a2": {"DV": {"status": "not_run_gate", "validity_final": None}}}
+                # the passing decisions and the failing ones (fr_step0 at 0.6 meV at attempt 1 and 2, FR-1 failing at D,
+                # FR-2 at 51 meV): a failure prints the decision only, as a pass does (no D-C2-10 STOP mode; S2B §1)
+                for gate, s_, delta, sp_off, pl, want in (
+                        ("fr_step0", ctx0, 10.0, 0.0004, {}, {"outcome": "pass", "attempts": 1}),
+                        ("FR", s_ok, 10.0, 0.0004, {}, {"outcome": "pass", "FR1": True, "FR2": True}),
+                        ("fr_step0", ctx0, 10.0, 0.0006, {}, {"outcome": "fail_pending_fix", "attempts": 1}),
+                        ("fr_step0", rep0, 10.0, 0.0006, {}, {"outcome": "fail_final", "attempts": 2, "repeat": True}),
+                        ("FR", s_ok, 10.0, 0.0004, bad_d, {"outcome": "fail", "FR1": False, "FR2": None, "part": "FR-1",
+                                                           "cell": FR_QUARTET["D"], "kind": "check"}),
+                        ("FR", s_ok, 51.0, 0.0004, {}, {"outcome": "fail", "FR1": True, "FR2": False, "part": "FR-2"})):
+                    plant(delta, **pl)
+                    put_sp(lay, sp_v, Fb["V"] + sp_off)
+                    put_sp(lay, sp_dv, Fb["DV"] - 0.0005)
+                    rc, text = cli(gate, s_)
+                    gf = c46_cli.Layout(kind="archive", root=cli2).gate("fr", gate)
+                    body = open(gf).read()
+                    dl = [x for x in text.splitlines() if x.startswith(f"{gate}: decision ")]
+                    # R4-1: the whole captured output (stdout and stderr) is the one decision line, exactly: a print
+                    # from inside the evaluation (a failing step-0 dF, delta_far) is caught however it is worded
+                    exp = [f"{gate}: decision {json.dumps(json.loads(body)['decision'])}; written {gf}"]
+                    assert rc == 0 and text.strip().splitlines() == exp and dl == exp and \
+                        all(repr(v) in body for v in sent.values()), \
+                        (gate, rc, text)                # the sentinels reach the gate file, not the printed line
+                    dec = json.loads(dl[0][len(f"{gate}: decision "):].split("; written ")[0])
+                    key = "fr_step0" if gate == "fr_step0" else "FR"
+                    assert list(dec) == [key] and all(dec[key].get(k) == v for k, v in want.items()), (gate, dec, want)
+                    os.remove(gf)
+                    n_ok += 1
+            mode["result"] = None
+            V, DV, D = FR_QUARTET["V"], FR_QUARTET["DV"], FR_QUARTET["D"]
+            ctxV = {"gate_context": {"at": V}}
+            # each with its whole refusal text (R4-1: the captured output is that one line and nothing else)
+            rows_ = [("fr_step0", {**ctxV, "fr_step0": {"outcome": "fail_final", "cell": V}}, None, {},
+                      "step-0 failed finally: A2 has stopped (§11)"),
+                     ("fr_step0", {**ctxV, "fr_step0": {"outcome": "fail_pending_fix", "cell": V}}, None, {},
+                      "step-0 failed: A2 waits for the dated fix note (§11)"),
+                     ("fr_step0", ctxV, {"attempt": 2}, {},
+                      "step-0 attempt 2 given, the state implies attempt 1 (§11)"),
+                     ("fr_step0", ctxV, {"cells": [sp_v, sp_dv]}, {},
+                      f"fr_step0 needs exactly one SP of {sorted([sp_v, sp_dv])}, not {[sp_v, sp_dv]!r} (S2B §2)"),
+                     ("fr_step0", {**ctxV, "fr_step0": {"outcome": "repeat_pending", "repeat": True, "fix_note": None,
+                                                        "cell": V}}, None, {},
+                      "step-0 repeat without the dated fix note (§11)"),
+                     ("FR", {"fr_step0": {"outcome": "fail_pending_fix", "cell": DV}}, None, {},
+                      "gate FR: the FR step-0 check is fail_pending_fix; FR is not evaluated (S2B §2, X6)"),
+                     ("FR", {"fr_step0": {"outcome": "fail_final", "cell": DV}}, None, {},
+                      "gate FR: the FR step-0 check is fail_final; FR is not evaluated (S2B §2, X6)"),
+                     ("FR", {"fr_step0": {"outcome": "pass", "cell": V}}, None, {},
+                      f"gate FR: FR-1 passed without the step-0 pass at {DV} (fr_step0 pass at {V}; S2B §2)"),
+                     ("FR", s_ok, None, {"missing": "D"},
+                      f"FR-2: values missing ({D} k = 0 F, {D} final F): FR-2 cannot be evaluated (S2B §2)"),
+                     ("FR", s_ok, None, {"final_missing": "D"},
+                      f"FR-2: values missing ({D} final F): FR-2 cannot be evaluated (S2B §2)"),
+                     ("FR", s_ok, None, {"a2": {"D": {"status": "pending"}}},
+                      f"FR: {D} has not ended (status pending); gate FR is evaluated at the end (S2B §2)"),
+                     ("FR", s_ok, None, {"a2": {"D": {"status": "bogus"}}},
+                      f"FR: {D} has the unknown A2 status 'bogus'"),
+                     ("FR", s_ok, None, {"vf": {"D": {"check5_reading": None}}},
+                      f"FR: {D} has a final-geometry check without the invariant reading of check 5 (check5_reading "
+                      f"None; S2B §2, X4)")]
+            for gate, s_, inp_, pl, word in rows_:
+                plant_s(**{k: v for k, v in pl.items() if k not in ("missing", "final_missing")})
+                if "missing" in pl:
+                    os.remove(lay.a2_parts("fr", FR_QUARTET[pl["missing"]])[0])        # its k = 0 and final F
+                if "final_missing" in pl:                           # its final F only; its k = 0 F (a sentinel) stays
+                    p_ = lay.a2_parts("fr", FR_QUARTET[pl["final_missing"]])[-1]
+                    with gzip.open(p_, "rt") as fh:
+                        d_ = json.load(fh)
+                    d_["F_final_eV"] = None
+                    with gzip.open(p_, "wt") as fh:
+                        json.dump(d_, fh)
+                rc, text = cli(gate, s_, inp_)
+                assert rc == 3 and text.strip().splitlines() == [f"REFUSED: GateRefused: {word}"], \
+                    (gate, s_, inp_, word, text)
+                assert not os.path.exists(os.path.join(cli2, "fr", "gates", f"{gate}.json")), (gate, word)
+                n_ref += 1
+        finally:
+            g_.update(saved)
+            plant(10.0)
+            for sp_, F_ in ((sp_v, Fb["V"] + 0.0004), (sp_dv, Fb["DV"] - 0.0005)):
+                put_sp(lay, sp_, F_)
+        assert n_ref == 13 and n_ok in (0, 6), (n_ok, n_ref)
+        out.append(f"run CLI: {n_ok} fr runs (fr_step0 pass, fail_pending_fix, fail_final; FR pass, FR-1 and FR-2 fail) "
+                   f"whose result holds the {len(names)} withheld fields (sentinels in the gate file) and {n_ref} "
+                   f"GateRefused paths of fr_step0 and FR with sentinel F (one with only a final F missing) print no "
+                   f"withheld name or value; each prints exactly one line, its decision line or its refusal text")
+
+        # verify --campaign fr: every file reproduces; a changed output gives 1 differing. IX-8: the output becomes the
+        # public fr_verify/verify_fr.txt before E, so, as R4-1 pins the run CLI, the whole captured output (stdout and
+        # stderr) of both runs is pinned line for line, with the sentinel F planted, and no withheld name or sentinel
+        # value is printed; a print from the evaluation that verify runs is caught (a negative control)
+        plant_s()
+        st_v = {"fr_step0": {"outcome": "pass", "cell": FR_QUARTET["V"]}, "K3": "fail_replan"}
+        recs = [("fr_step0", st_v, {"cells": [sp_dv], "attempt": 1}), ("FR", s_ok, {})]
+        for gate, s_, inp_ in recs:
+            rec = evaluate_gate(gate, lay, "fr", s_, inputs=inp_, reader_kw=kw)
+            rec["state_in"], rec["inputs_in"], rec["c1_in"] = s_, inp_, None
+            os.makedirs(os.path.dirname(lay.gate("fr", gate)), exist_ok=True)
+            json.dump(rec, open(lay.gate("fr", gate), "w"))
+
+        def verify_out(want_rc, want):
+            so, se = io.StringIO(), io.StringIO()
+            with contextlib.redirect_stdout(so), contextlib.redirect_stderr(se):
+                rc = verify(lay.root, "fr", layout=lay, reader_kw=kw)
+            text = so.getvalue() + se.getvalue()
+            leak = sorted({w for w in words if w in text})
+            assert rc == want_rc and text.splitlines() == want and not leak, (rc, text, leak)
+        ok_lines = ["OK   fr FR", "OK   fr fr_step0", "verify fr: 2 gate files, 0 differ"]
+        verify_out(0, ok_lines)
+        saved_v = g_["evaluate_gate"]
+
+        def eval_print(gate, *a_, **k_):                # the negative control: a print reached through verify
+            rec_ = saved_v(gate, *a_, **k_)
+            if gate == "FR":
+                print({k: rec_["result"].get(k) for k in ("FR2",)})
+            return rec_
+        try:
+            g_["evaluate_gate"] = eval_print
+            try:
+                verify_out(0, ok_lines)
+                raise RuntimeError("verify --campaign fr: a print of the FR result was not caught")
+            except AssertionError:
+                pass
+        finally:
+            g_["evaluate_gate"] = saved_v
+        put_a2(lay, FR_QUARTET["D"], F_s["D"][0], F_s["D"][1] + 0.0101)    # a changed output read by gate FR only
+        rec = json.load(open(logical_path(lay, f"a2:{FR_QUARTET['D']}")))
+        rec["validity_final"] = {"valid": True, "failed": [], "check5_reading": "invariant", "valid_as_written": True,
+                                 "failed_as_written": [], "invariant_only": False}
+        json.dump(rec, open(logical_path(lay, f"a2:{FR_QUARTET['D']}"), "w"))
+        verify_out(1, ["DIFF fr FR", "OK   fr fr_step0", "verify fr: 2 gate files, 1 differ"])
+        out.append("verify --campaign fr with sentinel F: exactly 'OK   fr FR', 'OK   fr fr_step0', 'verify fr: 2 gate "
+                   "files, 0 differ' on stdout and stderr; a changed final output: exactly 'DIFF fr FR', 'OK   fr "
+                   "fr_step0', '... 1 differ'; no withheld name or sentinel printed; a print of the FR result through "
+                   "verify caught (IX-8)")
+        return "; ".join(out)
+
     def t_real_parser():
         try:
             q47 = dep("q47")
@@ -2292,7 +2976,7 @@ def self_test():
     for nm, fn in (("hygiene", t_hygiene), ("constants", t_constants), ("t quantile", t_tppf), ("Boltzmann", t_boltz), ("G1", t_g1),
                    ("gate N and n rule", t_gate_n), ("pose rule", t_pose), ("step-0", t_step0), ("K2 and K3", t_k2k3),
                    ("separability", t_sep), ("budget", t_budget), ("throughput", t_tp), ("Reader", t_reader),
-                   ("gate runners", t_runners), ("real parser", t_real_parser)):
+                   ("gate runners", t_runners), ("S2b fr gates", t_fr), ("real parser", t_real_parser)):
         case(nm, fn)
     print("NOTES:")
     for k, v in NOTES.items():

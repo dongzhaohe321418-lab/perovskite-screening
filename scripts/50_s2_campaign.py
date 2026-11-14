@@ -15,7 +15,10 @@ keeps the evidence of every attempt and applies the decisions the gate outputs r
             host 1 + 75 frozen relaxations and 76 single points (multi-pose tokens: every sampled start, one
             single point per kept minimum, <= 100 more). C4: the 26 A2 relaxations of section 11. Each is reduced
             by G1 (section 7; I-31) and by the cuts of section 16. Every A2 relaxation has a geometry-only job for
-            the section 11 final-geometry checks (scripts/46 validate-a2; I-F1); K3 waits for them.
+            the section 11 final-geometry checks (scripts/46 validate-a2; I-F1); K3 waits for them. fr (S2b,
+            results/objective2/s2/S2B_PLAN.md section 2): the far-site reference at m30 FA188, four A2 relaxations
+            run one at a time in their order with the early stop of scripts/49 fr_progress, check 5 read
+            invariantly (X4), the step-0 gate fr_step0 at V+_R and D+V+, and gate FR at the end (N-FR1 to N-FR8).
   run       The node runner, started by ehpc/node/s2_campaign.sh. One runner at a time (fcntl.flock on
             /data/work/s2/s2.lock, inherited by every child). Resumable from files: the graph and every job's
             state are recomputed from records, outputs and markers at each start, and every launch is recorded
@@ -48,7 +51,8 @@ keeps the evidence of every attempt and applies the decisions the gate outputs r
             last entry of its journal); the current boot ends now. Incomplete evidence stops new job starts (I-23).
   archive   Laptop (interface spec 5.5): gzips the raw QE files of one pulled campaign, copies records, tars the
             structures, scrubs the log, refuses a duplicated label or a record whose sha256 does not match its file,
-            and checks every written JSON and log for public-repository hygiene.
+            and checks every written JSON and log for public-repository hygiene. For fr, an --out inside
+            results/objective2/s2 other than its fr tree is refused before anything is written (N-FR3).
 
 Blinding (section 17): the runner reads QE outputs only in the status, counts and end-rule modes of scripts/47, and
 the final positions of A2 relaxations in final_geom mode for the section 11 checks (no energy); every such read is
@@ -670,7 +674,7 @@ STALL_OUT_S, MACE_WALL_S = 7200.0, {"host": 12 * 3600.0, "frozen": 3 * 3600.0}
 # N-F18 (round-3 R3-C1-7, D-S0-8): the spot endpoint must answer (200 or 404) within SPOT_FIRST_S of the poller's start
 # before any job runs, and a last good poll older than SPOT_STALE_S is a STOP (a notice that cannot arrive)
 SPOT_FIRST_S, SPOT_STALE_S = 120.0, 300.0
-CAMPAIGNS = ("c1", "c2", "c3", "c4")
+CAMPAIGNS = ("c1", "c2", "c3", "c4", "fr")
 K_TOTAL = 201                                               # configurations k = 0 ... 200 (section 11)
 SP_AHEAD = 2                                                # single points published ahead of completion (I-D2)
 ADMISSIBILITY_RECORD = "results/objective2/s2/stage0/admissibility.json"
@@ -679,6 +683,7 @@ PHASES = {"c1": ("check", "smoke", "tp", "smoke2", "mace", "qe", "gate"),
           "c2": ("check", "a2"),
           "c3": ("check", "pre", "mace", "qe", "gate"),
           "c4": ("check", "pre", "a2", "gate"),
+          "fr": ("check", "a2", "gate"),
           "t": ("check", "smoke", "tp", "smoke2", "mace", "qe", "a2", "gate")}       # the self-test graph (run as c1)
 TERMINAL = {"done", "missing", "skipped", "rejected", "not_started_cap", "not_run", "killed_by_gate"}
 TERMINAL_A2 = {"complete", "missing", "killed_by_gate", "not_run_gate", "not_started_cap"}   # A2 record statuses
@@ -692,6 +697,14 @@ Q0_ROWS = ("s2_m30_VB136_q0", "s2_m30_Sr136o0_vac_q0", "s2_m30_Ca136o0_vac_q0", 
 C2_ORDER = ("s2r_m30_VB136", "s2r_m30_hostB136", "s2r_m30_Sr136o0_novac", "s2r_m30_Sr136o0_vac",
             "s2r_m30_hostB76", "s2r_m30_VB76", "s2r_m30_Sr76o0_novac", "s2r_m30_Sr76o0_vac",
             "s2r_m30_Ca136o0_novac", "s2r_m30_Ca136o0_vac")                       # section 11 (fixed)
+FR_ORDER = ("s2r_m30_hostA188", "s2r_m30_VA188", "s2r_m30_Cs188o0_novac", "s2r_m30_Cs188o0_vac")   # S2B section 2
+FR_STEP0_AT = {"gate:fr_step0@2": "s2r_m30_VA188", "gate:fr_step0@4": "s2r_m30_Cs188o0_vac"}       # S2B section 2
+S2B_CAMPAIGNS = ("fr",)                                                     # campaigns of the S2b commit (N-FR2)
+S2B_STATE_KEYS = ("campaign_commit", "fr_step0", "fr_stop", "FR")           # the only state keys S2b writes (N-FR4)
+S2B_NODE_SCRIPTS = ("ehpc/node/qe_queue.sh", "ehpc/node/chain.sh", "ehpc/node/s2_run_qe.sh")       # unchanged (N-FR2)
+FR_DECISION_KEYS = ("outcome", "FR1", "FR2", "part", "cell", "kind")      # decision.FR, decisions only (N-FR8)
+FR_STEP0_KEYS = ("attempts", "outcome", "repeat", "fix_note", "cell", "attempt1", "no_error_found", "note")   # N-FR6
+FR_OUTCOMES = ("pass", "fail (FR-1)", "fail (FR-2)", "fail (step-0 final; gate not evaluated)")   # S2B section 1
 SP_LABELS_FIXED = {"G1": ("s2g1_m30_host_e60", "s2g1_m30_Cl138o0_novac_e60", "s2g1_m30_Cl138o0_novac_e50",
                           "s2g1_m30_Ca136o0_novac_e60", "s2g1_m30_Ca136o0_novac_e50"),
                    "spin": ("s2spin_m30_Cl175o0_vac", "s2spin_m30_Ca76o0_vac"),
@@ -946,6 +959,81 @@ NOTES = {
             "relaunch gives the same decision; jobs without node-hours are never swept (N-F14)",
     "N-D11": "a campaign whose preconditions are refused by recorded decisions (e.g. K3 a1_only for C4) is recorded "
              "as not_run without booting work; missing evidence for a precondition is a STOP",
+    "N-FR1": "S2B_PLAN.md sections 2 and 9 step 3 (X5): campaign fr runs the four FR relaxations (host_R, V+_R, Cs D, "
+             "Cs D+V+ at m30 FA188) one copy at a time in FR_ORDER (a 2x32 layout is a STOP); the cell to start is the "
+             "next of scripts/49 fr_progress, computed at every tick at the top of schedule() from the A2 records and "
+             "the section 11 check jobs, so a cell starts only after the check of the cell before it has been "
+             "evaluated; the partners are V+ -> host_R, D -> host_R, D+V+ -> V+_R; preconditions: C1 and C2 done, C3 "
+             "not_run, no C4 (no K2, K3, step0, gateN, cuts or n is read)",
+    "N-FR2": "X13: the S2b campaign commit is admitted once through fr/CAMPAIGN_COMMIT '<40-hex> <YYYY-MM-DD> <note "
+             "path>': three tokens, the commit equal to HEAD, the date, the note a tracked file under "
+             "results/objective2/s2/ (relative, no '..') that contains the date and is among the paths changed from "
+             "the ancestor to HEAD (git diff --name-only), the recorded S2 commit an ancestor of HEAD, qe_queue.sh, "
+             "chain.sh and s2_run_qe.sh unchanged from it, C2 done, the line hygiene-clean; one save_state records "
+             "campaign_commit.fr and the commit_history entry (via, campaign), then the file is renamed .used.<t> "
+             "(R6-C1-3; the first free name, .used.<t>.1, ... after a rename in the same second, N-FR6); a refusal "
+             "names every reason and records nothing; later starts need HEAD = "
+             "campaign_commit.fr, the one other route being fr/STEP0_FIX (same checks with the fr commit as ancestor, "
+             "HEAD a strict descendant of it, only at fr_step0 fail_pending_fix); state['commit'] stays the C1/C2 "
+             "commit; campaign.json records campaign_commit[c]",
+    "N-FR3": "S2B section 9 (X13): once C2 is done, a c1-c4 start at a HEAD other than the recorded S2 commit (or with "
+             "git failing) is refused before the lock, any directory or log line: exit 2, nothing written (the not_run "
+             "c3 stays as it is); on the node a c1-c4 start without a readable state.json (missing, not JSON, not an "
+             "object) is refused alike (the stateless c1 mock start runs on the MockBackend); on the laptop, archive "
+             "--campaign fr refuses, before anything is read or written, an --out whose real path lies inside "
+             "results/objective2/s2 (of this checkout or of any checkout that path runs through) unless its first "
+             "component there is exactly 'fr' (as strings, casefolded and by file identity, links followed, as "
+             "s2b/fr_inputs.py F9), so that the fr archive never lands under c1/, c2/ or c3/ (c1-c4 unchanged)",
+    "N-FR4": "S2B section 9 step 3 (C2 keys never overwritten): an fr runner records at load_state a digest of every "
+             "state key outside S2B_STATE_KEYS, campaigns and commit_history, of campaigns without the S2b ids and of "
+             "the existing commit_history entries; save_state refuses with a STOP naming the changed key(s) if it "
+             "changed (nothing written); a STOP that finds the state in memory changed so (begin_stop) names the keys "
+             "and writes campaigns.fr = 'stopped' into the state read again from disk, through the same protection, "
+             "so that state.json and campaign.json agree; an fr gate decision with any key but fr_step0 or FR, or "
+             "with a field outside FR_STEP0_KEYS or FR_DECISION_KEYS, is a STOP before it is applied",
+    "N-FR5": "S2B section 2 (the early stop): for fr, A2 is stopped only by fr_step0 fail_pending_fix or fail_final or "
+             "by fr_stop (C2's K2, K3 and step0 are not read); fr_stop {at, kind, time} is written once by the scan "
+             "(also when the last cell fails, in the gate phase); cells not started become not_run_gate with the "
+             "reason 'FR early stop at <cell> (<kind>; S2B section 2)' or 'FR step-0 <outcome>', also after a "
+             "hard-cap refusal (the refused cell keeps its not_started_cap record, I-D9; S2B section 2: 'Cells not "
+             "started are recorded as not_run_gate'); a held end-rule STOP is raised first and the same fr_stop is "
+             "written at the relaunch",
+    "N-FR6": "S2B section 2 (step-0): gate fr_step0 at k = 0 of V+_R(A188) (@2) and Cs D+V+(A188) (@4); a failure "
+             "kills the running part and STOPs, naming fr/STEP0_FIX and fr/STEP0_NO_ERROR; STEP0_FIX (N-FR2) moves "
+             "only the failed cell's a2/<label>, gates/fr_step0.json and that gate's marker trio to "
+             "discarded/step0_attempt1_<t>/ (archived) and the check records aside, then one save_state records "
+             "campaign_commit.fr, the commit_history entry and fr_step0 repeat_pending with the note (one repeat for "
+             "FR as a whole), and the file is renamed .used.<t>: a start cut short before the save leaves the state "
+             "and the file (the moves skip what is absent at the next start, and its log line names the directory "
+             "it moved files to or says none was left), one cut short after it leaves the file, renamed at the next "
+             "start with no state change and one log line when it names campaign_commit.fr with the note of the "
+             "last commit_history entry (via fr/STEP0_FIX) and of fr_step0 (repeat_pending); STEP0_NO_ERROR, its "
+             "text hygiene-clean (else a STOP naming the rules broken, no state change), gives fail_final and is then "
+             "renamed .used.<t>, FR ends as 'fail (step-0 final; gate not evaluated)' and gate:FR is skipped; a "
+             "STEP0_NO_ERROR left by a start cut short after that save (fr_step0 fail_final with no_error_found and "
+             "the note of its text, no STEP0_FIX) is renamed at the next start with no state change and one log "
+             "line; a start while fr_step0 is fail_pending_fix without either file is a STOP, and so are both files "
+             "together, or either one while fr_step0 is not fail_pending_fix, the two leftovers excepted (the STOP "
+             "names the file, says when the state records a route applied earlier, and changes no state); a .used "
+             "name of an fr route file is the first free one of .used.<t>, .used.<t>.1, ... (never overwritten); "
+             "the step-0 failure is diagnosed from decision.fr_step0 and non-energy evidence, never from dF (S2B "
+             "sections 0 and 1); the k = 0 of an fr cell is also read from its A2 record after a relaunch",
+    "N-FR7": "X4: every fr section 11 check runs scripts/46 validate-a2 with check5_reading 'invariant'; "
+             "validity_final adds check5_reading, valid_as_written, failed_as_written and invariant_only (another "
+             "reading is a STOP); the log line says only that the checks were evaluated (D-C2-5: the operator reads "
+             "the stop decision, the validity leaves after CAMPAIGN_DONE and verify)",
+    "N-FR8": "S2B sections 1 and 2 (X3, X6): gate FR runs in phase gate after the four checks; its decision must agree "
+             "with the scan (FR-1 passed and no fr_stop, or fr_stop at FR.cell with FR.kind), else a STOP before it "
+             "is applied, which sends the operator to decision.FR of gates/FR.json through s2b/guard.py GateLeaves "
+             "only (S2B section 1), never to the file itself; gate:FR is skipped at fr_step0 fail_final; decision.FR "
+             "holds only outcome, FR1, FR2, part, cell and kind (the invariant_only labels stay in the gate file's "
+             "result, read by E after verify); at "
+             "the end campaign.json records fr_outcome, one of 'pass', 'fail (FR-1)', 'fail (FR-2)' and 'fail "
+             "(step-0 final; gate not evaluated)', from the decisions only (S2B section 1), derived before any write "
+             "of finish() (none derivable: a STOP, nothing written); a STOP of fr records in campaign.json the "
+             "fr_outcome its decisions already fix, else null (IX-4: the outcome named before a final STOP; "
+             "fr/STEP0_NO_ERROR changes only the state); status prints campaign_commit, fr_step0, fr_stop "
+             "and FR (decision fields only); no gate result reaches the log, the status output or campaign.json",
 }
 
 
@@ -1393,7 +1481,21 @@ def graph_c3(state, sites=site_sets):
     return G
 
 
-GRAPHS = {"c1": graph_c1, "c2": graph_c2, "c3": graph_c3, "c4": graph_c4}
+def graph_fr(state, sites=site_sets):
+    """S2b FR (S2B_PLAN.md section 2; N-FR1): the checks, the four FR relaxations with their section 11 checks (the
+    partners from a2_parent), the step-0 gates at k = 0 of V+_R and D+V+, and gate FR after the four checks. The order
+    is the scan's (fr_progress), not a dependency."""
+    G = Graph("fr", PHASES["fr"])
+    G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")
+    _a2_jobs(G, list(FR_ORDER))
+    for gid, at in FR_STEP0_AT.items():
+        G.add(gid, "gate", "a2", ["k0:" + at], gate="fr_step0", cat="gate", at=at)
+    G.add("gate:FR", "gate", "gate", ["a2v:" + x for x in FR_ORDER], gate="FR", cat="gate")
+    return G
+
+
+GRAPHS = {"c1": graph_c1, "c2": graph_c2, "c3": graph_c3, "c4": graph_c4, "fr": graph_fr}
 
 
 def graph(campaign, state, *, sites=site_sets):
@@ -1433,6 +1535,8 @@ def expected_counts(campaign, state):
         if g1.get("Ca") is False:
             n -= 2; adj.append("Ca failed G1: Ca124 D, D+V")
         return {"a2": n, "a2_validate": n, "gate": 2}, adj
+    if campaign == "fr":
+        return {"a2": 4, "a2_validate": 4, "gate": 3}, adj                     # S2B section 2 (N-FR1)
     hosts = production_hosts(state)
     nh = len(hosts)
     per = {"mace_host": 1, "mace_V": 19, "mace_dopant": 56, "sp": 76}
@@ -1696,6 +1800,38 @@ class NodeBackend:
                        f"{head[:12]!r}): nothing started; the checkout must be a clean git checkout of the S2 commit "
                        f"(STAGE0 section 8 item 1, N-F32)")
         return {"head": head, "clean": s.stdout.strip() == ""}
+
+    def _git(self, args, what):
+        try:
+            return subprocess.run(["git", "-C", self.node.checkout] + list(args), stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE, universal_newlines=True, timeout=600)
+        except (OSError, subprocess.SubprocessError) as e:
+            raise Stop(f"git {what} failed in the checkout ({type(e).__name__}): nothing started (N-FR2)")
+
+    def git_is_ancestor(self, a, b):
+        """N-FR2: True iff commit a is an ancestor of b (git merge-base --is-ancestor); any other exit is a STOP."""
+        p = self._git(["merge-base", "--is-ancestor", str(a), str(b)], "merge-base")
+        if p.returncode not in (0, 1):
+            raise Stop(f"git merge-base --is-ancestor exited {p.returncode}: nothing started (N-FR2)")
+        return p.returncode == 0
+
+    def git_tracked(self, path):
+        """N-FR2: True iff path is a tracked file of the checkout (git ls-files --error-unmatch)."""
+        return self._git(["ls-files", "--error-unmatch", "--", path], "ls-files").returncode == 0
+
+    def git_unchanged(self, a, b, paths):
+        """N-FR2: True iff the paths are equal at commits a and b (git diff --quiet); any other exit is a STOP."""
+        p = self._git(["diff", "--quiet", str(a), str(b), "--"] + list(paths), "diff")
+        if p.returncode not in (0, 1):
+            raise Stop(f"git diff --quiet exited {p.returncode}: nothing started (N-FR2)")
+        return p.returncode == 0
+
+    def git_changed_paths(self, a, b):
+        """N-FR2: the paths that differ between commits a and b (git diff --name-only); a failure is a STOP."""
+        p = self._git(["diff", "--name-only", str(a), str(b)], "diff")
+        if p.returncode != 0:
+            raise Stop(f"git diff --name-only exited {p.returncode}: nothing started (N-FR2)")
+        return [x for x in p.stdout.splitlines() if x]
 
     def spawn(self, cmd, *, cwd, log, rc, env=None, pass_fds=()):
         e = dict(os.environ); e.update(env or {})
@@ -1977,6 +2113,7 @@ class Runner:
         self.held_labels, self.slots_cache = {}, None                       # round 4: N-F36 (held STOP -> A2 label); N-F30
         self.resolve_wait, self.tree_full = set(), set()                    # round 4: log-once keys; N-F34
         self.poller_renewals = []                                           # round 6: R6-C1-2 (N-F18)
+        self.fr_next, self.protect, self.protect_parts = None, None, None   # S2b: N-FR1 (next cell), N-FR4 (digest)
 
     # ---- logging and records
     def log(self, msg):
@@ -2023,7 +2160,46 @@ class Runner:
         return (m.get("electrons") or {}).get("n_el")
 
     def save_state(self):
+        if self.protect is not None and self.protected(self.state, self.protect[0]) != self.protect:
+            raise Stop(self.protect_reason(self.state))
         write_json(self.state, self.node.state)
+
+    def protect_reason(self, s):
+        """N-FR4: the STOP text of a changed protected state, naming the changed keys."""
+        return (f"{self.c}: the protected state key(s) {', '.join(self.protected_changes(s)) or '(not identified)'} "
+                f"changed; an S2b runner writes only {', '.join(S2B_STATE_KEYS)}, the {self.c} entry of campaigns and "
+                f"new commit_history entries: state.json is not written (N-FR4)")
+
+    @staticmethod
+    def protected_parts(s, n):
+        """N-FR4: {name: canonical JSON} of every protected part of s, for naming what changed."""
+        keep = {k: v for k, v in s.items() if k not in S2B_STATE_KEYS + ("campaigns", "commit_history")}
+        out = {k: json.dumps(v, sort_keys=True, default=str) for k, v in keep.items()}
+        out.update({f"campaigns.{k}": json.dumps(v, sort_keys=True, default=str)
+                    for k, v in (s.get("campaigns") or {}).items() if k not in S2B_CAMPAIGNS})
+        hist = list(s.get("commit_history") or [])
+        out.update({f"commit_history[{i}]": json.dumps(x, sort_keys=True, default=str) for i, x in enumerate(hist[:n])})
+        if len(hist) < n:
+            out["commit_history (entries removed)"] = str(len(hist))
+        return out
+
+    def protected_changes(self, s):
+        """N-FR4: the names of the protected parts of s that differ from the state read at load_state."""
+        if self.protect is None or self.protect_parts is None:
+            return []
+        now = self.protected_parts(s, self.protect[0])
+        return sorted(k for k in set(now) | set(self.protect_parts) if now.get(k) != self.protect_parts.get(k))
+
+    @staticmethod
+    def protected(s, n=None):
+        """N-FR4: (number of commit_history entries at load, digest of every key outside S2B_STATE_KEYS, campaigns and
+        commit_history, of campaigns without the S2b ids and of those commit_history entries)."""
+        hist = list(s.get("commit_history") or [])
+        n = len(hist) if n is None else n
+        keep = {k: v for k, v in s.items() if k not in S2B_STATE_KEYS + ("campaigns", "commit_history")}
+        camp = {k: v for k, v in (s.get("campaigns") or {}).items() if k not in S2B_CAMPAIGNS}
+        blob = json.dumps([keep, camp, hist[:n], len(hist) >= n], sort_keys=True, default=str)
+        return n, hashlib.sha256(blob.encode()).hexdigest()
 
     def set_campaign(self, status, **kw):
         p = os.path.join(self.cdir, "campaign.json")
@@ -2032,7 +2208,9 @@ class Runner:
             r.setdefault(k, v)                                              # a file mark_phase wrote first
         if self.boot not in r["boots"]:
             r["boots"].append(self.boot)
-        r.update({"status": status, "updated": utc(), "commit": self.state.get("commit") if self.state else None,
+        r.update({"status": status, "updated": utc(),
+                  "commit": ((self.state.get("campaign_commit") or {}).get(self.c) if self.c in S2B_CAMPAIGNS
+                             else self.state.get("commit")) if self.state else None,
                   "phases": r.get("phases", {}),
                   "mocked": list(MOCKED), "notes": sorted(NOTES), **kw})
         if self.state is not None:
@@ -2241,11 +2419,26 @@ class Runner:
         held = [w for w in self.pending_stop if w not in reason]
         if held:
             reason = "; ".join([reason] + held)
+        if self.state is not None and self.protect is not None and \
+                self.protected(self.state, self.protect[0]) != self.protect:
+            # N-FR4: a changed protected key is named in the STOP; the state in memory is not saved: campaigns[c] =
+            # 'stopped' goes into the state read again from disk, through the same protection, so that state.json and
+            # campaign.json agree
+            why = self._guard(self.protect_reason, self.state) or f"{self.c}: a protected state key changed (N-FR4)"
+            if why not in reason:
+                reason = f"{reason}; {why}"
+            disk = self._guard(read_json, self.node.state)
+            if disk is not None:
+                self.state = disk
         self._guard(self.log, f"STOP: {reason}")
         sf = os.path.join(self.cdir, "CAMPAIGN_STOPPED")
         self._guard(write_text, f"{utc()} {reason}\n", sf)
         if self.state is not None:
-            self._guard(self.set_campaign, "stopped", stop_reason=public_text(reason))
+            # IX-4 (amendment 2026-11-12a item 13): at a STOP of fr, the FR outcome its decisions already fix (else
+            # null), so that E and the FR figure name the decision recorded before a final STOP; fr/STEP0_NO_ERROR
+            # changes only the state, which a STOP does not publish (no state_end.json)
+            fo = {"fr_outcome": self._guard(self.stop_outcome)} if self.c in S2B_CAMPAIGNS else {}
+            self._guard(self.set_campaign, "stopped", stop_reason=public_text(reason), **fo)
         if os.path.exists(sf):
             for why in list(self.pending_stop):
                 self._guard(self.mark_stop_raised, why)
@@ -2282,7 +2475,27 @@ class Runner:
         self.chain_lock_release()                                  # once no pw.x of this runner runs (N-6)
         return bool(alive)
 
+    def stop_outcome(self):
+        """IX-4: the FR outcome the decisions fix at a STOP (fr_outcome), or None while none follows from them."""
+        try:
+            return self.fr_outcome()
+        except Stop:
+            return None
+
+    def fr_outcome(self):
+        """N-FR8 (S2B section 1): the FR outcome from the decisions only (fr_step0 and FR); a STOP if none applies."""
+        s0, fr = self.state.get("fr_step0") or {}, self.state.get("FR") or {}
+        if s0.get("outcome") == "fail_final":
+            return FR_OUTCOMES[3]
+        if fr.get("outcome") == "pass" and fr.get("part") is None:
+            return FR_OUTCOMES[0]
+        if fr.get("outcome") == "fail" and fr.get("part") in ("FR-1", "FR-2"):
+            return f"fail ({fr['part']})"
+        raise Stop(f"{self.c}: no FR outcome follows from the decisions (fr_step0 {s0.get('outcome')}, FR "
+                   f"{fr.get('outcome')} {fr.get('part')}): CAMPAIGN_DONE is not written (N-FR8)")
+
     def finish(self):
+        fo = {"fr_outcome": self.fr_outcome()} if self.c in S2B_CAMPAIGNS else {}     # N-FR8: before any write
         st = self.statuses()
         self.mark_phase(None)
         comp = {"schema": "s2-completeness-1", "campaign": self.c, "by_category": {}, "jobs": {}}
@@ -2293,7 +2506,7 @@ class Runner:
         comp["by_category"] = {k: dict(v) for k, v in comp["by_category"].items()}
         c46.dump_public(comp, os.path.join(self.cdir, "completeness.json"))
         self.snapshot_ledger()
-        self.set_campaign("done", completeness=comp["by_category"])
+        self.set_campaign("done", completeness=comp["by_category"], **fo)
         c46.dump_public(self.state, os.path.join(self.cdir, "state_end.json"))
         write_text(f"{utc()}\n", os.path.join(self.cdir, "CAMPAIGN_DONE"))
         if os.path.exists(self.node.keep_alive):
@@ -2307,6 +2520,9 @@ class Runner:
             if self.c != "c1" and not self.be.mock:
                 raise Stop(f"no state.json: {self.c} cannot start before C1")
             s = {"schema": "s2-state-1", "commit": None, "campaigns": {}, "cuts": []}
+        if self.c in S2B_CAMPAIGNS:
+            self.protect = self.protected(s)                                # N-FR4
+            self.protect_parts = self.protected_parts(s, self.protect[0])
         return s
 
     def load_walls(self):
@@ -2357,6 +2573,8 @@ class Runner:
         gs = self.be.git_state()
         if not gs["clean"]:
             raise Stop("the checkout is not clean")
+        if self.c in S2B_CAMPAIGNS:
+            return self.check_commit_s2b(gs["head"])
         if self.state.get("commit") is None:
             self.state["commit"] = gs["head"]; self.save_state()
             self.log(f"S2 campaign commit recorded: {gs['head'][:12]}")
@@ -2375,6 +2593,220 @@ class Runner:
                 pass
             else:
                 raise Stop(f"checkout HEAD {gs['head'][:12]} is not the recorded S2 commit {self.state['commit'][:12]}")
+
+    def check_commit_s2b(self, head):
+        """N-FR2 (X13): the S2b campaign commit. At the first start fr/CAMPAIGN_COMMIT admits HEAD once; later starts
+        need HEAD = campaign_commit[c], the one other route being fr/STEP0_FIX at fr_step0 fail_pending_fix, which
+        repeats the failed cell (fr_step0_repeat). state['commit'] is never changed."""
+        self.fr_route_files(self.state)                                    # N-FR6: before any change
+        cc = (self.state.get("campaign_commit") or {}).get(self.c)
+        if cc is None:
+            note = self.s2b_route("CAMPAIGN_COMMIT", head, self.state.get("commit"))
+            self.s2b_accept("CAMPAIGN_COMMIT", head, self.state.get("commit"), note)
+            self.log(f"S2b campaign commit of {self.c} recorded (N-FR2, X13): {head[:12]}; note: {note[:200]}")
+            return
+        cf = os.path.join(self.cdir, "CAMPAIGN_COMMIT")
+        if os.path.exists(cf):
+            if open(cf).read().split()[:1] != [cc]:
+                raise Stop(f"{self.c}/CAMPAIGN_COMMIT names another commit than the recorded {cc[:12]}: the route is "
+                           f"used once (N-FR2, X13)")
+            self.rename_used(cf)                                            # recorded before the rename (R6-C1-3)
+        fix = os.path.join(self.cdir, "STEP0_FIX")
+        if os.path.exists(fix) and self.fr_fix_leftover(self.state):
+            self.rename_used(fix)                                           # recorded before the rename (R6-C1-3)
+            self.log(f"{self.c}/STEP0_FIX: the applied route's leftover renamed .used, no state change (N-FR6); "
+                     f"fr_step0 repeat_pending since {(self.state.get('commit_history') or [{}])[-1].get('time')}")
+        elif os.path.exists(fix):                                           # at fail_pending_fix (fr_route_files)
+            note = self.s2b_route("STEP0_FIX", head, cc)
+            self.fr_step0_repeat(head, cc, note)
+            return
+        if head != cc:
+            raise Stop(f"checkout HEAD {head[:12]} is not the recorded {self.c} campaign commit {cc[:12]} (X13, N-FR2)")
+
+    def fr_route_files(self, s):
+        """N-FR6: fr/STEP0_FIX and fr/STEP0_NO_ERROR apply only while fr_step0 is fail_pending_fix, and never together;
+        otherwise a STOP naming the file, before any state change (nothing is recorded or renamed). The exceptions are
+        the leftovers of an applied route: a STEP0_FIX (fr_fix_leftover), which check_commit_s2b renames, and a
+        STEP0_NO_ERROR (fr_noerror_leftover), which preconditions renames. When the state shows a route applied, the
+        STOP says so (the file is then not that route's leftover)."""
+        s0 = s.get("fr_step0") or {}
+        outc = s0.get("outcome")
+        have = [f"{self.c}/{n}" for n in ("STEP0_FIX", "STEP0_NO_ERROR") if os.path.exists(os.path.join(self.cdir, n))]
+        if have == [f"{self.c}/STEP0_FIX"] and self.fr_fix_leftover(s):
+            return
+        if have == [f"{self.c}/STEP0_NO_ERROR"] and self.fr_noerror_leftover(s):
+            return
+        if have and outc != "fail_pending_fix":
+            done = [f"{self.c}/{n}" for n, k in (("STEP0_FIX", "repeat"), ("STEP0_NO_ERROR", "no_error_found"))
+                    if s0.get(k)]
+            raise Stop(f"{' and '.join(have)} refused: the FR step-0 check is {outc}, not fail_pending_fix (N-FR6); " +
+                       (f"the state records {' and '.join(done)} as applied earlier and this file is not the leftover "
+                        f"of an applied route; this start changed nothing" if done else "nothing was recorded"))
+        if len(have) == 2:
+            raise Stop(f"{' and '.join(have)} are both present at fr_step0 fail_pending_fix: one route only (N-FR6); "
+                       f"nothing was recorded")
+
+    def fr_fix_leftover(self, s):
+        """N-FR6: fr/STEP0_FIX is the leftover of the applied route (its one save_state done, the rename not): fr_step0
+        is repeat_pending with the file's note, the file names the recorded fr campaign commit, and the last
+        commit_history entry came to that commit by fr/STEP0_FIX with that note."""
+        try:
+            tok = open(os.path.join(self.cdir, "STEP0_FIX")).read().split()
+        except OSError:
+            return False
+        cc = (s.get("campaign_commit") or {}).get(self.c)
+        h = (list(s.get("commit_history") or []) or [{}])[-1]
+        s0 = s.get("fr_step0") or {}
+        return (cc is not None and tok[:1] == [cc] and s0.get("outcome") == "repeat_pending" and
+                h.get("via") == f"{self.c}/STEP0_FIX" and h.get("to") == cc and
+                " ".join(tok[1:]) == h.get("note") == s0.get("fix_note"))
+
+    def fr_noerror_leftover(self, s):
+        """N-FR6: fr/STEP0_NO_ERROR is the leftover of the applied route (its save_state done, the rename not): fr_step0
+        is fail_final with no_error_found and the note of the file's text (.strip()[:300]), and fr/STEP0_FIX is
+        absent."""
+        try:
+            text = open(os.path.join(self.cdir, "STEP0_NO_ERROR")).read()
+        except OSError:
+            return False
+        s0 = s.get("fr_step0") or {}
+        return (s0.get("outcome") == "fail_final" and s0.get("no_error_found") is True and
+                s0.get("note") == text.strip()[:300] and not os.path.exists(os.path.join(self.cdir, "STEP0_FIX")))
+
+    def rename_used(self, p):
+        """N-FR2, N-FR6: an fr route file (CAMPAIGN_COMMIT, STEP0_FIX, STEP0_NO_ERROR) goes to the first free name of
+        <p>.used.<t>, <p>.used.<t>.1, <p>.used.<t>.2, ... (<t> the clock's second): a copy renamed earlier in the same
+        second is never overwritten. Returns the new path."""
+        base = p + f".used.{int(time.time())}"
+        q, i = base, 0
+        while os.path.lexists(q):
+            i += 1
+            q = f"{base}.{i}"
+        os.replace(p, q)
+        return q
+
+    def s2b_route(self, name, head, ancestor):
+        """N-FR2: the checks of a dated route file <c>/<name>; returns its note ('<date> <path>'), or STOPs naming
+        every reason (nothing is recorded)."""
+        p = os.path.join(self.cdir, name)
+        if not os.path.exists(p):
+            raise Stop(f"no {self.c}/{name}: the S2b campaign commit {head[:12]} is admitted only by a dated route "
+                       f"file '<commit> <YYYY-MM-DD> <note path>' (X13, N-FR2)")
+        line = open(p).read()
+        tok, why = line.split(), []
+        if len(tok) != 3:
+            why.append(f"{len(tok)} tokens, not '<40-hex commit> <YYYY-MM-DD> <note path>'")
+        else:
+            h, day, note = tok
+            if h != head:
+                why.append(f"its commit {h[:12]} is not the checkout HEAD {head[:12]}")
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
+                why.append(f"the date {day!r} is not YYYY-MM-DD")
+            if os.path.isabs(note) or ".." in note or not note.startswith("results/objective2/s2/"):
+                why.append(f"the note path {note!r} is not a relative path under results/objective2/s2/")
+            elif not self.be.git_tracked(note):
+                why.append(f"the note {note} is not tracked at HEAD")
+            elif ancestor is None or note not in self.be.git_changed_paths(ancestor, head):
+                why.append(f"the note {note} is not changed between {str(ancestor)[:12]} and HEAD {head[:12]} (a dated "
+                           f"note of this route)")
+            else:
+                try:
+                    text = open(os.path.join(self.node.checkout, note)).read()
+                except OSError as e:
+                    text = None
+                    why.append(f"the note {note} cannot be read ({type(e).__name__})")
+                if text is not None and day not in text:
+                    why.append(f"the note {note} does not contain its date {day}")
+        if ancestor is None or not self.be.git_is_ancestor(ancestor, head):
+            why.append(f"the commit {str(ancestor)[:12]} is not an ancestor of HEAD {head[:12]}")
+        if name == "STEP0_FIX" and head == ancestor:
+            why.append(f"HEAD {head[:12]} is the recorded {self.c} campaign commit: the fix is a new commit, a strict "
+                       f"descendant of it")
+        if self.state.get("commit") is None or not self.be.git_unchanged(self.state["commit"], head, S2B_NODE_SCRIPTS):
+            why.append("qe_queue.sh, chain.sh or s2_run_qe.sh differ from the recorded S2 commit")
+        if (self.state.get("campaigns") or {}).get("c2") != "done":
+            why.append("C2 is not done")
+        if c46.hygiene_violations(line):
+            why.append("the line fails the hygiene check of scripts/46 (D-C2-4)")
+        if why:
+            raise Stop(f"{self.c}/{name} refused: {'; '.join(why)} (X13, N-FR2); nothing was recorded")
+        return " ".join(tok[1:])
+
+    def s2b_accept(self, name, head, ancestor, note, **keys):
+        """N-FR2: one save_state records the commit, its history entry and any further S2b keys (the repeat state of
+        STEP0_FIX); only then is the route file renamed (a leftover is renamed at the next start)."""
+        self.state.setdefault("campaign_commit", {})[self.c] = head
+        self.state.setdefault("commit_history", []).append({"from": ancestor, "to": head, "note": note, "time": utc(),
+                                                             "via": f"{self.c}/{name}", "campaign": self.c})
+        self.state.update(keys)
+        self.save_state()
+        self.rename_used(os.path.join(self.cdir, name))
+
+    def fr_step0_repeat(self, head, cc, note):
+        """N-FR2, N-FR6 (S2B section 2: 'the repeat reruns only the cell whose check failed, from k = 0, and its
+        attempt-1 files are set aside unread'): the failed cell's a2/<label>, gates/fr_step0.json and that gate's marker
+        trio go to discarded/step0_attempt1_<t>/{a2,gates,gates_applied}/ (archived) and the check records aside
+        (discard_checks); both moves skip what is absent, so a start cut short before the save repeats them. Then one
+        save_state records the commit, its history entry and fr_step0 repeat_pending with the note, and STEP0_FIX is
+        renamed (s2b_accept). No key is popped and the other cells stay as they are (step0_repeat is never called for
+        fr). The log names the directory this start moved files to, or says that nothing was left to move (an earlier
+        start cut short before its save moved them); a directory not made is never named."""
+        s0 = dict(self.state.get("fr_step0") or {})
+        cell = s0.get("cell")
+        gid = {at: g for g, at in FR_STEP0_AT.items()}.get(cell)
+        if gid is None:
+            raise Stop(f"the FR step-0 state names no step-0 cell ({cell!r}): the repeat cannot be prepared (N-FR6)")
+        dst = os.path.join(self.cdir, "discarded", f"step0_attempt1_{int(time.time())}")
+        mk = self.gate_marker({"id": gid})[:-5]
+        moves = [(os.path.join(self.cdir, "a2", cell), os.path.join(dst, "a2", cell)),
+                 (self.L.gate(self.c, "fr_step0"), os.path.join(dst, "gates", "fr_step0.json"))]
+        moves += [(mk + s, os.path.join(dst, "gates_applied", os.path.basename(mk) + s))
+                  for s in (".json", ".gate.json", ".inputs.json")]
+        moved = 0
+        for a, b in moves:
+            if os.path.exists(a):
+                os.makedirs(os.path.dirname(b), exist_ok=True)
+                shutil.move(a, b)
+                moved += 1
+        self.discard_checks(self.c)
+        self.s2b_accept("STEP0_FIX", head, cc, note,
+                        fr_step0={**s0, "outcome": "repeat_pending", "repeat": True, "fix_note": note,
+                                  "attempt1": {k: s0.get(k) for k in ("attempts", "outcome", "cell")}})
+        self.log(f"commit for the FR step-0 repeat accepted (N-FR2, N-FR6): {head[:12]}")
+        earlier = "moved aside by an earlier start cut short before its save, or absent"
+        where = (f"{moved} of its {len(moves)} attempt-1 paths moved to {os.path.relpath(dst, self.cdir)}" +
+                 ("" if moved == len(moves) else f" (the others {earlier})") if moved else
+                 f"none of its {len(moves)} attempt-1 paths left to move ({earlier})")
+        self.log(f"FR step-0 repeat prepared: {cell}: {where}; {cell} reruns from k = 0 (attempt 2)")
+
+    def s2b_refusal(self):
+        """N-FR3: the reason a c1-c4 start is refused once C2 is done and HEAD is not the recorded S2 commit (or git
+        fails), or None. On the node (not the mock) a missing or unreadable state.json is a refusal too: at the S2b
+        code a c1-c4 start needs a checkout at the S2 commit, and only a readable state names it (the c1 mock campaign,
+        the one start without a state, runs on the MockBackend). Reads only state.json and git; writes nothing."""
+        if self.c in S2B_CAMPAIGNS:
+            return None
+        try:
+            s = read_json(self.node.state)
+        except (OSError, ValueError) as e:
+            if self.be.mock:
+                return None                                                 # load_state decides (a STOP)
+            return (f"state.json cannot be read ({type(e).__name__}): a {self.c} start needs a checkout at the S2 "
+                    f"commit, which only a readable state names (N-FR3, X13)")
+        if not self.be.mock and not isinstance(s, dict):
+            return (f"{'no state.json' if s is None else 'state.json is not a JSON object'}: a {self.c} start needs a "
+                    f"checkout at the S2 commit, which only a readable state names (N-FR3, X13)")
+        s = s or {}
+        if (s.get("campaigns") or {}).get("c2") != "done":
+            return None
+        try:
+            head = self.be.git_state()["head"]
+        except Stop as e:
+            return f"git failed in the checkout ({e})"
+        if head != s.get("commit"):
+            return (f"checkout HEAD {head[:12]} is not the recorded S2 commit {str(s.get('commit'))[:12]}: a {self.c} "
+                    f"start needs a checkout at that commit (N-FR3, X13)")
+        return None
 
     def node_fix(self, head):
         """N-F17 (round-3 R3-C1-3, D-S0-8): a C1 STOP fixed by a dated, committed change resumes at the new commit
@@ -2474,6 +2906,47 @@ class Runner:
             if s["a2_layout"] != "48" and (sm.get("at_layout") or {}).get("label") != f"s2smoke_ref232_rst{s['a2_layout']}":
                 raise Stop(f"the exit/restart smoke test at the A2 layout {s['a2_layout']} is not in c1/smoke.json "
                            f"(at_layout; X-4, N-F19)")
+        if self.c in S2B_CAMPAIGNS:
+            # N-FR1, N-FR6 (S2B sections 2, 9): no C2 decision key is read; each missing item is a STOP
+            why = [f"{k} is {camp.get(k)!r}, not {v!r}" for k, v in (("c1", "done"), ("c2", "done"), ("c3", "not_run"))
+                   if camp.get(k) != v] + (["C4 has a campaign state"] if "c4" in camp else [])
+            if "49_s2_gates.py" in MOCKED or not hasattr(g49, "fr_progress"):
+                why.append("scripts/49 is the stub (no fr_progress)")
+            if why:
+                raise Stop(f"{self.c} preconditions: {'; '.join(why)} (S2B_PLAN.md section 9, N-FR1)")
+            s0 = s.get("fr_step0") or {}
+            ne = os.path.join(self.cdir, "STEP0_NO_ERROR")
+            self.fr_route_files(s)                                          # a stray route file is a STOP (N-FR6)
+            if s0.get("outcome") == "fail_pending_fix" and os.path.exists(ne):
+                text = open(ne).read()
+                note = text.strip()[:300]
+                # D-C2-4: the note reaches state.json and the public state_end.json; the STOP names the rules only
+                bad = sorted({v.split(": ", 1)[0] for v in c46.hygiene_violations(text) +
+                              c46.hygiene_violations(json.dumps(note))})
+                if bad:
+                    raise Stop(f"{self.c}/STEP0_NO_ERROR refused: its text breaks the hygiene rules of scripts/46 "
+                               f"({', '.join(bad)}; D-C2-4) (N-FR6); nothing was recorded")
+                s["fr_step0"] = {**s0, "outcome": "fail_final", "no_error_found": True, "note": note}
+                self.save_state()
+                self.rename_used(ne)                                        # recorded before the rename (R6-C1-3)
+                self.log("fr/STEP0_NO_ERROR: FR step-0 fail_final (no error found); FR ends as 'fail (step-0 final; "
+                         "gate not evaluated)' (S2B section 2, X6)")
+            elif os.path.exists(ne) and self.fr_noerror_leftover(s):
+                self.rename_used(ne)                                        # the applied route's leftover (N-FR6)
+                self.log("fr/STEP0_NO_ERROR: the applied route's leftover renamed .used, no state change (N-FR6); FR "
+                         "step-0 fail_final since an earlier start")
+            if (s.get("fr_step0") or {}).get("outcome") == "fail_pending_fix":
+                raise Stop("the FR step-0 check failed and neither fr/STEP0_FIX nor fr/STEP0_NO_ERROR has been applied: "
+                           "nothing starts (N-FR6)")
+            sm = read_json(os.path.join(self.node.c("c1"), "smoke.json"))
+            if not sm or not (sm.get("mapping") or {}).get("affine_slope_1") or s.get("a2_layout") is None:
+                raise Stop("no usable smoke-test mapping or A2 layout from C1 (X-3, X-4)")
+            if s["a2_layout"] != "48" and (sm.get("at_layout") or {}).get("label") != f"s2smoke_ref232_rst{s['a2_layout']}":
+                raise Stop(f"the exit/restart smoke test at the A2 layout {s['a2_layout']} is not in c1/smoke.json "
+                           f"(at_layout; X-4, N-F19)")
+            if s["a2_layout"] == "2x32":
+                raise Stop("the A2 layout is 2x32: FR runs one copy at a time (S2B section 2, N-FR1)")
+            return None
         if self.c == "c3":
             if camp.get("c2") not in ("done",):
                 if s.get("sr_stop") or (s.get("gateN") or {}).get("Sr") is not True:
@@ -2581,6 +3054,8 @@ class Runner:
                 return "done"
             if j["phase"] == "a2" and self.a2_stopped():
                 return "skipped"                                            # no in-A2 gate after A2 has stopped
+            if j.get("gate") == "FR" and (self.state.get("fr_step0") or {}).get("outcome") == "fail_final":
+                return "skipped"                                            # 'gate not evaluated' (X6, N-FR6)
             ds = self.deps_state(j, st)
             return "skipped" if ds == "blocked" else "pending"
         ds = self.deps_state(j, st)
@@ -2621,6 +3096,8 @@ class Runner:
     def schedule(self, st):
         if not self.spot_check():
             return                                                         # no job before a good poll (N-F18)
+        if self.c in S2B_CAMPAIGNS and not self.a2_stopped() and self.fr_scan(st):
+            return                                                         # fr_stop written: rebuild (N-FR5)
         G = self.G
         active = next((ph for ph in G["phases"] if any(not _is_terminal(st[jid]) for jid, j in G["jobs_by_id"].items()
                                                        if j["phase"] == ph)), None)
@@ -2629,6 +3106,10 @@ class Runner:
         if active != getattr(self, "phase_now", None):
             self.mark_phase(active)
         jobs = [j for j in G["jobs_by_id"].values() if j["phase"] == active]
+        if self.c in S2B_CAMPAIGNS and active != "a2" and self.a2_stopped():
+            # N-FR5: an early stop seen in another phase (every later cell swept to not_started_cap by a hard-cap
+            # refusal): the FR cells not started still get their not_run_gate record
+            self.a2_phase(list(G["jobs_by_id"].values()), st)
         n46 = 0
         for j in jobs:
             if self.stopping or self.shutdown:
@@ -2662,6 +3143,32 @@ class Runner:
             self.sp_phase(jobs, st)
         if active == "a2":
             self.a2_phase(jobs, st)
+
+    def fr_scan(self, st):
+        """N-FR1, N-FR5: scripts/49 fr_progress on the A2 records and the section 11 check jobs; keeps the next cell
+        to start and writes fr_stop {at, kind, time} once at the first failure (in any phase, so a failure of the
+        last cell is caught in the gate phase). True iff fr_stop was written now."""
+        rows = []
+        for lab in FR_ORDER:
+            r = read_json(self.a2_path(lab)) or {}
+            vf = r.get("validity_final")
+            rows.append({"label": lab, "status": r.get("status"), "end_rule": (r.get("end_rule") or {}).get("outcome"),
+                         "check": st.get("a2v:" + lab), "valid": None if vf is None else vf.get("valid") is True})
+        pr = g49.fr_progress(rows)
+        self.fr_next = pr["next"]
+        ff = pr["first_failure"]
+        if ff is None or self.state.get("fr_stop"):
+            return False
+        self.state["fr_stop"] = {"at": ff["cell"], "kind": ff["kind"], "time": utc()}
+        self.save_state()
+        self.log(f"FR early stop at {ff['cell']} ({ff['kind']}; S2B section 2)")
+        return True
+
+    def fr_stop_reason(self):
+        fs = self.state.get("fr_stop")
+        if fs:
+            return f"FR early stop at {fs.get('at')} ({fs.get('kind')}; S2B section 2)"
+        return f"FR step-0 {(self.state.get('fr_step0') or {}).get('outcome')}"
 
     def mark_phase(self, active):
         """Phase start and end times in campaign.json (reported only; no phase wall enters the projection, N-F9)."""
@@ -2719,6 +3226,14 @@ class Runner:
             fx = os.path.join(self.cdir, "STEP0_FIX")
             note = (" ".join(open(fx).read().split()[1:]) if os.path.exists(fx) else None) or st.get("fix_note")
             inp = {"cells": [sp], "attempt": att, "fix_note": note if att == 2 else None}
+        elif g == "fr_step0":
+            # N-FR6: the SP of the cell (scripts/49 FR_STEP0_PAIRS inverted), the attempt from fr_step0
+            sp = {a2: x for x, a2 in g49.FR_STEP0_PAIRS.items()}[j["at"]]
+            st = self.state.get("fr_step0") or {}
+            att = 2 if (st.get("repeat") or st.get("outcome") == "repeat_pending") else 1
+            fx = os.path.join(self.cdir, "STEP0_FIX")
+            note = (" ".join(open(fx).read().split()[1:]) if os.path.exists(fx) else None) or st.get("fix_note")
+            inp = {"cells": [sp], "attempt": att, "fix_note": note if att == 2 else None}
         elif g == "c3_complete":
             inp = {"c1": {"c3_labels": [x["label"] for x in self.G["jobs_by_id"].values() if x["kind"] == "sp"]}}
         return inp, att
@@ -2741,6 +3256,10 @@ class Runner:
         if rc != 0 or out is None:
             raise Stop(f"gate {j['gate']} did not complete (exit {rc}): see gates_applied/gates.log")
         dec = out.get("decision") or {}
+        if self.c in S2B_CAMPAIGNS:
+            # N-FR4, N-FR8: before it is applied, so before the copy and the marker below; the readers of fr find gate
+            # FR 'written but not applied' by these names alone (IX-15), and the self-test (z29) pins the order
+            self.s2b_decision_check(j, dec)
         self.state.update(copy.deepcopy(dec))                               # N-D1
         self.save_state()
         c46.dump_public(out, self.gate_marker(j)[:-5] + ".gate.json")      # every evaluation kept (step-0 twice)
@@ -2751,8 +3270,37 @@ class Runner:
             self.a2_stop_all("step-0 check failed")
             raise Stop("step-0 check failed: find the writer or input error, commit the fix with a dated note, write "
                        "c2/STEP0_FIX ('<commit> <note path>') and relaunch; the check is repeated once (section 11)")
+        if j["gate"] == "fr_step0" and (self.state.get("fr_step0") or {}).get("outcome") == "fail_pending_fix":
+            self.a2_stop_all("FR step-0 check failed")
+            raise Stop("FR step-0 check failed (S2B section 2): find the writer or input error, commit the fix with a "
+                       "dated note, write fr/STEP0_FIX ('<commit> <YYYY-MM-DD> <note path>') and relaunch: the failed "
+                       "cell is rerun once from k = 0; or, if no error is found, write fr/STEP0_NO_ERROR (a dated note) "
+                       "and relaunch: FR ends as 'fail (step-0 final; gate not evaluated)' (N-FR6)")
         if j["phase"] == "a2" and self.a2_stopped():
             self.a2_stop_all(f"gate {j['id']}")                            # at once, every running part (I-D3, N-F20)
+
+    def s2b_decision_check(self, j, dec):
+        """N-FR4: an fr gate decision holds only its own key (fr_step0 or FR), and that only decision fields
+        (FR_STEP0_KEYS, FR_DECISION_KEYS: no value, check list or validity leaf); N-FR8: gate FR agrees with the scan
+        (FR-1 passed and no fr_stop, or fr_stop at FR.cell with FR.kind). A STOP otherwise, before it is applied."""
+        want = "fr_step0" if j["gate"] == "fr_step0" else "FR"
+        if set(dec) != {want}:
+            raise Stop(f"gate {j['id']}: the decision keys {sorted(dec)} are not [{want!r}] (N-FR4): not applied")
+        sub = dec[want] if isinstance(dec[want], dict) else {}
+        extra = sorted(set(sub) - set(FR_STEP0_KEYS if want == "fr_step0" else FR_DECISION_KEYS))
+        if extra or (want == "FR" and set(sub) != set(FR_DECISION_KEYS)):
+            raise Stop(f"gate {j['id']}: decision.{want} holds the fields {sorted(sub)}, not decision fields only "
+                       f"(N-FR4, N-FR8): not applied")
+        if want == "FR":
+            fr, fs = dec["FR"] or {}, self.state.get("fr_stop")
+            agree = (fr.get("FR1") is True and not fs) or \
+                (bool(fs) and (fs.get("at"), fs.get("kind")) == (fr.get("cell"), fr.get("kind")))
+            if not agree:
+                # gates/FR.json holds the FR-2 values once FR-1 has passed: the STOP names the guard's reading route
+                # (S2B section 1: before E an fr gate file is read through the allow-list only), never the raw file
+                raise Stop(f"gate FR ({fr.get('outcome')} at {fr.get('cell')}, {fr.get('kind')}) disagrees with the "
+                           f"runner's early stop {fs} (N-FR8): not applied; read decision.FR of gates/FR.json "
+                           f"through s2b/guard.py GateLeaves only (S2B section 1)")
 
     def record_path(self, j):
         return os.path.join(self.cdir, {"smoke": "smoke.json", "smoke2": "smoke2.json", "tp": "throughput.json"}[j["what"]])
@@ -3185,6 +3733,14 @@ class Runner:
             vac = read(os.path.join(ROOT, b42.VAC_REF))
             self._ref = (vac, c46.free_in_cell(reg, "V"))
         return self._ref
+
+    def ref_host_cells(self):
+        """The 233-atom reference host and the region's free atoms in host numbering: the fr self-test's host_R row."""
+        if getattr(self, "_ref_host", None) is None:
+            ctx = c46.ref_context()
+            reg = c46.build_region(ctx.host, "ref233", 136)
+            self._ref_host = (read(os.path.join(ROOT, c46.REF_HOST)), c46.free_in_cell(reg, "host"))
+        return self._ref_host
 
     def smoke_rec(self):
         return read_json(os.path.join(self.node.c("c1"), "smoke.json")) or {}
@@ -3624,11 +4180,13 @@ class Runner:
         """K2 fail, a pending or final step-0 failure, K3 fail_replan or a1_only, or a recorded stop. 'repeat_pending'
         (after STEP0_FIX) is not a stop: C2 runs again from relaxation 1 for the one repeat (I-D1, review-2 F3)."""
         s = self.state
+        if self.c in S2B_CAMPAIGNS:                                         # N-FR5: no C2 decision key is read
+            return (s.get("fr_step0") or {}).get("outcome") in ("fail_pending_fix", "fail_final") or bool(s.get("fr_stop"))
         return (s.get("K2") == "fail" or (s.get("step0") or {}).get("outcome") in ("fail_pending_fix", "fail_final")
                 or s.get("K3") in ("fail_replan", "a1_only") or bool(s.get("a2_stopped")))
 
     def a2_k0_from_files(self, label):
-        if self.c not in ("c1", "c2"):
+        if self.c not in ("c1", "c2", "fr"):
             return False
         r = read_json(self.a2_path(label))
         return bool(r and (r.get("k0_seen") or r.get("n_config", 0) >= 1))
@@ -3882,7 +4440,7 @@ class Runner:
         """The A2 start: the S2-relaxed host for host_R, else the A1 relaxed cell (section 11); the reference vacancy
         cell for the self-test's reference rows."""
         if j.get("ref"):
-            return self.ref_cells()[0]
+            return (self.ref_host_cells() if j.get("cell_kind") == "host" else self.ref_cells())[0]
         c1 = "c1"
         return read(self.relaxed_path(wid_of(j["member"], "host") if j["cell_kind"] == "host" else j["a1"], c1))
 
@@ -3944,6 +4502,9 @@ class Runner:
             sf = os.path.join(d, "vac232.extxyz")
             if not os.path.exists(sf):
                 c46.write_cell(sf, self.ref_cells()[0])
+            if j.get("cell_kind") == "host":                                # the fr self-test's host_R row
+                return {"start": hf, "host_relaxed": hf, "region": rf, "pair": None, "parent_final": None,
+                        "final": os.path.join(self.L.a2_dir(self.c, lab), f"{lab}.final.extxyz")}
             return {"start": sf, "host_relaxed": hf, "region": rf, "pair": None, "parent_final": hf,
                     "final": os.path.join(self.L.a2_dir(self.c, lab), f"{lab}.final.extxyz")}
         c1, h, L_, jj = "c1", j["member"], j["L"], j["j"]
@@ -3975,6 +4536,8 @@ class Runner:
         job = {"action": "validate-a2", "campaign": self.c, "root": self.node.root, "member": j.get("member"),
                "label": lab, "kind": j["cell_kind"], "site": j["j"], "token": j.get("token"), "leg": j.get("leg"),
                "parent_label": j.get("parent"), "files": files, "out": self.a2v_out(lab)}
+        if self.c in S2B_CAMPAIGNS:
+            job["check5_reading"] = "invariant"                             # X4 (N-FR7)
         jf = os.path.join(self.cdir, "jobs46", f"a2v_{lab}.json")
         write_json(job, jf)
         rc = self.be.run46("validate-a2", jf, os.path.join(self.cdir, "jobs46", "jobs46.log"))
@@ -3988,6 +4551,14 @@ class Runner:
         r["validity_final"] = {"valid": bool(v["valid"]), "failed": list(v["failed"]),
                                "file": os.path.basename(self.a2v_out(lab)), "sha256": sha256_file(self.a2v_out(lab)),
                                "parent": j.get("parent"), "parent_final": bool(files.get("parent_final"))}
+        if self.c in S2B_CAMPAIGNS:
+            if v.get("check5_reading") != "invariant":
+                raise Stop(f"{lab}: scripts/46 validate-a2 did not read check 5 invariantly (X4, N-FR7)")
+            r["validity_final"].update({k: v[k] for k in ("check5_reading", "valid_as_written", "failed_as_written",
+                                                          "invariant_only")})
+            write_json(r, self.a2_path(lab))
+            self.log(f"{lab}: section 11 final-geometry checks evaluated (check 5 invariant)")      # D-C2-5 (N-FR7)
+            return
         write_json(r, self.a2_path(lab))
         self.log(f"{lab}: section 11 final-geometry checks {'passed' if v['valid'] else 'FAILED ' + str(v['failed'])}")
 
@@ -4007,7 +4578,10 @@ class Runner:
                 if st[j["id"]] == "running":
                     # a 'cap' or 'spot' request is replaced by the gate's (round-4 missed item, N-F37)
                     self.request_exit(j["label"], self.L.a2_dir(self.c, j["label"]), "gate")
-                elif st[j["id"]] == "pending":
+                elif st[j["id"]] == "pending" or (self.c in S2B_CAMPAIGNS and st[j["id"]] == "not_started_cap" and
+                                                  read_json(self.a2_path(j["label"])) is None):
+                    # S2B section 2: an FR cell not started is not_run_gate, also after a hard-cap refusal of an
+                    # earlier cell (that cell keeps its not_started_cap record; N-FR5)
                     r = self.a2_rec(j)
                     if r["parts"]:
                         # a relaxation between parts (a spot restart prepared) is killed: its outputs and restart data
@@ -4016,8 +4590,11 @@ class Runner:
                                                                 "section 16)")
                     else:
                         r["status"] = "not_run_gate"
-                        r["status_reason"] = "A2 stopped by a gate decision"
+                        r["status_reason"] = self.fr_stop_reason() if self.c in S2B_CAMPAIGNS else \
+                            "A2 stopped by a gate decision"
                         write_json(r, self.a2_path(j["label"]))
+                        if self.c in S2B_CAMPAIGNS:
+                            self.cache.pop(j["id"], None)                  # a cached not_started_cap (N-FR5)
             return
         if self.held() or self.stopping or self.pending_stop:
             return
@@ -4028,6 +4605,8 @@ class Runner:
             s = st[j["id"]]
             if s != "pending":
                 continue
+            if self.c in S2B_CAMPAIGNS and j["label"] != self.fr_next:
+                continue                                                     # N-FR1: one cell at a time, in order
             r = self.a2_rec(j)
             if busy >= copies:
                 return
@@ -4058,8 +4637,7 @@ class Runner:
             if not sm.get("affine_slope_1") or not nst:
                 raise Stop(f"{lab}: no verified nstep mapping from the smoke tests (X-3)")
             if j.get("ref"):
-                vac, free = self.ref_cells()
-                at = vac
+                at, free = self.ref_host_cells() if j.get("cell_kind") == "host" else self.ref_cells()
             else:
                 c1 = "c1"
                 if j["cell_kind"] == "host":
@@ -4083,6 +4661,10 @@ class Runner:
 
     # ---- the main loop
     def run(self):
+        why = self.s2b_refusal()
+        if why:
+            print(f"refused: {why}; nothing started", file=sys.stderr)         # N-FR3: before any write
+            return 2
         os.makedirs(self.cdir, exist_ok=True)
         self.take_lock()
         self.boot = self.be.boot_id()
@@ -4182,7 +4764,7 @@ class Runner:
                     continue                                               # the shutdown begins at housekeeping (N-F21)
                 done = all(_is_terminal(s) for s in st.values())
                 if self.pending_stop and (done or not self.free_ready(st)):
-                    if self.c in ("c2", "c4") and self.a2_stopped():
+                    if self.c in ("c2", "c4", "fr") and self.a2_stopped():
                         self.a2_stop_all("a gate decision before the held STOP")
                     raise Stop("; ".join(self.pending_stop))               # N-F20: after the free jobs
                 if done:
@@ -4237,10 +4819,58 @@ def _archive_casefold(cw, jobs):
             raise S2Error(f"gates_applied/{b} is the marker of {i!r} (a case-fold collision, N-F15)")
 
 
+def _below(rp, rd):
+    """Where the real path rp lies with respect to the tree rd, by the three tests of s2b/fr_inputs.py _under (F9):
+    None if it is not rd and does not lie under it, '' if it is rd, else its first component below rd. As strings,
+    also casefolded (on a case-insensitive volume realpath keeps the typed case: '.../s2/C3' is '.../s2/c3'), and by
+    identity, rp or one of its existing ancestors being the existing tree rd (os.path.samefile; a volume that folds
+    case or Unicode normalisation)."""
+    parts, n = rp.split(os.sep), len(rd.rstrip(os.sep).split(os.sep))
+    for a, b in ((rp, rd), (rp.casefold(), rd.casefold())):
+        if a == b or a.startswith(b.rstrip(os.sep) + os.sep):
+            return os.sep.join(parts[n:n + 1])
+    if not os.path.exists(rd):
+        return None
+    x = rp
+    while True:
+        if os.path.exists(x) and os.path.samefile(x, rd):
+            return os.sep.join(parts[len(x.split(os.sep)):][:1])
+        up = os.path.dirname(x)
+        if up == x:
+            return None
+        x = up
+
+
+def archive_out_refusal(out):
+    """N-FR3 (archive --campaign fr only): the reason an --out is refused, or None. Inside results/objective2/s2 of
+    this checkout, or of any checkout that its real path runs through (links followed, a dangling one included), only
+    the fr tree may receive the fr archive: an --out whose first component under that directory is not exactly 'fr'
+    (c3, c1/x, c1/fr, the directory itself, a case variant such as 'Fr') is refused, so that no file under c1/, c2/ or
+    c3/ is written. Read only; nothing is made."""
+    rp = os.path.realpath(out)
+    tops, x = {os.path.realpath(os.path.join(ROOT, "results", "objective2", "s2"))}, rp
+    while os.path.dirname(x) != x:
+        if [p.casefold() for p in x.split(os.sep)[-3:]] == ["results", "objective2", "s2"]:
+            tops.add(x)
+        x = os.path.dirname(x)
+    for top in sorted(tops):
+        first = _below(rp, top)
+        if first is not None and first != "fr":
+            return (f"--out lies under results/objective2/s2 ({repr(first) if first else 'the directory itself'}), "
+                    f"not under its fr tree")
+    return None
+
+
 def archive(stage, campaign, out):
     """One pulled campaign (<stage>/work = /data/work/s2, <stage>/jobs/s2<c> = /data/jobs/s2<c>) into the
     repository layout of interface spec 5.2. Refuses a duplicated label, a record whose sha256 does not match its
-    file, names that differ only in case (N-F15), and any written JSON or log that fails the hygiene check."""
+    file, names that differ only in case (N-F15), and any written JSON or log that fails the hygiene check. For fr
+    (S2b) it first refuses an --out inside results/objective2/s2 other than its fr tree, before anything is read or
+    written (archive_out_refusal, N-FR3); c1-c4 are unchanged."""
+    if campaign in S2B_CAMPAIGNS:
+        why = archive_out_refusal(out)
+        if why:
+            raise S2Error(f"archive --campaign {campaign}: {why} (N-FR3): nothing written")
     cw, jobs = os.path.join(stage, "work", campaign), os.path.join(stage, "jobs", f"s2{campaign}")
     if not os.path.isdir(cw):
         raise S2Error(f"no pulled campaign directory for {campaign}")
@@ -4341,6 +4971,11 @@ def cmd_status(root):
     s = read_json(node.state) or {}
     print("state:", json.dumps({k: s.get(k) for k in ("commit", "a2_layout", "G1", "gateN", "sr_stop", "n", "pose",
                                                         "step0", "K2", "K3", "cuts", "campaigns")}, sort_keys=True))
+    s2b = {k: s.get(k) for k in S2B_STATE_KEYS}
+    for k, keys in (("fr_step0", FR_STEP0_KEYS), ("FR", FR_DECISION_KEYS)):
+        if isinstance(s2b[k], dict):
+            s2b[k] = {x: v for x, v in s2b[k].items() if x in keys}
+    print("state (S2b):", json.dumps(s2b, sort_keys=True))                       # N-FR8: decisions only
     for c in CAMPAIGNS:
         cd = L.campaign_dir(c)
         if not os.path.isdir(cd):
@@ -4622,6 +5257,21 @@ class MockBackend(NodeBackend):
     def git_state(self):
         return {"head": _mock_cfg(self.sys).get("git_head") or "0" * 40, "clean": True}
 
+    # N-FR2: git answers from the lists of mock/config.json, so the arguments matter: git_ancestors [[a, b], ...]
+    # (a commit is its own ancestor, as in git), git_tracked_paths [path, ...], git_changed {"<a>..<b>": [path, ...]}
+    # (the paths that differ between a and b, for git_unchanged and git_changed_paths); a missing list is empty
+    def git_is_ancestor(self, a, b):
+        return a == b or [a, b] in (_mock_cfg(self.sys).get("git_ancestors") or [])
+
+    def git_tracked(self, path):
+        return path in (_mock_cfg(self.sys).get("git_tracked_paths") or [])
+
+    def git_changed_paths(self, a, b):
+        return list((_mock_cfg(self.sys).get("git_changed") or {}).get(f"{a}..{b}") or [])
+
+    def git_unchanged(self, a, b, paths):
+        return not set(paths) & set(self.git_changed_paths(a, b))
+
     def cmd46(self, action, jobfile):
         hang = self.cfg.get("mace_hang") or {}
         if action == "relax" and hang.get("wid") == (read_json(jobfile) or {}).get("work_id") and \
@@ -4638,8 +5288,9 @@ class MockBackend(NodeBackend):
 
     def gate(self, gate, campaign, log, inputs, attempt):
         dec = (self.cfg.get("gates") or {}).get(gate, {})
+        res = (self.cfg.get("gate_results") or {}).get(gate, {"scripted": True})      # a scripted result (N-FR8 test)
         L = c46.Layout(kind="node", root=self.node.root)
-        write_json({"schema": "s2-gate-1", "gate": gate, "campaign": campaign, "result": {"scripted": True},
+        write_json({"schema": "s2-gate-1", "gate": gate, "campaign": campaign, "result": res,
                     "decision": dec, "written": utc()}, L.gate(campaign, gate))
         return 0
 
@@ -4651,7 +5302,27 @@ class MockBackend(NodeBackend):
         return {"schema": "s2-mace-1", "passed": True, "scripted": True}
 
     def graph(self, campaign, state):
-        return graph_ref(state).to_json()
+        return (graph_ref_fr(state) if campaign == "fr" else graph_ref(state)).to_json()
+
+
+def graph_ref_fr(state):
+    """The self-test fr campaign (N-FR1): the fr graph with four reference rows labelled with FR_ORDER (as graph_ref's:
+    the 233 reference host for the host_R row, the 232 vacancy cell otherwise, every check against the 233 cell), the
+    two step-0 gates and gate FR."""
+    G = Graph("fr", PHASES["fr"])
+    G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")
+    kinds = ("host", "V", "D", "DV")
+    for i, (lab, k) in enumerate(zip(FR_ORDER, kinds), 1):
+        G.add("a2:" + lab, "a2", "a2", [], label=lab, order=i, ref=True, member="ref233", cell_kind=k, L="B", j=136,
+              token=None, a1=None, cat="a2")
+    for i, (lab, k) in enumerate(zip(FR_ORDER, kinds), 1):
+        G.add("a2v:" + lab, "a2v", "a2", ["a2:" + lab], label=lab, parent=None, order=i, ref=True, member="ref233",
+              cell_kind=k, L="B", j=136, token=None, leg=None, a1=None, cat="a2_validate")
+    for gid, at in FR_STEP0_AT.items():
+        G.add(gid, "gate", "a2", ["k0:" + at], gate="fr_step0", cat="gate", at=at)
+    G.add("gate:FR", "gate", "gate", ["a2v:" + x for x in FR_ORDER], gate="FR", cat="gate")
+    return G
 
 
 def graph_ref(state):
@@ -4983,6 +5654,170 @@ def self_test(work=None):
                    ("(f) OOM kill without restart data", c_f), ("(g) MACE interruption", c_g), ("(h) keep-alive", c_h),
                    ("(j) resume", c_j), ("(l) runner reads", c_l)):
         case(nm, fn)
+
+    def tree_sha(top):
+        """{relative path: sha256} of every file under top."""
+        return {os.path.relpath(os.path.join(dp, f), top): sha256_file(os.path.join(dp, f))
+                for dp, _, fs in os.walk(top) for f in fs} if os.path.isdir(top) else {}
+
+    def c_fr_campaign():
+        """S2b fr on the mock node after the C1 campaign, in the same sysroot (the ledger and H_spent carry over; N-FR1
+        to N-FR8): a C2-done state (K3 fail_replan) and a synthetic c2/ tree; c2 and c3 starts at the S2b HEAD return 2
+        and write nothing (N-FR3); fr/CAMPAIGN_COMMIT admits the new HEAD (N-FR2); a spot notice during host_R with a
+        restart part; V+_R moves a far atom so that check 5 fails (both readings); scripted gates fr_step0 (pass) and FR
+        (fail at V+_R, kind check). Expected: complete, complete, not_run_gate, not_run_gate; fr_stop once;
+        fr_step0@4 skipped; CAMPAIGN_DONE; the protected state and every file under c1/, c2/ and c3/ unchanged; the
+        boot record lists fr; the fr archive is written."""
+        W = os.path.join(R, "work", "s2")
+        sp_ = os.path.join(W, "state.json")
+        st0 = read_json(sp_)
+        st0.update({"K2": "pass", "K3": "fail_replan", "step0": {"attempts": 1, "outcome": "pass"},
+                    "campaigns": {**(st0.get("campaigns") or {}), "c2": "done", "c3": "not_run"}})
+        write_json(st0, sp_)
+        for lab in C2_ORDER[:2]:                                            # a synthetic c2/ tree, never read
+            write_json({"schema": "s2-a2-1", "label": lab, "status": "complete", "synthetic": True},
+                       os.path.join(W, "c2", "a2", lab, f"{lab}.a2.json"))
+        write_json({"schema": "s2-campaign-1", "campaign": "c2", "status": "done"}, os.path.join(W, "c2", "campaign.json"))
+        write_text(f"{utc()}\n", os.path.join(W, "c2", "CAMPAIGN_DONE"))
+        write_json({"schema": "s2-campaign-1", "campaign": "c3", "status": "not_run"}, os.path.join(W, "c3", "campaign.json"))
+        prot0 = Runner.protected(st0)
+        trees0 = {c: tree_sha(os.path.join(W, c)) for c in ("c1", "c2", "c3")}
+        cfgp = os.path.join(sysroot, "mock", "config.json")
+        cfg = read_json(cfgp)
+        dec_s0 = {"fr_step0": {"attempts": 1, "outcome": "pass", "repeat": False, "fix_note": None, "cell": FR_ORDER[1]}}
+        dec_fr = {"FR": {"outcome": "fail", "FR1": False, "FR2": None, "part": "FR-1", "cell": FR_ORDER[1], "kind": "check"}}
+        note_ = "results/objective2/s2/S2B_PLAN.md"
+        cfg.update({"git_head": "e" * 40, "git_ancestors": [[st0["commit"], "e" * 40]], "git_tracked_paths": [note_],
+                    "git_changed": {f"{st0['commit']}..{'e' * 40}": [note_]},
+                    "gates": {**cfg.get("gates", {}), "fr_step0": dec_s0, "FR": dec_fr}})
+        write_json(cfg, cfgp)
+        scen = read_json(os.path.join(sysroot, "mock", "pw_scenarios.json"))
+        scen.update({FR_ORDER[0]: {"delay": 0.15, "converge_at": 8},
+                     FR_ORDER[1]: {"delay": 0.05, "converge_at": 30, "shift": [shift_atom, 0.30]}})
+        write_json(scen, os.path.join(sysroot, "mock", "pw_scenarios.json"))
+        bootC = "c" * 8 + "-boot-c"
+        write_text(bootC, os.path.join(sysroot, "mock", "boot_id"))
+        write_text(f"{time.time():.0f}", os.path.join(sysroot, "mock", f"btime.{bootC}"))
+        refused_ = []
+        for c in ("c2", "c3"):                                               # N-FR3: refused before any write
+            pr_ = subprocess.run([sys.executable, me, "run", "--campaign", c, "--root", R, "--mock"], env=env,
+                                 capture_output=True, text=True, timeout=120)
+            assert pr_.returncode == 2 and "refused" in pr_.stderr and "N-FR3" in pr_.stderr, (c, pr_.returncode, pr_.stderr)
+            refused_.append(c)
+        assert {c: tree_sha(os.path.join(W, c)) for c in ("c1", "c2", "c3")} == trees0 and not os.path.isdir(
+            os.path.join(W, "c4")) and read_json(sp_) == st0
+        frd = os.path.join(W, "fr"); os.makedirs(frd, exist_ok=True)
+        write_text("e" * 40 + " 2026-11-12 results/objective2/s2/S2B_PLAN.md\n", os.path.join(frd, "CAMPAIGN_COMMIT"))
+        spot.on = False                                                      # the C1 notice was for boot B
+        lf = open(os.path.join(base, "runner_fr.log"), "w")
+        p = subprocess.Popen([sys.executable, me, "run", "--campaign", "fr", "--root", R, "--mock"], env=env, stdout=lf,
+                             stderr=subprocess.STDOUT, start_new_session=True)
+        procs["fr"] = p
+        hp = os.path.join(L.a2_dir("fr", FR_ORDER[0]), f"{FR_ORDER[0]}.p1.out")
+        wait_for(lambda: os.path.exists(hp) and "number of scf cycles    =   4" in open(hp).read(), 240,
+                 "host_R(A188) to reach k = 3")
+        spot.fire()
+        wait_for(lambda: p.poll() is not None, 300, "the fr runner to end")
+        log = open(os.path.join(base, "runner_fr.log")).read()
+        assert p.returncode == 0 and os.path.exists(os.path.join(frd, "CAMPAIGN_DONE")), (p.returncode, log[-2000:])
+        recs = [read_json(os.path.join(L.a2_dir("fr", x), f"{x}.a2.json")) for x in FR_ORDER]
+        assert [r["status"] for r in recs] == ["complete", "complete", "not_run_gate", "not_run_gate"], [r["status"] for r in recs]
+        reason = f"FR early stop at {FR_ORDER[1]} (check; S2B section 2)"
+        assert all(r["status_reason"] == reason for r in recs[2:]), [r.get("status_reason") for r in recs]
+        assert recs[0]["restarts"] == 1 and len(recs[0]["parts"]) == 2 and recs[0]["end_rule"]["outcome"] == \
+            "accepted_converged", recs[0]
+        it = [json.loads(x) for x in open(os.path.join(frd, "interruptions.jsonl"))]
+        assert [x["cause"] for x in it if x["label"] == FR_ORDER[0]] == ["spot-notice"], it
+        vf0, vf1 = recs[0]["validity_final"], recs[1]["validity_final"]
+        assert vf0["valid"] and vf0["check5_reading"] == "invariant" and not vf0["invariant_only"], vf0
+        assert vf1["valid"] is False and vf1["failed"] == [5] and vf1["failed_as_written"] == [5] and \
+            vf1["check5_reading"] == "invariant", vf1
+        st1 = read_json(sp_)
+        fs = st1.get("fr_stop") or {}
+        assert (fs.get("at"), fs.get("kind")) == (FR_ORDER[1], "check") and st1["FR"] == dec_fr["FR"], st1
+        assert st1["fr_step0"]["outcome"] == "pass" and st1["campaign_commit"] == {"fr": "e" * 40}
+        assert st1["commit"] == st0["commit"] and st1["commit_history"][-1]["via"] == "fr/CAMPAIGN_COMMIT"
+        assert Runner.protected(st1, prot0[0]) == prot0, "a protected state key changed"
+        comp = read_json(os.path.join(frd, "completeness.json"))["jobs"]
+        assert comp["gate:fr_step0@4"] == "skipped" and comp["gate:fr_step0@2"] == "done" and comp["gate:FR"] == "done", comp
+        assert comp["a2v:" + FR_ORDER[2]] == comp["a2v:" + FR_ORDER[3]] == "skipped", comp
+        clog = open(os.path.join(frd, "campaign.log")).read()
+        assert clog.count("FR early stop at") == 1 and "checks evaluated (check 5 invariant)" in clog and \
+            "final-geometry checks passed" not in clog and "final-geometry checks FAILED" not in clog
+        # the early-stop line names the cell and kind only, no validity leaf or check state (N-FR7, D-C2-5)
+        assert [x.split("] ", 1)[1] for x in clog.splitlines() if "FR early stop at" in x] == [reason], clog[-1500:]
+        # FR_IMPL_DECISIONS_R5 R5-1: no validity-leaf key on any line of the log
+        assert not re.search(r"'valid':|\"valid\":|valid_as_written|validity_final", clog), clog[-800:]
+        assert {c: tree_sha(os.path.join(W, c)) for c in ("c1", "c2", "c3")} == trees0 and not os.path.isdir(os.path.join(W, "c4"))
+        assert "fr" in read_json(os.path.join(W, "ledger", f"boot.{bootC}.json"))["campaigns"]
+        assert read_json(os.path.join(frd, "campaign.json"))["commit"] == "e" * 40
+        assert read_json(os.path.join(frd, "campaign.json"))["fr_outcome"] == "fail (FR-1)"
+        # gate FR evaluated by scripts/49 on the runner-written records agrees with the runner's scan (FR-1 fails at
+        # V+_R, so no relaxation output is opened)
+        g_fr = g49.evaluate_gate("FR", c46.Layout(kind="node", root=R), "fr", st1)
+        assert g_fr["decision"] == dec_fr and (g_fr["decision"]["FR"]["cell"], g_fr["decision"]["FR"]["kind"]) == \
+            (fs["at"], fs["kind"]) and {o["mode"] for o in g_fr["opened"]} <= {"files", "records"}, g_fr["decision"]
+        assert glob.glob(os.path.join(frd, "CAMPAIGN_COMMIT.used.*")) and not os.path.exists(os.path.join(frd, "CAMPAIGN_COMMIT"))
+        stage = os.path.join(base, "pull_fr")
+        os.makedirs(os.path.join(stage, "jobs"), exist_ok=True)
+        shutil.copytree(W, os.path.join(stage, "work"), ignore=shutil.ignore_patterns("smoke", "tp", "tmp"))
+        ar = archive(stage, "fr", os.path.join(base, "archive", "fr"))
+        assert os.path.exists(os.path.join(base, "archive", "fr", "raw", f"{FR_ORDER[0]}.p2.out.gz")) and \
+            os.path.exists(os.path.join(base, "archive", "fr", "raw", f"{FR_ORDER[1]}.a2.json")), ar
+        # R4-3 (N-FR3): archive --campaign fr refuses, before anything is read or written, an --out inside
+        # results/objective2/s2 whose first component there is not exactly 'fr': in a fake checkout c3 (absent), c1/x,
+        # c1/fr, the directory itself, case variants, a link and a dangling link, a case-variant spelling of the
+        # directory, and names that only begin with 'fr' (fr_old, frx: exactly 'fr', not a prefix; integration review
+        # 2); through the CLI once; this checkout's own trees by the rule alone (no write tried there); s2/fr
+        # accepted; c1 and c4 keep their earlier refusals (the rule is not applied to them)
+        fk = os.path.join(base, "fakerepo", "results", "objective2", "s2")
+        write_text("kept\n", os.path.join(fk, "c1", "kept.txt"))
+        os.symlink(os.path.join(fk, "c3"), os.path.join(base, "link_c3"))            # dangling: c3 is never made
+        os.symlink(os.path.join(fk, "c1"), os.path.join(base, "link_c1"))
+
+        def listing(top):
+            return sorted((os.path.relpath(os.path.join(dp, x), top), os.path.isdir(os.path.join(dp, x)))
+                          for dp, ds, fs_ in os.walk(top) for x in ds + fs_), tree_sha(top)
+        fk0 = listing(os.path.join(base, "fakerepo"))
+        bad_outs = [os.path.join(fk, "c3"), os.path.join(fk, "c1", "x"), os.path.join(fk, "c1", "fr"), fk,
+                    os.path.join(fk, "C3"), os.path.join(fk, "Fr"), os.path.join(fk, "FR", "x"),
+                    os.path.join(fk, "s2b"), os.path.join(base, "link_c3"), os.path.join(base, "link_c1", "x"),
+                    os.path.join(base, "fakerepo", "Results", "objective2", "S2", "c3"), os.path.join(fk, "fr_old"),
+                    os.path.join(fk, "frx", "fr")]
+        for o in bad_outs:
+            try:
+                archive(stage, "fr", o); raise AssertionError(f"archive --campaign fr --out {o} accepted")
+            except S2Error as e:
+                assert str(e).startswith("archive --campaign fr: --out lies under results/objective2/s2 (") and \
+                    str(e).endswith("), not under its fr tree (N-FR3): nothing written"), (o, e)
+        pr_ = subprocess.run([sys.executable, me, "archive", "--stage", stage, "--campaign", "fr", "--out",
+                              os.path.join(fk, "c3")], env=env, capture_output=True, text=True, timeout=120)
+        assert pr_.returncode != 0 and "not under its fr tree (N-FR3): nothing written" in pr_.stderr, \
+            (pr_.returncode, pr_.stderr[-800:])
+        assert listing(os.path.join(base, "fakerepo")) == fk0 and not os.path.lexists(os.path.join(fk, "c3")), \
+            "a refused --out wrote under the fake checkout"
+        s2_ = os.path.join(ROOT, "results", "objective2", "s2")
+        for o in ("c1", "c2", "c3", "C1", os.path.join("c1", "fr"), "s2b", "", "fr2", "fr_old"):
+            assert archive_out_refusal(os.path.join(s2_, o)) is not None, o
+        assert archive_out_refusal(os.path.join(s2_, "fr")) is None and \
+            archive_out_refusal(os.path.join(base, "archive", "fr")) is None
+        for c, o, word in (("c4", os.path.join(fk, "c3"), "no pulled campaign directory for c4"),
+                           ("c1", os.path.join(fk, "c1"), "the archive directory exists and is not empty")):
+            try:
+                archive(stage, c, o); raise AssertionError(f"archive --campaign {c} --out {o} accepted")
+            except S2Error as e:
+                assert str(e) == word, (c, e)
+        assert listing(os.path.join(base, "fakerepo")) == fk0
+        ar2 = archive(stage, "fr", os.path.join(fk, "fr"))
+        assert ar2["labels"] == ar["labels"] and \
+            os.path.exists(os.path.join(fk, "fr", "raw", f"{FR_ORDER[0]}.p2.out.gz")), ar2
+        return (f"{'/'.join(refused_)} at the S2b HEAD: exit 2, nothing written; CAMPAIGN_COMMIT admitted the HEAD; host_R "
+                f"spot notice and restart; V+_R check 5 failed: early stop {fs.get('at')} ({fs.get('kind')}), D and D+V "
+                f"not_run_gate, fr_step0@4 skipped, gate FR agrees (scripted, and scripts/49 on the runner's records); "
+                f"CAMPAIGN_DONE with fr_outcome 'fail (FR-1)'; protected keys and c1-c3 files unchanged; boot "
+                f"{bootC[:8]} lists fr; archive {ar['labels']} labels; archive --out: {len(bad_outs)} paths inside "
+                f"results/objective2/s2 outside fr refused (and one through the CLI), nothing written; s2/fr accepted")
+    case("(fr) S2b campaign fr on the mock node after C1 (N-FR1 to N-FR8)", c_fr_campaign)
 
     def c_a2stop():
         R3 = os.path.join(base, "a2stop", "data")
@@ -5897,7 +6732,8 @@ def self_test(work=None):
         rn = Runner("c1", R, MockBackend(R))
         sts = [("c1", synthetic_state(a2_layout=None)), ("c1", synthetic_state(a2_layout="2x32")),
                ("c1", synthetic_state(a2_layout="64")), ("c2", synthetic_state()), ("c3", synthetic_state()),
-               ("c3", synthetic_state(n=10, pose={"Cs": "multi", "Cl": "multi"})), ("c4", synthetic_state())]
+               ("c3", synthetic_state(n=10, pose={"Cs": "multi", "Cl": "multi"})), ("c4", synthetic_state()),
+               ("fr", synthetic_state())]
         cats = 0
         for c, st in sts:
             g = graph(c, st, sites=lambda m: S2.get(m) or site_sets(m))
@@ -5984,6 +6820,8 @@ def self_test(work=None):
         intr = [json.loads(x) for x in open(os.path.join(cd, "interruptions.jsonl"))] \
             if os.path.exists(os.path.join(cd, "interruptions.jsonl")) else []
         assert rc1 == 3 and "smoke tests n1/n3 incomplete" in (cj.get("stop_reason") or ""), (rc1, cj.get("stop_reason"))
+        # IX-10 (integration review 2): begin_stop records fr_outcome at a STOP of fr only; a c1 STOP leaves no such key
+        assert "fr_outcome" not in cj, sorted(cj)
         assert d1.get("status") == "missing" and "pw.x error" in (d1.get("reason") or ""), d1
         assert not os.path.isdir(os.path.join(n1d, "discarded")), "n1 was rerun"           # one attempt (N-D10)
         assert not any(str(x.get("label", "")).startswith("s2smoke_ref232_n1") for x in intr), intr
@@ -6024,8 +6862,8 @@ def self_test(work=None):
             except Stop as e:
                 assert "NODE_FIX refused" in str(e), e
                 msgs.append(str(e).split(": ", 1)[1][:40])
-        return (f"n1 pw.x error: one attempt, missing, no interruption; throughput STOP names the smoke tests; new HEAD "
-                f"refused; NODE_FIX + RESOLVE rerun: commit_history (also in campaign.json beside start_commit, round-4 R4-C1-6), c0 {sm['mapping']['c0']}, throughput row, MACE "
+        return (f"n1 pw.x error: one attempt, missing, no interruption; throughput STOP names the smoke tests (no "
+                f"fr_outcome in c1's campaign.json: IX-10); new HEAD refused; NODE_FIX + RESOLVE rerun: commit_history (also in campaign.json beside start_commit, round-4 R4-C1-6), c0 {sm['mapping']['c0']}, throughput row, MACE "
                 f"phase reached; NODE_FIX refused: {msgs}")
     case("(z2) smoke-test failure: STOP, NODE_FIX and RESOLVE (round-3 R3-C1-2, -3, -5)", c_smoke_stop)
 
@@ -6852,9 +7690,9 @@ def self_test(work=None):
         camp = camp.replace(a_, f"R={nog}; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup")
         write_text(camp, os.path.join(sysd, "camp.sh"))
         _node_scripts(sysd)
-        pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), "c1"], capture_output=True, text=True,
+        pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), "fr"], capture_output=True, text=True,
                             env=dict(os.environ, PATH=os.path.join(sysd, "bin") + os.pathsep + os.environ.get("PATH", "")))
-        assert pr.returncode == 1 and "git failed" in pr.stderr and not os.path.exists(os.path.join(W, "c1", "driver.out")), \
+        assert pr.returncode == 1 and "git failed" in pr.stderr and not os.path.exists(os.path.join(W, "fr", "driver.out")), \
             (pr.returncode, pr.stderr[-300:])
         return "no .git: STOP; a git checkout: 40-hex HEAD, clean, then dirty; s2_campaign.sh in a non-repository: exit 1, nothing started"
     case("(z19) git failures are a STOP (round-4 R4-C1-3 node)", c_git_state)
@@ -6987,7 +7825,7 @@ def self_test(work=None):
         assert rr == 1 and "no S2 work tree" in so, (rr, so)
         # a refusal of s2_campaign.sh itself (the checkout is not clean): the stale KEEP_ALIVE goes
         W = os.path.join(Rm, "work", "s2"); co = os.path.join(Rm, "work", "ps_s2")
-        os.makedirs(os.path.join(W, "c1"), exist_ok=True); os.makedirs(os.path.join(co, "ehpc", "node"), exist_ok=True)
+        os.makedirs(os.path.join(W, "fr"), exist_ok=True); os.makedirs(os.path.join(co, "ehpc", "node"), exist_ok=True)
         camp = open(os.path.join(ROOT, "ehpc", "node", "s2_campaign.sh")).read()
         camp = camp.replace("R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2",
                             f"R={co}; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup")
@@ -6997,8 +7835,8 @@ def self_test(work=None):
         for cmd in (["init", "-q"], ["add", "-A"], ["commit", "-q", "-m", "s2 self-test"]):
             subprocess.run(["git", "-C", co] + cmd, check=True, env=ge, capture_output=True)
         write_text("x\n", os.path.join(co, "stray.txt"))
-        write_json({"status": "running"}, os.path.join(W, "c1", "campaign.json"))
-        ka_ = os.path.join(Rm, "KEEP_ALIVE"); write_text("S2 c1\n", ka_)
+        write_json({"status": "running"}, os.path.join(W, "fr", "campaign.json"))
+        ka_ = os.path.join(Rm, "KEEP_ALIVE"); write_text("S2 fr\n", ka_)
         bt_ = time.time() - 600
         os.utime(ka_, (bt_ - 3600, bt_ - 3600))
         rr2, so2 = r3_relaunch(sysd, Rm, btime=bt_, campaign_sh=True)
@@ -7240,6 +8078,1114 @@ def self_test(work=None):
                 "a C2 STEP0_FIX moves C2's check records alike; until check:upf passes the moved record's Cl/Ca MD5 "
                 "are used, a re-check with other MD5 STOPs")
     case("(z28) a NODE_FIX re-runs the C1 checks at the new commit (round-5 R5-2; round-6 R6-C1-1)", c_nodefix_checks)
+
+    # ---------------------------------------------------------------- S2b campaign fr (S2B_PLAN.md sections 2, 9)
+    PLAN_NOTE = "results/objective2/s2/S2B_PLAN.md"                  # tracked, and it contains 2026-11-12
+
+    def fr_mini(tag, cfg=None, **over):
+        """A temporary node with a C2-done state (K3 fail_replan) and an fr runner on the real fr graph."""
+        sysd, Rm = mini(tag, cfg=cfg)
+        st = synthetic_state(commit="8" * 40, K3="fail_replan", campaigns={"c1": "done", "c2": "done", "c3": "not_run"},
+                             commit_history=[{"from": "7" * 40, "to": "8" * 40, "note": "synthetic", "time": "t"}])
+        st.update(over)
+        write_json(st, os.path.join(Rm, "work", "s2", "state.json"))
+        write_json({"mapping": {"affine_slope_1": True, "nstep_first": 201}}, os.path.join(Node(Rm).c("c1"), "smoke.json"))
+        return sysd, Rm, fr_load(Rm)
+
+    def fr_git(head, **over):
+        """The mock git answers of the dated routes (N-FR2): commits 8 (the S2 commit) -> e -> f, the plan note tracked
+        and changed on each step."""
+        e8, e, f = "8" * 40, "e" * 40, "f" * 40
+        c_ = {"git_head": head, "git_ancestors": [[e8, e], [e8, f], [e, f]], "git_tracked_paths": [PLAN_NOTE],
+              "git_changed": {f"{e8}..{e}": [PLAN_NOTE], f"{e8}..{f}": [PLAN_NOTE], f"{e}..{f}": [PLAN_NOTE]}}
+        c_.update(over)
+        return c_
+
+    def withheld_s2b():
+        """S2B section 1: the field names of the S2b guard (s2b/guard.py WITHHELD_S2B); without that file, those of
+        scripts/49 FR_ENERGY_FIELDS, the step-0 and FR-2 inputs and the D-C2-12 list."""
+        gp = os.path.join(ROOT, "results", "objective2", "s2", "s2b", "guard.py")
+        if not os.path.exists(gp):
+            return set(g49.FR_ENERGY_FIELDS) | {"F_sp_eV", "F_k0_eV", "F_final_eV", "dF_200_180_meV", "value_meV",
+                                                "Eb_A2_meV"}
+        s_ = importlib.util.spec_from_file_location("s2b_guard", gp)
+        m_ = importlib.util.module_from_spec(s_); s_.loader.exec_module(m_)
+        return set(m_.WITHHELD_S2B)
+
+    def fr_load(Rm, c="fr"):
+        rn = Runner(c, Rm, MockBackend(Rm)); rn.boot = "m-boot"
+        rn.state = rn.load_state()
+        rn.be.graph = lambda c_, s: graph(c_, s, sites=lambda m: S2[m])
+        if c == "fr":
+            rn.graph_now()
+        return rn
+
+    def used_at(fn, p, T=1767225600):
+        """N-FR2, N-FR6: fn() renames the fr route file p at the fixed clock T while p.used.<T> and p.used.<T>.1 of
+        earlier renames in that second exist: p goes to p.used.<T>.2 and the earlier copies stay as they were."""
+        prev = {p + f".used.{T}": "earlier copy 0 (self-test)\n", p + f".used.{T}.1": "earlier copy 1 (self-test)\n"}
+        for q, t in prev.items():
+            write_text(t, q)
+        body, t0 = open(p).read(), time.time
+        time.time = lambda: float(T)
+        try:
+            out = fn()
+        finally:
+            time.time = t0
+        assert all(open(q).read() == t for q, t in prev.items()) and not os.path.exists(p) and \
+            open(p + f".used.{T}.2").read() == body, (p, sorted(glob.glob(p + ".used.*")))
+        return out
+
+    def fr_done(rn, lab, *, valid=True, inv_only=False, check=True):
+        """A complete FR relaxation; with check, its section 11 check recorded as scripts/50 writes it for fr."""
+        kw = {}
+        if check:
+            kw["validity_final"] = {"valid": valid, "failed": [] if valid else [5], "check5_reading": "invariant",
+                                    "valid_as_written": valid and not inv_only,
+                                    "failed_as_written": [] if valid and not inv_only else [5], "invariant_only": inv_only}
+        put_rec(rn, lab, status="complete", end_rule={"outcome": "accepted_converged"}, n_config=41, k0_seen=True,
+                final_geometry={"file": f"{lab}.final.extxyz", "k": 40, "sha256": "0" * 64}, **kw)
+        if check:
+            c46.dump_public({"validity": {"valid": valid, "failed": [] if valid else [5]}}, rn.a2v_out(lab))
+
+    def c_fr_units():
+        """S2b fr (N-FR1 to N-FR4, N-FR7, N-FR8): graph and counts; the dated commit route accepted, refused for each
+        condition with state.json byte-identical, accepted again at the same HEAD, refused at another, STEP0_FIX only
+        at fail_pending_fix and resumable after a start cut short before its save or before its rename (the leftover
+        only at repeat_pending with the recorded history entry; both logged), .used names of the same second kept;
+        c1-c4 starts at the S2b HEAD (on the node also without a readable state.json) return 2 and write nothing;
+        a2_stopped reads no C2 key; key isolation (every non-S2b campaigns entry among the rows); gate FR against
+        fr_stop; the fr fields and log line of run_a2v, an invariant-only pass through scripts/46 and the scan; status
+        keys."""
+        out = []
+        st = synthetic_state()
+        g = graph("fr", st)
+        exp, _ = assert_counts(g, st)
+        assert exp == {"a2": 4, "a2_validate": 4, "gate": 3} and g["counts"] == exp, g["counts"]
+        assert FR_ORDER == tuple(g49.FR_ORDER) and set(FR_STEP0_AT.values()) == set(g49.FR_STEP0_PAIRS.values())
+        jb = {j["id"]: j for j in g["jobs"]}
+        assert [j["label"] for j in g["jobs"] if j["kind"] == "a2"] == list(FR_ORDER)
+        par = {x: jb["a2v:" + x]["parent"] for x in FR_ORDER}
+        assert par == {FR_ORDER[0]: None, FR_ORDER[1]: FR_ORDER[0], FR_ORDER[2]: FR_ORDER[0], FR_ORDER[3]: FR_ORDER[1]}, par
+        assert jb["a2v:" + FR_ORDER[3]]["deps"] == ["a2:" + FR_ORDER[3], "a2:" + FR_ORDER[1]]
+        assert jb["gate:FR"]["deps"] == ["a2v:" + x for x in FR_ORDER] and jb["gate:FR"]["phase"] == "gate"
+        assert all(not j["deps"] for j in g["jobs"] if j["kind"] == "a2")                   # the order is the scan's
+        assert graph_ref_fr(st).to_json()["counts"] == exp and PHASES["fr"] == ("check", "a2", "gate")
+        assert all(a1_of_a2(x)["a1"] == g49.a1_start_of(x) for x in FR_ORDER)
+        out.append("graph: 4 a2, 4 checks (V+ -> host_R, D -> host_R, D+V -> V+_R), 3 gates; FR_ORDER == scripts/49")
+        # the dated route (N-FR2); the mock git answers come from lists: 8 -> e -> f, the plan note tracked and changed
+        sysd, Rm, rn = fr_mini("frroute", cfg=fr_git("e" * 40))
+        cfgp, sp_ = os.path.join(sysd, "mock", "config.json"), rn.node.state
+        cfp = os.path.join(rn.cdir, "CAMPAIGN_COMMIT")
+        os.makedirs(rn.cdir, exist_ok=True)
+        raw0 = open(sp_, "rb").read()
+        p0 = Runner.protected(read_json(sp_))
+        good = "e" * 40 + f" 2026-11-12 {PLAN_NOTE}\n"
+
+        def refused_route(line, word, cfg=None, over=None, name="CAMPAIGN_COMMIT"):
+            write_json(fr_git("e" * 40, **(cfg or {})), cfgp)
+            f_ = os.path.join(rn.cdir, name)
+            if line is None:
+                if os.path.exists(f_):
+                    os.remove(f_)
+            else:
+                write_text(line, f_)
+            r_ = fr_load(Rm)
+            r_.state.update(over or {})
+            try:
+                r_.check_commit(); raise AssertionError(f"route accepted: {line!r} {cfg} {over}")
+            except Stop as e:
+                assert word in str(e), (word, str(e))
+            assert open(sp_, "rb").read() == raw0 and (line is None or os.path.exists(f_)), line
+            write_json(fr_git("e" * 40), cfgp)
+        rows = [(None, "no fr/CAMPAIGN_COMMIT", None, None), ("e" * 40 + " 2026-11-12\n", "tokens", None, None),
+                (good.strip() + " extra\n", "tokens", None, None),
+                ("f" * 40 + f" 2026-11-12 {PLAN_NOTE}\n", "is not the checkout HEAD", None, None),
+                ("e" * 40 + f" 2026-11-1x {PLAN_NOTE}\n", "YYYY-MM-DD", None, None),
+                ("e" * 40 + f" 12-11-2026 {PLAN_NOTE}\n", "YYYY-MM-DD", None, None),
+                ("e" * 40 + " 2026-11-12 /data/x.md\n", "relative path", None, None),
+                ("e" * 40 + " 2026-11-12 results/objective2/s2/../s2/S2B_PLAN.md\n", "relative path", None, None),
+                ("e" * 40 + " 2026-11-12 scripts/50_s2_campaign.py\n", "relative path", None, None),
+                ("e" * 40 + f" 1999-01-01 {PLAN_NOTE}\n", "does not contain its date", None, None),
+                ("e" * 40 + " 2026-11-12 results/objective2/s2/x" + chr(0x20AC) + ".md\n", "hygiene", None, None),
+                (good, "not tracked", {"git_tracked_paths": []}, None),
+                (good, "not an ancestor", {"git_ancestors": [["e" * 40, "f" * 40]]}, None),
+                (good, "differ from the recorded S2 commit",
+                 {"git_changed": {"8" * 40 + ".." + "e" * 40: [PLAN_NOTE, "ehpc/node/chain.sh"]}}, None),
+                (good, "is not changed between", {"git_changed": {"8" * 40 + ".." + "e" * 40: []}}, None),
+                ("e" * 40 + " 2026-11-12 results/objective2/s2/C2_RESULT.md\n", "is not changed between",
+                 {"git_tracked_paths": [PLAN_NOTE, "results/objective2/s2/C2_RESULT.md"]}, None),
+                (good, "C2 is not done", None, {"campaigns": {"c1": "done", "c2": "running"}})]
+        for line, word, cfg, over in rows:
+            refused_route(line, word, cfg, over)
+        write_text(good, cfp)
+        r1 = fr_load(Rm); used_at(r1.check_commit, cfp)                       # a .used name of the same second kept
+        s1 = read_json(sp_)
+        h = s1["commit_history"][-1]
+        assert s1["campaign_commit"] == {"fr": "e" * 40} and s1["commit"] == "8" * 40 and len(s1["commit_history"]) == 2
+        assert h == {**h, "from": "8" * 40, "to": "e" * 40, "note": f"2026-11-12 {PLAN_NOTE}", "via": "fr/CAMPAIGN_COMMIT",
+                     "campaign": "fr"}, h
+        assert not os.path.exists(cfp) and glob.glob(cfp + ".used.*")
+        r2 = fr_load(Rm); r2.check_commit()                                   # again at the same HEAD
+        assert read_json(sp_) == s1
+        r2.set_campaign("running")
+        assert read_json(os.path.join(r2.cdir, "campaign.json"))["commit"] == "e" * 40
+        raw1 = open(sp_, "rb").read()
+        write_json(fr_git("f" * 40), cfgp)
+        try:
+            fr_load(Rm).check_commit(); raise AssertionError("another HEAD accepted")
+        except Stop as e:
+            assert "is not the recorded fr campaign commit" in str(e), e
+        assert open(sp_, "rb").read() == raw1
+        write_json(fr_git("e" * 40), cfgp)
+        write_text(good, cfp); used_at(fr_load(Rm).check_commit, cfp, T=1767225700)   # a leftover naming the fr commit
+        # FR_IMPL_DECISIONS_R5 R5-3 (N4_12): the leftover with the checkout at another HEAD STOPs, naming the fr commit
+        write_text(good, cfp); write_json(fr_git("f" * 40), cfgp)
+        try:
+            fr_load(Rm).check_commit(); raise AssertionError("a CAMPAIGN_COMMIT leftover ran at another HEAD")
+        except Stop as e:
+            assert "is not the recorded fr campaign commit" in str(e), e
+        assert open(sp_, "rb").read() == raw1, "the STOP changed state.json"
+        write_json(fr_git("e" * 40), cfgp)
+        if os.path.exists(cfp):
+            os.remove(cfp)
+        assert not os.path.exists(cfp) and open(sp_, "rb").read() == raw1
+        write_text("f" * 40 + f" 2026-11-12 {PLAN_NOTE}\n", cfp)
+        try:
+            fr_load(Rm).check_commit(); raise AssertionError("a second CAMPAIGN_COMMIT accepted")
+        except Stop as e:
+            assert "names another commit" in str(e), e
+        os.remove(cfp)
+        # STEP0_FIX: only at fail_pending_fix, checked as the first route, HEAD a strict descendant of the fr commit
+        # and the note changed since it (N-FR2, N-FR6)
+        fixl = "f" * 40 + f" 2026-11-12 {PLAN_NOTE}\n"
+        raw0 = raw1
+        write_json(fr_git("f" * 40), cfgp)
+        write_text(fixl, os.path.join(rn.cdir, "STEP0_FIX"))
+        try:
+            fr_load(Rm).check_commit(); raise AssertionError("STEP0_FIX accepted without a step-0 failure")
+        except Stop as e:
+            assert "not fail_pending_fix" in str(e), e
+        assert open(sp_, "rb").read() == raw0
+        s_ = read_json(sp_)
+        s_["fr_step0"] = {"attempts": 1, "outcome": "fail_pending_fix", "repeat": False, "fix_note": None, "cell": FR_ORDER[1]}
+        write_json(s_, sp_)
+        raw0 = open(sp_, "rb").read()
+        # refused: f descends from the S2 commit but not from the fr commit e; HEAD = the fr commit (git counts a
+        # commit as its own ancestor); the note not changed from e to f (also when it changed from the S2 commit 8 to
+        # f: the diff is taken from the fr commit)
+        fixe = "e" * 40 + f" 2026-11-12 {PLAN_NOTE}\n"
+        for line, cfg_, word in ((fixl, fr_git("f" * 40, git_ancestors=[["8" * 40, "e" * 40], ["8" * 40, "f" * 40]]),
+                                  "not an ancestor"),
+                                 (fixe, fr_git("e" * 40), "strict descendant"),
+                                 (fixl, fr_git("f" * 40, git_changed={"8" * 40 + ".." + "e" * 40: [PLAN_NOTE]}),
+                                  "is not changed between"),
+                                 (fixl, fr_git("f" * 40, git_changed={"8" * 40 + ".." + "e" * 40: [PLAN_NOTE],
+                                                                      "8" * 40 + ".." + "f" * 40: [PLAN_NOTE]}),
+                                  "is not changed between " + "e" * 12)):
+            write_json(cfg_, cfgp)
+            write_text(line, os.path.join(rn.cdir, "STEP0_FIX"))
+            try:
+                fr_load(Rm).check_commit(); raise AssertionError(f"STEP0_FIX accepted ({word})")
+            except Stop as e:
+                assert word in str(e) and "STEP0_FIX" in str(e), (word, e)
+            assert open(sp_, "rb").read() == raw0 and os.path.exists(os.path.join(rn.cdir, "STEP0_FIX"))
+        write_json(fr_git("f" * 40), cfgp)
+        write_text(fixl, os.path.join(rn.cdir, "STEP0_FIX"))
+        r6 = fr_load(Rm)
+        fr_done(r6, FR_ORDER[0])
+        put_rec(r6, FR_ORDER[1], status="killed_by_gate")
+        keep = {"gates/K9.json": {}, "gates_applied/gate_fr_step0_4.json": {}, "upf_check.json": {"passed": True}}
+        trio = ["gates_applied/gate_fr_step0_2" + s for s in (".json", ".gate.json", ".inputs.json")]
+        for rel in ["gates/fr_step0.json"] + trio + list(keep):
+            write_json({"x": 1}, os.path.join(r6.cdir, rel))
+        # a start cut short before the one save (N-FR6): nothing recorded, STEP0_FIX kept, the files moved so far stay
+        # aside; the next start accepts the same STEP0_FIX (the moves skip what is absent)
+        r5 = fr_load(Rm)
+
+        def crash():
+            raise RuntimeError("self-test: the start ends before its save")
+        r5.save_state = crash
+        try:
+            r5.check_commit(); raise AssertionError("the STEP0_FIX route did not reach its save")
+        except RuntimeError:
+            pass
+        assert open(sp_, "rb").read() == raw0 and os.path.exists(os.path.join(rn.cdir, "STEP0_FIX"))
+        assert not os.path.exists(r6.a2_path(FR_ORDER[1])) and not os.path.exists(os.path.join(r6.cdir, "upf_check.json"))
+        r6.check_commit()
+        s6 = read_json(sp_)
+        lg6 = open(os.path.join(rn.cdir, "campaign.log")).read()          # nothing left to move; no dir not made named
+        assert "FR step-0 repeat prepared" in lg6 and "none of its 5 attempt-1 paths left to move" in lg6 and \
+            all(os.path.isdir(os.path.join(rn.cdir, x)) for x in re.findall(r"discarded/step0_attempt1_\d+", lg6)), \
+            lg6[-600:]
+        assert s6["campaign_commit"]["fr"] == "f" * 40 and s6["commit"] == "8" * 40
+        assert s6["commit_history"][-1]["via"] == "fr/STEP0_FIX" and s6["commit_history"][-1]["from"] == "e" * 40
+        f6 = s6["fr_step0"]
+        assert f6["outcome"] == "repeat_pending" and f6["repeat"] and f6["fix_note"] == f"2026-11-12 {PLAN_NOTE}" and \
+            f6["attempt1"] == {"attempts": 1, "outcome": "fail_pending_fix", "cell": FR_ORDER[1]}, f6
+        dd = glob.glob(os.path.join(r6.cdir, "discarded", "step0_attempt1_*"))
+        assert len(dd) == 1
+        moved = sorted(os.path.relpath(os.path.join(dp, f), dd[0]) for dp, _, fs in os.walk(dd[0]) for f in fs)
+        assert moved == sorted([f"a2/{FR_ORDER[1]}/{FR_ORDER[1]}.a2.json", "gates/fr_step0.json"] + trio), moved
+        # IX-2 contract (integration review 1): the archive publishes these set-aside gate files under
+        # fr/step0_attempt1/{gates,gates_applied}/ by the names E lists (e_eval route_fr: step0_attempt1/gates_applied/
+        # gate_fr_step0_<2|4>.json), the FR figure and the 6b read test; the attempt-1 A2 record stays on the node
+        stg = os.path.join(base, "pull_fr_repeat")
+        shutil.copytree(os.path.join(Rm, "work", "s2"), os.path.join(stg, "work"),
+                        ignore=shutil.ignore_patterns("smoke", "tp", "tmp"))
+        os.makedirs(os.path.join(stg, "jobs"), exist_ok=True)
+        aro = os.path.join(base, "archive_fr_repeat")
+        archive(stg, "fr", aro)
+        pub_ = sorted(os.path.relpath(os.path.join(dp, f), os.path.join(aro, "step0_attempt1"))
+                      for dp, _, fs in os.walk(os.path.join(aro, "step0_attempt1")) for f in fs)
+        assert pub_ == sorted(["gates/fr_step0.json"] + trio), pub_
+        assert not [f for dp, _, fs in os.walk(aro) for f in fs if f == f"{FR_ORDER[1]}.a2.json" and
+                    "step0_attempt1" in dp], "an attempt-1 A2 record was published"
+        assert os.path.exists(r6.a2_path(FR_ORDER[0])) and os.path.exists(r6.a2v_out(FR_ORDER[0]))
+        assert all(os.path.exists(os.path.join(r6.cdir, k)) for k in keep if k != "upf_check.json")
+        assert glob.glob(os.path.join(r6.cdir, "discarded", "commit_*", "upf_check.json"))       # the checks run again
+        assert Runner.protected(s6, p0[0]) == p0                                    # no protected key changed
+        assert len(s6["commit_history"]) == 3 and not os.path.exists(os.path.join(rn.cdir, "STEP0_FIX"))
+        # a start cut short after the save, before the rename: the leftover STEP0_FIX (the recorded commit and note,
+        # repeat_pending) is renamed at the next start with no state change; another STEP0_FIX at repeat_pending STOPs
+        fx_ = os.path.join(rn.cdir, "STEP0_FIX")
+        used_ = glob.glob(fx_ + ".used.*")
+        assert len(used_) == 1 and re.fullmatch(r"STEP0_FIX\.used\.\d+", os.path.basename(used_[0])), used_  # base free
+        shutil.copyfile(used_[0], fx_)
+        raw6 = open(sp_, "rb").read()
+        r7 = fr_load(Rm)
+        r7.fr_route_files(r7.state); used_at(r7.check_commit, fx_, T=1767225800)
+        lg7 = open(os.path.join(rn.cdir, "campaign.log")).read()
+        assert lg7.count("fr/STEP0_FIX: the applied route's leftover renamed .used, no state change") == 1
+        # the line: repeat_pending since the last history entry's time (R3-7), no other value
+        assert [x.split("] ", 1)[1] for x in lg7.splitlines() if "fr/STEP0_FIX: the applied route's leftover" in x] == \
+            ["fr/STEP0_FIX: the applied route's leftover renamed .used, no state change (N-FR6); fr_step0 repeat_pending "
+             f"since {read_json(sp_)['commit_history'][-1]['time']}"], lg7[-800:]
+        assert read_json(sp_)["commit_history"][0]["time"] != read_json(sp_)["commit_history"][-1]["time"]
+        assert open(sp_, "rb").read() == raw6 and not os.path.exists(fx_) and glob.glob(fx_ + ".used.*")
+        # FR_IMPL_DECISIONS_R5 R5-3 (N4_11): the leftover with the checkout at another HEAD STOPs, naming the fr commit
+        shutil.copyfile(used_[0], fx_); write_json(fr_git("e" * 40), cfgp)
+        try:
+            fr_load(Rm).check_commit(); raise AssertionError("a STEP0_FIX leftover let a start run at another HEAD")
+        except Stop as e:
+            assert "is not the recorded fr campaign commit" in str(e), e
+        assert open(sp_, "rb").read() == raw6, "the STOP changed state.json"
+        write_json(fr_git("f" * 40), cfgp); open(sp_, "wb").write(raw6)
+        if os.path.exists(fx_):
+            os.remove(fx_)
+        for bad_ in ("e" * 40 + f" 2026-11-12 {PLAN_NOTE}\n", "f" * 40 + f" 2026-11-13 {PLAN_NOTE}\n"):
+            write_text(bad_, fx_)
+            try:
+                fr_load(Rm).check_commit(); raise AssertionError(f"a STEP0_FIX at repeat_pending accepted: {bad_!r}")
+            except Stop as e:
+                assert "fr/STEP0_FIX refused" in str(e) and "repeat_pending" in str(e), e
+            assert open(sp_, "rb").read() == raw6 and os.path.exists(fx_)
+        # the leftover's other conditions: with campaign_commit, the history and the fix note as recorded, the applied
+        # route's file at fr_step0 pass or fail_final, or at repeat_pending with the last history entry's via or to
+        # changed, STOPs (state.json byte-identical, the file kept; N-FR6)
+        write_text(fixl, fx_)
+        s7 = read_json(sp_)
+        n_lo = 0
+        for what_, edit_ in (("outcome pass", lambda s: s["fr_step0"].__setitem__("outcome", "pass")),
+                             ("outcome fail_final", lambda s: s["fr_step0"].__setitem__("outcome", "fail_final")),
+                             ("via", lambda s: s["commit_history"][-1].__setitem__("via", "fr/CAMPAIGN_COMMIT")),
+                             ("to", lambda s: s["commit_history"][-1].__setitem__("to", "e" * 40))):
+            sx_ = copy.deepcopy(s7); edit_(sx_); write_json(sx_, sp_)
+            rawx = open(sp_, "rb").read()
+            try:
+                fr_load(Rm).check_commit(); raise AssertionError(f"the STEP0_FIX leftover accepted with {what_} changed")
+            except Stop as e:
+                assert "fr/STEP0_FIX refused" in str(e) and "this start changed nothing" in str(e), (what_, e)
+            assert open(sp_, "rb").read() == rawx and os.path.exists(fx_) and open(fx_).read() == fixl, what_
+            n_lo += 1
+        open(sp_, "wb").write(raw6)
+        os.remove(fx_)
+        # the repeat at D+V (@4): only that cell, gates/fr_step0.json and the @4 marker trio move (N-FR6)
+        sysd4, Rm4, r4 = fr_mini("frfix4", cfg=fr_git("f" * 40), campaign_commit={"fr": "e" * 40},
+                                 fr_step0={"attempts": 1, "outcome": "fail_pending_fix", "repeat": False, "fix_note": None,
+                                           "cell": FR_ORDER[3]})
+        for lab in FR_ORDER[:3]:
+            fr_done(r4, lab)
+        put_rec(r4, FR_ORDER[3], status="killed_by_gate")
+        trios = {n: ["gates_applied/gate_fr_step0_" + n + s for s in (".json", ".gate.json", ".inputs.json")]
+                 for n in ("2", "4")}
+        for rel in ["gates/fr_step0.json"] + trios["2"] + trios["4"]:
+            write_json({"x": 1}, os.path.join(r4.cdir, rel))
+        before4 = tree_sha(r4.cdir)
+        write_text(fixl, os.path.join(r4.cdir, "STEP0_FIX"))
+        r4.check_commit()
+        dd4 = glob.glob(os.path.join(r4.cdir, "discarded", "step0_attempt1_*"))
+        moved4 = sorted(os.path.relpath(os.path.join(dp, f), dd4[0]) for dp, _, fs in os.walk(dd4[0]) for f in fs)
+        assert len(dd4) == 1 and moved4 == sorted([f"a2/{FR_ORDER[3]}/{FR_ORDER[3]}.a2.json", "gates/fr_step0.json"] +
+                                                  trios["4"]), moved4
+        after4 = tree_sha(r4.cdir)
+        assert all(after4.get(k) == v for k, v in before4.items() if k not in moved4), \
+            sorted(k for k, v in before4.items() if k not in moved4 and after4.get(k) != v)     # the @2 trio, the cells
+        assert read_json(r4.node.state)["fr_step0"]["outcome"] == "repeat_pending"
+        assert f"5 of its 5 attempt-1 paths moved to {os.path.relpath(dd4[0], r4.cdir)};" in \
+            open(os.path.join(r4.cdir, "campaign.log")).read()                  # the directory the files went to
+        inp4, att4 = r4.gate_inputs(r4.G["jobs_by_id"]["gate:fr_step0@4"])
+        assert att4 == 2 and inp4["cells"] == ["s2_m30_Cs188o0_vac"], inp4
+        # some attempt-1 paths not there (here the @4 trio's .inputs.json): the log names the directory of the ones
+        # moved now and says where the others are (R3-7)
+        sysd4p, Rm4p, r4p = fr_mini("frfix4p", cfg=fr_git("f" * 40), campaign_commit={"fr": "e" * 40},
+                                    fr_step0={"attempts": 1, "outcome": "fail_pending_fix", "repeat": False,
+                                              "fix_note": None, "cell": FR_ORDER[3]})
+        for lab in FR_ORDER[:3]:
+            fr_done(r4p, lab)
+        put_rec(r4p, FR_ORDER[3], status="killed_by_gate")
+        for rel in ["gates/fr_step0.json"] + trios["4"][:2]:
+            write_json({"x": 1}, os.path.join(r4p.cdir, rel))
+        write_text(fixl, os.path.join(r4p.cdir, "STEP0_FIX"))
+        r4p.check_commit()
+        dd4p = glob.glob(os.path.join(r4p.cdir, "discarded", "step0_attempt1_*"))
+        assert len(dd4p) == 1 and (f"4 of its 5 attempt-1 paths moved to {os.path.relpath(dd4p[0], r4p.cdir)} (the "
+                                   f"others moved aside by an earlier start cut short before its save, or absent);") in \
+            open(os.path.join(r4p.cdir, "campaign.log")).read()
+        out.append(f"route: {len(rows)} refusals with state.json byte-identical, accepted, accepted again at the same "
+                   f"HEAD, refused at another, a leftover file renamed or refused; STEP0_FIX only at fail_pending_fix, "
+                   f"refused off the fr commit's line, at the fr commit itself and with a note unchanged since the fr "
+                   f"commit (also when changed since the S2 commit); a start cut short before the save leaves the state "
+                   f"and STEP0_FIX, the next start accepts it (its log: nothing left to move); a leftover STEP0_FIX after "
+                   f"the save is renamed with no state change and one log line (repeat_pending since the last history "
+                   f"entry's time), another at repeat_pending STOPs, and so "
+                   f"does the leftover itself in {n_lo} rows (fr_step0 pass or fail_final, the last history entry's via "
+                   f"or to changed); .used names of the same second kept (.used.<t>.2), a free .used.<t> taken; the "
+                   f"repeat at V+ moved "
+                   f"{len(moved)} files, at D+V {len(moved4)} (each time the failed cell, gates/fr_step0.json and its own "
+                   f"marker trio, logged with their directory; the other trio and cells stay; attempt 2 at @4); 4 of 5 "
+                   f"paths there: logged with where the others are")
+        # c1-c4 starts at the S2b HEAD (N-FR3)
+        W = os.path.join(Rm, "work", "s2")
+        write_json({"status": "not_run"}, os.path.join(W, "c3", "campaign.json"))
+        write_text("x\n", os.path.join(W, "c2", "CAMPAIGN_DONE"))
+        before = {c: tree_sha(os.path.join(W, c)) for c in ("c1", "c2", "c3", "c4")}
+        stb = open(sp_, "rb").read()
+        for c in ("c1", "c2", "c3", "c4"):
+            assert Runner(c, Rm, MockBackend(Rm)).run() == 2, c
+        assert {c: tree_sha(os.path.join(W, c)) for c in ("c1", "c2", "c3", "c4")} == before and \
+            open(sp_, "rb").read() == stb and not os.path.exists(os.path.join(W, "s2.lock"))
+        write_json({"git_head": "8" * 40}, cfgp)
+        assert Runner("c2", Rm, MockBackend(Rm)).s2b_refusal() is None                        # at the S2 commit
+        rg = Runner("c3", Rm, MockBackend(Rm))
+
+        def gfail():
+            raise Stop("git failed in the checkout (self-test)")
+        rg.be.git_state = gfail
+        assert "git failed" in (rg.s2b_refusal() or "") and rg.run() == 2
+        assert Runner("c2", Rm, MockBackend(Rm)).s2b_refusal() is None and \
+            Runner("fr", Rm, MockBackend(Rm)).s2b_refusal() is None
+        write_json({"git_head": "f" * 40}, cfgp)
+        # on the node a missing or unreadable state.json refuses a c1-c4 start too (nothing written); the mock keeps
+        # its stateless c1 start (N-FR3)
+        sysdN, RmN = mini("frnostate")
+        WN = os.path.join(RmN, "work", "s2")
+        n_ns = 0
+        for content, word in ((None, "no state.json"), ('{"commit": "8', "state.json cannot be read"),
+                              ("[1]\n", "not a JSON object")):
+            if content is not None:
+                write_text(content, os.path.join(WN, "state.json"))
+            beforeN = tree_sha(WN)
+            for c in ("c1", "c3"):
+                rN = Runner(c, RmN, NodeBackend(RmN))
+                assert word in (rN.s2b_refusal() or "") and "N-FR3" in rN.s2b_refusal() and rN.run() == 2, (c, content)
+                n_ns += 1
+            assert tree_sha(WN) == beforeN and not os.path.exists(os.path.join(WN, "s2.lock")), content
+            if content != "[1]\n":
+                assert Runner("c1", RmN, MockBackend(RmN)).s2b_refusal() is None
+        out.append(f"c1-c4 at the S2b HEAD (or git failing): exit 2, no file, lock or state change; on the node {n_ns} "
+                   f"starts without a readable state.json refused alike")
+        # a2_stopped reads no C2 key (N-FR5)
+        sk = synthetic_state(K2="fail", K3="fail_replan", step0={"outcome": "fail_final"})
+        for c, want in (("fr", False), ("c2", True)):
+            r_ = Runner(c, Rm, MockBackend(Rm)); r_.state = copy.deepcopy(sk)
+            assert r_.a2_stopped() is want, c
+        r_ = Runner("fr", Rm, MockBackend(Rm))
+        for over, want in (({"fr_stop": {"at": FR_ORDER[0], "kind": "end_rule"}}, True),
+                           ({"fr_step0": {"outcome": "fail_pending_fix"}}, True), ({"fr_step0": {"outcome": "fail_final"}}, True),
+                           ({"fr_step0": {"outcome": "repeat_pending"}}, False), ({"fr_step0": {"outcome": "pass"}}, False)):
+            r_.state = {**sk, **over}
+            assert r_.a2_stopped() is want, over
+        out.append("a2_stopped: K2 fail, K3 fail_replan, step0 fail_final: False for fr, True for c2")
+        # key isolation (N-FR4)
+        sysd2, Rm2, rk = fr_mini("frkeys")
+        sp2 = rk.node.state
+        rawk = open(sp2, "rb").read()
+        muts = ((lambda s: s.__setitem__("K3", "pass"), "K3"), (lambda s: s["campaigns"].__setitem__("c2", "running"),
+                                                                 "campaigns.c2"),
+                (lambda s: s.__setitem__("step0", {"outcome": "fail_final"}), "step0"),
+                (lambda s: s.__setitem__("commit", "9" * 40), "commit"),
+                (lambda s: s["commit_history"][0].__setitem__("note", "x"), "commit_history[0]"),
+                (lambda s: s.__setitem__("commit_history", []), "commit_history (entries removed)"),
+                (lambda s: s.__setitem__("cuts", [{"cut": 8}]), "cuts"), (lambda s: s.__setitem__("a2_stopped", True),
+                                                                         "a2_stopped"),
+                (lambda s: s["campaigns"].__setitem__("c3", "running"), "campaigns.c3"),   # every non-S2b entry
+                (lambda s: s["campaigns"].__setitem__("c1", "running"), "campaigns.c1"),
+                (lambda s: s["campaigns"].__setitem__("c4", "not_run"), "campaigns.c4"),
+                (lambda s: s["campaigns"].pop("c3"), "campaigns.c3"))           # FR_IMPL_DECISIONS_R5 R5-7 (N4_08)
+        assert {"c1", "c3"} <= set(read_json(sp2)["campaigns"]) and "c4" not in read_json(sp2)["campaigns"]
+        for mut, name in muts:
+            rk.state = rk.load_state()
+            mut(rk.state)
+            try:
+                rk.save_state(); raise AssertionError("a protected key change was written")
+            except Stop as e:
+                assert "N-FR4" in str(e) and name in str(e).split("key(s) ")[1].split(" changed;")[0].split(", "), (name, e)
+            assert open(sp2, "rb").read() == rawk
+        # a STOP that finds a protected key changed in memory: named, and campaigns.fr = 'stopped' saved from the disk
+        # copy, so that state.json and campaign.json agree (N-FR4)
+        sysd3, Rm3, rs = fr_mini("frstop")
+        rs.state["K3"] = "pass"; rs.state["fr_stop"] = {"at": FR_ORDER[0], "kind": "missing", "time": "t"}
+        rs.begin_stop("self-test stop")
+        s3, c3_ = read_json(rs.node.state), read_json(os.path.join(rs.cdir, "campaign.json"))
+        assert s3["campaigns"]["fr"] == "stopped" == c3_["status"] and s3["K3"] == "fail_replan" and "fr_stop" not in s3
+        assert "key(s) K3 changed" in c3_["stop_reason"] and "K3" in open(os.path.join(rs.cdir, "CAMPAIGN_STOPPED")).read()
+        assert Runner.protected(s3, rs.protect[0]) == rs.protect and rs.state == s3, s3
+        rk.state = rk.load_state()
+        rk.state.update({"fr_stop": {"at": FR_ORDER[0], "kind": "missing", "time": "t"}, "FR": {"outcome": "fail"},
+                         "fr_step0": {"outcome": "pass"}, "campaign_commit": {"fr": "e" * 40}})
+        rk.state["campaigns"]["fr"] = "running"
+        rk.state["commit_history"].append({"from": "8" * 40, "to": "e" * 40, "via": "fr/CAMPAIGN_COMMIT"})
+        rk.save_state()
+        assert read_json(sp2)["fr_stop"]["kind"] == "missing"
+        rk.state = rk.load_state()
+        for k in ("fr_stop", "FR", "fr_step0"):
+            rk.state.pop(k)
+        rk.save_state()
+        # an fr gate decision with another key, and gate FR against fr_stop (N-FR4, N-FR8)
+        cfgk = os.path.join(sysd2, "mock", "config.json")
+        jb = rk.G["jobs_by_id"]
+        os.makedirs(os.path.dirname(rk.node.chain_lock), exist_ok=True)
+        s0ok = {"attempts": 1, "outcome": "pass", "repeat": False, "fix_note": None, "cell": FR_ORDER[1]}
+        frd = {"outcome": "fail", "FR1": False, "FR2": None, "part": "FR-1", "cell": FR_ORDER[0], "kind": "end_rule"}
+        cases = [("gate:fr_step0@2", {"fr_step0": s0ok, "K3": "pass"}, None, "decision keys"),
+                 ("gate:fr_step0@2", {"step0": s0ok}, None, "decision keys"),
+                 ("gate:fr_step0@2", {"fr_step0": {**s0ok, "dF_meV": 0.1}}, None, "decision fields only"),
+                 ("gate:FR", {"FR": {**frd, "invariant_only": False}}, {"at": FR_ORDER[0], "kind": "end_rule"},
+                  "decision fields only"),
+                 ("gate:FR", {"FR": {k: v for k, v in frd.items() if k != "kind"}}, {"at": FR_ORDER[0], "kind": "end_rule"},
+                  "decision fields only"),
+                 ("gate:FR", {"FR": frd}, {"at": FR_ORDER[1], "kind": "check"}, "disagrees"),
+                 ("gate:FR", {"FR": {**frd, "FR1": True, "outcome": "pass", "cell": None, "kind": None}},
+                  {"at": FR_ORDER[0], "kind": "end_rule"}, "disagrees"),
+                 ("gate:FR", {"FR": frd}, None, "disagrees")]
+        n_dis = 0
+        for gid, dec, fs, word in cases:
+            write_json({"gates": {jb[gid]["gate"]: dec}}, cfgk)
+            rk.be.cfg = read_json(cfgk)                                       # MockBackend reads it at start
+            rk.state = rk.load_state()
+            rk.state.pop("fr_stop", None)                                     # run_gate saves the state first
+            if fs:
+                rk.state["fr_stop"] = {**fs, "time": "t"}
+            try:
+                rk.run_gate(jb[gid]); raise AssertionError(f"{gid} {dec} applied")
+            except Stop as e:
+                assert word in str(e), (word, e)
+                if word == "disagrees":
+                    # the whole STOP: it names the guard's reading route of gates/FR.json, which holds the FR-2
+                    # values once FR-1 has passed (S2B section 1), and reaches campaign.json unredacted (R4-2)
+                    f_ = dec["FR"]
+                    assert str(e) == (f"gate FR ({f_['outcome']} at {f_['cell']}, {f_['kind']}) disagrees with the "
+                                      f"runner's early stop {({**fs, 'time': 't'} if fs else None)} (N-FR8): not "
+                                      f"applied; read decision.FR of gates/FR.json through s2b/guard.py GateLeaves "
+                                      f"only (S2B section 1)"), e
+                    assert not c46.hygiene_violations(str(e)) and public_text(str(e)) == str(e), e
+                    n_dis += 1
+            assert rk.state.get("K3") == "fail_replan" and "FR" not in rk.state and not os.path.exists(rk.gate_marker(jb[gid]))
+            # IX-15 (integration review 3): the gate file is written and neither its gates_applied copy nor the marker
+            # is, since E, the FR figure and the 6b read find gate FR 'written but not applied' by these names alone
+            assert os.path.exists(rk.L.gate(rk.c, jb[gid]["gate"])) and \
+                not os.path.exists(rk.gate_marker(jb[gid])[:-5] + ".gate.json"), (gid, "gate copy before the check")
+        assert n_dis == 3, n_dis
+        write_json({"gates": {"FR": {"FR": frd}}}, cfgk)
+        rk.be.cfg = read_json(cfgk)
+        rk.state = rk.load_state(); rk.state["fr_stop"] = {"at": FR_ORDER[0], "kind": "end_rule", "time": "t"}
+        rk.run_gate(jb["gate:FR"])
+        assert rk.state["FR"] == frd and os.path.exists(rk.gate_marker(jb["gate:FR"]))
+        out.append(f"key isolation: {len(muts)} protected changes refused (a STOP naming the key, nothing written), "
+                   f"S2b keys written; a STOP with a changed key in memory names it and saves campaigns.fr = 'stopped' "
+                   f"from disk (state.json and campaign.json agree); {len(cases)} fr gate decisions refused before they "
+                   f"apply (other keys, a dF, invariant_only, a missing field, disagreeing: {n_dis} STOPs naming the "
+                   f"guard's route to decision.FR), an agreeing FR applied")
+        # run_a2v: the fr fields and log line; a c2 runner keeps the 8bff03e fields and line (N-FR7)
+        lines = {}
+        for c, rr in (("fr", rk), ("c2", Runner("c2", Rm2, MockBackend(Rm2)))):
+            rr.boot = "m-boot"
+            if c == "c2":
+                rr.state = synthetic_state()
+            lab = FR_ORDER[1] if c == "fr" else "s2r_m30_VB136"
+            j = {"id": "a2v:" + lab, "kind": "a2v", "label": lab, "ref": True, "cell_kind": "V", "j": 136, "member": "ref233",
+                 "parent": None, "token": None, "leg": None}
+            d = rr.L.a2_dir(c, lab); os.makedirs(d, exist_ok=True)
+            ff = os.path.join(d, f"{lab}.final.extxyz")
+            c46.write_cell(ff, rr.ref_cells()[0])
+            write_json({"label": lab, "status": "complete", "final_geometry": {"file": os.path.basename(ff), "k": 5,
+                                                                               "sha256": sha256_file(ff)}}, rr.a2_path(lab))
+            rr.run_a2v(j)
+            vf = read_json(rr.a2_path(lab))["validity_final"]
+            jobf = read_json(os.path.join(rr.cdir, "jobs46", f"a2v_{lab}.json"))
+            lines[c] = open(os.path.join(rr.cdir, "campaign.log")).read().splitlines()[-1]
+            base6 = {"valid", "failed", "file", "sha256", "parent", "parent_final"}
+            if c == "fr":
+                assert set(vf) == base6 | {"check5_reading", "valid_as_written", "failed_as_written", "invariant_only"}, vf
+                assert vf["check5_reading"] == "invariant" and vf["valid"] and jobf["check5_reading"] == "invariant"
+                assert lines[c].endswith(f"{lab}: section 11 final-geometry checks evaluated (check 5 invariant)") and \
+                    "passed" not in lines[c] and "FAILED" not in lines[c], lines[c]
+            else:
+                assert set(vf) == base6 and "check5_reading" not in jobf and lines[c].endswith("checks passed"), (vf, lines[c])
+        # run_a2v for fr STOPs on a validity without the invariant reading, and records no validity_final (N-FR7)
+        lab = FR_ORDER[2]
+        j = {"id": "a2v:" + lab, "kind": "a2v", "label": lab, "ref": True, "cell_kind": "V", "j": 136, "member": "ref233",
+             "parent": None, "token": None, "leg": None}
+        d = rk.L.a2_dir("fr", lab); os.makedirs(d, exist_ok=True)
+        ff = os.path.join(d, f"{lab}.final.extxyz")
+        c46.write_cell(ff, rk.ref_cells()[0])
+        write_json({"label": lab, "status": "complete", "final_geometry": {"file": os.path.basename(ff), "k": 5,
+                                                                           "sha256": sha256_file(ff)}}, rk.a2_path(lab))
+
+        def run46_as_written(action, jf, log):
+            c46.dump_public({"validity": {"valid": True, "failed": []}}, rk.a2v_out(lab)); return 0
+        rk.be.run46 = run46_as_written
+        try:
+            rk.run_a2v(j); raise AssertionError("an fr check without the invariant reading was recorded")
+        except Stop as e:
+            assert "invariantly" in str(e), e
+        finally:
+            del rk.be.run46
+        assert "validity_final" not in read_json(rk.a2_path(lab))
+        # an FR cell whose check 5 passes only under the invariant reading (a gated FA of V+_R with its two amino
+        # groups exchanged), through the real scripts/46 validate-a2: run_a2v records valid True with invariant_only,
+        # and the scan starts the next cell with no fr_stop (S2B section 2: the invariant reading decides; X4)
+        sysdI, RmI, ri = fr_mini("frinv")
+        fr_done(ri, FR_ORDER[0])
+        vacI = ri.ref_cells()[0]
+        ctxI = c46.ref_context()
+        regI = c46.build_region(ctxI.host, "ref233", 136)
+        c2hI, _ = c46.cell_maps("V", n_host=len(ctxI.host))
+        dvI = np.linalg.norm(find_mic(ctxI.host.positions - np.array(regI["centres"]["v"]), ctxI.host.cell.array)[0],
+                             axis=1)
+        syI, cellI = np.array(vacI.get_chemical_symbols()), vacI.cell.array
+        cpI = [int(i) for i in c46.free_in_cell(regI, "V") if syI[i] == "C" and dvI[c2hI[i]] > c46.PARTNER_CUT_A + 0.3
+               and len(a38.molecule(vacI, int(i), syI, cellI)[1]) == 2][0]
+        molI, nsI = a38.molecule(vacI, cpI, syI, cellI)
+        hsI = lambda nn: [x for x in molI if syI[x] == "H" and
+                          find_mic(np.array([vacI.positions[x] - vacI.positions[nn]]), cellI)[1][0] < 1.25]
+        grpI = [[int(nsI[0])] + hsI(nsI[0]), [int(nsI[1])] + hsI(nsI[1])]
+        assert len(grpI[0]) == len(grpI[1]) == 3, grpI
+        exI = vacI.copy()
+        for a_, b_ in zip(*grpI):
+            exI.positions[a_], exI.positions[b_] = vacI.positions[b_].copy(), vacI.positions[a_].copy()
+        lab = FR_ORDER[1]
+        jI = {"id": "a2v:" + lab, "kind": "a2v", "label": lab, "ref": True, "cell_kind": "V", "j": 136, "member": "ref233",
+              "parent": None, "token": None, "leg": None}
+        os.makedirs(ri.L.a2_dir("fr", lab), exist_ok=True)
+        ffI = os.path.join(ri.L.a2_dir("fr", lab), f"{lab}.final.extxyz")
+        c46.write_cell(ffI, exI)
+        put_rec(ri, lab, status="complete", end_rule={"outcome": "accepted_converged"}, n_config=41, k0_seen=True,
+                final_geometry={"file": os.path.basename(ffI), "k": 40, "sha256": sha256_file(ffI)})
+        ri.run_a2v(jI)
+        vfI = read_json(ri.a2_path(lab))["validity_final"]
+        assert vfI["valid"] is True and vfI["failed"] == [] and vfI["invariant_only"] is True and \
+            vfI["valid_as_written"] is False and vfI["failed_as_written"] == [5], vfI
+        assert ri.fr_scan(ri.statuses()) is False and ri.fr_next == FR_ORDER[2] and "fr_stop" not in ri.state, \
+            (ri.fr_next, ri.state.get("fr_stop"))
+        # status: the S2b keys, decision fields only
+        buf = io.StringIO()
+        old_out, sys.stdout = sys.stdout, buf
+        try:
+            cmd_status(Rm2)
+        finally:
+            sys.stdout = old_out
+        sl = [x for x in buf.getvalue().splitlines() if x.startswith("state (S2b):")]
+        assert sl and all(k in sl[0] for k in S2B_STATE_KEYS) and json.loads(sl[0][len("state (S2b):"):])["FR"] == frd, \
+            buf.getvalue()[-500:]
+        s_ = read_json(rk.node.state); s_["FR"] = {**s_["FR"], "invariant_only": True}; write_json(s_, rk.node.state)
+        buf = io.StringIO()
+        old_out, sys.stdout = sys.stdout, buf
+        try:
+            cmd_status(Rm2)
+        finally:
+            sys.stdout = old_out
+        sl = [x for x in buf.getvalue().splitlines() if x.startswith("state (S2b):")]
+        assert json.loads(sl[0][len("state (S2b):"):])["FR"] == frd, sl                # decision fields only
+        out.append("run_a2v: fr adds check5_reading, valid_as_written, failed_as_written, invariant_only and logs "
+                   "'evaluated (check 5 invariant)', and STOPs on a check without the invariant reading (no "
+                   "validity_final); a V+_R with exchanged FA nitrogens passes invariantly only (scripts/46), is "
+                   "recorded valid with invariant_only and the scan starts D; c2 unchanged; status prints the S2b keys, "
+                   "decision fields only")
+        return "; ".join(out)
+    case("(z29) S2b fr: graph, dated commit route, c1-c4 refusal, stop state, key isolation, run_a2v (N-FR1 to N-FR8)",
+         c_fr_units)
+
+    def c_fr_early():
+        """N-FR1, N-FR5 (S2B section 2, the early stop): a stop at each of the four cells. No cell starts while the
+        check of the cell before it is pending; the next cell starts once it passed (at V+_R and D a pass under the
+        invariant reading only, X4), with no fr_stop; at the failure fr_stop is written once, the later cells become
+        not_run_gate (records and job states) with the FR reason, their checks are skipped and gate FR (agreeing) ends
+        the campaign; a failure at the last cell is caught in the gate phase; after a hard-cap refusal of V+_R the
+        later cells are not_run_gate as well."""
+        out = []
+        fails = ((0, "end_rule"), (1, "check"), (2, "missing"), (3, "check"), (1, "not_started_cap"))
+        for n_, (i, kind) in enumerate(fails):
+            cell = FR_ORDER[i]
+            frd = {"outcome": "fail", "FR1": False, "FR2": None, "part": "FR-1", "cell": cell, "kind": kind}
+            sysd, Rm, rn = fr_mini(f"frearly{n_}", cfg={"gates": {"FR": {"FR": frd}}})
+            os.makedirs(rn.cdir, exist_ok=True)
+            for w in ("upf", "nodescripts"):
+                c46.dump_public({"schema": f"s2-{w}-1", "passed": True}, os.path.join(rn.cdir, f"{w}_check.json"))
+            r3_markers(rn, list(FR_STEP0_AT))                                  # both step-0 gates applied
+            os.makedirs(os.path.dirname(rn.node.chain_lock), exist_ok=True)
+            rn.h_spent = lambda: 100.0
+            launched, checked = [], []
+            rn.a2_launch = lambda j, r, ranks, lay: launched.append(j["label"])
+            rn.run_a2v = lambda j: checked.append(j["label"])                  # the check stays pending
+
+            def tick():
+                rn.graph_now()
+                st_ = rn.statuses()
+                rn.schedule(st_)
+                return st_
+            tick()
+            assert launched == [FR_ORDER[0]], launched
+            for k in range(i + 1):
+                lab = FR_ORDER[k]
+                if k == i and kind == "missing":
+                    put_rec(rn, lab, status="missing")
+                elif k == i and kind == "not_started_cap":                     # cap_ok's record and the sweep
+                    put_rec(rn, lab, status="not_started_cap")
+                    rn.capped = {"job": "a2:" + lab, "kind": "a2", "H_spent_h": 519.0, "outstanding_h": 0.0,
+                                 "expected_h": 9.0, "time": utc()}
+                elif k == i and kind == "end_rule":
+                    put_rec(rn, lab, status="complete", end_rule={"outcome": "unconverged_cap"}, n_config=201)
+                else:
+                    fr_done(rn, lab, check=False)                              # complete; its check pending
+                    launched.clear(); tick()
+                    assert not launched and rn.fr_next is None and checked[-1:] == [lab], (lab, launched, checked)
+                    assert not rn.state.get("fr_stop")
+                    if k < i or kind != "check":
+                        # the check passed; at V+_R and D only under the invariant reading, which decides (X4)
+                        fr_done(rn, lab, inv_only=k in (1, 2))
+                    else:
+                        fr_done(rn, lab, valid=False)                          # the check failed
+                if k < i:
+                    launched.clear(); tick()
+                    assert launched == [FR_ORDER[k + 1]] and not rn.state.get("fr_stop"), (k, launched)
+            st_ = rn.statuses()
+            phase = rn.active_phase(st_)
+            # the last cell, or a cap refusal (every later cell swept to not_started_cap): caught in the gate phase
+            assert phase == ("gate" if i == 3 or kind == "not_started_cap" else "a2"), phase
+            rn.schedule(st_)
+            fs = dict(rn.state.get("fr_stop") or {})
+            assert (fs.get("at"), fs.get("kind")) == (cell, kind), fs
+            for _ in range(4):
+                tick()
+            reason = f"FR early stop at {cell} ({kind}; S2B section 2)"
+            later = [read_json(rn.a2_path(x)) or {} for x in FR_ORDER[i + 1:]]
+            assert all(r.get("status") == "not_run_gate" and r.get("status_reason") == reason for r in later), later
+            clog = open(os.path.join(rn.cdir, "campaign.log")).read()
+            assert read_json(rn.node.state)["fr_stop"] == fs and clog.count("FR early stop at") == 1
+            # the line names the cell and kind only, no validity leaf or check state (N-FR7, D-C2-5)
+            assert [x.split("] ", 1)[1] for x in clog.splitlines() if "FR early stop at" in x] == [reason], \
+                (cell, kind, [x for x in clog.splitlines() if "FR early stop at" in x])
+            # FR_IMPL_DECISIONS_R5 R5-1 (N4_05): no validity-leaf key on any line of the log
+            assert not re.search(r"'valid':|\"valid\":|valid_as_written|validity_final", clog), clog[-800:]
+            st_ = rn.statuses()
+            assert all(st_["a2v:" + x] == "skipped" for x in FR_ORDER[i + 1:]) and st_["gate:FR"] == "done", st_
+            # the later cells' job states follow their not_run_gate records ('not_run'; a cached not_started_cap is
+            # dropped, N-FR5)
+            assert all(st_["a2:" + x] == "not_run" for x in FR_ORDER[i + 1:]), {x: st_["a2:" + x] for x in FR_ORDER}
+            assert rn.state["FR"] == frd and all(x not in launched for x in FR_ORDER[i + 1:]), (rn.state.get("FR"), launched)
+            if n_ == 0:              # IX-4: a STOP after gate FR (a held STOP, N-F20) records the outcome gate FR fixed
+                rn.begin_stop("a synthetic STOP after gate FR (self-test)")
+                cj_ = read_json(os.path.join(rn.cdir, "campaign.json"))
+                assert cj_["status"] == "stopped" and "fr_outcome" in cj_ and cj_["fr_outcome"] == "fail (FR-1)", \
+                    (cj_.get("status"), cj_.get("fr_outcome", "absent"))
+            out.append(f"{cell[8:]} {kind}")
+        # the launch filter itself (N-FR1): a2_phase called directly, every a2 job pending and no check runnable
+        sysd, Rm, rn = fr_mini("frnext")
+        os.makedirs(os.path.dirname(rn.node.chain_lock), exist_ok=True)
+        rn.h_spent = lambda: 100.0
+        launched = []
+        rn.a2_launch = lambda j, r, ranks, lay: launched.append(j["label"])
+        rn.graph_now()
+        st_ = rn.statuses()
+        a2j = [j for j in rn.G["jobs_by_id"].values() if j["kind"] == "a2"]
+        assert all(st_[j["id"]] == "pending" for j in a2j) and all(st_["a2v:" + x] != "pending" or
+                                                                   rn.deps_state(rn.G["jobs_by_id"]["a2v:" + x], st_) != "ok"
+                                                                   for x in FR_ORDER), st_
+        rn.fr_next = None
+        rn.a2_phase(a2j, dict(st_))
+        assert launched == [], launched                                        # fr_next None: nothing starts
+        rn.fr_next = FR_ORDER[2]
+        rn.a2_phase(a2j, dict(st_))
+        assert launched == [FR_ORDER[2]], launched                             # only the cell named by fr_next
+        # IX-4: the outcome a STOP records is the one fr_outcome gives (STEP0_NO_ERROR's fail_final, a gate FR pass or
+        # failure), and null while the decisions fix none (no decision, a step-0 failure pending its fix, a repeat)
+        for s0_, fr_, want in (({"outcome": "fail_final", "no_error_found": True, "attempts": 1}, None, FR_OUTCOMES[3]),
+                               (None, {"outcome": "pass", "part": None}, FR_OUTCOMES[0]),
+                               (None, {"outcome": "fail", "part": "FR-2"}, FR_OUTCOMES[2]),
+                               ({"outcome": "fail_pending_fix", "attempts": 1}, None, None),
+                               ({"outcome": "repeat_pending", "repeat": True}, None, None), (None, None, None)):
+            st0 = dict(rn.state)
+            rn.state.update({k: v for k, v in (("fr_step0", s0_), ("FR", fr_)) if v is not None})
+            assert rn.stop_outcome() == want, (s0_, fr_, rn.stop_outcome())
+            rn.state = st0
+        assert not rn.state.get("FR") and not rn.state.get("fr_step0")
+        rn.begin_stop("a synthetic STOP before any FR decision (self-test)")
+        cj_ = read_json(os.path.join(rn.cdir, "campaign.json"))
+        assert cj_["status"] == "stopped" and "fr_outcome" in cj_ and cj_["fr_outcome"] is None, cj_.get("fr_outcome")
+        return ("early stop at each cell (" + ", ".join(out) + "): fr_stop once, the later cells not_run_gate with the FR "
+                "reason, no start while a check is pending, gate FR applied; the last cell caught in the gate phase; "
+                "a2_phase launches nothing at fr_next None and only fr_next otherwise; a STOP after gate FR records "
+                "fr_outcome 'fail (FR-1)' in campaign.json, one before any decision null, and stop_outcome follows "
+                "fr_outcome (IX-4)")
+    case("(z30) S2b fr: the early stop at each of the four cells (N-FR1, N-FR5)", c_fr_early)
+
+    def c_fr_step0():
+        """N-FR6: a step-0 failure at V+ STOPs naming fr/STEP0_FIX and fr/STEP0_NO_ERROR; a start at fail_pending_fix
+        without either file STOPs; STEP0_NO_ERROR gives fail_final (gate:FR skipped, the cells not run with the step-0
+        reason), is refused when its text breaks a hygiene rule, and survives a start cut short before its save or
+        before its rename (the leftover renamed with no state change); finish() without an FR outcome STOPs before any
+        write; the inputs of fr_step0 (attempt 2 after the
+        repeat, accepted by scripts/49); k = 0 from the A2 record after a relaunch; no gate-result energy in the
+        operator's outputs; the fr preconditions."""
+        out = []
+        s0f = {"attempts": 1, "outcome": "fail_pending_fix", "repeat": False, "fix_note": None, "cell": FR_ORDER[1]}
+        sysd, Rm, rn = fr_mini("frs0", cfg={"gates": {"fr_step0": {"fr_step0": s0f}}})
+        os.makedirs(os.path.dirname(rn.node.chain_lock), exist_ok=True)
+        jb = rn.G["jobs_by_id"]
+        inp, att = rn.gate_inputs(jb["gate:fr_step0@2"])
+        assert att == 1 and inp == {"cells": ["s2_m30_VA188"], "attempt": 1, "fix_note": None}, inp
+        inp, att = rn.gate_inputs(jb["gate:fr_step0@4"])
+        assert inp["cells"] == ["s2_m30_Cs188o0_vac"], inp
+        try:
+            rn.run_gate(jb["gate:fr_step0@2"]); raise AssertionError("a failed FR step-0 did not STOP")
+        except Stop as e:
+            assert "fr/STEP0_FIX" in str(e) and "fr/STEP0_NO_ERROR" in str(e), e
+        assert rn.state["fr_step0"]["outcome"] == "fail_pending_fix" and rn.a2_stopped() and "step0" in rn.state and \
+            rn.state["step0"] == synthetic_state()["step0"]
+        try:
+            fr_load(Rm).preconditions(); raise AssertionError("a start at fail_pending_fix without a route")
+        except Stop as e:
+            assert "STEP0_FIX" in str(e) and "STEP0_NO_ERROR" in str(e), e
+        # STEP0_NO_ERROR whose text breaks a hygiene rule (D-C2-4): a STOP naming the file and the rules, not the text;
+        # no state change, no rename. The rules are those of the JSON records (dump_public of state_end.json at
+        # finish): the last three rows break a JSON rule only (a dollar sign not next to a digit, a URL, a host name),
+        # which the code reading of scripts/46 lets through
+        sp0, ne = rn.node.state, os.path.join(rn.cdir, "STEP0_NO_ERROR")
+        raw_pf = open(sp0, "rb").read()
+        ip4 = ".".join(("10", "0", "0", "12"))
+        url_, host_ = "https" + ":" + "//", "docs" + ".example" + ".org"
+        n_hy = 0
+        for txt_, rule_, json_only in (
+                ("2026-11-20 no error found; recheck cost " + chr(36) + "3 (self-test)\n", "currency", False),
+                (f"2026-11-20 no error found; node {ip4} rechecked (self-test)\n", "IPv4 address", False),
+                ("2026-11-20 no error found; recheck cost 3 " + chr(0xA3) + " (self-test)\n", "currency", False),
+                ("2026-11-20 no error found; checked " + chr(36) + "HOME of the run user (self-test)\n",
+                 "currency symbol", True),
+                (f"2026-11-20 no error found; see {url_}x/notes (self-test)\n", "URL", True),
+                (f"2026-11-20 no error found; see the notes on {host_} (self-test)\n", "host name", True),
+                # FR_IMPL_DECISIONS_R5 R5-4 (N4_01): clean as raw text, a host name only in its JSON dump
+                ("2026-11-20 no error found; see the notes of caf" + chr(0xE9) + ".org (self-test)\n", "host name",
+                 True)):
+            write_text(txt_, ne)                        # the third only in the text itself (JSON escapes it)
+            assert not json_only or c46.hygiene_violations(txt_, kind="code") == [], txt_
+            assert chr(0xE9) not in txt_ or c46.hygiene_violations(txt_) == [], txt_       # R5-4: only as JSON
+            try:
+                fr_load(Rm).preconditions(); raise AssertionError(f"a STEP0_NO_ERROR breaking {rule_} was recorded")
+            except Stop as e:
+                assert "fr/STEP0_NO_ERROR refused" in str(e) and rule_ in str(e) and "hygiene" in str(e) and \
+                    all(x not in str(e) for x in (ip4, chr(36), chr(0xA3), url_, host_)), e
+            assert open(sp0, "rb").read() == raw_pf and open(ne).read() == txt_ and not glob.glob(ne + ".used.*")
+            n_hy += 1
+        # a start cut short before its save: state.json byte-identical, the file kept; the next start applies it. The
+        # text is longer than the 300 characters kept as the note, so the note and the leftover rule use .strip()[:300]
+        # FR_IMPL_DECISIONS_R5 R5-5 (N4_06, N4_07): the text starts with a newline, so the cut must follow the strip
+        good_ne = ("\n2026-11-20 no writer or input error found (self-test): " +
+                   " ".join(f"check {i_} of the attempt-1 logs, environment and inputs found nothing;" for i_ in range(6))
+                   + "\n")
+        assert len(good_ne.strip()) > 300 and good_ne.strip()[:300] != good_ne.strip()
+        write_text(good_ne, ne)
+        ra = fr_load(Rm)
+
+        def crash_save():
+            raise RuntimeError("self-test: the start ends before its save")
+        ra.save_state = crash_save
+        try:
+            ra.preconditions(); raise AssertionError("the STEP0_NO_ERROR route did not reach its save")
+        except RuntimeError:
+            pass
+        assert open(sp0, "rb").read() == raw_pf and open(ne).read() == good_ne
+        assert used_at(fr_load(Rm).preconditions, ne, T=1767225900) is None
+        s_ne = read_json(sp0)["fr_step0"]
+        assert s_ne["outcome"] == "fail_final" and s_ne["no_error_found"] is True and \
+            s_ne["note"] == good_ne.strip()[:300], s_ne
+        # a start cut short after its save, before the rename: the leftover (fail_final, no_error_found, the note of
+        # its text, no STEP0_FIX) is renamed by the next start with no state change and one log line (N-FR6)
+        open(sp0, "wb").write(raw_pf); write_text(good_ne, ne)
+        rc_ = fr_load(Rm)
+
+        def crash_rename(p_):
+            raise RuntimeError("self-test: the start ends before its rename")
+        rc_.rename_used = crash_rename
+        try:
+            rc_.preconditions(); raise AssertionError("the STEP0_NO_ERROR route did not reach its rename")
+        except RuntimeError:
+            pass
+        assert read_json(sp0)["fr_step0"] == s_ne and open(ne).read() == good_ne
+        raw_ff = open(sp0, "rb").read()
+        lo_line = "fr/STEP0_NO_ERROR: the applied route's leftover renamed .used, no state change"
+        n_lo = open(os.path.join(rn.cdir, "campaign.log")).read().count(lo_line)
+        r2 = fr_load(Rm)
+        r2.fr_route_files(r2.state)
+        assert used_at(r2.preconditions, ne, T=1767226000) is None and open(sp0, "rb").read() == raw_ff
+        assert open(os.path.join(rn.cdir, "campaign.log")).read().count(lo_line) == n_lo + 1
+        assert r2.state["fr_step0"]["outcome"] == "fail_final" and r2.state["fr_step0"]["no_error_found"] and \
+            read_json(r2.node.state)["fr_step0"]["outcome"] == "fail_final"
+        assert not os.path.exists(ne) and glob.glob(ne + ".used.*")                     # used once (N-FR6)
+        # another STEP0_NO_ERROR once the route was applied: a STOP that says so (not 'nothing was recorded')
+        write_text("2026-11-21 a second note (self-test)\n", ne)
+        for step in ("check_commit", "preconditions"):
+            try:
+                getattr(fr_load(Rm), step)(); raise AssertionError(f"{step}: a second STEP0_NO_ERROR accepted")
+            except Stop as e:
+                assert "fr/STEP0_NO_ERROR refused" in str(e) and "fr/STEP0_NO_ERROR as applied earlier" in str(e) and \
+                    "nothing was recorded" not in str(e), (step, e)
+            assert open(sp0, "rb").read() == raw_ff and os.path.exists(ne)
+        # R5-5 (N4_10): a stored note that is a proper prefix of the file's text (of 300 characters or fewer) is not
+        # the applied route's leftover: a STOP, state.json unchanged and the file kept
+        s_pre = read_json(sp0); s_pre["fr_step0"] = {**s_pre["fr_step0"], "note": "2026-11-21 a second note"}
+        write_json(s_pre, sp0)
+        raw_pre, txt_ne = open(sp0, "rb").read(), open(ne).read()
+        assert len(txt_ne.strip()) <= 300 and txt_ne.strip().startswith(s_pre["fr_step0"]["note"]) and \
+            txt_ne.strip() != s_pre["fr_step0"]["note"]
+        try:
+            fr_load(Rm).preconditions(); raise AssertionError("a text extending the stored note taken as leftover")
+        except Stop as e:
+            assert "fr/STEP0_NO_ERROR refused" in str(e), e
+        assert open(sp0, "rb").read() == raw_pre and os.path.exists(ne) and open(ne).read() == txt_ne
+        open(sp0, "wb").write(raw_ff)
+        os.remove(ne)
+        r2.graph_now()
+        st_ = r2.statuses()
+        assert st_["gate:FR"] == "skipped" and st_["gate:fr_step0@4"] == "skipped", st_
+        r2.a2_phase([j for j in r2.G["jobs_by_id"].values() if j["phase"] == "a2"], st_)
+        assert all((read_json(r2.a2_path(x)) or {}).get("status_reason") == "FR step-0 fail_final" for x in FR_ORDER)
+        assert r2.fr_outcome() == "fail (step-0 final; gate not evaluated)"
+        # finish() derives the outcome before any write: with fr_step0 pass and no FR decision it STOPs naming N-FR8
+        # and nothing under work/s2 changes (completeness.json, the ledger snapshot, campaign.json, CAMPAIGN_DONE)
+        Wf = os.path.join(Rm, "work", "s2")
+        s_ = read_json(r2.node.state)
+        r3 = fr_load(Rm); r3.state = {**s_, "fr_step0": {**s_["fr_step0"], "outcome": "pass"}}
+        r3.graph_now()
+        before_f = tree_sha(Wf)
+        try:
+            r3.finish(); raise AssertionError("finish() without an FR outcome")
+        except Stop as e:
+            assert "N-FR8" in str(e) and "CAMPAIGN_DONE is not written" in str(e), e
+        assert tree_sha(Wf) == before_f and not os.path.exists(os.path.join(r3.cdir, "CAMPAIGN_DONE"))
+        r2.finish()
+        cj = read_json(os.path.join(r2.cdir, "campaign.json"))
+        assert cj["status"] == "done" and cj["fr_outcome"] == "fail (step-0 final; gate not evaluated)" and \
+            "FR" not in read_json(r2.node.state), cj
+        os.remove(os.path.join(r2.cdir, "CAMPAIGN_DONE"))
+        # a route file outside fr_step0 fail_pending_fix, or both together: a STOP naming it, no state change (N-FR6);
+        # no route applied (repeat False, no no_error_found), so the STOP says nothing was recorded
+        sp_ = r2.node.state
+        fixl = "f" * 40 + f" 2026-11-12 {PLAN_NOTE}\n"
+        n_rf = 0
+        for outc, files_, word in (("pass", ("STEP0_NO_ERROR",), "fr/STEP0_NO_ERROR refused"),
+                                   ("repeat_pending", ("STEP0_NO_ERROR",), "fr/STEP0_NO_ERROR refused"),
+                                   ("fail_final", ("STEP0_NO_ERROR",), "fr/STEP0_NO_ERROR refused"),
+                                   ("pass", ("STEP0_FIX",), "fr/STEP0_FIX refused"),
+                                   ("fail_pending_fix", ("STEP0_FIX", "STEP0_NO_ERROR"), "both present")):
+            s_ = read_json(sp_); s_["fr_step0"] = {**s0f, "outcome": outc}; write_json(s_, sp_)
+            for f_ in files_:
+                write_text(fixl if f_ == "STEP0_FIX" else "2026-11-20 none found\n", os.path.join(rn.cdir, f_))
+            raw = open(sp_, "rb").read()
+            for step in ("check_commit", "preconditions"):
+                try:
+                    getattr(fr_load(Rm), step)(); raise AssertionError(f"{step}: {files_} at {outc} accepted")
+                except Stop as e:
+                    assert word in str(e) and "nothing was recorded" in str(e) and "as applied earlier" not in str(e), \
+                        (step, outc, e)
+                assert open(sp_, "rb").read() == raw and all(os.path.exists(os.path.join(rn.cdir, f_)) for f_ in files_)
+                n_rf += 1
+            for f_ in files_:
+                os.remove(os.path.join(rn.cdir, f_))
+        out.append(f"failure at V+: STOP naming fr/STEP0_FIX and fr/STEP0_NO_ERROR; a start without either STOPs; "
+                   f"{n_hy} STEP0_NO_ERROR texts breaking a hygiene rule STOP naming the rule (state and file as they "
+                   f"were; 3 of them break a JSON rule only); a start cut short before its save leaves both, the next "
+                   f"applies it (a text of {len(good_ne.strip())} characters, its first 300 the note); one cut short "
+                   f"after its save leaves the file, renamed by the next start with no state change and one log line; a "
+                   f"second STEP0_NO_ERROR then STOPs saying the route was applied; .used names of the same second kept; "
+                   "STEP0_NO_ERROR: fail_final (the file renamed .used), gate:FR skipped, cells not run ('FR step-0 "
+                   "fail_final'), fr_outcome 'fail (step-0 final; gate not evaluated)' in campaign.json; STEP0_NO_ERROR "
+                   f"at pass, repeat_pending and fail_final, STEP0_FIX at pass and both files at fail_pending_fix: "
+                   f"{n_rf} STOPs with the state unchanged, each saying nothing was recorded")
+        # the repeat's inputs and scripts/49 (one repeat for FR as a whole)
+        sysd, Rm, rn = fr_mini("frs0b", fr_step0={"attempts": 1, "outcome": "repeat_pending", "repeat": True,
+                                                  "fix_note": f"2026-11-12 {PLAN_NOTE}", "cell": FR_ORDER[1]})
+        jb = rn.G["jobs_by_id"]
+        for gid in FR_STEP0_AT:
+            inp, att = rn.gate_inputs(jb[gid])
+            assert att == 2 and inp["attempt"] == 2 and inp["fix_note"] == f"2026-11-12 {PLAN_NOTE}", inp
+            inp2, _ = g49.derive_inputs("fr_step0", c46.Layout(kind="node", root=Rm), rn.state, dict(inp))
+            assert inp2["attempt"] == 2 and inp2["cells"] == inp["cells"]
+        assert not rn.a2_stopped()
+        rn.state["fr_step0"] = {"attempts": 2, "outcome": "pass", "repeat": True, "fix_note": f"2026-11-12 {PLAN_NOTE}",
+                                "cell": FR_ORDER[1]}                         # after the repeat passed at V+
+        inp, att = rn.gate_inputs(jb["gate:fr_step0@4"])
+        assert att == 2 and inp["attempt"] == 2 and inp["cells"] == ["s2_m30_Cs188o0_vac"], inp
+        # the FR outcome from the decisions (N-FR8)
+        for s0_, fr_, want in (({"outcome": "pass"}, {"outcome": "pass", "part": None}, "pass"),
+                               ({"outcome": "pass"}, {"outcome": "fail", "part": "FR-1"}, "fail (FR-1)"),
+                               ({"outcome": "pass"}, {"outcome": "fail", "part": "FR-2"}, "fail (FR-2)"),
+                               ({"outcome": "fail_final"}, None, "fail (step-0 final; gate not evaluated)"),
+                               ({"outcome": "pass"}, None, None), ({"outcome": "pass"}, {"outcome": "fail", "part": None}, None)):
+            r_ = Runner("fr", Rm, MockBackend(Rm)); r_.state = {"fr_step0": s0_, **({"FR": fr_} if fr_ else {})}
+            try:
+                got = r_.fr_outcome()
+                assert got == want and got in FR_OUTCOMES, (s0_, fr_, got)
+            except Stop as e:
+                assert want is None and "no FR outcome" in str(e), (s0_, fr_, e)
+        # k = 0 read from the A2 record after a relaunch (a2_k0_from_files covers fr)
+        put_rec(rn, FR_ORDER[1], status="complete", end_rule={"outcome": "accepted_converged"}, k0_seen=True, n_config=41)
+        rn.k0 = {}
+        st_ = rn.statuses()
+        assert rn.a2_k0_from_files(FR_ORDER[1]) and rn.deps_state(jb["gate:fr_step0@2"], st_) == "ok"
+        assert rn.deps_state(jb["gate:fr_step0@4"], st_) == "wait"
+        out.append("the repeat: attempt 2 with the note at both step-0 gates (and at @4 after the repeat passed), "
+                   "accepted by scripts/49; fr_outcome for each decision state; k = 0 from the A2 record after a "
+                   "relaunch")
+        # the operator's outputs hold no gate-result energy (S2B section 2: during the campaign only the stop decision
+        # is read; N-FR8): fr_step0 and FR files whose result holds every WITHHELD_S2B field with a sentinel value, at
+        # a pass, at gate FR, at finish() and at a failing step-0 STOP; no name or value reaches campaign.log, the
+        # status output, campaign.json, CAMPAIGN_STOPPED, completeness.json, state.json or state_end.json
+        names = withheld_s2b()
+        sent = {f: -987654.25 - 1000.0 * i for i, f in enumerate(sorted(names))}    # no time or count looks like it
+        res_ = dict(sent, cells={"s2_m30_VA188": dict(sent, passed=True)}, FR2=dict(sent, passed=True), rows=[dict(sent)])
+        s0p = {"attempts": 1, "outcome": "pass", "repeat": False, "fix_note": None, "cell": FR_ORDER[1]}
+        frf = {"outcome": "fail", "FR1": False, "FR2": None, "part": "FR-1", "cell": FR_ORDER[0], "kind": "end_rule"}
+        sysdS, RmS, rS = fr_mini("frsent", cfg={"gates": {"fr_step0": {"fr_step0": s0p}, "FR": {"FR": frf}},
+                                              "gate_results": {"fr_step0": res_, "FR": res_}})
+        os.makedirs(os.path.dirname(rS.node.chain_lock), exist_ok=True)
+        jbS = rS.G["jobs_by_id"]
+        rS.run_gate(jbS["gate:fr_step0@2"])
+        rS.state["fr_stop"] = {"at": FR_ORDER[0], "kind": "end_rule", "time": utc()}
+        rS.run_gate(jbS["gate:FR"])
+        rS.finish()
+        rS.be.cfg["gates"]["fr_step0"] = {"fr_step0": {**s0p, "outcome": "fail_pending_fix", "cell": FR_ORDER[3]}}
+        try:
+            rS.run_gate(jbS["gate:fr_step0@4"]); raise AssertionError("a failed FR step-0 did not STOP")
+        except Stop as e:
+            rS.begin_stop(str(e))
+        buf = io.StringIO()
+        old_out, sys.stdout = sys.stdout, buf
+        try:
+            cmd_status(RmS)
+        finally:
+            sys.stdout = old_out
+        texts = {"status": buf.getvalue(), "state.json": open(rS.node.state).read()}
+        for f_ in ("campaign.log", "campaign.json", "CAMPAIGN_STOPPED", "completeness.json", "state_end.json"):
+            texts[f_] = open(os.path.join(rS.cdir, f_)).read()
+        words = sorted(names) + [repr(v) for v in sent.values()]
+        leak = sorted({(f_, w) for f_, t in texts.items() for w in words if w in t})
+        assert not leak, leak
+        assert texts["campaign.log"].count(": decision {") == 3 and "FR step-0 check failed" in texts["CAMPAIGN_STOPPED"]
+        assert all(repr(v) in open(rS.L.gate("fr", g_)).read() for g_ in ("fr_step0", "FR") for v in sent.values())
+        out.append(f"no gate-result energy ({len(names)} names, their sentinel values) in {len(texts)} operator outputs "
+                   f"after a step-0 pass, gate FR, finish() and a step-0 STOP")
+        # preconditions (N-FR1)
+        rows = [({}, None), ({"campaigns": {"c1": "done", "c2": "running", "c3": "not_run"}}, "c2"),
+                ({"campaigns": {"c1": "done", "c2": "done"}}, "c3"),
+                ({"campaigns": {"c1": "done", "c2": "done", "c3": "not_run", "c4": "not_run"}}, "C4"),
+                ({"a2_layout": "2x32"}, "one copy at a time"), ({"a2_layout": None}, "A2 layout")]
+        write_json({"mapping": {"affine_slope_1": True, "nstep_first": 201}, "at_layout": {"label": "s2smoke_ref232_rst2x32"}},
+                   os.path.join(Node(Rm).c("c1"), "smoke.json"))
+        for over, word in rows:
+            r_ = fr_load(Rm); r_.state.update(over)
+            try:
+                got = r_.preconditions()
+                assert word is None and got is None, (over, got)
+            except Stop as e:
+                assert word is not None and word in str(e), (over, e)
+        MOCKED.append("49_s2_gates.py")
+        try:
+            fr_load(Rm).preconditions(); raise AssertionError("fr ran with the scripts/49 stub")
+        except Stop as e:
+            assert "stub" in str(e), e
+        finally:
+            MOCKED.remove("49_s2_gates.py")
+        out.append(f"preconditions: {len(rows)} rows and the scripts/49 stub")
+        return "; ".join(out)
+    case("(z31) S2b fr: step-0 failure, STEP0_NO_ERROR, the repeat's inputs, k = 0 after a relaunch (N-FR6)", c_fr_step0)
+
+    def c_fr_relaunch():
+        """N-FR1: s2_relaunch.sh relaunches a running fr and lists fr/CAMPAIGN_STOPPED (refusing); s2_campaign.sh
+        accepts fr only."""
+        sysd, Rm = mini("frrel")
+        W = os.path.join(Rm, "work", "s2")
+        write_json({"status": "done"}, os.path.join(W, "c2", "campaign.json")); write_text("x\n", os.path.join(W, "c2", "CAMPAIGN_DONE"))
+        write_json({"status": "running"}, os.path.join(W, "fr", "campaign.json"))
+        rr, so = r3_relaunch(sysd, Rm)
+        assert rr == 0 and "WOULD RELAUNCH fr" in so, (rr, so)
+        write_text("2026-11-20 stopped for the test\n", os.path.join(W, "fr", "CAMPAIGN_STOPPED"))
+        rr2, so2 = r3_relaunch(sysd, Rm)
+        assert rr2 == 1 and f"{W}/fr/CAMPAIGN_STOPPED" in so2 and "WOULD RELAUNCH" not in so2, (rr2, so2)
+        camp = open(os.path.join(ROOT, "ehpc", "node", "s2_campaign.sh")).read()
+        a_ = "R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2"
+        write_text(camp.replace(a_, f"R={sysd}/none; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup"),
+                   os.path.join(sysd, "camp.sh"))
+        for c in ("c1", "c2", "c3", "c4", "c3b"):
+            pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), c], capture_output=True, text=True)
+            assert pr.returncode == 2 and "usage: s2_campaign.sh fr" in pr.stderr, (c, pr.returncode, pr.stderr)
+        return ("a running fr: WOULD RELAUNCH fr; fr/CAMPAIGN_STOPPED listed and the relaunch refused; s2_campaign.sh "
+                "refuses c1-c4 (usage, exit 2)")
+    case("(z32) S2b fr: s2_relaunch.sh and s2_campaign.sh (N-FR1)", c_fr_relaunch)
+
+    def c_fr_git():
+        """N-FR2: the git helpers of the dated routes on a real repository (z19 style): commits A -> B and a side commit
+        C; ancestry both ways and across the branch, tracked and untracked paths, unchanged and changed paths, the
+        changed-path list, and an unknown commit as a STOP."""
+        sysd, Rm = mini("frgit")
+        be = NodeBackend(Rm)
+        rp = os.path.join(sysd, "repo"); os.makedirs(os.path.join(rp, "results"), exist_ok=True)
+        ge = dict(os.environ, GIT_AUTHOR_NAME="s2", GIT_AUTHOR_EMAIL="s2-selftest", GIT_COMMITTER_NAME="s2",
+                  GIT_COMMITTER_EMAIL="s2-selftest", GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+
+        def git_(*a):
+            return subprocess.run(["git", "-C", rp] + list(a), check=True, env=ge, capture_output=True,
+                                  text=True).stdout.strip()
+        git_("init", "-q")
+        write_text("a\n", os.path.join(rp, "kept.txt")); write_text("n1\n", os.path.join(rp, "results", "note.md"))
+        git_("add", "-A"); git_("commit", "-q", "-m", "A"); A = git_("rev-parse", "HEAD")
+        write_text("n2 2026-11-20\n", os.path.join(rp, "results", "note.md"))
+        git_("add", "-A"); git_("commit", "-q", "-m", "B"); B = git_("rev-parse", "HEAD")
+        git_("checkout", "-q", "-b", "side", A)
+        write_text("c\n", os.path.join(rp, "side.txt"))
+        git_("add", "-A"); git_("commit", "-q", "-m", "C"); C = git_("rev-parse", "HEAD")
+        git_("checkout", "-q", B)
+        write_text("u\n", os.path.join(rp, "untracked.txt"))
+        be.node.checkout = rp
+        assert be.git_is_ancestor(A, B) and not be.git_is_ancestor(B, A) and not be.git_is_ancestor(B, C) and \
+            be.git_is_ancestor(A, C) and be.git_is_ancestor(B, B)
+        assert be.git_tracked("kept.txt") and be.git_tracked("results/note.md") and not be.git_tracked("untracked.txt") \
+            and not be.git_tracked("side.txt") and not be.git_tracked("results/none.md")
+        assert be.git_unchanged(A, B, ["kept.txt"]) and not be.git_unchanged(A, B, ["results/note.md"]) and \
+            not be.git_unchanged(A, B, ["kept.txt", "results/note.md"]) and be.git_unchanged(A, C, ["results/note.md"])
+        assert be.git_changed_paths(A, B) == ["results/note.md"] and be.git_changed_paths(A, C) == ["side.txt"] and \
+            sorted(be.git_changed_paths(B, C)) == ["results/note.md", "side.txt"] and be.git_changed_paths(B, B) == []
+        n_bad = 0
+        for bad in (lambda: be.git_is_ancestor("0" * 40, B), lambda: be.git_unchanged("0" * 40, B, ["kept.txt"]),
+                    lambda: be.git_changed_paths("0" * 40, B)):
+            try:
+                bad(); raise AssertionError("an unknown commit was answered")
+            except Stop:
+                n_bad += 1
+        return (f"A -> B, side C: is_ancestor (A,B) True, (B,A) and (B,C) False; tracked and untracked paths; unchanged "
+                f"and changed paths; changed paths A..B, A..C, B..C; {n_bad} unknown-commit calls STOP")
+    case("(z33) S2b fr: the git helpers of the dated routes on a real repository (N-FR2)", c_fr_git)
 
     for p in procs.values():                                   # nothing of the simulated campaign is left running
         if p.poll() is None:
