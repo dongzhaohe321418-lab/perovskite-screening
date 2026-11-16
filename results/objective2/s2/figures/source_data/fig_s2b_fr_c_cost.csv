@@ -1,0 +1,24 @@
+key,value
+fr_node_h,23.027007358405324
+fr_boots,2
+fr_boot_split_at_c2_ledger,False
+c2_tail_h,0.040445951819421566
+retimed_boots,0
+retimed_boots_h,0.0
+manual_rows_new,0
+manual_rows_new_h,0.0
+other_boots_h,0.0
+problem_rows,0
+ledger_complete,True
+ledger_problems,0
+H_spent_h,114.98761320590972
+H_spent_c2_ledger_h,91.92015989568498
+ledger_now_utc,2026-11-15T23:19:43Z
+wall_h_sum,22.75525415784783
+uncovered_h,0.2717532005574945
+early_stop,False
+cells_run,host V D D+V
+plan_fr_node_h,22-58
+step0_repeat,False
+plan_repeat_max_h,72
+cap_h,520.0

@@ -1,0 +1,4 @@
+gate,state,detail,attempt,cell,kind,stops_fr
+fr_step0@2,pass,attempt 1,1,s2r_m30_VA188,,False
+fr_step0@4,pass,attempt 1,1,s2r_m30_Cs188o0_vac,,False
+FR,pass,FR-1 and FR-2 passed (|δ_far| ≤ 50 meV),,,,True

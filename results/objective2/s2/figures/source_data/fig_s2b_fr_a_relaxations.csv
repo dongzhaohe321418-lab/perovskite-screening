@@ -1,0 +1,5 @@
+order,label,role,status,line,outcome,end,n_config,k_last,converged_at_k,restarts,reruns_from_zero,interruptions,ranks,wall_h,min_per_config,n_free,n_fixed,part_starts,step0_rerun,status_text
+1,s2r_m30_hostA188,host,complete,complete,accepted_converged,,82,81,81,0,1,1,64,5.787404448721144,4.234686181991081,64,169,,False,complete
+2,s2r_m30_VA188,V,complete,complete,accepted_converged,,82,81,81,0,0,0,64,5.8115774457322225,4.2523737407796744,63,169,,False,complete
+3,s2r_m30_Cs188o0_novac,D,complete,complete,accepted_converged,,81,80,80,0,0,0,64,5.736191630694601,4.249030837551556,57,169,,False,complete
+4,s2r_m30_Cs188o0_vac,DV,complete,complete,accepted_converged,,77,76,76,0,0,0,64,5.42008063269986,4.22343945405184,56,169,,False,complete
