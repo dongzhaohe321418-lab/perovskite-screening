@@ -1,0 +1,30 @@
+{
+ "schema": "s2-completeness-1",
+ "campaign": "fr",
+ "by_category": {
+  "a2": {
+   "done": 4
+  },
+  "a2_validate": {
+   "done": 4
+  },
+  "gate": {
+   "done": 3
+  }
+ },
+ "jobs": {
+  "check:upf": "done",
+  "check:nodescripts": "done",
+  "a2:s2r_m30_hostA188": "done",
+  "a2:s2r_m30_VA188": "done",
+  "a2:s2r_m30_Cs188o0_novac": "done",
+  "a2:s2r_m30_Cs188o0_vac": "done",
+  "a2v:s2r_m30_hostA188": "done",
+  "a2v:s2r_m30_VA188": "done",
+  "a2v:s2r_m30_Cs188o0_novac": "done",
+  "a2v:s2r_m30_Cs188o0_vac": "done",
+  "gate:fr_step0@2": "done",
+  "gate:fr_step0@4": "done",
+  "gate:FR": "done"
+ }
+}

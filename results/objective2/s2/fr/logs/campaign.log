@@ -1,0 +1,27 @@
+[2026-11-14T23:40:25Z] start fr; boot a40e2fee; pid 5656; mocked none
+[2026-11-14T23:40:25Z] S2b campaign commit of fr recorded (N-FR2, X13): 0a3e8f0f07df; note: 2026-11-14 results/objective2/s2/FR_OPERATIONS.md
+[2026-11-14T23:40:26Z] measured walls loaded: a2 8, a2_config 8, host 2, mace 158, smoke 6, sp 124, sp_g1 3, sp_spin 2, throughput 4
+[2026-11-14T23:40:31Z] check upf: passed
+[2026-11-14T23:40:31Z] check nodescripts: passed
+[2026-11-14T23:40:36Z] pw.x s2r_m30_hostA188.p1 started at 64 ranks (pid 5935)
+[2026-11-14T23:45:26Z] spot termination notice recorded: nothing new starts for 1800 s (N-11); exit files for every running A2 part
+[2026-11-14T23:45:26Z] s2r_m30_hostA188: exit file created (spot)
+[2026-11-14T23:46:01Z] s2r_m30_hostA188: no usable restart data (spot-notice): rerun from k = 0 (1 of 2)
+[2026-11-15T00:32:52Z] start fr; boot c077dd73; pid 4916; mocked none
+[2026-11-15T00:32:52Z] measured walls loaded: a2 8, a2_config 8, host 2, mace 158, smoke 6, sp 124, sp_g1 3, sp_spin 2, throughput 4
+[2026-11-15T00:32:57Z] pw.x s2r_m30_hostA188.p1 started at 64 ranks (pid 5195)
+[2026-11-15T06:20:25Z] s2r_m30_hostA188: complete, 82 configurations, end rule accepted_converged
+[2026-11-15T06:20:26Z] s2r_m30_hostA188: section 11 final-geometry checks evaluated (check 5 invariant)
+[2026-11-15T06:20:31Z] pw.x s2r_m30_VA188.p1 started at 64 ranks (pid 14738)
+[2026-11-15T06:27:13Z] gate gate:fr_step0@2: decision {"fr_step0": {"attempts": 1, "cell": "s2r_m30_VA188", "fix_note": null, "outcome": "pass", "repeat": false}}
+[2026-11-15T12:09:28Z] s2r_m30_VA188: complete, 82 configurations, end rule accepted_converged
+[2026-11-15T12:09:29Z] s2r_m30_VA188: section 11 final-geometry checks evaluated (check 5 invariant)
+[2026-11-15T12:09:34Z] pw.x s2r_m30_Cs188o0_novac.p1 started at 64 ranks (pid 22533)
+[2026-11-15T17:53:59Z] s2r_m30_Cs188o0_novac: complete, 81 configurations, end rule accepted_converged
+[2026-11-15T17:54:00Z] s2r_m30_Cs188o0_novac: section 11 final-geometry checks evaluated (check 5 invariant)
+[2026-11-15T17:54:05Z] pw.x s2r_m30_Cs188o0_vac.p1 started at 64 ranks (pid 30327)
+[2026-11-15T18:00:17Z] gate gate:fr_step0@4: decision {"fr_step0": {"attempts": 1, "cell": "s2r_m30_Cs188o0_vac", "fix_note": null, "outcome": "pass", "repeat": false}}
+[2026-11-15T23:19:31Z] s2r_m30_Cs188o0_vac: complete, 77 configurations, end rule accepted_converged
+[2026-11-15T23:19:32Z] s2r_m30_Cs188o0_vac: section 11 final-geometry checks evaluated (check 5 invariant)
+[2026-11-15T23:19:38Z] gate gate:FR: decision {"FR": {"FR1": true, "FR2": true, "cell": null, "kind": null, "outcome": "pass", "part": null}}
+[2026-11-15T23:19:43Z] end: {'done': 13}; CAMPAIGN_DONE; KEEP_ALIVE removed

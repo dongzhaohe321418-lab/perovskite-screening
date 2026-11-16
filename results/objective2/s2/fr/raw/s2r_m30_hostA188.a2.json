@@ -1,0 +1,71 @@
+{
+ "schema": "s2-a2-1",
+ "label": "s2r_m30_hostA188",
+ "campaign": "fr",
+ "order": 1,
+ "a1_cell": {
+  "work_id": "s2_m30_host"
+ },
+ "layout": {
+  "name": "64",
+  "ranks": 64,
+  "copies": 1
+ },
+ "parts": [
+  {
+   "n": 1,
+   "input": "s2r_m30_hostA188.p1.in",
+   "restart_mode": null,
+   "nstep": 201,
+   "started": "2026-11-15T00:32:57Z",
+   "ended": "2026-11-15T06:20:25Z",
+   "end": "converged",
+   "k_last": 81,
+   "wall_s": 20834.656015396118
+  }
+ ],
+ "reruns_from_zero": 1,
+ "restarts": 0,
+ "interruptions": [
+  {
+   "k": -1,
+   "time": "2026-11-14T23:46:01Z",
+   "boot": "a40e2fee-6aba-4d20-b6ad-19dba240942c",
+   "cause": "spot-notice",
+   "part": 1
+  }
+ ],
+ "status": "complete",
+ "nstep_first": 201,
+ "n_config": 82,
+ "k_last": 81,
+ "k0_seen": true,
+ "qe_converged": true,
+ "converged_at_k": 81,
+ "end_rule": {
+  "outcome": "accepted_converged",
+  "dF_200_180_meV": null,
+  "end": null,
+  "stop": false,
+  "reason": null
+ },
+ "wall_h": 5.787404448721144,
+ "min_per_config": 4.234686181991081,
+ "final_geometry": {
+  "file": "s2r_m30_hostA188.final.extxyz",
+  "k": 81,
+  "sha256": "70e845aa36d963d77413324a0915da0beeaf80626ba250b66911a6d1d065a6a8"
+ },
+ "validity_final": {
+  "valid": true,
+  "failed": [],
+  "file": "s2r_m30_hostA188.validity_final.json",
+  "sha256": "510453dda372f27842b5abc7e821a6a798cc9bbb5d1e15aa6a66d60f8666e272",
+  "parent": null,
+  "parent_final": false,
+  "check5_reading": "invariant",
+  "valid_as_written": true,
+  "failed_as_written": [],
+  "invariant_only": false
+ }
+}

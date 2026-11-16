@@ -1,0 +1,221 @@
+{
+ "schema": "s2-graph-1",
+ "campaign": "fr",
+ "phases": [
+  "check",
+  "a2",
+  "gate"
+ ],
+ "counts": {
+  "a2": 4,
+  "a2_validate": 4,
+  "gate": 3
+ },
+ "jobs": [
+  {
+   "id": "check:upf",
+   "kind": "check",
+   "phase": "check",
+   "deps": [],
+   "seq": 0,
+   "what": "upf"
+  },
+  {
+   "id": "check:nodescripts",
+   "kind": "check",
+   "phase": "check",
+   "deps": [],
+   "seq": 1,
+   "what": "nodescripts"
+  },
+  {
+   "id": "a2:s2r_m30_hostA188",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 2,
+   "label": "s2r_m30_hostA188",
+   "order": 1,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "host",
+   "L": "A",
+   "j": 188,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_host"
+  },
+  {
+   "id": "a2:s2r_m30_VA188",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 3,
+   "label": "s2r_m30_VA188",
+   "order": 2,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "V",
+   "L": "A",
+   "j": 188,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_VA188"
+  },
+  {
+   "id": "a2:s2r_m30_Cs188o0_novac",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 4,
+   "label": "s2r_m30_Cs188o0_novac",
+   "order": 3,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "D",
+   "L": "A",
+   "j": 188,
+   "token": "Cs",
+   "leg": "novac",
+   "a1": "s2_m30_Cs188p0_novac"
+  },
+  {
+   "id": "a2:s2r_m30_Cs188o0_vac",
+   "kind": "a2",
+   "phase": "a2",
+   "deps": [],
+   "seq": 5,
+   "label": "s2r_m30_Cs188o0_vac",
+   "order": 4,
+   "cat": "a2",
+   "member": "m30",
+   "cell_kind": "DV",
+   "L": "A",
+   "j": 188,
+   "token": "Cs",
+   "leg": "vac",
+   "a1": "s2_m30_Cs188p0_vac"
+  },
+  {
+   "id": "a2v:s2r_m30_hostA188",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_hostA188"
+   ],
+   "seq": 6,
+   "label": "s2r_m30_hostA188",
+   "parent": null,
+   "order": 1,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "host",
+   "L": "A",
+   "j": 188,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_host"
+  },
+  {
+   "id": "a2v:s2r_m30_VA188",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_VA188",
+    "a2:s2r_m30_hostA188"
+   ],
+   "seq": 7,
+   "label": "s2r_m30_VA188",
+   "parent": "s2r_m30_hostA188",
+   "order": 2,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "V",
+   "L": "A",
+   "j": 188,
+   "token": null,
+   "leg": null,
+   "a1": "s2_m30_VA188"
+  },
+  {
+   "id": "a2v:s2r_m30_Cs188o0_novac",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_Cs188o0_novac",
+    "a2:s2r_m30_hostA188"
+   ],
+   "seq": 8,
+   "label": "s2r_m30_Cs188o0_novac",
+   "parent": "s2r_m30_hostA188",
+   "order": 3,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "D",
+   "L": "A",
+   "j": 188,
+   "token": "Cs",
+   "leg": "novac",
+   "a1": "s2_m30_Cs188p0_novac"
+  },
+  {
+   "id": "a2v:s2r_m30_Cs188o0_vac",
+   "kind": "a2v",
+   "phase": "a2",
+   "deps": [
+    "a2:s2r_m30_Cs188o0_vac",
+    "a2:s2r_m30_VA188"
+   ],
+   "seq": 9,
+   "label": "s2r_m30_Cs188o0_vac",
+   "parent": "s2r_m30_VA188",
+   "order": 4,
+   "cat": "a2_validate",
+   "member": "m30",
+   "cell_kind": "DV",
+   "L": "A",
+   "j": 188,
+   "token": "Cs",
+   "leg": "vac",
+   "a1": "s2_m30_Cs188p0_vac"
+  },
+  {
+   "id": "gate:fr_step0@2",
+   "kind": "gate",
+   "phase": "a2",
+   "deps": [
+    "k0:s2r_m30_VA188"
+   ],
+   "seq": 10,
+   "gate": "fr_step0",
+   "cat": "gate",
+   "at": "s2r_m30_VA188"
+  },
+  {
+   "id": "gate:fr_step0@4",
+   "kind": "gate",
+   "phase": "a2",
+   "deps": [
+    "k0:s2r_m30_Cs188o0_vac"
+   ],
+   "seq": 11,
+   "gate": "fr_step0",
+   "cat": "gate",
+   "at": "s2r_m30_Cs188o0_vac"
+  },
+  {
+   "id": "gate:FR",
+   "kind": "gate",
+   "phase": "gate",
+   "deps": [
+    "a2v:s2r_m30_hostA188",
+    "a2v:s2r_m30_VA188",
+    "a2v:s2r_m30_Cs188o0_novac",
+    "a2v:s2r_m30_Cs188o0_vac"
+   ],
+   "seq": 12,
+   "gate": "FR",
+   "cat": "gate"
+  }
+ ]
+}

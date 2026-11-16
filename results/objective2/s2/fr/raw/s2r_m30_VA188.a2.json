@@ -1,0 +1,63 @@
+{
+ "schema": "s2-a2-1",
+ "label": "s2r_m30_VA188",
+ "campaign": "fr",
+ "order": 2,
+ "a1_cell": {
+  "work_id": "s2_m30_VA188"
+ },
+ "layout": {
+  "name": "64",
+  "ranks": 64,
+  "copies": 1
+ },
+ "parts": [
+  {
+   "n": 1,
+   "input": "s2r_m30_VA188.p1.in",
+   "restart_mode": null,
+   "nstep": 201,
+   "started": "2026-11-15T06:20:31Z",
+   "ended": "2026-11-15T12:09:28Z",
+   "end": "converged",
+   "k_last": 81,
+   "wall_s": 20921.678804636
+  }
+ ],
+ "reruns_from_zero": 0,
+ "restarts": 0,
+ "interruptions": [],
+ "status": "complete",
+ "nstep_first": 201,
+ "k0_seen": true,
+ "n_config": 82,
+ "k_last": 81,
+ "qe_converged": true,
+ "converged_at_k": 81,
+ "end_rule": {
+  "outcome": "accepted_converged",
+  "dF_200_180_meV": null,
+  "end": null,
+  "stop": false,
+  "reason": null
+ },
+ "wall_h": 5.8115774457322225,
+ "min_per_config": 4.2523737407796744,
+ "final_geometry": {
+  "file": "s2r_m30_VA188.final.extxyz",
+  "k": 81,
+  "sha256": "87f9792c4bf9f56fc7edcaef06ce0e55c1ddef4bbc35b350ab01d038094aea47"
+ },
+ "validity_final": {
+  "valid": true,
+  "failed": [],
+  "file": "s2r_m30_VA188.validity_final.json",
+  "sha256": "dfcb2f553fb1bf98b7199fba88c993177d989409ecf63c4721cd0a401cab203d",
+  "parent": "s2r_m30_hostA188",
+  "parent_final": true,
+  "check5_reading": "invariant",
+  "valid_as_written": true,
+  "failed_as_written": [],
+  "invariant_only": false
+ }
+}

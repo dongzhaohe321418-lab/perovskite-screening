@@ -1,0 +1,19 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:FR",
+ "gate": "FR",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "FR": {
+   "outcome": "pass",
+   "FR1": true,
+   "FR2": true,
+   "part": null,
+   "cell": null,
+   "kind": null
+  }
+ },
+ "gate_file_sha256": "d53243018ad3f2d2c0380c23de138249ffcf4f18419d013a51686a20114bfb13",
+ "applied": "2026-11-15T23:19:38Z"
+}

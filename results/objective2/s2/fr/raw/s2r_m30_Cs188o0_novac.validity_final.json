@@ -1,0 +1,105 @@
+{
+ "schema": "s2-a2validity-1",
+ "label": "s2r_m30_Cs188o0_novac",
+ "kind": "D",
+ "site": 188,
+ "token": "Cs",
+ "leg": "novac",
+ "region_id": "fbd636de95e98e511d96ce0db3ea14f70da91cf483e71d4b4afac2ce0124a425",
+ "parent_label": "s2r_m30_hostA188",
+ "validity": {
+  "checks": {
+   "2": null,
+   "3": {
+    "passed": true,
+    "centre": 225,
+    "displacement_A": 0.37560535577196996
+   },
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 126,
+    "bonds_final": 126,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.6262634004502856,
+    "cn_inorganic_min_A": 3.6249567312692896,
+    "min_pair_A": 1.015012973013378
+   },
+   "5": {
+    "passed": true,
+    "gated": {
+     "n_inorganic": 13,
+     "n_fa": 3,
+     "max_dr_inorganic_A": 0.04471953888032208,
+     "max_dr_fa_carbon_A": 0.05742159992668268,
+     "max_rot_fa_deg": 1.4607404673919737,
+     "worst": {
+      "inorganic": {
+       "index": 125,
+       "d_host_A": 7.906281018989552,
+       "dr_A": 0.04471953888032208
+      },
+      "fa_carbon": {
+       "carbon": 28,
+       "d_host_A": 6.9622889724383,
+       "dr_carbon_A": 0.05742159992668268,
+       "rot_deg": 1.4607404673919737,
+       "rot_exchanged_deg": 179.50094206597922
+      },
+      "fa_rotation": {
+       "carbon": 28,
+       "d_host_A": 6.9622889724383,
+       "dr_carbon_A": 0.05742159992668268,
+       "rot_deg": 1.4607404673919737,
+       "rot_exchanged_deg": 179.50094206597922
+      },
+      "fa_rotation_invariant": {
+       "carbon": 28,
+       "d_host_A": 6.9622889724383,
+       "dr_carbon_A": 0.05742159992668268,
+       "rot_deg": 1.4607404673919737,
+       "rot_exchanged_deg": 179.50094206597922
+      }
+     },
+     "max_rot_fa_invariant_deg": 1.4607404673919737
+    },
+    "within_6A_reported": {
+     "n_inorganic": 19,
+     "n_fa": 0,
+     "max_dr_inorganic_A": 0.3514876877416345,
+     "max_dr_fa_carbon_A": null,
+     "max_rot_fa_deg": null,
+     "worst": {
+      "inorganic": {
+       "index": 190,
+       "d_host_A": 4.564570767966195,
+       "dr_A": 0.3514876877416345
+      },
+      "fa_carbon": null,
+      "fa_rotation": null,
+      "fa_rotation_invariant": null
+     },
+     "max_rot_fa_invariant_deg": null
+    },
+    "passed_as_written": true,
+    "reading": "invariant (D5, check5_diag.py 966aa75)",
+    "fa_needs_exchange": []
+   }
+  },
+  "valid": true,
+  "failed": [],
+  "check5_reading": "invariant",
+  "valid_as_written": true,
+  "failed_as_written": [],
+  "invariant_only": false
+ },
+ "geometry_sha256": {
+  "start": "27a745b47f92404589ad49156dffeb615e4e2ba8454a8886aee5f13ddc2d1884",
+  "final": "11c2f8287c87e6e4f3b1aeaf79fcdca1e72571f9d5792e34bbca22f0ea2a7f8e",
+  "parent_final": "01fb335c5184ea4f3f71b5fcf3ca3705863f76919c57970b288d859c79dffbcf",
+  "host_relaxed": "fba8b424676d555a2d52a2b0fc093ad2e8e5a472e8409c48c136a76765167f83"
+ },
+ "rule": "S2_PLAN.md section 11: section 5 checks 2-5 on the final geometries (host_R: check 4); partner check between the final geometries of child and parent; check 5 read invariantly under the exchange of the two FA nitrogens (S2B_PLAN.md section 2, X4; D5 at 966aa75)",
+ "written": "2026-11-15T17:54:00Z"
+}

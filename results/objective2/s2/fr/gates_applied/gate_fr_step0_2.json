@@ -1,0 +1,18 @@
+{
+ "schema": "s2-gate-applied-1",
+ "id": "gate:fr_step0@2",
+ "gate": "fr_step0",
+ "rc": 0,
+ "attempt": 1,
+ "decision": {
+  "fr_step0": {
+   "attempts": 1,
+   "outcome": "pass",
+   "repeat": false,
+   "fix_note": null,
+   "cell": "s2r_m30_VA188"
+  }
+ },
+ "gate_file_sha256": "8f0e6df86a440c5f107047ee9baf2b659a6414e836f1b393805a44bda5799a72",
+ "applied": "2026-11-15T06:27:13Z"
+}

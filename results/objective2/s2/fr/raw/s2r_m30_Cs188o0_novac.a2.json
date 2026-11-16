@@ -1,0 +1,63 @@
+{
+ "schema": "s2-a2-1",
+ "label": "s2r_m30_Cs188o0_novac",
+ "campaign": "fr",
+ "order": 3,
+ "a1_cell": {
+  "work_id": "s2_m30_Cs188p0_novac"
+ },
+ "layout": {
+  "name": "64",
+  "ranks": 64,
+  "copies": 1
+ },
+ "parts": [
+  {
+   "n": 1,
+   "input": "s2r_m30_Cs188o0_novac.p1.in",
+   "restart_mode": null,
+   "nstep": 201,
+   "started": "2026-11-15T12:09:34Z",
+   "ended": "2026-11-15T17:53:59Z",
+   "end": "converged",
+   "k_last": 80,
+   "wall_s": 20650.289870500565
+  }
+ ],
+ "reruns_from_zero": 0,
+ "restarts": 0,
+ "interruptions": [],
+ "status": "complete",
+ "nstep_first": 201,
+ "k0_seen": true,
+ "n_config": 81,
+ "k_last": 80,
+ "qe_converged": true,
+ "converged_at_k": 80,
+ "end_rule": {
+  "outcome": "accepted_converged",
+  "dF_200_180_meV": null,
+  "end": null,
+  "stop": false,
+  "reason": null
+ },
+ "wall_h": 5.736191630694601,
+ "min_per_config": 4.249030837551556,
+ "final_geometry": {
+  "file": "s2r_m30_Cs188o0_novac.final.extxyz",
+  "k": 80,
+  "sha256": "6eea007656104ab3729c3de0ceae172cffec89b759b88585f3e914650f08cbae"
+ },
+ "validity_final": {
+  "valid": true,
+  "failed": [],
+  "file": "s2r_m30_Cs188o0_novac.validity_final.json",
+  "sha256": "719a6d29cd1644aba7a6758c15de9ba3674cfc881e551c1891538c65d4d6793b",
+  "parent": "s2r_m30_hostA188",
+  "parent_final": true,
+  "check5_reading": "invariant",
+  "valid_as_written": true,
+  "failed_as_written": [],
+  "invariant_only": false
+ }
+}

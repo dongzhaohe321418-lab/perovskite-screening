@@ -1,0 +1,42 @@
+{
+ "schema": "s2-a2validity-1",
+ "label": "s2r_m30_hostA188",
+ "kind": "host",
+ "site": 188,
+ "token": null,
+ "leg": null,
+ "region_id": "fbd636de95e98e511d96ce0db3ea14f70da91cf483e71d4b4afac2ce0124a425",
+ "parent_label": null,
+ "validity": {
+  "checks": {
+   "2": null,
+   "3": null,
+   "4": {
+    "passed": true,
+    "composition_equal": true,
+    "bonds_start": 133,
+    "bonds_final": 133,
+    "bonds_added": [],
+    "bonds_lost": [],
+    "h_inorganic_min_A": 2.6021559199320925,
+    "cn_inorganic_min_A": 3.5908191262050506,
+    "min_pair_A": 1.015012973013378
+   },
+   "5": null
+  },
+  "valid": true,
+  "failed": [],
+  "check5_reading": "invariant",
+  "valid_as_written": true,
+  "failed_as_written": [],
+  "invariant_only": false
+ },
+ "geometry_sha256": {
+  "start": "b818a7865ae35a43f681bd9e969b36d5b1a9375bd357452e7118512dfdac75ea",
+  "final": "01fb335c5184ea4f3f71b5fcf3ca3705863f76919c57970b288d859c79dffbcf",
+  "parent_final": null,
+  "host_relaxed": "fba8b424676d555a2d52a2b0fc093ad2e8e5a472e8409c48c136a76765167f83"
+ },
+ "rule": "S2_PLAN.md section 11: section 5 checks 2-5 on the final geometries (host_R: check 4); partner check between the final geometries of child and parent; check 5 read invariantly under the exchange of the two FA nitrogens (S2B_PLAN.md section 2, X4; D5 at 966aa75)",
+ "written": "2026-11-15T06:20:26Z"
+}

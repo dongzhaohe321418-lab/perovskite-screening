@@ -1,0 +1,169 @@
+{
+ "schema": "s2-gate-1",
+ "gate": "fr_step0",
+ "campaign": "fr",
+ "commit": "0a3e8f0f07df96a948c28dad71ba4dce6108c8f1",
+ "attempt": 1,
+ "opened": [
+  {
+   "label": "smoke:c1",
+   "file": "work/s2/c1/smoke.json",
+   "sha256": "69527badc5811b325856f933a5b259e07b9b444885d4e948c753c7bbee647115",
+   "mode": "files"
+  },
+  {
+   "label": "s2_m30_Cs188o0_vac",
+   "file": "jobs/s2c1/s2_m30_Cs188o0_vac/s2_m30_Cs188o0_vac.out",
+   "sha256": "4ea6f361cc30d00b209d5e1766e379d6fb63a939d5cd722aa436c87860b8f0d4",
+   "mode": "status"
+  },
+  {
+   "label": "s2_m30_Cs188o0_vac",
+   "file": "jobs/s2c1/s2_m30_Cs188o0_vac/s2_m30_Cs188o0_vac.out",
+   "sha256": "4ea6f361cc30d00b209d5e1766e379d6fb63a939d5cd722aa436c87860b8f0d4",
+   "mode": "full"
+  },
+  {
+   "label": "s2r_m30_Cs188o0_vac",
+   "file": "work/s2/fr/a2/s2r_m30_Cs188o0_vac/s2r_m30_Cs188o0_vac.p1.out",
+   "sha256": "a1c27004b903d3c047ecb90b0f5556f6c929d041dce2a000be11e4551ffe2693",
+   "mode": "k0"
+  }
+ ],
+ "inputs_digest": "5db64d210ebf58e5bbeade7c6d0ee201fdb499a0e7e01e6e9cb33dbf08dc1649",
+ "result": {
+  "cells": {
+   "s2_m30_Cs188o0_vac": {
+    "dF_meV": 0.0,
+    "passed": true,
+    "reason": null
+   }
+  },
+  "attempt": 1,
+  "fix_note": null,
+  "outcome": "pass",
+  "tolerance_meV": 0.5
+ },
+ "decision": {
+  "fr_step0": {
+   "attempts": 1,
+   "outcome": "pass",
+   "repeat": false,
+   "fix_note": null,
+   "cell": "s2r_m30_Cs188o0_vac"
+  }
+ },
+ "written": "2026-11-15T18:00:17Z",
+ "state_in": {
+  "schema": "s2-state-1",
+  "commit": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+  "campaigns": {
+   "c1": "done",
+   "c2": "done",
+   "c3": "not_run",
+   "fr": "running"
+  },
+  "cuts": [],
+  "stage0": {
+   "production_n8": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23"
+   ],
+   "reserves_n8": [
+    "m33",
+    "m13"
+   ],
+   "production_n10": [
+    "m06",
+    "m02",
+    "m16",
+    "m12",
+    "m32",
+    "m26",
+    "m22",
+    "m23",
+    "m33",
+    "m13"
+   ],
+   "reserves_n10": [
+    "m17",
+    "m03"
+   ],
+   "m05_cal": {
+    "B": 124,
+    "A": 28,
+    "X": 49
+   },
+   "pbcl": {
+    "decision": "provisional_2.837",
+    "value_used_A": 2.837,
+    "tag_for_shifted_starts": "[M] starting point",
+    "allow_provisional_required": true
+   }
+  },
+  "a2_layout": "64",
+  "G1": {
+   "Cl": true,
+   "Ca": false
+  },
+  "gateN": {
+   "Sr": true,
+   "Ca": true,
+   "Cl": true,
+   "Cs": true,
+   "GA": true
+  },
+  "sr_stop": false,
+  "n": 8,
+  "pose": {
+   "Cs": "default",
+   "Cl": "default"
+  },
+  "step0": {
+   "attempts": 1,
+   "outcome": "pass",
+   "repeat": false,
+   "fix_note": null
+  },
+  "K2": "pass",
+  "multi_pose_cut": {},
+  "c4_run": true,
+  "K3": "fail_replan",
+  "campaign_commit": {
+   "fr": "0a3e8f0f07df96a948c28dad71ba4dce6108c8f1"
+  },
+  "commit_history": [
+   {
+    "from": "8bff03ede8b9d0f380b6ef373b239e7deb87817f",
+    "to": "0a3e8f0f07df96a948c28dad71ba4dce6108c8f1",
+    "note": "2026-11-14 results/objective2/s2/FR_OPERATIONS.md",
+    "time": "2026-11-14T23:40:25Z",
+    "via": "fr/CAMPAIGN_COMMIT",
+    "campaign": "fr"
+   }
+  ],
+  "fr_step0": {
+   "attempts": 1,
+   "outcome": "pass",
+   "repeat": false,
+   "fix_note": null,
+   "cell": "s2r_m30_VA188"
+  }
+ },
+ "inputs_in": {
+  "cells": [
+   "s2_m30_Cs188o0_vac"
+  ],
+  "attempt": 1,
+  "fix_note": null,
+  "no_error_found": false
+ },
+ "c1_in": null,
+ "inputs_opened": []
+}
