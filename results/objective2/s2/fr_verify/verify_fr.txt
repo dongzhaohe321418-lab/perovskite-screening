@@ -1,0 +1,4 @@
+OK   fr FR
+DIFF fr fr_step0
+verify fr: 2 gate files, 1 differ
+exit 1
