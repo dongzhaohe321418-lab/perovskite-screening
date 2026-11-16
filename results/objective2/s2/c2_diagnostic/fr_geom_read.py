@@ -118,6 +118,12 @@ Information state. Written on 2026-11-12, knowing every part-d output, G2 (c2_di
 built from the public C1 geometries; nothing in it bears on an FR result. Revised on 2026-11-12, before any read, after
 review rounds 1 and 2, at integration (IX-1: --stop-note NOTE replaces the bare --final-stop) and at integration
 review 1 (IX-6: the one stop note path and the blob test; IX-9: the --without-wp2e wording) (no fr datum seen).
+Fixed on 2026-11-16 after a failure before output (S2B section 7): the first --read hung and was interrupted with
+nothing printed or written. Cause: _temporary called tempfile.gettempdir() for the first time in the process inside
+the 'open' audit hook; tempfile resolves its directory under a lock that is not re-entrant and opens a probe file
+there, which entered the hook again and waited on that lock for ever. The self-test did not show it because it makes
+its temporary directory before any audit context. The fix is one line: _reading resolves the temporary directory
+before the context is on. No rule, item or printed word of the read is changed (no fr datum seen).
 
 Blinding (S2B sections 0, 1 and 6b; OPS2 D-C2-10 to D-C2-12; amendment part d). fr A2 and validity records are read
 through GuardedS2b of s2b/guard.py, not through fig_s2_c2_a2.Guarded: S2B section 1 extends WITHHELD for fr records by
@@ -162,7 +168,9 @@ guards on placeholder fr raw parts; real G on synthetic fr raw parts cut from th
 variant; skipped by --without-wp2e); the --read discipline (the 6b 'When' rule, output files, attempts, exit codes,
 header, uncommitted code) on a stand-in git and S2; the stop note's phrase and rules against s2b/e_eval.py, E's own
 code compiled from its source, on a throwaway git repository in the temporary directory (IX-1); and the final STOP
-only through a stop note (IX-1: every refusal, the header, the command line) on the stand-in git and S2.
+only through a stop note (IX-1: every refusal, the header, the command line) on the stand-in git and S2; and the
+first open of an audit context in a fresh process, whose temporary directory is not yet resolved (the fix of
+2026-11-16; the code before the fix hangs there and is stopped by the case's time limit).
 """
 import argparse, ast, contextlib, gc, gzip, hashlib, importlib.util, io, json, os, re, shutil, subprocess, sys
 import tarfile, tempfile, types
@@ -309,6 +317,7 @@ def _reading(root, campaign, labels, s2_roots=()):
     if not _HOOK:
         sys.addaudithook(_audit)
         _HOOK.append(True)
+    tempfile.gettempdir()        # resolved before the context is on (fix of 2026-11-16: see 'Information state')
     prev = dict(_CTX)
     _CTX.clear()
     _CTX.update(on=True, root=root, campaign=campaign, labels=tuple(labels), s2_roots=(S2,) + tuple(s2_roots))
@@ -2954,6 +2963,57 @@ def _item5_fa_as_written(gated, fr, f=item5_objects):    # broken: the invariant
     return objs
 
 
+@contextlib.contextmanager
+def _reading_before_fix(root, campaign, labels, s2_roots=()):   # broken: the code before the fix of 2026-11-16
+    if not _HOOK:
+        sys.addaudithook(_audit)
+        _HOOK.append(True)
+    prev = dict(_CTX)
+    _CTX.clear()
+    _CTX.update(on=True, root=root, campaign=campaign, labels=tuple(labels), s2_roots=(S2,) + tuple(s2_roots))
+    try:
+        yield
+    finally:
+        _CTX.clear()
+        _CTX.update(prev)
+
+
+FRESH_LIMIT_S = 120
+_FRESH = r"""
+import importlib.util, os, sys, tempfile
+spec = importlib.util.spec_from_file_location("fr_geom_read_fresh", sys.argv[1])
+m = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = m
+spec.loader.exec_module(m)
+if sys.argv[2] == "before":
+    m._reading = m._reading_before_fix
+if tempfile.tempdir is not None:
+    sys.exit("the temporary directory is already resolved: this is not the state of a fresh read")
+with m._reading(m.S2, "fr", m.FR_ORDER):
+    open(os.devnull).close()
+    if not m._CTX.get("on"):
+        sys.exit("the audit context is not on")
+print("opened")
+"""
+
+
+def t_fresh_tmp():
+    """The first open of an audit context in a fresh process (the fix of 2026-11-16; S2B section 7, a failure before
+    output). A child process loads this file, checks that tempfile has not resolved its directory, enters _reading on
+    the real S2 root with the FR labels, as the read does, and opens os.devnull: no fr file is opened. The code before
+    the fix waits for ever on tempfile's lock; the case stops the child at FRESH_LIMIT_S."""
+    which = "before" if globals()["_reading"] is _reading_before_fix else "fixed"
+    try:
+        r = subprocess.run([sys.executable, "-B", "-c", _FRESH, os.path.abspath(__file__), which],
+                           capture_output=True, text=True, timeout=FRESH_LIMIT_S)
+    except subprocess.TimeoutExpired:
+        raise AssertionError(f"the first open under the audit context hangs in a fresh process "
+                             f"(stopped at {FRESH_LIMIT_S} s)") from None
+    assert r.returncode == 0 and r.stdout.strip() == "opened", \
+        f"fresh process: exit {r.returncode}: {(r.stderr.strip().splitlines() or [''])[-1][:80]}"
+    return "a fresh process opens a file under the audit context of the real S2 root (no fr file opened)"
+
+
 CASES = [
     ("C2 cases of part_d_read through the generalised code paths", t_c2,
      [("item4_reference", lambda A, x, ip, fp: (fp, "parent final")), ("stop_on_mismatch", lambda ok: False)]),
@@ -3027,6 +3087,8 @@ CASES = [
     ("G guards: raw fr outputs only, positions only (placeholder parts)", t_g_guards,
      [("g_part_ok", lambda A, l, p: True), ("reads_changed", lambda q, b: []), ("g_part_ok", lambda A, l, p: False)]),
     ("G: real G on fr raw parts cut from the public WP2e output", t_g_real, []),
+    ("audit context: the first open in a fresh process (fix of 2026-11-16)", t_fresh_tmp,
+     [("_reading", _reading_before_fix)]),
     ("--read: 6b 'When', outputs, attempts, exit codes, header, uncommitted code", t_main,
      [("output_attempt", _attempt_at_head_only), ("output_attempt", _attempt2_tree_only),
       ("tracked_paths", _tracked_before_fix), ("tracked_paths", lambda: code_files()),
