@@ -674,7 +674,7 @@ STALL_OUT_S, MACE_WALL_S = 7200.0, {"host": 12 * 3600.0, "frozen": 3 * 3600.0}
 # N-F18 (round-3 R3-C1-7, D-S0-8): the spot endpoint must answer (200 or 404) within SPOT_FIRST_S of the poller's start
 # before any job runs, and a last good poll older than SPOT_STALE_S is a STOP (a notice that cannot arrive)
 SPOT_FIRST_S, SPOT_STALE_S = 120.0, 300.0
-CAMPAIGNS = ("c1", "c2", "c3", "c4", "fr")
+CAMPAIGNS = ("c1", "c2", "c3", "c4", "fr", "c3b")
 K_TOTAL = 201                                               # configurations k = 0 ... 200 (section 11)
 SP_AHEAD = 2                                                # single points published ahead of completion (I-D2)
 ADMISSIBILITY_RECORD = "results/objective2/s2/stage0/admissibility.json"
@@ -684,6 +684,7 @@ PHASES = {"c1": ("check", "smoke", "tp", "smoke2", "mace", "qe", "gate"),
           "c3": ("check", "pre", "mace", "qe", "gate"),
           "c4": ("check", "pre", "a2", "gate"),
           "fr": ("check", "a2", "gate"),
+          "c3b": ("check", "pre", "mace", "qe", "gate"),                         # as c3 (S2B section 3; N-C3B1)
           "t": ("check", "smoke", "tp", "smoke2", "mace", "qe", "a2", "gate")}       # the self-test graph (run as c1)
 TERMINAL = {"done", "missing", "skipped", "rejected", "not_started_cap", "not_run", "killed_by_gate"}
 TERMINAL_A2 = {"complete", "missing", "killed_by_gate", "not_run_gate", "not_started_cap"}   # A2 record statuses
@@ -699,8 +700,19 @@ C2_ORDER = ("s2r_m30_VB136", "s2r_m30_hostB136", "s2r_m30_Sr136o0_novac", "s2r_m
             "s2r_m30_Ca136o0_novac", "s2r_m30_Ca136o0_vac")                       # section 11 (fixed)
 FR_ORDER = ("s2r_m30_hostA188", "s2r_m30_VA188", "s2r_m30_Cs188o0_novac", "s2r_m30_Cs188o0_vac")   # S2B section 2
 FR_STEP0_AT = {"gate:fr_step0@2": "s2r_m30_VA188", "gate:fr_step0@4": "s2r_m30_Cs188o0_vac"}       # S2B section 2
-S2B_CAMPAIGNS = ("fr",)                                                     # campaigns of the S2b commit (N-FR2)
-S2B_STATE_KEYS = ("campaign_commit", "fr_step0", "fr_stop", "FR")           # the only state keys S2b writes (N-FR4)
+S2B_CAMPAIGNS = ("fr", "c3b")                                               # the S2b campaigns (N-FR2, N-C3B1)
+FR_ONLY = ("fr",)                                                           # the S2b branches that are fr's alone
+S2B_STATE_KEYS = ("campaign_commit", "fr_step0", "fr_stop", "FR")           # the only state keys fr writes (N-FR4)
+C3B_STATE_KEYS = ("campaign_commit", "s2b_projection", "c3b_complete", "c3b_tier")   # ... and c3b (N-C3B2)
+S2B_WRITES = {"fr": S2B_STATE_KEYS, "c3b": C3B_STATE_KEYS}
+C3B_NOTE = "results/objective2/s2/C3B_OPERATIONS.md"                        # the dated note of the c3b route (N-C3B3)
+C3B_BLOCK4 = "results/objective2/s2/s2b/e_block4.py"                        # E's block 4: not the stub (N-C3B3)
+C3B_BLOCK4_STUB = "BLOCK4_IMPLEMENTED = False"
+C3B_NOTE_FORBIDDEN = ("DATE-OF-COMMIT", "[open]", "DRAFT")                  # never in the committed note (N-C3B3)
+C3B_COUNTS = {"mace_host": 8, "mace_V": 152, "mace_dopant": 384, "sp": 544, "gate": 4}    # S2B section 3 (N-C3B1)
+C3B_GATE_KEYS = {"s2b_projection": ("points", "cuts", "c4b_run", "c4b_origin"), "c3b_complete": None,
+                 "c3b_tier": ("computable", "n_d")}                         # gate -> decision fields (N-C3B5)
+C3B_DOPANTS, C3B_DECISIVE = ("Sr", "Cl", "Cs", "GA"), ("Cl", "Cs", "GA")    # S2B section 3 (no Ca)
 S2B_NODE_SCRIPTS = ("ehpc/node/qe_queue.sh", "ehpc/node/chain.sh", "ehpc/node/s2_run_qe.sh")       # unchanged (N-FR2)
 FR_DECISION_KEYS = ("outcome", "FR1", "FR2", "part", "cell", "kind")      # decision.FR, decisions only (N-FR8)
 FR_STEP0_KEYS = ("attempts", "outcome", "repeat", "fix_note", "cell", "attempt1", "no_error_found", "note")   # N-FR6
@@ -1034,6 +1046,59 @@ NOTES = {
              "fr_outcome its decisions already fix, else null (IX-4: the outcome named before a final STOP; "
              "fr/STEP0_NO_ERROR changes only the state); status prints campaign_commit, fr_step0, fr_stop "
              "and FR (decision fields only); no gate result reaches the log, the status output or campaign.json",
+    "N-C3B1": "S2B section 3 and amendment 2026-11-16a (X1, R-5): the production campaign c3b is the graph of c3 "
+              "(graph_c3 is unchanged) for the eight hosts of the Stage-0 list, with the gates s2b_projection at the "
+              "points fr and c3b in phase pre and c3b_complete then c3b_tier in phase gate; cuts and multi_pose_cut "
+              "are not read; the counts are the literals of S2B section 3 (8 host relaxations, 152 V+ and 384 dopant "
+              "relaxations, 544 single points, 4 gates), asserted at every graph build; single points run in "
+              "jobs/s2c3b",
+    "N-C3B2": "S2B section 9 step 3 and section 4 (new keys; C2 keys never overwritten or read): a c3b runner writes "
+              "only campaign_commit.c3b, s2b_projection, c3b_complete, c3b_tier, campaigns.c3b and new commit_history "
+              "entries; every other state key, campaigns entry and campaign_commit entry (fr_step0, fr_stop, FR and "
+              "campaign_commit.fr among them) is protected as N-FR4 protects fr's (a STOP naming the key, nothing "
+              "written); for fr the protected digest is that of 0a3e8f0; K2, K3, step0, cuts and c4_run are never "
+              "read by c3b (a2_stopped is false for c3b)",
+    "N-C3B3": "S2B X13 and amendment 2026-11-16a (R-7, R-8): c3b/CAMPAIGN_COMMIT admits HEAD once, with the checks "
+              "of N-FR2 and these: its ancestor is campaign_commit.fr and HEAD is a strict descendant of it; its note "
+              "is exactly results/objective2/s2/C3B_OPERATIONS.md, changed since campaign_commit.fr; "
+              "results/objective2/s2/s2b/e_block4.py is tracked at HEAD and is not the stub (no line "
+              "'BLOCK4_IMPLEMENTED = False'); later starts need HEAD = campaign_commit.c3b; c3b has no fix route "
+              "(OPS3 D-C3-3), and fr's route files (STEP0_FIX, STEP0_NO_ERROR) are not read",
+    "N-C3B4": "S2B sections 1, 3 and amendment 2026-11-16a (R-5, R-6, D-0): a c3b start is refused before the runner "
+              "writes anything (exit 2; the launcher s2_campaign.sh has by then made c3b/ and c3b/driver.out, which "
+              "holds the refusal text, and has printed 'started') unless the state is readable, campaigns.fr is done, fr/CAMPAIGN_DONE exists, "
+              "FR.outcome is pass with part null, there is no fr_stop, fr_step0.outcome is pass and fr/campaign.json "
+              "records fr_outcome pass; and when a c4b tree or a campaigns.c4b entry exists (C4b is not run); the "
+              "other preconditions are STOPs: c1 and c2 done, c3 not_run, no c4, scripts/49 real with the c3b gates "
+              "and C4B_PLANNED false, n = 8 with the applied n rule, G1 Ca false and Cl true, default poses, a "
+              "Stage-0 list of eight hosts",
+    "N-C3B5": "S2B section 8 and amendment 2026-11-16a (R-1, R-4, interface): a c3b gate decision holds only its own "
+              "key (s2b_projection: points, cuts, c4b_run, c4b_origin; c3b_complete: a boolean; c3b_tier: computable "
+              "and n_d over Sr, Cl, Cs, GA), else a STOP before it is applied; s2b_projection must name the points "
+              "evaluated so far in their order, cuts [], c4b_run false and the origin of scripts/49 C4B_ORIGIN; "
+              "c3b_tier.computable must equal 'n_d >= 2 for Cl, Cs or GA'; when the gate file's result.over_cap is "
+              "true (P + U > 520 node-h) the decision is not applied and the runner stops: with no C4b there is "
+              "nothing to cut; H_spent at the point fr is that of fr/ledger.json (complete), at the point c3b the "
+              "live ledger's; CAMPAIGN_DONE is written only with s2b_projection (both points), c3b_complete and "
+              "c3b_tier in the state",
+    "N-C3B6": "S2B section 3, X4 and amendment 2026-11-16a (R-9, R-10): every c3b relax job of a V+, D or D+V cell "
+              "carries check5_reading 'invariant' (never a host job); a record of such a cell without that reading "
+              "is a STOP; the runner reads no other validity leaf (N-F12)",
+    "N-C3B7": "S2B section 1 (X15) and amendment 2026-11-16a (R-11, interface): archive --campaign c3b refuses, "
+              "before anything is read or written, an --out inside this checkout or inside results/objective2/s2 of "
+              "any checkout, and one whose last component is not exactly 'c3b'; the layout of the archive is "
+              "unchanged; its last step writes MANIFEST.sha256, one line '<sha256>  <relative path>' per file of the "
+              "archive except the manifest itself, sorted by path; an --out with a directory above it that holds .git "
+              "is refused as well (inside a checkout)",
+    "N-C3B8": "amendment 2026-11-16a (review of part 1, findings 1, 2, 6, 8, 9): c3b has no fix route, so before "
+              "c3b/CAMPAIGN_COMMIT is consumed the runner makes every check that needs no node work: the "
+              "preconditions, one graph build with the pinned counts, the site table (scripts/49 c3b_sites_check, and "
+              "its quartet labels equal to the graph's 544 single-point labels), the completeness of fr/ledger.json "
+              "and a dry evaluation of s2b_projection at the point fr (no file, no decision); a STOP there records no "
+              "commit. The site table is checked again at every graph build and by scripts/49 at both projection "
+              "points. A projection point whose decision is in the state without a marker is evaluated again with "
+              "the same decision (inputs.reevaluate). The route also refuses a block 4 that does not hold the one "
+              "line 'BLOCK4_IMPLEMENTED = True', and a note that still holds 'DATE-OF-COMMIT', '[open]' or 'DRAFT'",
 }
 
 
@@ -1434,16 +1499,34 @@ def c3_multi(state, T):
     return (state.get("pose") or {}).get(T) == "multi" and not (T == "Cs" and 6 in cuts) and not (T == "Cl" and 7 in cuts)
 
 
-def graph_c3(state, sites=site_sets):
-    G = Graph("c3", PHASES["c3"])
+def c3b_hosts(state):
+    """N-C3B1 (S2B section 3; amendment 2026-11-16a R-5): the eight production hosts of the Stage-0 list, in draw
+    order. The state must show n = 8; no cut is read."""
+    lst = (state.get("stage0") or {}).get("production_n8")
+    if state.get("n") != 8 or not lst or len(lst) != 8:
+        raise S2Error(f"c3b needs n = 8 and the Stage-0 production list of eight hosts (n = {state.get('n')!r}; S2B "
+                      f"section 3, N-C3B1)")
+    return list(lst)
+
+
+def _graph_production(c, state, sites):
+    """The production graph of section 12: for c3 with the gates of S2_PLAN.md, for c3b (N-C3B1) with the S2b gates,
+    the eight hosts of c3b_hosts and default poses only."""
+    s2b = c == "c3b"
+    G = Graph(c, PHASES[c])
     G.add("check:upf", "check", "check", what="upf")
     G.add("check:nodescripts", "check", "check", what="nodescripts")             # N-F31 (round 4)
     G.add("check:mace", "check", "check", what="mace")
-    G.add("gate:projection@c3", "gate", "pre", [], gate="projection", point="c3", cat="gate")
+    if s2b:                                                                      # S2B section 8 (R-1): fr, then c3b
+        G.add("gate:s2b_projection@fr", "gate", "pre", [], gate="s2b_projection", point="fr", cat="gate")
+        G.add("gate:s2b_projection@c3b", "gate", "pre", ["gate:s2b_projection@fr"], gate="s2b_projection",
+              point="c3b", cat="gate")
+    else:
+        G.add("gate:projection@c3", "gate", "pre", [], gate="projection", point="c3", cat="gate")
     g1 = state.get("G1") or {}
-    hosts = production_hosts(state)
+    hosts = c3b_hosts(state) if s2b else production_hosts(state)
     toks_of = {L: tuple(T for T in TOKENS_OF[L] if g1.get(T) is not False) for L in "BAX"}
-    multi = {T: c3_multi(state, T) for T in c46.MULTI_START}
+    multi = {T: (not s2b) and c3_multi(state, T) for T in c46.MULTI_START}
     for h in hosts:
         S = sites(h)
         G.add("mace:" + wid_of(h, "host"), "mace", "mace", [], action="relax-host", member=h, work_id=wid_of(h, "host"),
@@ -1453,7 +1536,7 @@ def graph_c3(state, sites=site_sets):
             if not toks_of[L]:
                 continue                                                               # I-31: no V+ for no dopant
             for j in production_sites(S, L):
-                _mace_site(G, "c3", h, L, j, toks_of[L], role="production", cat_dopant="mace_dopant",
+                _mace_site(G, c, h, L, j, toks_of[L], role="production", cat_dopant="mace_dopant",
                            starts=lambda T, jj: _starts(T, multi.get(T, False)), prov=pbcl_provisional(state))
                 for T in toks_of[L]:
                     if multi.get(T):
@@ -1477,8 +1560,58 @@ def graph_c3(state, sites=site_sets):
                                     deps=[f"distinct:{h}_{T}{j}_{leg}"], src="distinct",
                                     slot={"distinct": f"distinct:{h}_{T}{j}_{leg}", "k": k, "member": h, "token": T,
                                           "site": j, "leg": leg})
-    G.add("gate:c3_complete", "gate", "gate", [], gate="c3_complete", cat="gate")
+    if s2b:                                                                      # N-C3B1: completeness, then the tier
+        G.add("gate:c3b_complete", "gate", "gate", [], gate="c3b_complete", cat="gate")
+        G.add("gate:c3b_tier", "gate", "gate", ["gate:c3b_complete"], gate="c3b_tier", cat="gate")
+    else:
+        G.add("gate:c3_complete", "gate", "gate", [], gate="c3_complete", cat="gate")
     return G
+
+
+def graph_c3(state, sites=site_sets):
+    return _graph_production("c3", state, sites)
+
+
+def graph_c3b(state, sites=site_sets):
+    """S2b production (S2B_PLAN.md section 3; N-C3B1)."""
+    return _graph_production("c3b", state, sites)
+
+
+def c3b_site_table(state, sites=site_sets):
+    """N-C3B5: the first-shell and far sites of every c3b host, {host: {L: {"first", "far"}}}, the non-energy input
+    of gate c3b_tier (scripts/49 c3b_sites_check)."""
+    return {h: {L: {"first": first_sites(sites(h), L), "far": far_sites(sites(h), L)} for L in "BAX"}
+            for h in c3b_hosts(state)}
+
+
+def c3b_table_check(state, g, sites=site_sets):
+    """N-C3B8 (review findings 2 and 3): before any job. The site table that the c3b gates receive passes scripts/49
+    c3b_sites_check, and the single-point labels of its quartets are exactly the 'sp' labels of the graph g. An
+    S2Error otherwise. Geometry and names only. Returns the table."""
+    tab = c3b_site_table(state, sites)
+    try:
+        g49.c3b_sites_check(tab, state)
+    except g49.GateRefused as e:
+        raise S2Error(f"c3b site table: {e} (N-C3B8)")
+    want = sorted(j["label"] for j in g["jobs"] if j["kind"] == "sp")
+    got = list(g49.c3b_table_labels(tab))
+    if got != want:
+        only_t, only_g = sorted(set(got) - set(want)), sorted(set(want) - set(got))
+        raise S2Error(f"c3b site table: its quartet labels are not the single-point labels of the graph ({len(got)} "
+                      f"against {len(want)}; only in the table {only_t[:3]}, only in the graph {only_g[:3]}; N-C3B8)")
+    return tab
+
+
+def c3b_block4_reason(text):
+    """N-C3B3 (review finding 8): None iff the text of E's block 4 assigns BLOCK4_IMPLEMENTED exactly once and that
+    line is 'BLOCK4_IMPLEMENTED = True' at column 0; else the reason. A text test; nothing is imported."""
+    lines = [x for x in text.splitlines() if re.match(r"\s*BLOCK4_IMPLEMENTED\b\s*(:[^=]*)?=(?!=)", x)]
+    if len(lines) == 1 and re.match(r"BLOCK4_IMPLEMENTED\s*=\s*True\b", lines[0]):
+        return None
+    if not lines:
+        return f"{C3B_BLOCK4} holds no line 'BLOCK4_IMPLEMENTED = True'"
+    return (f"{C3B_BLOCK4} is the stub ({C3B_BLOCK4_STUB}) or assigns BLOCK4_IMPLEMENTED otherwise than by the one "
+            f"line 'BLOCK4_IMPLEMENTED = True' ({len(lines)} assignment{'s' if len(lines) != 1 else ''})")
 
 
 def graph_fr(state, sites=site_sets):
@@ -1495,7 +1628,7 @@ def graph_fr(state, sites=site_sets):
     return G
 
 
-GRAPHS = {"c1": graph_c1, "c2": graph_c2, "c3": graph_c3, "c4": graph_c4, "fr": graph_fr}
+GRAPHS = {"c1": graph_c1, "c2": graph_c2, "c3": graph_c3, "c4": graph_c4, "fr": graph_fr, "c3b": graph_c3b}
 
 
 def graph(campaign, state, *, sites=site_sets):
@@ -1506,6 +1639,8 @@ def graph(campaign, state, *, sites=site_sets):
 # ---------------------------------------------------------------- counts (asserted against the plan)
 def expected_counts(campaign, state):
     """The plan's counts (interface spec section 11), each adjustment listed; independent of the graph builders."""
+    if campaign == "c3b":                                # before cut_ids: c3b reads no legacy cut (N-C3B1, N-C3B2)
+        return dict(C3B_COUNTS), ["S2B section 3: n = 8, no Ca, default poses (literals; N-C3B1)"]
     g1 = state.get("G1") or {}
     cuts = cut_ids(state)
     adj = []
@@ -1854,6 +1989,21 @@ class NodeBackend:
                                    "--attempt", str(attempt)], cwd=self.node.checkout,
                                   stdout=fh, stderr=subprocess.STDOUT, timeout=7200).returncode
 
+    def gate_dry(self, gate, campaign, inputs):
+        """N-C3B8: scripts/49 `run --dry-run` in a child process, as gate() runs it: the gate is evaluated and nothing
+        is written. Returns (exit code, the record of its 'DRY ' line or None, the tail of its output)."""
+        p = subprocess.run([self.python, os.path.join(HERE, "49_s2_gates.py"), "run", "--gate", gate,
+                            "--root", self.node.root, "--campaign", campaign, "--inputs", inputs, "--dry-run"],
+                           cwd=self.node.checkout, capture_output=True, text=True, timeout=7200)
+        rec = None
+        for line in p.stdout.splitlines():
+            if line.startswith("DRY "):
+                try:
+                    rec = json.loads(line[4:])
+                except ValueError:
+                    rec = None
+        return p.returncode, rec, (p.stdout + p.stderr)[-600:]
+
     def upf_check(self, campaign, reference):
         return q47.upf_check(self.node.pseudo, reference=reference)
 
@@ -2160,23 +2310,27 @@ class Runner:
         return (m.get("electrons") or {}).get("n_el")
 
     def save_state(self):
-        if self.protect is not None and self.protected(self.state, self.protect[0]) != self.protect:
+        if self.protect is not None and self.protected(self.state, self.protect[0], self.c) != self.protect:
             raise Stop(self.protect_reason(self.state))
         write_json(self.state, self.node.state)
 
     def protect_reason(self, s):
         """N-FR4: the STOP text of a changed protected state, naming the changed keys."""
         return (f"{self.c}: the protected state key(s) {', '.join(self.protected_changes(s)) or '(not identified)'} "
-                f"changed; an S2b runner writes only {', '.join(S2B_STATE_KEYS)}, the {self.c} entry of campaigns and "
+                f"changed; an S2b runner writes only {', '.join(S2B_WRITES[self.c])}, the {self.c} entry of campaigns and "
                 f"new commit_history entries: state.json is not written (N-FR4)")
 
     @staticmethod
-    def protected_parts(s, n):
-        """N-FR4: {name: canonical JSON} of every protected part of s, for naming what changed."""
-        keep = {k: v for k, v in s.items() if k not in S2B_STATE_KEYS + ("campaigns", "commit_history")}
+    def protected_parts(s, n, c="fr"):
+        """N-FR4: {name: canonical JSON} of every protected part of s, for naming what changed. c: the S2b campaign
+        whose runner asks (N-C3B2); for c3b the campaign_commit entries of the other campaigns are protected too."""
+        keep = {k: v for k, v in s.items() if k not in S2B_WRITES[c] + ("campaigns", "commit_history")}
         out = {k: json.dumps(v, sort_keys=True, default=str) for k, v in keep.items()}
         out.update({f"campaigns.{k}": json.dumps(v, sort_keys=True, default=str)
-                    for k, v in (s.get("campaigns") or {}).items() if k not in S2B_CAMPAIGNS})
+                    for k, v in (s.get("campaigns") or {}).items() if k != c})
+        if c not in FR_ONLY:
+            out.update({f"campaign_commit.{k}": json.dumps(v, sort_keys=True, default=str)
+                        for k, v in (s.get("campaign_commit") or {}).items() if k != c})
         hist = list(s.get("commit_history") or [])
         out.update({f"commit_history[{i}]": json.dumps(x, sort_keys=True, default=str) for i, x in enumerate(hist[:n])})
         if len(hist) < n:
@@ -2187,18 +2341,23 @@ class Runner:
         """N-FR4: the names of the protected parts of s that differ from the state read at load_state."""
         if self.protect is None or self.protect_parts is None:
             return []
-        now = self.protected_parts(s, self.protect[0])
+        now = self.protected_parts(s, self.protect[0], self.c)
         return sorted(k for k in set(now) | set(self.protect_parts) if now.get(k) != self.protect_parts.get(k))
 
     @staticmethod
-    def protected(s, n=None):
-        """N-FR4: (number of commit_history entries at load, digest of every key outside S2B_STATE_KEYS, campaigns and
-        commit_history, of campaigns without the S2b ids and of those commit_history entries)."""
+    def protected(s, n=None, c="fr"):
+        """N-FR4: (number of commit_history entries at load, digest of every key outside the keys campaign c writes
+        (S2B_WRITES), campaigns and commit_history, of campaigns without the entry of c and of those commit_history
+        entries). For fr this is the digest of 0a3e8f0; for c3b it also covers the campaign_commit entries of the
+        other campaigns (N-C3B2)."""
         hist = list(s.get("commit_history") or [])
         n = len(hist) if n is None else n
-        keep = {k: v for k, v in s.items() if k not in S2B_STATE_KEYS + ("campaigns", "commit_history")}
-        camp = {k: v for k, v in (s.get("campaigns") or {}).items() if k not in S2B_CAMPAIGNS}
-        blob = json.dumps([keep, camp, hist[:n], len(hist) >= n], sort_keys=True, default=str)
+        keep = {k: v for k, v in s.items() if k not in S2B_WRITES[c] + ("campaigns", "commit_history")}
+        camp = {k: v for k, v in (s.get("campaigns") or {}).items() if k != c}
+        parts = [keep, camp, hist[:n], len(hist) >= n]
+        if c not in FR_ONLY:
+            parts.append({k: v for k, v in (s.get("campaign_commit") or {}).items() if k != c})
+        blob = json.dumps(parts, sort_keys=True, default=str)
         return n, hashlib.sha256(blob.encode()).hexdigest()
 
     def set_campaign(self, status, **kw):
@@ -2420,7 +2579,7 @@ class Runner:
         if held:
             reason = "; ".join([reason] + held)
         if self.state is not None and self.protect is not None and \
-                self.protected(self.state, self.protect[0]) != self.protect:
+                self.protected(self.state, self.protect[0], self.c) != self.protect:
             # N-FR4: a changed protected key is named in the STOP; the state in memory is not saved: campaigns[c] =
             # 'stopped' goes into the state read again from disk, through the same protection, so that state.json and
             # campaign.json agree
@@ -2437,7 +2596,7 @@ class Runner:
             # IX-4 (amendment 2026-11-12a item 13): at a STOP of fr, the FR outcome its decisions already fix (else
             # null), so that E and the FR figure name the decision recorded before a final STOP; fr/STEP0_NO_ERROR
             # changes only the state, which a STOP does not publish (no state_end.json)
-            fo = {"fr_outcome": self._guard(self.stop_outcome)} if self.c in S2B_CAMPAIGNS else {}
+            fo = {"fr_outcome": self._guard(self.stop_outcome)} if self.c in FR_ONLY else {}
             self._guard(self.set_campaign, "stopped", stop_reason=public_text(reason), **fo)
         if os.path.exists(sf):
             for why in list(self.pending_stop):
@@ -2495,7 +2654,9 @@ class Runner:
                    f"{fr.get('outcome')} {fr.get('part')}): CAMPAIGN_DONE is not written (N-FR8)")
 
     def finish(self):
-        fo = {"fr_outcome": self.fr_outcome()} if self.c in S2B_CAMPAIGNS else {}     # N-FR8: before any write
+        fo = {"fr_outcome": self.fr_outcome()} if self.c in FR_ONLY else {}           # N-FR8: before any write
+        if self.c == "c3b":
+            self.c3b_end_check()                                                    # N-C3B5: before any write
         st = self.statuses()
         self.mark_phase(None)
         comp = {"schema": "s2-completeness-1", "campaign": self.c, "by_category": {}, "jobs": {}}
@@ -2521,9 +2682,26 @@ class Runner:
                 raise Stop(f"no state.json: {self.c} cannot start before C1")
             s = {"schema": "s2-state-1", "commit": None, "campaigns": {}, "cuts": []}
         if self.c in S2B_CAMPAIGNS:
-            self.protect = self.protected(s)                                # N-FR4
-            self.protect_parts = self.protected_parts(s, self.protect[0])
+            self.protect = self.protected(s, None, self.c)                  # N-FR4, N-C3B2
+            self.protect_parts = self.protected_parts(s, self.protect[0], self.c)
         return s
+
+    def c3b_end_check(self):
+        """N-C3B5 (amendment 2026-11-16a, interface): c3b ends only with the decisions that state_end.json must carry:
+        s2b_projection at both points with C4b not run, c3b_complete and c3b_tier. A STOP otherwise; nothing is
+        written."""
+        s, why = self.state, []
+        pj = s.get("s2b_projection")
+        if not isinstance(pj, dict) or pj.get("points") != ["fr", "c3b"] or pj.get("c4b_run") is not False:
+            why.append("s2b_projection does not hold the points fr and c3b with c4b_run false")
+        if not isinstance(s.get("c3b_complete"), bool):
+            why.append("no c3b_complete decision")
+        tier = s.get("c3b_tier")
+        if not isinstance(tier, dict) or not isinstance(tier.get("computable"), bool) or \
+                sorted(tier.get("n_d") or {}) != sorted(C3B_DOPANTS):
+            why.append("no c3b_tier decision (computable, n_d of Sr, Cl, Cs, GA)")
+        if why:
+            raise Stop(f"c3b: {'; '.join(why)}: CAMPAIGN_DONE is not written (N-C3B5)")
 
     def load_walls(self):
         """I-21 / review F6: the measured walls of every completed job of S2 so far, from the files of every campaign
@@ -2551,7 +2729,7 @@ class Runner:
                     r = read_json(f) or {}
                     if r.get("ok") and r.get("wall_s"):
                         W.setdefault(kind, {})[os.path.basename(f)] = float(r["wall_s"]) / 3600.0
-        for c in ("c1", "c3"):
+        for c in ("c1", "c3", "c3b"):                                       # c3b: its own walls after a relaunch
             for d in glob.glob(os.path.join(self.node.jobs, f"s2{c}", "*")):
                 lab = os.path.basename(d)
                 if not os.path.exists(os.path.join(d, f"{lab}.in")) or not os.path.exists(os.path.join(d, f"{lab}.out")):
@@ -2597,12 +2775,19 @@ class Runner:
     def check_commit_s2b(self, head):
         """N-FR2 (X13): the S2b campaign commit. At the first start fr/CAMPAIGN_COMMIT admits HEAD once; later starts
         need HEAD = campaign_commit[c], the one other route being fr/STEP0_FIX at fr_step0 fail_pending_fix, which
-        repeats the failed cell (fr_step0_repeat). state['commit'] is never changed."""
-        self.fr_route_files(self.state)                                    # N-FR6: before any change
+        repeats the failed cell (fr_step0_repeat). state['commit'] is never changed. For c3b (N-C3B3) the route's
+        ancestor is campaign_commit.fr, of which HEAD is a strict descendant, its note is C3B_OPERATIONS.md itself and
+        E's block 4 is not the stub; c3b has no fix route, and fr's route files are not read."""
+        fr = self.c in FR_ONLY
+        if fr:
+            self.fr_route_files(self.state)                                # N-FR6: before any change
         cc = (self.state.get("campaign_commit") or {}).get(self.c)
         if cc is None:
-            note = self.s2b_route("CAMPAIGN_COMMIT", head, self.state.get("commit"))
-            self.s2b_accept("CAMPAIGN_COMMIT", head, self.state.get("commit"), note)
+            anc = self.state.get("commit") if fr else (self.state.get("campaign_commit") or {}).get("fr")
+            note = self.s2b_route("CAMPAIGN_COMMIT", head, anc)
+            if not fr:
+                self.c3b_preroute()                                         # N-C3B8: before the route is consumed
+            self.s2b_accept("CAMPAIGN_COMMIT", head, anc, note)
             self.log(f"S2b campaign commit of {self.c} recorded (N-FR2, X13): {head[:12]}; note: {note[:200]}")
             return
         cf = os.path.join(self.cdir, "CAMPAIGN_COMMIT")
@@ -2611,6 +2796,11 @@ class Runner:
                 raise Stop(f"{self.c}/CAMPAIGN_COMMIT names another commit than the recorded {cc[:12]}: the route is "
                            f"used once (N-FR2, X13)")
             self.rename_used(cf)                                            # recorded before the rename (R6-C1-3)
+        if not fr:                                                          # N-C3B3: no fix route in c3b
+            if head != cc:
+                raise Stop(f"checkout HEAD {head[:12]} is not the recorded {self.c} campaign commit {cc[:12]} (X13, "
+                           f"N-C3B3): c3b has no fix route")
+            return
         fix = os.path.join(self.cdir, "STEP0_FIX")
         if os.path.exists(fix) and self.fr_fix_leftover(self.state):
             self.rename_used(fix)                                           # recorded before the rename (R6-C1-3)
@@ -2622,6 +2812,52 @@ class Runner:
             return
         if head != cc:
             raise Stop(f"checkout HEAD {head[:12]} is not the recorded {self.c} campaign commit {cc[:12]} (X13, N-FR2)")
+
+    def c3b_preroute(self):
+        """N-C3B8 (review finding 1; amendment 2026-11-16a): c3b has no fix route, so every check that needs no node
+        work is made before c3b/CAMPAIGN_COMMIT is consumed: the preconditions; one graph build with the pinned
+        counts; the site table against scripts/49 and against the graph's labels; the completeness of fr/ledger.json;
+        and a dry evaluation of gate s2b_projection at the point fr by the scripts/49 `run --dry-run` CLI in a child
+        process (no gate file is written and no decision applied; no gate logic runs in this process). A STOP here
+        records no commit: after the remedy, the same commit or a new one is admitted by a route file. On the mock
+        node the graph is the reference graph, and the dry evaluation is the scripted one of mock/config.json
+        ('gate_dry') or is left out when none is scripted."""
+        tail = "before the route is consumed (N-C3B8); no commit was recorded"
+        why = self.preconditions()                                          # c3b: read-only; a STOP names each reason
+        if why:
+            raise Stop(f"c3b {tail}: {why}")
+        jf = {"id": "gate:s2b_projection@fr", "gate": "s2b_projection", "point": "fr"}
+        try:
+            g = self.be.graph(self.c, self.state)
+            if not self.be.mock:
+                assert_counts(g, self.state)
+                c3b_table_check(self.state, g)
+        except S2Error as e:
+            raise Stop(f"c3b {tail}: {e}")
+        inp, _ = self.gate_inputs(jf)                                       # a STOP unless fr/ledger.json is complete
+        fd, ip = tempfile.mkstemp(prefix="s2_c3b_dry_", suffix=".json")     # outside the campaign tree; removed below
+        os.close(fd)
+        try:
+            write_json(inp, ip)
+            dry = self.be.gate_dry("s2b_projection", self.c, ip)            # scripts/49 in a child; nothing written
+        finally:
+            try:
+                os.remove(ip)
+            except OSError:
+                pass
+        if dry is not None:                                                 # None: a mock node with no scripted dry run
+            rc, rec, out = dry
+            if rc != 0 or not isinstance(rec, dict):
+                raise Stop(f"c3b {tail}: the dry evaluation of s2b_projection at the point fr did not complete (exit "
+                           f"{rc}): {' '.join(str(out).split())[-300:]}")
+            self.c3b_decision_check(jf, rec.get("decision") or {})
+            if rec.get("over_cap") is not False:
+                raise Stop(f"c3b {tail}: " + ("P + U exceeds the cap of 520 node-h at the point fr" if
+                                              rec.get("over_cap") is True else "no over_cap flag at the point fr") +
+                           " (dry evaluation)")
+        self.log("c3b pre-route checks passed (N-C3B8): preconditions, graph" +
+                 ("" if self.be.mock else ", counts, site table") + ", fr ledger" +
+                 ("" if dry is None else ", dry s2b_projection at the point fr"))
 
     def fr_route_files(self, s):
         """N-FR6: fr/STEP0_FIX and fr/STEP0_NO_ERROR apply only while fr_step0 is fail_pending_fix, and never together;
@@ -2722,6 +2958,35 @@ class Runner:
         if name == "STEP0_FIX" and head == ancestor:
             why.append(f"HEAD {head[:12]} is the recorded {self.c} campaign commit: the fix is a new commit, a strict "
                        f"descendant of it")
+        if self.c == "c3b":                                                 # N-C3B3 (amendment 2026-11-16a R-7, R-8)
+            if ancestor is None:
+                why.append("the state records no fr campaign commit (campaign_commit.fr)")
+            elif head == ancestor:
+                why.append(f"HEAD {head[:12]} is the recorded fr campaign commit: the c3b commit is a new commit, a "
+                           f"strict descendant of it")
+            if len(tok) == 3 and tok[2] != C3B_NOTE:
+                why.append(f"the note of the c3b route is {C3B_NOTE}, not {tok[2]!r}")
+            if not self.be.git_tracked(C3B_BLOCK4):
+                why.append(f"{C3B_BLOCK4} is not tracked at HEAD")
+            else:
+                try:
+                    b4 = open(os.path.join(self.node.checkout, C3B_BLOCK4)).read()
+                except OSError as e:
+                    b4 = None
+                    why.append(f"{C3B_BLOCK4} cannot be read ({type(e).__name__})")
+                if b4 is not None and c3b_block4_reason(b4):
+                    why.append(f"{c3b_block4_reason(b4)}: block 4 is implemented at the c3b campaign commit (S2B "
+                               f"amendment 2026-11-12a item 8)")
+            if len(tok) == 3 and tok[2] == C3B_NOTE and self.be.git_tracked(C3B_NOTE):
+                # review finding 9: the committed note is final (no date token, no open item, no draft mark)
+                try:
+                    held = [w for w in C3B_NOTE_FORBIDDEN
+                            if w in open(os.path.join(self.node.checkout, C3B_NOTE)).read()]
+                except OSError:
+                    held = []                                               # unreadable: named above
+                if held:
+                    why.append(f"the note {C3B_NOTE} still holds {', '.join(repr(w) for w in held)}: it is committed "
+                               f"final, with no date token, no open item and no draft mark")
         if self.state.get("commit") is None or not self.be.git_unchanged(self.state["commit"], head, S2B_NODE_SCRIPTS):
             why.append("qe_queue.sh, chain.sh or s2_run_qe.sh differ from the recorded S2 commit")
         if (self.state.get("campaigns") or {}).get("c2") != "done":
@@ -2807,6 +3072,43 @@ class Runner:
             return (f"checkout HEAD {head[:12]} is not the recorded S2 commit {str(s.get('commit'))[:12]}: a {self.c} "
                     f"start needs a checkout at that commit (N-FR3, X13)")
         return None
+
+    def c3b_refusal(self):
+        """N-C3B4 (S2B sections 1, 3; amendment 2026-11-16a R-6, D-0): the reason a c3b start is refused before any
+        write, or None: FR is not a recorded pass of a done fr, or a c4b tree or campaign entry exists (C4b is not
+        run). Reads state.json, fr/campaign.json and two names; writes nothing, so that no c3b tree is made."""
+        if self.c != "c3b":
+            return None
+        tail = "c3b starts only after FR passes and fr ends done (S2B sections 1, 3; N-C3B4)"
+        try:
+            s = read_json(self.node.state)
+        except (OSError, ValueError) as e:
+            return f"state.json cannot be read ({type(e).__name__}): {tail}"
+        if not isinstance(s, dict):
+            return f"{'no state.json' if s is None else 'state.json is not a JSON object'}: {tail}"
+        camp, why = s.get("campaigns") or {}, []
+        if "c4b" in camp or os.path.lexists(self.node.c("c4b")):
+            why.append("a c4b tree or campaigns.c4b entry exists, and C4b is not run (amendment 2026-11-16a)")
+        if camp.get("fr") != "done":
+            why.append(f"campaigns.fr is {camp.get('fr')!r}, not 'done'")
+        frd = self.node.c("fr")
+        if not os.path.exists(os.path.join(frd, "CAMPAIGN_DONE")):
+            why.append("no fr/CAMPAIGN_DONE")
+        fr = s.get("FR") if isinstance(s.get("FR"), dict) else {}
+        if fr.get("outcome") != "pass" or fr.get("part") is not None:
+            why.append(f"FR is {fr.get('outcome')!r} (part {fr.get('part')!r}), not a pass")
+        if s.get("fr_stop"):
+            why.append("an FR early stop (fr_stop) is recorded")
+        s0 = s.get("fr_step0") if isinstance(s.get("fr_step0"), dict) else {}
+        if s0.get("outcome") != "pass":
+            why.append(f"the FR step-0 check is {s0.get('outcome')!r}, not 'pass'")
+        try:
+            cj = read_json(os.path.join(frd, "campaign.json"))
+        except (OSError, ValueError):
+            cj = None
+        if not isinstance(cj, dict) or cj.get("status") != "done" or cj.get("fr_outcome") != FR_OUTCOMES[0]:
+            why.append("fr/campaign.json does not record status 'done' with fr_outcome 'pass'")
+        return f"{'; '.join(why)}: {tail}" if why else None
 
     def node_fix(self, head):
         """N-F17 (round-3 R3-C1-3, D-S0-8): a C1 STOP fixed by a dated, committed change resumes at the new commit
@@ -2906,7 +3208,35 @@ class Runner:
             if s["a2_layout"] != "48" and (sm.get("at_layout") or {}).get("label") != f"s2smoke_ref232_rst{s['a2_layout']}":
                 raise Stop(f"the exit/restart smoke test at the A2 layout {s['a2_layout']} is not in c1/smoke.json "
                            f"(at_layout; X-4, N-F19)")
-        if self.c in S2B_CAMPAIGNS:
+        if self.c == "c3b":
+            # N-C3B4 (S2B section 3; amendment 2026-11-16a R-5): only S2b keys and the C1 decisions n, G1 and pose are
+            # read, never K2, K3, step0, cuts or c4_run; each missing item is a STOP (FR itself: c3b_refusal)
+            why = [f"{k} is {camp.get(k)!r}, not {v!r}"
+                   for k, v in (("c1", "done"), ("c2", "done"), ("c3", "not_run"), ("fr", "done"))
+                   if camp.get(k) != v] + (["C4 has a campaign state"] if "c4" in camp else [])
+            if "49_s2_gates.py" in MOCKED or not all(hasattr(g49, x) for x in ("projection_s2b", "c3b_tier",
+                                                                               "c3b_table_labels", "C4B_PLANNED",
+                                                                               "C4B_ORIGIN")):
+                why.append("scripts/49 is the stub or lacks the c3b gates")
+            elif g49.C4B_PLANNED is not False:
+                why.append("scripts/49 C4B_PLANNED is not False: a planned C4b is not implemented at this commit "
+                           "(amendment 2026-11-16a)")
+            g1, pose = s.get("G1") or {}, s.get("pose") or {}
+            if s.get("n") != 8 or not os.path.exists(os.path.join(self.node.c("c1"), "gates_applied",
+                                                                  "gate_nrule.json")):
+                why.append(f"the C1 n rule (gate:nrule) is not applied with n = 8 (n = {s.get('n')!r})")
+            if g1.get("Ca") is not False or g1.get("Cl") is not True:
+                why.append(f"G1 is Ca {g1.get('Ca')!r}, Cl {g1.get('Cl')!r}, not Ca False, Cl True")
+            if any(pose.get(t) != "default" for t in ("Cs", "Cl")):
+                why.append(f"the poses are Cs {pose.get('Cs')!r}, Cl {pose.get('Cl')!r}, not both 'default'")
+            lst = (s.get("stage0") or {}).get("production_n8")
+            if not lst or len(lst) != 8:
+                why.append("no Stage-0 production list of eight hosts")
+            if why:
+                raise Stop(f"c3b preconditions: {'; '.join(why)} (S2B_PLAN.md section 3, amendment 2026-11-16a; "
+                           f"N-C3B4)")
+            return None
+        if self.c in FR_ONLY:
             # N-FR1, N-FR6 (S2B sections 2, 9): no C2 decision key is read; each missing item is a STOP
             why = [f"{k} is {camp.get(k)!r}, not {v!r}" for k, v in (("c1", "done"), ("c2", "done"), ("c3", "not_run"))
                    if camp.get(k) != v] + (["C4 has a campaign state"] if "c4" in camp else [])
@@ -2984,6 +3314,8 @@ class Runner:
             g = self.be.graph(self.c, self.state)
             if self.c in GRAPHS and not self.be.mock:
                 assert_counts(g, self.state)
+                if self.c == "c3b":
+                    c3b_table_check(self.state, g)                          # N-C3B8: before the first job
             g["jobs_by_id"] = OrderedDict((j["id"], j) for j in g["jobs"])
             c46.dump_public({k: v for k, v in g.items() if k != "jobs_by_id"}, os.path.join(self.cdir, "graph.json"))
             self.G, self.gkey = g, key
@@ -3096,7 +3428,7 @@ class Runner:
     def schedule(self, st):
         if not self.spot_check():
             return                                                         # no job before a good poll (N-F18)
-        if self.c in S2B_CAMPAIGNS and not self.a2_stopped() and self.fr_scan(st):
+        if self.c in FR_ONLY and not self.a2_stopped() and self.fr_scan(st):
             return                                                         # fr_stop written: rebuild (N-FR5)
         G = self.G
         active = next((ph for ph in G["phases"] if any(not _is_terminal(st[jid]) for jid, j in G["jobs_by_id"].items()
@@ -3106,7 +3438,7 @@ class Runner:
         if active != getattr(self, "phase_now", None):
             self.mark_phase(active)
         jobs = [j for j in G["jobs_by_id"].values() if j["phase"] == active]
-        if self.c in S2B_CAMPAIGNS and active != "a2" and self.a2_stopped():
+        if self.c in FR_ONLY and active != "a2" and self.a2_stopped():
             # N-FR5: an early stop seen in another phase (every later cell swept to not_started_cap by a hard-cap
             # refusal): the FR cells not started still get their not_run_gate record
             self.a2_phase(list(G["jobs_by_id"].values()), st)
@@ -3236,6 +3568,27 @@ class Runner:
             inp = {"cells": [sp], "attempt": att, "fix_note": note if att == 2 else None}
         elif g == "c3_complete":
             inp = {"c1": {"c3_labels": [x["label"] for x in self.G["jobs_by_id"].values() if x["kind"] == "sp"]}}
+        elif g == "s2b_projection":
+            # N-C3B5 (S2B section 8; R-1): H_spent of the fr ledger at the point fr (the FR-decision projection) and
+            # of the live ledger at the point c3b; the C1 timings are derived by scripts/49 as for the section 16 one
+            if j["point"] == "fr":
+                led = read_json(os.path.join(self.node.c("fr"), "ledger.json"))
+                if not isinstance(led, dict) or led.get("complete") is not True or led.get("H_spent_h") is None:
+                    raise Stop("gate s2b_projection at the point fr: fr/ledger.json is missing or not complete: no "
+                               "projection and no job start (N-C3B5, I-23)")
+                h = float(led["H_spent_h"])
+            else:
+                h = self.h_spent()
+            inp = {"point": j["point"], "H_spent_h": h}
+            if not self.be.mock:
+                # N-C3B8 (review finding 2): the site table is refused by scripts/49 at this first gate, before any job
+                inp["c1"] = {"c3b_sites": c3b_site_table(self.state)}
+            if self.c3b_point_again(j):
+                inp["reevaluate"] = True                                    # N-C3B5 (review finding 6)
+        elif g == "c3b_complete":
+            inp = {"c1": {"c3b_labels": [x["label"] for x in self.G["jobs_by_id"].values() if x["kind"] == "sp"]}}
+        elif g == "c3b_tier":
+            inp = {"c1": {"c3b_sites": {} if self.be.mock else c3b_site_table(self.state)}}
         return inp, att
 
     def run_gate(self, j):
@@ -3260,6 +3613,15 @@ class Runner:
             # N-FR4, N-FR8: before it is applied, so before the copy and the marker below; the readers of fr find gate
             # FR 'written but not applied' by these names alone (IX-15), and the self-test (z29) pins the order
             self.s2b_decision_check(j, dec)
+        if j["gate"] == "s2b_projection":
+            # N-C3B5 (amendment 2026-11-16a R-4): over the cap nothing can be cut (C4b is not run): a STOP, the
+            # decision not applied and no marker written, so that a relaunch evaluates the gate again
+            oc = (out.get("result") or {}).get("over_cap")
+            if oc is not False:
+                raise Stop(f"gate {j['id']}: " + ("P + U exceeds the cap of 520 node-h" if oc is True else
+                                                  "the gate file holds no result.over_cap") +
+                           ": with C4b not run there is nothing to cut; the decision is not applied and c3b stops "
+                           "(S2B section 8, amendment 2026-11-16a; N-C3B5)")
         self.state.update(copy.deepcopy(dec))                               # N-D1
         self.save_state()
         c46.dump_public(out, self.gate_marker(j)[:-5] + ".gate.json")      # every evaluation kept (step-0 twice)
@@ -3283,6 +3645,8 @@ class Runner:
         """N-FR4: an fr gate decision holds only its own key (fr_step0 or FR), and that only decision fields
         (FR_STEP0_KEYS, FR_DECISION_KEYS: no value, check list or validity leaf); N-FR8: gate FR agrees with the scan
         (FR-1 passed and no fr_stop, or fr_stop at FR.cell with FR.kind). A STOP otherwise, before it is applied."""
+        if self.c == "c3b":
+            return self.c3b_decision_check(j, dec)
         want = "fr_step0" if j["gate"] == "fr_step0" else "FR"
         if set(dec) != {want}:
             raise Stop(f"gate {j['id']}: the decision keys {sorted(dec)} are not [{want!r}] (N-FR4): not applied")
@@ -3301,6 +3665,42 @@ class Runner:
                 raise Stop(f"gate FR ({fr.get('outcome')} at {fr.get('cell')}, {fr.get('kind')}) disagrees with the "
                            f"runner's early stop {fs} (N-FR8): not applied; read decision.FR of gates/FR.json "
                            f"through s2b/guard.py GateLeaves only (S2B section 1)")
+
+    def c3b_point_again(self, j):
+        """N-C3B5 (review finding 6): True iff the projection point of gate job j is the last point the state records
+        and the job has no marker: its decision was saved and the node was lost before the marker was written. The
+        point is then evaluated again and must give the same decision; with a marker it is never evaluated again."""
+        pts = (self.state.get("s2b_projection") or {}).get("points") or []
+        return bool(j.get("point")) and pts[-1:] == [j.get("point")] and not os.path.exists(self.gate_marker(j))
+
+    def c3b_decision_check(self, j, dec):
+        """N-C3B5 (amendment 2026-11-16a, interface): a c3b gate decision holds only its own key, with decision
+        fields only. s2b_projection: the points evaluated so far in their order, cuts [], c4b_run false and the origin
+        of scripts/49 (C4b is not run); c3b_complete: a boolean; c3b_tier: computable and n_d of Sr, Cl, Cs and GA
+        (0 to 8 hosts), computable being 'n_d >= 2 for Cl, Cs or GA'. A STOP otherwise, before it is applied."""
+        want = j["gate"]
+        if want not in C3B_GATE_KEYS or set(dec) != {want}:
+            raise Stop(f"gate {j['id']}: the decision keys {sorted(dec)} are not [{want!r}] (N-C3B5): not applied")
+        sub = dec[want]
+        if want == "c3b_complete":
+            ok = isinstance(sub, bool)
+        elif not isinstance(sub, dict) or sorted(sub) != sorted(C3B_GATE_KEYS[want]):
+            ok = False
+        elif want == "s2b_projection":
+            prev = list((self.state.get("s2b_projection") or {}).get("points") or [])
+            if self.c3b_point_again(j):
+                prev = prev[:-1]                                            # the same decision once more (finding 6)
+            ok = (sub["points"] == prev + [j.get("point")] and sub["points"] == ["fr", "c3b"][:len(sub["points"])]
+                  and sub["cuts"] == [] and sub["c4b_run"] is False and g49.C4B_PLANNED is False
+                  and sub["c4b_origin"] == g49.C4B_ORIGIN)
+        else:
+            nd = sub["n_d"]
+            ok = (isinstance(sub["computable"], bool) and isinstance(nd, dict) and sorted(nd) == sorted(C3B_DOPANTS)
+                  and all(isinstance(v, int) and not isinstance(v, bool) and 0 <= v <= 8 for v in nd.values())
+                  and sub["computable"] is any(nd[d] >= g49.C3B_TIER_MIN_HOSTS for d in C3B_DECISIVE))
+        if not ok:
+            raise Stop(f"gate {j['id']}: decision.{want} is not a c3b decision of that gate (fields "
+                       f"{sorted(sub) if isinstance(sub, dict) else type(sub).__name__}; N-C3B5): not applied")
 
     def record_path(self, j):
         return os.path.join(self.cdir, {"smoke": "smoke.json", "smoke2": "smoke2.json", "tp": "throughput.json"}[j["what"]])
@@ -3424,6 +3824,16 @@ class Runner:
         wid = j["work_id"]
         d = self.L.cell_dir(self.c, wid)
         if os.path.exists(self.L.record(self.c, wid)):
+            if self.c == "c3b" and j.get("action") == "relax":
+                # N-C3B6: the one validity leaf the runner reads (through the blinded loader): the reading itself
+                try:
+                    rd5 = (c46.load_record(self.L.record(self.c, wid), blind=True).get("validity") or {}).get(
+                        "check5_reading")
+                except (OSError, ValueError) as e:
+                    raise Stop(f"{wid}: its record cannot be read ({type(e).__name__}; N-C3B6)")
+                if rd5 != "invariant":
+                    raise Stop(f"{wid}: its record does not hold the invariant reading of check 5 (check5_reading "
+                               f"{rd5!r}; S2B section 3, X4; N-C3B6)")
             if wid not in self.walls.get(j["xkind"], {}):
                 try:
                     w = (c46.load_record(self.L.record(self.c, wid), blind=True).get("relax") or {}).get("wall_s")
@@ -3546,6 +3956,8 @@ class Runner:
         os.makedirs(d, exist_ok=True)
         jf = os.path.join(d, "job.json")
         job = self.job46(j, action=j["action"], work_id=wid)
+        if self.c == "c3b" and j["action"] == "relax":
+            job["check5_reading"] = "invariant"                             # X4 (N-C3B6): V+, D and D+V cells
         old = read_json(jf)
         if old is not None and old != job:
             raise Stop(f"{wid}: the job differs from its earlier attempts (a rerun must be identical, section 13)")
@@ -4180,7 +4592,9 @@ class Runner:
         """K2 fail, a pending or final step-0 failure, K3 fail_replan or a1_only, or a recorded stop. 'repeat_pending'
         (after STEP0_FIX) is not a stop: C2 runs again from relaxation 1 for the one repeat (I-D1, review-2 F3)."""
         s = self.state
-        if self.c in S2B_CAMPAIGNS:                                         # N-FR5: no C2 decision key is read
+        if self.c == "c3b":                                                 # N-C3B2: no A2 in c3b; no C2 key is read
+            return False
+        if self.c in FR_ONLY:                                               # N-FR5: no C2 decision key is read
             return (s.get("fr_step0") or {}).get("outcome") in ("fail_pending_fix", "fail_final") or bool(s.get("fr_stop"))
         return (s.get("K2") == "fail" or (s.get("step0") or {}).get("outcome") in ("fail_pending_fix", "fail_final")
                 or s.get("K3") in ("fail_replan", "a1_only") or bool(s.get("a2_stopped")))
@@ -4578,7 +4992,7 @@ class Runner:
                 if st[j["id"]] == "running":
                     # a 'cap' or 'spot' request is replaced by the gate's (round-4 missed item, N-F37)
                     self.request_exit(j["label"], self.L.a2_dir(self.c, j["label"]), "gate")
-                elif st[j["id"]] == "pending" or (self.c in S2B_CAMPAIGNS and st[j["id"]] == "not_started_cap" and
+                elif st[j["id"]] == "pending" or (self.c in FR_ONLY and st[j["id"]] == "not_started_cap" and
                                                   read_json(self.a2_path(j["label"])) is None):
                     # S2B section 2: an FR cell not started is not_run_gate, also after a hard-cap refusal of an
                     # earlier cell (that cell keeps its not_started_cap record; N-FR5)
@@ -4590,10 +5004,10 @@ class Runner:
                                                                 "section 16)")
                     else:
                         r["status"] = "not_run_gate"
-                        r["status_reason"] = self.fr_stop_reason() if self.c in S2B_CAMPAIGNS else \
+                        r["status_reason"] = self.fr_stop_reason() if self.c in FR_ONLY else \
                             "A2 stopped by a gate decision"
                         write_json(r, self.a2_path(j["label"]))
-                        if self.c in S2B_CAMPAIGNS:
+                        if self.c in FR_ONLY:
                             self.cache.pop(j["id"], None)                  # a cached not_started_cap (N-FR5)
             return
         if self.held() or self.stopping or self.pending_stop:
@@ -4605,7 +5019,7 @@ class Runner:
             s = st[j["id"]]
             if s != "pending":
                 continue
-            if self.c in S2B_CAMPAIGNS and j["label"] != self.fr_next:
+            if self.c in FR_ONLY and j["label"] != self.fr_next:
                 continue                                                     # N-FR1: one cell at a time, in order
             r = self.a2_rec(j)
             if busy >= copies:
@@ -4661,9 +5075,9 @@ class Runner:
 
     # ---- the main loop
     def run(self):
-        why = self.s2b_refusal()
+        why = self.s2b_refusal() or self.c3b_refusal()
         if why:
-            print(f"refused: {why}; nothing started", file=sys.stderr)         # N-FR3: before any write
+            print(f"refused: {why}; nothing started", file=sys.stderr)         # N-FR3, N-C3B4: before any write
             return 2
         os.makedirs(self.cdir, exist_ok=True)
         self.take_lock()
@@ -4841,6 +5255,45 @@ def _below(rp, rd):
         x = up
 
 
+def c3b_archive_out_refusal(out):
+    """N-C3B7 (archive --campaign c3b; S2B section 1, X15): the c3b archive is private until E. The reason an --out
+    is refused, or None: its last component is not exactly 'c3b' (E's private root holds c3b/), or its real path lies
+    inside this checkout or inside results/objective2/s2 of any checkout it runs through (links followed; case
+    variants and aliases as _below). Read only; nothing is made."""
+    rp = os.path.realpath(out)
+    if os.path.basename(rp) != "c3b":
+        return "the last component of --out is not exactly 'c3b' (the private root holds c3b/)"
+    if _below(rp, os.path.realpath(ROOT)) is not None:
+        return "--out lies inside this checkout; the c3b archive is private until E"
+    x = rp
+    while os.path.dirname(x) != x:
+        if [p.casefold() for p in x.split(os.sep)[-3:]] == ["results", "objective2", "s2"]:
+            return "--out lies under results/objective2/s2 of a checkout; the c3b archive is private until E"
+        x = os.path.dirname(x)
+    x = os.path.dirname(rp)
+    while True:                                                             # review finding 10: any checkout
+        if os.path.lexists(os.path.join(x, ".git")):
+            return "--out lies inside a checkout (a directory above it holds .git); the c3b archive is private until E"
+        if os.path.dirname(x) == x:
+            return None
+        x = os.path.dirname(x)
+
+
+def write_manifest(out):
+    """N-C3B7 (amendment 2026-11-16a, interface): MANIFEST.sha256 of an archive directory, written last: one line
+    '<sha256>  <relative path>' for every file under out except the manifest itself, sorted by path ('/' separators).
+    Returns (number of files, sha256 of the manifest)."""
+    rows = []
+    for dp, _, fns in os.walk(out):
+        for fn in fns:
+            rel = os.path.relpath(os.path.join(dp, fn), out).replace(os.sep, "/")
+            if rel != "MANIFEST.sha256":
+                rows.append((rel, sha256_file(os.path.join(dp, fn))))
+    rows.sort()
+    write_text("".join(f"{h}  {rel}\n" for rel, h in rows), os.path.join(out, "MANIFEST.sha256"))
+    return len(rows), sha256_file(os.path.join(out, "MANIFEST.sha256"))
+
+
 def archive_out_refusal(out):
     """N-FR3 (archive --campaign fr only): the reason an --out is refused, or None. Inside results/objective2/s2 of
     this checkout, or of any checkout that its real path runs through (links followed, a dangling one included), only
@@ -4867,10 +5320,14 @@ def archive(stage, campaign, out):
     file, names that differ only in case (N-F15), and any written JSON or log that fails the hygiene check. For fr
     (S2b) it first refuses an --out inside results/objective2/s2 other than its fr tree, before anything is read or
     written (archive_out_refusal, N-FR3); c1-c4 are unchanged."""
-    if campaign in S2B_CAMPAIGNS:
+    if campaign in FR_ONLY:
         why = archive_out_refusal(out)
         if why:
             raise S2Error(f"archive --campaign {campaign}: {why} (N-FR3): nothing written")
+    if campaign == "c3b":
+        why = c3b_archive_out_refusal(out)
+        if why:
+            raise S2Error(f"archive --campaign c3b: {why} (N-C3B7): nothing written")
     cw, jobs = os.path.join(stage, "work", campaign), os.path.join(stage, "jobs", f"s2{campaign}")
     if not os.path.isdir(cw):
         raise S2Error(f"no pulled campaign directory for {campaign}")
@@ -4962,6 +5419,10 @@ def archive(stage, campaign, out):
         write_text("".join(lines), os.path.join(out, "logs", "campaign.log"))
         if c46.hygiene_violations("".join(lines)):
             raise S2Error("the scrubbed log still fails the hygiene check")
+    if campaign == "c3b":                                                   # N-C3B7: the last step
+        nfiles, msha = write_manifest(out)
+        return {"campaign": campaign, "counts": dict(n), "labels": len(seen), "structures": len(set(structs)),
+                "manifest": {"file": "MANIFEST.sha256", "files": nfiles, "sha256": msha}}
     return {"campaign": campaign, "counts": dict(n), "labels": len(seen), "structures": len(set(structs))}
 
 
@@ -4976,6 +5437,17 @@ def cmd_status(root):
         if isinstance(s2b[k], dict):
             s2b[k] = {x: v for x, v in s2b[k].items() if x in keys}
     print("state (S2b):", json.dumps(s2b, sort_keys=True))                       # N-FR8: decisions only
+    c3b = {k: s.get(k) for k in C3B_STATE_KEYS if k != "campaign_commit"}
+    for k, keys in C3B_GATE_KEYS.items():
+        if isinstance(c3b[k], dict):
+            c3b[k] = {x: v for x, v in c3b[k].items() if x in (keys or ())}
+    if any(v is not None for v in c3b.values()):
+        print("state (c3b):", json.dumps(c3b, sort_keys=True))                  # N-C3B5: decisions only
+    cnt = ((read_json(L.gate("c3b", "c3b_tier")) or {}).get("result") or {}).get("invariant_only_counts")
+    if isinstance(cnt, dict):
+        # the one result leaf of a c3b gate file that is printed: three counts, no label and no value (the reader
+        # of C3_OPERATIONS.md D-C3-18 as adapted for c3b; review finding 14)
+        print("c3b_tier invariant-only cells:", json.dumps({k: cnt.get(k) for k in ("V", "D", "DV")}, sort_keys=True))
     for c in CAMPAIGNS:
         cd = L.campaign_dir(c)
         if not os.path.isdir(cd):
@@ -5212,6 +5684,21 @@ class MockBackend(NodeBackend):
         super().__init__(root)
         self.sys = os.path.dirname(os.path.abspath(root))
         self.cfg = _mock_cfg(self.sys)
+        if self.cfg.get("checkout"):
+            # a synthetic checkout for the files a dated route reads (the c3b note, E's block 4): the c3b campaign
+            # case; without the key the checkout is this repository, as before
+            self.node.checkout = self.cfg["checkout"]
+
+    def gate_dry(self, gate, campaign, inputs):
+        """The scripted dry run of the mock node: mock/config.json 'gate_dry' {rc, decision, over_cap, out}; None when
+        none is scripted. The inputs file exists while it runs and names the point fr."""
+        d = self.cfg.get("gate_dry")
+        if d is None:
+            return None
+        assert (read_json(inputs) or {}).get("point") == "fr", inputs
+        rc = int(d.get("rc", 0))
+        rec = {"gate": gate, "campaign": campaign, "decision": d.get("decision"), "over_cap": d.get("over_cap")}
+        return rc, (rec if rc == 0 else None), str(d.get("out", ""))
 
     def boot_id(self):
         return open(os.path.join(self.sys, "mock", "boot_id")).read().strip()
@@ -5274,8 +5761,8 @@ class MockBackend(NodeBackend):
 
     def cmd46(self, action, jobfile):
         hang = self.cfg.get("mace_hang") or {}
-        if action == "relax" and hang.get("wid") == (read_json(jobfile) or {}).get("work_id") and \
-                hang.get("boot") == self.boot_id():
+        if action in ("relax", "relax-host") and hang.get("wid") == (read_json(jobfile) or {}).get("work_id") and \
+                hang.get("boot") == self.boot_id():                     # relax-host: the c3b case (a host-wave loss)
             return [self.python, os.path.abspath(__file__), "_mock46", "hang", "--job", jobfile]   # case (g)
         if "46_s2_cells.py" not in MOCKED:
             return [self.python, os.path.join(HERE, "46_s2_cells.py"), action, "--job", jobfile]
@@ -5287,7 +5774,11 @@ class MockBackend(NodeBackend):
                                   timeout=600).returncode
 
     def gate(self, gate, campaign, log, inputs, attempt):
-        dec = (self.cfg.get("gates") or {}).get(gate, {})
+        gates = self.cfg.get("gates") or {}
+        dec = gates.get(gate, {})
+        point = (read_json(inputs) or {}).get("point") if inputs else None
+        if point is not None and f"{gate}@{point}" in gates:               # a gate evaluated at several points (c3b:
+            dec = gates[f"{gate}@{point}"]                                 # s2b_projection@fr, @c3b); else as before
         res = (self.cfg.get("gate_results") or {}).get(gate, {"scripted": True})      # a scripted result (N-FR8 test)
         L = c46.Layout(kind="node", root=self.node.root)
         write_json({"schema": "s2-gate-1", "gate": gate, "campaign": campaign, "result": res,
@@ -5302,7 +5793,38 @@ class MockBackend(NodeBackend):
         return {"schema": "s2-mace-1", "passed": True, "scripted": True}
 
     def graph(self, campaign, state):
+        if campaign == "c3b":
+            return graph_ref_c3b(state).to_json()
         return (graph_ref_fr(state) if campaign == "fr" else graph_ref(state)).to_json()
+
+
+C3B_REF_SPS = (("s2_m06_host", ("host", {})), ("s2_m06_VB136", ("V", {"L": "B", "j": 136})),
+               ("s2_m06_Sr136o0_novac", ("D", {"T": "Sr", "j": 136, "n": 0, "leg": "novac"})),
+               ("s2_m06_Sr136o0_vac", ("D", {"T": "Sr", "j": 136, "n": 0, "leg": "vac"})))
+
+
+def graph_ref_c3b(state):
+    """The self-test c3b campaign (N-C3B1): the checks and the four gates of graph_c3b around one host and one site of
+    the reference cell (ref233, Sr at B136, default pose): the host relaxation, V+, the pair and its two legs, and
+    their four single points. The labels name the production host m06 (the grammar needs a pool host); every cell
+    behind them is a reference cell (N-1)."""
+    G = Graph("c3b", PHASES["c3b"])
+    G.add("check:upf", "check", "check", what="upf")
+    G.add("check:nodescripts", "check", "check", what="nodescripts")
+    G.add("check:mace", "check", "check", what="mace")
+    G.add("gate:s2b_projection@fr", "gate", "pre", [], gate="s2b_projection", point="fr", cat="gate")
+    G.add("gate:s2b_projection@c3b", "gate", "pre", ["gate:s2b_projection@fr"], gate="s2b_projection", point="c3b",
+          cat="gate")
+    G.add("mace:" + wid_of("ref233", "host"), "mace", "mace", [], action="relax-host", member="ref233",
+          work_id=wid_of("ref233", "host"), cell_kind="host", role="reference", cat="mace_host", xkind="host")
+    _mace_site(G, "c3b", "ref233", "B", 136, ("Sr",), role="reference", cat_dopant="mace_dopant",
+               starts=lambda T, j: [0], prov=False)
+    for lab, (kind, kw) in C3B_REF_SPS:
+        c46.check_label(lab)
+        _sp(G, lab, wid_of("ref233", kind, **kw), "sp")
+    G.add("gate:c3b_complete", "gate", "gate", [], gate="c3b_complete", cat="gate")
+    G.add("gate:c3b_tier", "gate", "gate", ["gate:c3b_complete"], gate="c3b_tier", cat="gate")
+    return G
 
 
 def graph_ref_fr(state):
@@ -5818,6 +6340,116 @@ def self_test(work=None):
                 f"{bootC[:8]} lists fr; archive {ar['labels']} labels; archive --out: {len(bad_outs)} paths inside "
                 f"results/objective2/s2 outside fr refused (and one through the CLI), nothing written; s2/fr accepted")
     case("(fr) S2b campaign fr on the mock node after C1 (N-FR1 to N-FR8)", c_fr_campaign)
+
+    def c_c3b_campaign():
+        """S2b c3b on a mock node of its own, after a passed FR (N-C3B1 to N-C3B7): the reduced reference graph
+        (graph_ref_c3b), scripted gates, the real scripts/46 (mock-harmonic) and the committed queue scripts.
+        The route is satisfied in a synthetic repository (mock git answers; a stand-in checkout with a final note and
+        an implemented block 4), so the campaign always runs. The pre-route checks pass, with a scripted dry
+        evaluation; both projection points are applied before any job;
+        the node is lost during the host relaxation (the host wave) and c3b resumes in the next boot at the recorded
+        commit; expected CAMPAIGN_DONE with the four decisions in the state, the invariant reading on the V+, D and
+        D+V records (not on the host's), single points under jobs/s2c3b, the fr and c1 trees unchanged, both boots
+        listing c3b, and a private archive with MANIFEST.sha256 and state_end.json."""
+        # the synthetic repository of the route, as the fr cases have it: the mock git answers of _c3b_git (a
+        # recorded fr campaign commit and a strict-descendant c3b HEAD) and a stand-in checkout holding a final note
+        # and an implemented block 4 (mock/config.json 'checkout'); this repository's own note and block 4 are not read
+        date_ = _C3B_DATE
+        co = os.path.join(base, "c3b_camp", "checkout")
+        nd = {"Sr": 1, "Cl": 0, "Cs": 2, "GA": 0}
+        proj = lambda pts: {"s2b_projection": {"points": pts, "cuts": [], "c4b_run": False,          # noqa: E731
+                                               "c4b_origin": g49.C4B_ORIGIN}}
+        dec_tier = {"c3b_tier": {"computable": True, "n_d": nd}}
+        boot1, boot2 = "m-boot", "n" * 8 + "-boot-n"
+        cfg = dict(_c3b_git(), gates={"s2b_projection@fr": proj(["fr"]), "s2b_projection@c3b": proj(["fr", "c3b"]),
+                                      "c3b_complete": {"c3b_complete": True}, "c3b_tier": dec_tier},
+                   gate_results={"s2b_projection": {"over_cap": False}},
+                   gate_dry={"rc": 0, "decision": proj(["fr"]), "over_cap": False}, checkout=co,
+                   mace_hang={"wid": "s2_ref233_host", "boot": boot1})
+        sysd, Rx = _c3b_mini(base, "camp", cfg=cfg)
+        assert _c3b_checkout(sysd) == co and c3b_block4_reason(open(os.path.join(co, C3B_BLOCK4)).read()) is None
+        W = os.path.join(Rx, "work", "s2")
+        os.remove(os.path.join(W, "ledger", f"boot.{boot1}.json"))        # the runner writes its own boot records
+        _node_scripts(sysd)
+        spx = _Spot()
+        write_text(f"http://localhost:{spx.port}/latest/meta-data/instance/spot/termination-time\n",
+                   os.path.join(Rx, "setup", "s2_spot_url"))
+        write_json({}, os.path.join(sysd, "mock", "pw_scenarios.json"))
+        envx = dict(os.environ, PATH=os.path.join(sysd, "bin") + os.pathsep + os.environ.get("PATH", ""))
+        envx.pop("S2_LOCK_FD", None)
+        Lx = c46.Layout(kind="node", root=Rx)
+        cd = Lx.campaign_dir("c3b")
+        sp_ = os.path.join(W, "state.json")
+        st0 = read_json(sp_)
+        trees0 = {c: tree_sha(os.path.join(W, c)) for c in ("c1", "fr")}
+        os.makedirs(cd, exist_ok=True)
+        write_text(f"{_C3B_H} {date_} {C3B_NOTE}\n", os.path.join(cd, "CAMPAIGN_COMMIT"))
+
+        def go(tag):
+            lf = open(os.path.join(base, f"runner_c3b_{tag}.log"), "w")
+            p = subprocess.Popen([sys.executable, me, "run", "--campaign", "c3b", "--root", Rx, "--mock"], env=envx,
+                                 stdout=lf, stderr=subprocess.STDOUT, start_new_session=True)
+            procs[f"c3b_{tag}"] = p
+            return p
+        p = go("1")
+        hd = Lx.cell_dir("c3b", "s2_ref233_host")
+        wait_for(lambda: os.path.exists(os.path.join(hd, "fire.log")), 240, "the host relaxation to start (boot 1)")
+        st1 = read_json(sp_)
+        assert st1["s2b_projection"] == proj(["fr", "c3b"])["s2b_projection"], st1.get("s2b_projection")   # before any job
+        inp_fr = read_json(os.path.join(cd, "gates_applied", "gate_s2b_projection_fr.inputs.json"))
+        assert (inp_fr.get("point"), inp_fr.get("H_spent_h")) == ("fr", 150.0), inp_fr     # the fr ledger of the mini tree
+        assert st1["campaign_commit"] == {"fr": _C3B_F, "c3b": _C3B_H} and st1["commit"] == st0["commit"]
+        os.killpg(p.pid, signal.SIGKILL); p.wait()                         # a node loss in the host wave
+        write_text(boot2, os.path.join(sysd, "mock", "boot_id"))
+        write_text(f"{time.time():.0f}", os.path.join(sysd, "mock", f"btime.{boot2}"))
+        p = go("2")
+        wait_for(lambda: p.poll() is not None, 300, "the c3b runner to end (boot 2)")
+        log = open(os.path.join(base, "runner_c3b_2.log")).read()
+        assert p.returncode == 0 and os.path.exists(os.path.join(cd, "CAMPAIGN_DONE")), (p.returncode, log[-2000:])
+        st2 = read_json(sp_)
+        assert st2["s2b_projection"] == proj(["fr", "c3b"])["s2b_projection"] and st2["c3b_complete"] is True and \
+            st2["c3b_tier"] == dec_tier["c3b_tier"] and st2["campaigns"]["c3b"] == "done", st2
+        assert st2["campaign_commit"] == {"fr": _C3B_F, "c3b": _C3B_H} and st2["commit"] == st0["commit"] and \
+            st2["commit_history"][-1]["via"] == "c3b/CAMPAIGN_COMMIT" and st2["K3"] == "fail_replan"
+        assert all(st2.get(k) == st0.get(k) for k in ("FR", "fr_step0", "K2", "K3", "step0", "cuts", "n", "G1", "pose"))
+        comp = read_json(os.path.join(cd, "completeness.json"))["jobs"]
+        assert all(comp[g] == "done" for g in ("gate:s2b_projection@fr", "gate:s2b_projection@c3b", "gate:c3b_complete",
+                                               "gate:c3b_tier")), comp
+        assert all(v == "done" for k, v in comp.items() if k.startswith(("sp:", "mace:"))), comp
+        rd5 = {w: (c46.load_record(Lx.record("c3b", w), blind=True).get("validity") or {}).get("check5_reading")
+               for w in ("s2_ref233_host", "s2_ref233_VB136", "s2_ref233_Sr136p0_novac", "s2_ref233_Sr136p0_vac")}
+        assert rd5 == {"s2_ref233_host": None, "s2_ref233_VB136": "invariant", "s2_ref233_Sr136p0_novac": "invariant",
+                       "s2_ref233_Sr136p0_vac": "invariant"}, rd5
+        for lab, _ in C3B_REF_SPS:
+            d = Lx.sp_dir("c3b", lab)
+            assert "s2c3b" in d.split(os.sep) and q47.sp_status(d, lab)["status"] == "complete", (lab, d)
+        assert {c: tree_sha(os.path.join(W, c)) for c in ("c1", "fr")} == trees0, "c3b changed a file of c1/ or fr/"
+        assert not os.path.lexists(os.path.join(W, "c4b")) and not os.path.lexists(os.path.join(W, "c3"))
+        for b in (boot1, boot2):
+            assert "c3b" in read_json(os.path.join(W, "ledger", f"boot.{b}.json"))["campaigns"], b
+        assert glob.glob(os.path.join(cd, "CAMPAIGN_COMMIT.used.*")) and not os.path.exists(os.path.join(cd, "CAMPAIGN_COMMIT"))
+        assert "fr_outcome" not in (read_json(os.path.join(cd, "campaign.json")) or {})
+        stage = os.path.join(base, "pull_c3b")
+        os.makedirs(os.path.join(stage, "jobs"), exist_ok=True)
+        shutil.copytree(W, os.path.join(stage, "work"), ignore=shutil.ignore_patterns("smoke", "tp", "tmp"))
+        shutil.copytree(os.path.join(Rx, "jobs", "s2c3b"), os.path.join(stage, "jobs", "s2c3b"))
+        priv = os.path.join(base, "c3b_private", "c3b")
+        os.makedirs(os.path.dirname(priv), exist_ok=True)
+        ar = archive(stage, "c3b", priv)
+        mf = open(os.path.join(priv, "MANIFEST.sha256")).read().splitlines()
+        se = read_json(os.path.join(priv, "state_end.json"))
+        assert ar["manifest"]["files"] == len(mf) and ar["manifest"]["sha256"] == sha256_file(os.path.join(priv, "MANIFEST.sha256"))
+        assert se["c3b_tier"] == dec_tier["c3b_tier"] and se["s2b_projection"] == proj(["fr", "c3b"])["s2b_projection"], se
+        clog = open(os.path.join(cd, "campaign.log")).read()
+        assert "c3b pre-route checks passed (N-C3B8)" in clog and "dry s2b_projection at the point fr" in clog
+        return (f"route admitted {_C3B_H[:8]} in a synthetic repository (final note, implemented block 4) after the "
+                f"pre-route checks with a scripted dry evaluation; both projection "
+                f"points applied before the first job (H_spent of the fr ledger at the point fr); node loss in the host "
+                f"wave, resumed in boot {boot2[:8]} at the recorded commit; CAMPAIGN_DONE with s2b_projection, "
+                f"c3b_complete, c3b_tier (n_d {nd}); the invariant reading on V+, D, D+V and not on the host; "
+                f"{len(C3B_REF_SPS)} single points complete under jobs/s2c3b; c1/ and fr/ unchanged; both boots list "
+                f"c3b; private archive with MANIFEST.sha256 ({len(mf)} files) and state_end.json")
+    case("(c3b) S2b campaign c3b on a mock node of its own (N-C3B1 to N-C3B7)", c_c3b_campaign)
 
     def c_a2stop():
         R3 = os.path.join(base, "a2stop", "data")
@@ -9122,8 +9754,8 @@ def self_test(work=None):
     case("(z31) S2b fr: step-0 failure, STEP0_NO_ERROR, the repeat's inputs, k = 0 after a relaunch (N-FR6)", c_fr_step0)
 
     def c_fr_relaunch():
-        """N-FR1: s2_relaunch.sh relaunches a running fr and lists fr/CAMPAIGN_STOPPED (refusing); s2_campaign.sh
-        accepts fr only."""
+        """N-FR1: s2_relaunch.sh relaunches a running fr and lists fr/CAMPAIGN_STOPPED (refusing). N-C3B1: at the c3b
+        commit s2_campaign.sh accepts c3b only, so c1-c4, fr and c4b get its usage line and exit 2."""
         sysd, Rm = mini("frrel")
         W = os.path.join(Rm, "work", "s2")
         write_json({"status": "done"}, os.path.join(W, "c2", "campaign.json")); write_text("x\n", os.path.join(W, "c2", "CAMPAIGN_DONE"))
@@ -9137,11 +9769,27 @@ def self_test(work=None):
         a_ = "R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2"
         write_text(camp.replace(a_, f"R={sysd}/none; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup"),
                    os.path.join(sysd, "camp.sh"))
-        for c in ("c1", "c2", "c3", "c4", "c3b"):
+        for c in ("c1", "c2", "c3", "c4", "fr", "c4b"):                # at the c3b commit only c3b starts (N-C3B1)
             pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), c], capture_output=True, text=True)
-            assert pr.returncode == 2 and "usage: s2_campaign.sh fr" in pr.stderr, (c, pr.returncode, pr.stderr)
-        return ("a running fr: WOULD RELAUNCH fr; fr/CAMPAIGN_STOPPED listed and the relaunch refused; s2_campaign.sh "
-                "refuses c1-c4 (usage, exit 2)")
+            assert pr.returncode == 2 and "usage: s2_campaign.sh c3b" in pr.stderr, (c, pr.returncode, pr.stderr)
+        # c3b passes the launcher's campaign test (review finding 13): it gets no usage line and fails only at the
+        # next step, the checkout this copy does not have; nothing is made
+        pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), "c3b"], capture_output=True, text=True)
+        assert pr.returncode == 1 and "usage:" not in pr.stderr and not os.path.isdir(os.path.join(W, "c3b")), \
+            (pr.returncode, pr.stderr)
+        # a running c3b is the one campaign s2_relaunch.sh relaunches (CAMPS holds c3b); stopped, it is listed
+        sysd2, Rm2 = mini("c3brel")
+        W2 = os.path.join(Rm2, "work", "s2")
+        write_json({"status": "done"}, os.path.join(W2, "fr", "campaign.json")); write_text("x\n", os.path.join(W2, "fr", "CAMPAIGN_DONE"))
+        write_json({"status": "running"}, os.path.join(W2, "c3b", "campaign.json"))
+        rr3, so3 = r3_relaunch(sysd2, Rm2)
+        assert rr3 == 0 and "WOULD RELAUNCH c3b" in so3, (rr3, so3)
+        write_text("2026-11-20 stopped for the test\n", os.path.join(W2, "c3b", "CAMPAIGN_STOPPED"))
+        rr4, so4 = r3_relaunch(sysd2, Rm2)
+        assert rr4 == 1 and f"{W2}/c3b/CAMPAIGN_STOPPED" in so4 and "WOULD RELAUNCH" not in so4, (rr4, so4)
+        return ("a running fr: WOULD RELAUNCH fr; fr/CAMPAIGN_STOPPED listed and the relaunch refused; a running c3b: "
+                "WOULD RELAUNCH c3b; c3b/CAMPAIGN_STOPPED listed and the relaunch refused; s2_campaign.sh accepts c3b "
+                "only: c1-c4, fr and c4b are refused (usage, exit 2), c3b passes that test")
     case("(z32) S2b fr: s2_relaunch.sh and s2_campaign.sh (N-FR1)", c_fr_relaunch)
 
     def c_fr_git():
@@ -9187,6 +9835,9 @@ def self_test(work=None):
                 f"and changed paths; changed paths A..B, A..C, B..C; {n_bad} unknown-commit calls STOP")
     case("(z33) S2b fr: the git helpers of the dated routes on a real repository (N-FR2)", c_fr_git)
 
+    for nm_, fn_ in c3b_cases(base):                           # (z34)-(z41): S2b c3b (N-C3B1 to N-C3B7)
+        case(nm_, fn_)
+
     for p in procs.values():                                   # nothing of the simulated campaign is left running
         if p.poll() is None:
             try:
@@ -9199,6 +9850,818 @@ def self_test(work=None):
     nf = sum(not x for _, x in results)
     print(f"SELF-TEST {'PASS' if not nf else 'FAIL'} ({len(results)} cases, {nf} failed, {time.time() - t0:.0f} s)")
     return 1 if nf else 0
+
+
+# ---------------------------------------------------------------- self-test cases of c3b (N-C3B1 to N-C3B7)
+# Module-level, each on its own mini node tree, with no reference cell, no pw.x and no spot endpoint: self_test() runs
+# them after the fr cases, and they can be run alone (c3b_cases(directory)). Synthetic states and decisions only.
+_C3B_A, _C3B_F, _C3B_H = "a" * 40, "f" * 40, "c" * 40           # the S2 commit, the fr commit, a c3b HEAD
+_C3B_DATE = "2026-11-17"
+
+
+def _c3b_state(**over):
+    """The state after a passed FR, as c3b finds it: K3 fail_replan and the other C2 keys stay as recorded."""
+    s = synthetic_state(commit=_C3B_A, G1={"Cl": True, "Ca": False}, K3="fail_replan",
+                        campaigns={"c1": "done", "c2": "done", "c3": "not_run", "fr": "done"},
+                        campaign_commit={"fr": _C3B_F},
+                        commit_history=[{"from": _C3B_A, "to": _C3B_F, "note": "2026-11-14 results/objective2/s2/"
+                                         "FR_OPERATIONS.md", "time": "2026-11-15T00:00:00Z",
+                                         "via": "fr/CAMPAIGN_COMMIT", "campaign": "fr"}],
+                        fr_step0={"attempts": 1, "outcome": "pass", "repeat": False, "fix_note": None},
+                        FR={"outcome": "pass", "FR1": True, "FR2": True, "part": None, "cell": None, "kind": None})
+    s.update(over)
+    return s
+
+
+def _c3b_git(head=_C3B_H, **over):
+    """The mock git answers of an admissible c3b commit (MockBackend reads them from mock/config.json)."""
+    fro = "results/objective2/s2/FR_OPERATIONS.md"
+    cfg = {"git_head": head, "git_ancestors": [[_C3B_A, _C3B_F], [_C3B_A, head], [_C3B_F, head]],
+           "git_tracked_paths": [C3B_NOTE, C3B_BLOCK4, fro],
+           "git_changed": {f"{_C3B_F}..{head}": [C3B_NOTE, C3B_BLOCK4, "scripts/50_s2_campaign.py"],
+                           f"{_C3B_A}..{head}": [C3B_NOTE, C3B_BLOCK4, fro, "scripts/50_s2_campaign.py"]}}
+    cfg.update(over)
+    return cfg
+
+
+def _c3b_mini(base, tag, *, state=None, cfg=None, fr=None, nrule=True):
+    """A mini node tree: mock boot and config, state.json, the fr tree of a done fr (CAMPAIGN_DONE, campaign.json with
+    fr_outcome pass, a complete ledger; fr: overrides, a None value removing the file) and C1's applied n rule."""
+    sysd = os.path.join(base, "c3b_" + tag); Rm = os.path.join(sysd, "data")
+    for dd in ("data/work/s2/ledger", "data/jobs", "data/setup", "data/pseudo", "mock", "bin"):
+        os.makedirs(os.path.join(sysd, dd), exist_ok=True)
+    write_text("m-boot", os.path.join(sysd, "mock", "boot_id"))
+    write_text(f"{time.time() - 60:.0f}", os.path.join(sysd, "mock", "btime.m-boot"))
+    write_json(_c3b_git() if cfg is None else cfg, os.path.join(sysd, "mock", "config.json"))
+    W = os.path.join(Rm, "work", "s2")
+    write_json({"boot_id": "m-boot", "btime": time.time() - 60, "campaigns": []},
+               os.path.join(W, "ledger", "boot.m-boot.json"))
+    if state is not False:
+        write_json(_c3b_state() if state is None else state, os.path.join(W, "state.json"))
+    files = {"CAMPAIGN_DONE": "x\n", "campaign.json": {"status": "done", "fr_outcome": "pass"},
+             "ledger.json": {"complete": True, "H_spent_h": 150.0, "problems": []}}
+    files.update(fr or {})
+    for f, v in files.items():
+        if v is not None:
+            (write_text if isinstance(v, str) else write_json)(v, os.path.join(W, "fr", f))
+    if nrule:
+        write_json({"schema": "s2-gate-applied-1", "gate": "nrule"}, os.path.join(W, "c1", "gates_applied",
+                                                                                 "gate_nrule.json"))
+    return sysd, Rm
+
+
+def _c3b_checkout(sysd, *, block4="BLOCK4_IMPLEMENTED = True\n", note=f"C3b operations, {_C3B_DATE}.\n"):
+    """A stand-in checkout holding the c3b note and E's block 4 (the runner reads both from the checkout)."""
+    co = os.path.join(sysd, "checkout")
+    if note is not None:
+        write_text(note, os.path.join(co, C3B_NOTE))
+    if block4 is not None:
+        write_text(block4, os.path.join(co, C3B_BLOCK4))
+    return co
+
+
+def _c3b_runner(Rm, load=True, c="c3b"):
+    rn = Runner(c, Rm, MockBackend(Rm)); rn.boot = "m-boot"
+    if load:
+        rn.state = rn.load_state()
+    return rn
+
+
+def _c3b_sites(h):
+    """Synthetic site sets of a production host (2 / 3 / 8 first-shell and two far sites per sublattice)."""
+    return {"B": {"first": [124, 136], "far": [76, 172]}, "A": {"first": [28, 92, 128], "far": [188, 164]},
+            "X": {"first": [3, 49, 53, 90, 102, 125, 126, 138], "far": [175, 186]}}
+
+
+def _c3b_stop(fn, word):
+    try:
+        fn()
+    except Stop as e:
+        assert word in str(e), (word, str(e))
+        return str(e)
+    raise AssertionError(f"no STOP ({word})")
+
+
+def c3b_cases(base):
+    """[(name, function)]: the self-test cases of campaign c3b."""
+
+    def z34():
+        """N-C3B1: the c3b graph is the c3 graph but for its gates; the counts are the literals of S2B section 3."""
+        st = _c3b_state()
+        g3, gb = graph("c3", st, sites=_c3b_sites), graph("c3b", st, sites=_c3b_sites)
+        assert gb["campaign"] == "c3b" and gb["phases"] == list(PHASES["c3"]) == list(PHASES["c3b"]), gb["phases"]
+        assert gb["counts"] == C3B_COUNTS == expected_counts("c3b", st)[0] and assert_counts(gb, st)
+        assert C3B_COUNTS == {"mace_host": 8, "mace_V": 8 * 19, "mace_dopant": 8 * 48, "sp": 8 * 68, "gate": 4}
+        # the same jobs in the same order; only 'seq' differs (c3b has one more gate before them)
+        rest3 = [{k: v for k, v in j.items() if k != "seq"} for j in g3["jobs"] if j["kind"] != "gate"]
+        restb = [{k: v for k, v in j.items() if k != "seq"} for j in gb["jobs"] if j["kind"] != "gate"]
+        assert rest3 == restb and len(restb) == 3 + 8 + 536 + 544 + 496, len(restb)
+        assert [j["seq"] for j in gb["jobs"]] == list(range(len(gb["jobs"])))
+        gates = [(j["id"], j["phase"], j["deps"], j["gate"], j.get("point")) for j in gb["jobs"] if j["kind"] == "gate"]
+        assert gates == [("gate:s2b_projection@fr", "pre", [], "s2b_projection", "fr"),
+                         ("gate:s2b_projection@c3b", "pre", ["gate:s2b_projection@fr"], "s2b_projection", "c3b"),
+                         ("gate:c3b_complete", "gate", [], "c3b_complete", None),
+                         ("gate:c3b_tier", "gate", ["gate:c3b_complete"], "c3b_tier", None)], gates
+        assert [j["id"] for j in g3["jobs"] if j["kind"] == "gate"] == ["gate:projection@c3", "gate:c3_complete"]
+        # cuts, multi_pose_cut and a multi pose are not read by the c3b graph (the precondition stops on the pose)
+        odd = _c3b_state(cuts=[{"cut": 6}, {"cut": 7}, {"cut": 8}], multi_pose_cut={"Cs": True},
+                         pose={"Cs": "multi", "Cl": "multi"})
+        assert graph("c3b", odd, sites=_c3b_sites)["jobs"] == gb["jobs"]
+        assert graph("c3", _c3b_state(pose={"Cs": "multi", "Cl": "default"}), sites=_c3b_sites)["counts"] != g3["counts"]
+        # multi poses with no cut (under cuts 6 and 7 c3_multi is false whatever the pose; review finding 4): the c3
+        # graph grows, the c3b graph does not
+        multi = _c3b_state(pose={"Cs": "multi", "Cl": "multi"})
+        assert c3_multi(multi, "Cs") and c3_multi(multi, "Cl") and not c3_multi(odd, "Cs")
+        assert graph("c3b", multi, sites=_c3b_sites)["jobs"] == gb["jobs"]
+        assert len(graph("c3", multi, sites=_c3b_sites)["jobs"]) > len(g3["jobs"])
+        # the counts of c3b are returned before any legacy cut is read (review finding 12)
+        assert expected_counts("c3b", _c3b_state(cuts="not a list"))[0] == C3B_COUNTS
+        for bad in (_c3b_state(n=10), _c3b_state(n=None), _c3b_state(stage0={"production_n8": ["m06"]})):
+            try:
+                graph("c3b", bad, sites=_c3b_sites); raise AssertionError("a c3b graph without n = 8 hosts")
+            except S2Error:
+                pass
+        tab = c3b_site_table(st, sites=_c3b_sites)
+        assert sorted(tab) == sorted(st["stage0"]["production_n8"]) and tab["m06"]["A"] == {"first": [28, 92, 128],
+                                                                                           "far": [188, 164]}
+        assert "c3b" in CAMPAIGNS and GRAPHS["c3b"] is graph_c3b and S2B_CAMPAIGNS == ("fr", "c3b") and FR_ONLY == ("fr",)
+        return (f"c3b graph: the {len(restb)} non-gate jobs of c3, gates s2b_projection@fr, @c3b (pre), c3b_complete, "
+                f"c3b_tier (gate); counts 8 / 152 / 384 / 544 / 4 pinned; cuts and a multi pose not read; n = 8 needed")
+
+    def z35():
+        """N-C3B4: a c3b start that FR does not allow is refused before any write (exit 2, no c3b tree)."""
+        import contextlib
+        rows = [("frrun", dict(state=_c3b_state(campaigns={"c1": "done", "c2": "done", "c3": "not_run",
+                                                           "fr": "running"})), "campaigns.fr"),
+                ("nodone", dict(fr={"CAMPAIGN_DONE": None}), "fr/CAMPAIGN_DONE"),
+                ("frfail", dict(state=_c3b_state(FR={"outcome": "fail", "FR1": False, "FR2": None, "part": "FR-1",
+                                                     "cell": "s2r_m30_VA188", "kind": "check"})), "not a pass"),
+                ("fr2", dict(state=_c3b_state(FR={"outcome": "fail", "FR1": True, "FR2": False, "part": "FR-2",
+                                                  "cell": None, "kind": None})), "not a pass"),
+                ("frpart", dict(state=_c3b_state(FR={"outcome": "pass", "FR1": True, "FR2": True, "part": "FR-2",
+                                                     "cell": None, "kind": None})), "not a pass"),
+                ("nofr", dict(state={k: v for k, v in _c3b_state().items() if k != "FR"}), "not a pass"),
+                ("frstop", dict(state=_c3b_state(fr_stop={"at": "s2r_m30_VA188", "kind": "check"})), "fr_stop"),
+                ("s0", dict(state=_c3b_state(fr_step0={"attempts": 2, "outcome": "fail_final"})), "step-0"),
+                ("cj", dict(fr={"campaign.json": {"status": "done", "fr_outcome": "fail (FR-2)"}}), "fr/campaign.json"),
+                ("cjstop", dict(fr={"campaign.json": {"status": "stopped", "fr_outcome": "pass"}}), "fr/campaign.json"),
+                ("nocj", dict(fr={"campaign.json": None}), "fr/campaign.json"),
+                ("c4bkey", dict(state=_c3b_state(campaigns={"c1": "done", "c2": "done", "c3": "not_run", "fr": "done",
+                                                            "c4b": "not_run"})), "c4b"),
+                ("nostate", dict(state=False), "no state.json")]
+        for tag, kw, word in rows:
+            sysd, Rm = _c3b_mini(base, "ref_" + tag, **kw)
+            rn = _c3b_runner(Rm, load=False)
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                rc = rn.run()
+            assert rc == 2 and word in err.getvalue() and "nothing started" in err.getvalue(), (tag, rc, err.getvalue())
+            assert not os.path.lexists(rn.cdir) and not os.path.exists(rn.node.keep_alive), tag
+        sysd, Rm = _c3b_mini(base, "ref_c4btree")
+        os.makedirs(os.path.join(Rm, "work", "s2", "c4b"))
+        rn = _c3b_runner(Rm, load=False)
+        assert "c4b" in rn.c3b_refusal() and not os.path.lexists(rn.cdir)
+        sysd, Rm = _c3b_mini(base, "ref_badjson")
+        write_text("{not json", os.path.join(Rm, "work", "s2", "state.json"))
+        assert "cannot be read" in _c3b_runner(Rm, load=False).c3b_refusal()
+        sysd, Rm = _c3b_mini(base, "ref_ok")
+        rn = _c3b_runner(Rm, load=False)
+        assert rn.c3b_refusal() is None and rn.s2b_refusal() is None           # K3 fail_replan is not read
+        assert _c3b_runner(Rm, load=False, c="fr").c3b_refusal() is None       # fr-only: no c3b refusal for fr
+        return (f"{len(rows) + 2} refusals before any write (fr not done, FR not a pass, fr_stop, step-0, "
+                f"fr/campaign.json, a c4b tree or entry, no or unreadable state): exit 2, no c3b tree; a passed FR "
+                f"with K3 fail_replan is admitted")
+
+    def z36():
+        """N-C3B4: the preconditions of c3b, each alone a STOP; no C2 key is read."""
+        ok = _c3b_state(K2="fail", step0={"outcome": "fail_final"}, cuts=[{"cut": 8}], c4_run=False, a2_stopped=True)
+        sysd, Rm = _c3b_mini(base, "pre_ok", state=ok)
+        rn = _c3b_runner(Rm)
+        assert rn.preconditions() is None and rn.a2_stopped() is False and rn.state == ok
+        camp = dict(ok["campaigns"])
+        rows = [({"campaigns": {**camp, "c2": "running"}}, "c2 is"), ({"campaigns": {**camp, "c3": "done"}}, "c3 is"),
+                ({"campaigns": {**camp, "c1": "stopped"}}, "c1 is"), ({"campaigns": {**camp, "c4": "not_run"}}, "C4"),
+                ({"campaigns": {k: v for k, v in camp.items() if k != "fr"}}, "fr is"),
+                ({"n": 10}, "n = 8"), ({"n": None}, "n = 8"), ({"G1": {"Cl": True, "Ca": True}}, "G1"),
+                ({"G1": {"Cl": False, "Ca": False}}, "G1"), ({"G1": {}}, "G1"),
+                ({"pose": {"Cs": "multi", "Cl": "default"}}, "poses"), ({"pose": {"Cs": "default"}}, "poses"),
+                ({"stage0": {"production_n8": ["m06"] * 7}}, "eight hosts"), ({"stage0": {}}, "eight hosts")]
+        for over, word in rows:
+            r_ = _c3b_runner(Rm); r_.state.update(over)
+            _c3b_stop(r_.preconditions, word)
+        sysd2, Rm2 = _c3b_mini(base, "pre_nonrule", state=ok, nrule=False)
+        _c3b_stop(_c3b_runner(Rm2).preconditions, "n rule")
+        MOCKED.append("49_s2_gates.py")
+        try:
+            _c3b_stop(_c3b_runner(Rm).preconditions, "stub")
+        finally:
+            MOCKED.remove("49_s2_gates.py")
+        g49.C4B_PLANNED = True
+        try:
+            _c3b_stop(_c3b_runner(Rm).preconditions, "C4B_PLANNED")
+        finally:
+            g49.C4B_PLANNED = False
+        assert g49.C4B_PLANNED is False and g49.C4B_ORIGIN == "decision (S2B amendment 2026-11-16a)"
+        return (f"preconditions: a state with K3 fail_replan, K2 fail, a final step-0 failure, cut 8 and a2_stopped "
+                f"passes (no C2 key read; a2_stopped False); {len(rows) + 3} single defects are STOPs (campaign "
+                f"states, n, the n rule, G1, poses, the host list, the scripts/49 stub, a planned C4b)")
+
+    def z37():
+        """N-C3B3: the dated route of c3b."""
+        line = f"{_C3B_H} {_C3B_DATE} {C3B_NOTE}\n"
+
+        def start(tag, *, cfg=None, state=None, route=line, **co):
+            sysd, Rm = _c3b_mini(base, "route_" + tag, cfg=cfg, state=state)
+            rn = _c3b_runner(Rm)
+            rn.node.checkout = _c3b_checkout(sysd, **co)
+            if route is not None:
+                write_text(route, os.path.join(rn.cdir, "CAMPAIGN_COMMIT"))
+            return rn
+        _c3b_stop(start("none", route=None).check_commit, "no c3b/CAMPAIGN_COMMIT")
+        rn = start("ok")
+        before = copy.deepcopy(rn.state)
+        rn.check_commit()
+        s = read_json(rn.node.state)
+        assert s["campaign_commit"] == {"fr": _C3B_F, "c3b": _C3B_H} and s["commit"] == _C3B_A
+        assert s["commit_history"][:-1] == before["commit_history"] and len(s["commit_history"]) == 2
+        h = s["commit_history"][-1]
+        assert (h["from"], h["to"], h["via"], h["campaign"], h["note"]) == \
+            (_C3B_F, _C3B_H, "c3b/CAMPAIGN_COMMIT", "c3b", f"{_C3B_DATE} {C3B_NOTE}"), h
+        assert {k: v for k, v in s.items() if k not in ("campaign_commit", "commit_history")} == \
+            {k: v for k, v in before.items() if k not in ("campaign_commit", "commit_history")}
+        left = os.listdir(rn.cdir)
+        assert "CAMPAIGN_COMMIT" not in left and any(x.startswith("CAMPAIGN_COMMIT.used.") for x in left), left
+        # later starts: the same HEAD passes, also with fr's route file names lying about (not read); a leftover
+        # route file of the recorded commit is renamed; another HEAD is a STOP (no fix route)
+        r2 = _c3b_runner(os.path.dirname(rn.cdir).rsplit(os.sep + "work", 1)[0])
+        write_text("x 2026-11-18 note\n", os.path.join(r2.cdir, "STEP0_FIX"))
+        write_text("2026-11-18 none\n", os.path.join(r2.cdir, "STEP0_NO_ERROR"))
+        write_text(line, os.path.join(r2.cdir, "CAMPAIGN_COMMIT"))
+        r2.check_commit()
+        assert read_json(r2.node.state) == s and not os.path.exists(os.path.join(r2.cdir, "CAMPAIGN_COMMIT"))
+        assert os.path.exists(os.path.join(r2.cdir, "STEP0_FIX")) and os.path.exists(os.path.join(r2.cdir, "STEP0_NO_ERROR"))
+        write_text(f"{'d' * 40} {_C3B_DATE} {C3B_NOTE}\n", os.path.join(r2.cdir, "CAMPAIGN_COMMIT"))
+        _c3b_stop(r2.check_commit, "used once")
+        os.remove(os.path.join(r2.cdir, "CAMPAIGN_COMMIT"))
+        write_json(_c3b_git(head="d" * 40), os.path.join(os.path.dirname(r2.node.root), "mock", "config.json"))
+        _c3b_stop(r2.check_commit, "no fix route")
+        assert read_json(r2.node.state) == s
+        # refusals of the route, each alone; nothing is recorded and the file stays
+        fro = "results/objective2/s2/FR_OPERATIONS.md"
+        chg = _c3b_git()["git_changed"]
+        rows = [("frnote", dict(route=f"{_C3B_H} {_C3B_DATE} {fro}\n"), "the note of the c3b route"),
+                ("headfr", dict(cfg=_c3b_git(head=_C3B_F), route=f"{_C3B_F} {_C3B_DATE} {C3B_NOTE}\n"), "strict descendant"),
+                ("stub", dict(block4="X = 1\nBLOCK4_IMPLEMENTED = False\n"), "is the stub"),
+                ("stubi", dict(block4="    BLOCK4_IMPLEMENTED = False  # stub\n"), "is the stub"),
+                ("nob4", dict(cfg=_c3b_git(git_tracked_paths=[C3B_NOTE, fro])), "is not tracked"),
+                ("b4gone", dict(block4=None), "cannot be read"),
+                ("b4none", dict(block4="X = 1\n"), "holds no line"),
+                ("b4nosp", dict(block4="BLOCK4_IMPLEMENTED=False\n"), "is the stub"),
+                ("b4ann", dict(block4="BLOCK4_IMPLEMENTED: bool = True\n"), "otherwise than by the one line"),
+                ("b4two", dict(block4="BLOCK4_IMPLEMENTED = True\nBLOCK4_IMPLEMENTED = True\n"), "2 assignments"),
+                ("b4both", dict(block4="BLOCK4_IMPLEMENTED = True\nBLOCK4_IMPLEMENTED = False\n"), "2 assignments"),
+                ("b4ind", dict(block4="if True:\n    BLOCK4_IMPLEMENTED = True\n"), "otherwise than by the one line"),
+                ("ndraft", dict(note=f"DRAFT. C3b operations, {_C3B_DATE}.\n"), "still holds 'DRAFT'"),
+                ("ntoken", dict(note=f"C3b operations, {_C3B_DATE} (DATE-OF-COMMIT).\n"), "still holds 'DATE-OF-COMMIT'"),
+                ("nopen", dict(note=f"C3b operations, {_C3B_DATE}. **[open]** one item.\n"), "still holds '[open]'"),
+                ("unchanged", dict(cfg=_c3b_git(git_changed={**chg, f"{_C3B_F}..{_C3B_H}": ["scripts/50_s2_campaign.py"]})),
+                 "is not changed between"),
+                ("nodate", dict(note="C3b operations, undated.\n"), "does not contain its date"),
+                ("notanc", dict(cfg=_c3b_git(git_ancestors=[[_C3B_A, _C3B_F], [_C3B_A, _C3B_H]])), "is not an ancestor"),
+                ("nofrcc", dict(state=_c3b_state(campaign_commit={})), "no fr campaign commit"),
+                ("otherhead", dict(route=f"{'d' * 40} {_C3B_DATE} {C3B_NOTE}\n"), "is not the checkout HEAD"),
+                ("nodes", dict(cfg=_c3b_git(git_changed={**chg, f"{_C3B_A}..{_C3B_H}": ["ehpc/node/chain.sh"]})),
+                 "differ from the recorded S2 commit")]
+        for tag, kw, word in rows:
+            r_ = start(tag, **kw)
+            s0 = read_json(r_.node.state)
+            _c3b_stop(r_.check_commit, word)
+            assert read_json(r_.node.state) == s0 and os.path.exists(os.path.join(r_.cdir, "CAMPAIGN_COMMIT")), tag
+        ok2 = start("okb4", block4="# BLOCK4_IMPLEMENTED = False at the FR commit\nBLOCK4_IMPLEMENTED = True\n")
+        ok2.check_commit()                                                 # a comment naming the stub is no stub
+        assert read_json(ok2.node.state)["campaign_commit"]["c3b"] == _C3B_H
+        for i, b4 in enumerate(("BLOCK4_IMPLEMENTED=True\n", "X = 1\nBLOCK4_IMPLEMENTED = True  # block 4 done\n",
+                                "BLOCK4_IMPLEMENTED = True\nassert BLOCK4_IMPLEMENTED == True\n")):
+            assert c3b_block4_reason(b4) is None, b4
+            ok3 = start(f"okb4_{i}", block4=b4)
+            ok3.check_commit()
+            assert read_json(ok3.node.state)["campaign_commit"]["c3b"] == _C3B_H
+        return (f"route: accepted once (campaign_commit.c3b, history from the fr commit, state.commit and "
+                f"campaign_commit.fr unchanged, file renamed); the same HEAD later, fr's route files unread; another "
+                f"HEAD: no fix route; {len(rows)} refusals (FR_OPERATIONS.md as note, HEAD = the fr commit, a block 4 "
+                f"that is the stub, untracked, or without the one line 'BLOCK4_IMPLEMENTED = True', a note unchanged, "
+                f"undated or holding DRAFT, the date token or an open mark, ancestry, node scripts), nothing recorded")
+
+    def z38():
+        """N-C3B2: the protected state of a c3b runner; the fr digest is that of 0a3e8f0."""
+        sysd, Rm = _c3b_mini(base, "prot")
+        rn = _c3b_runner(Rm)
+        rn.state.update({"s2b_projection": {"points": ["fr"], "cuts": [], "c4b_run": False, "c4b_origin": "x"},
+                         "c3b_complete": True, "c3b_tier": {"computable": True, "n_d": {}}})
+        rn.state["campaign_commit"]["c3b"] = _C3B_H
+        rn.state["campaigns"]["c3b"] = "running"
+        rn.state["commit_history"].append({"from": _C3B_F, "to": _C3B_H})
+        rn.save_state()                                                    # its own keys: written
+        disk = read_json(rn.node.state)
+        rows = [(lambda s: s["FR"].update(outcome="fail"), "FR"), (lambda s: s.pop("FR"), "FR"),
+                (lambda s: s.update(fr_stop={"at": "x"}), "fr_stop"), (lambda s: s["fr_step0"].update(outcome="x"), "fr_step0"),
+                (lambda s: s["campaigns"].update(fr="stopped"), "campaigns.fr"),
+                (lambda s: s["campaigns"].update(c4b="running"), "campaigns.c4b"),
+                (lambda s: s["campaign_commit"].update(fr=_C3B_H), "campaign_commit.fr"),
+                (lambda s: s.update(K3="pass"), "K3"), (lambda s: s.update(cuts=[{"cut": 1}]), "cuts"),
+                (lambda s: s.update(c4_run=False), "c4_run"), (lambda s: s.update(n=10), "n"),
+                (lambda s: s.update(commit=_C3B_H), "commit"), (lambda s: s["commit_history"].pop(0), "commit_history")]
+        for change, key in rows:
+            r_ = _c3b_runner(Rm)
+            change(r_.state)
+            msg = _c3b_stop(r_.save_state, "N-FR4")
+            assert f" {key}" in msg.split(" changed;")[0], (key, msg)
+            assert read_json(r_.node.state) == disk, key
+        # fr: the digest formula of 0a3e8f0, recomputed here; an fr runner still writes fr's keys and not c3b's
+        s = _c3b_state()
+        keys = ("campaign_commit", "fr_step0", "fr_stop", "FR")
+        keep = {k: v for k, v in s.items() if k not in keys + ("campaigns", "commit_history")}
+        camp = {k: v for k, v in s["campaigns"].items() if k != "fr"}
+        blob = json.dumps([keep, camp, s["commit_history"], True], sort_keys=True, default=str)
+        assert Runner.protected(s) == Runner.protected(s, None, "fr") == (1, hashlib.sha256(blob.encode()).hexdigest())
+        assert Runner.protected(s, None, "c3b") != Runner.protected(s) and S2B_WRITES["fr"] == keys == S2B_STATE_KEYS
+        rf = _c3b_runner(Rm, c="fr")
+        rf.state["FR"]["outcome"] = "fail"; rf.state["campaign_commit"]["fr"] = _C3B_H
+        rf.save_state()
+        rf.state["s2b_projection"] = {}
+        _c3b_stop(rf.save_state, "s2b_projection")
+        return (f"protection: a c3b runner writes s2b_projection, c3b_complete, c3b_tier, campaign_commit.c3b, "
+                f"campaigns.c3b and new history entries; {len(rows)} other changes are STOPs naming the key, nothing "
+                f"written; the fr digest equals the 0a3e8f0 formula, and an fr runner may not write a c3b key")
+
+    def z39():
+        """N-C3B5: gate inputs, the decision check, the over-cap STOP and the end check."""
+        pj = {"points": ["fr"], "cuts": [], "c4b_run": False, "c4b_origin": g49.C4B_ORIGIN}
+        tier = {"computable": True, "n_d": {"Sr": 8, "Cl": 2, "Cs": 0, "GA": 1}}
+        sysd, Rm = _c3b_mini(base, "gates", cfg={**_c3b_git(), "gates": {"s2b_projection": {"s2b_projection": pj}},
+                                                 "gate_results": {"s2b_projection": {"over_cap": False}}})
+        rn = _c3b_runner(Rm)
+        jf = {"id": "gate:s2b_projection@fr", "kind": "gate", "phase": "pre", "gate": "s2b_projection", "point": "fr"}
+        jc = dict(jf, id="gate:s2b_projection@c3b", point="c3b")
+        jt = {"id": "gate:c3b_tier", "kind": "gate", "phase": "gate", "gate": "c3b_tier"}
+        jk = {"id": "gate:c3b_complete", "kind": "gate", "phase": "gate", "gate": "c3b_complete"}
+        rn.h_spent = lambda: 151.5
+        assert rn.gate_inputs(jf) == ({"point": "fr", "H_spent_h": 150.0}, 1)          # the fr ledger
+        assert rn.gate_inputs(jc) == ({"point": "c3b", "H_spent_h": 151.5}, 1)         # the live ledger
+        rn.G = {"jobs_by_id": {"sp:a": {"kind": "sp", "label": "s2_m06_host"}, "mace:x": {"kind": "mace"}}}
+        assert rn.gate_inputs(jk) == ({"c1": {"c3b_labels": ["s2_m06_host"]}}, 1)
+        assert rn.gate_inputs(jt) == ({"c1": {"c3b_sites": {}}}, 1)                    # the mock has no pool host
+        led = os.path.join(rn.node.c("fr"), "ledger.json")
+        for bad in ({"complete": False, "H_spent_h": 150.0}, {"complete": True}, []):
+            write_json(bad, led)
+            _c3b_stop(lambda: rn.gate_inputs(jf), "fr/ledger.json")
+        os.remove(led)
+        _c3b_stop(lambda: rn.gate_inputs(jf), "fr/ledger.json")
+        write_json({"complete": True, "H_spent_h": 150.0}, led)
+        # the arm of the real node (N-C3B8): the site table of the eight hosts goes to both projection points and to
+        # c3b_tier (the site sets come from the cache that site_sets fills; no geometry is read here)
+        hosts8 = c3b_hosts(rn.state)
+        keep = {h: _SITE_CACHE.get(h) for h in hosts8}
+        _SITE_CACHE.update({h: _c3b_sites(h) for h in hosts8})
+        rn.be.mock = False
+        try:
+            tab = c3b_site_table(rn.state)
+            assert tab == c3b_site_table(rn.state, sites=_c3b_sites) and sorted(tab) == sorted(hosts8) and len(tab) == 8
+            assert rn.gate_inputs(jt) == ({"c1": {"c3b_sites": tab}}, 1)
+            assert rn.gate_inputs(jf) == ({"point": "fr", "H_spent_h": 150.0, "c1": {"c3b_sites": tab}}, 1)
+            assert rn.gate_inputs(jc) == ({"point": "c3b", "H_spent_h": 151.5, "c1": {"c3b_sites": tab}}, 1)
+        finally:
+            del rn.be.mock                                                  # the class value (True) again
+            for h, v in keep.items():
+                if v is None:
+                    _SITE_CACHE.pop(h, None)
+                else:
+                    _SITE_CACHE[h] = v
+        assert rn.be.mock is True and rn.gate_inputs(jt) == ({"c1": {"c3b_sites": {}}}, 1)
+        # the decision check
+        good = [(jf, {"s2b_projection": pj}), (jk, {"c3b_complete": False}), (jt, {"c3b_tier": tier}),
+                (jt, {"c3b_tier": {"computable": False, "n_d": {"Sr": 8, "Cl": 1, "Cs": 1, "GA": 0}}})]
+        for j, dec in good:
+            rn.s2b_decision_check(j, dec)
+        bad = [(jf, {"s2b_projection": pj, "cuts": []}), (jf, {"cuts": [], "n": 8, "multi_pose_cut": {}, "c4_run": False}),
+               (jf, {"FR": {}}), (jf, {"s2b_projection": {**pj, "P_h": 1.0}}),
+               (jf, {"s2b_projection": {k: v for k, v in pj.items() if k != "c4b_origin"}}),
+               (jf, {"s2b_projection": {**pj, "cuts": [1]}}), (jf, {"s2b_projection": {**pj, "c4b_run": True}}),
+               (jf, {"s2b_projection": {**pj, "c4b_run": None}}), (jf, {"s2b_projection": {**pj, "c4b_origin": "cut 2"}}),
+               (jf, {"s2b_projection": {**pj, "points": ["c3b"]}}), (jf, {"s2b_projection": {**pj, "points": ["fr", "c3b"]}}),
+               (jc, {"s2b_projection": pj}), (jf, {"s2b_projection": [1]}),
+               (jk, {"c3b_complete": 1}), (jk, {"c3b_complete": {"complete": True}}), (jk, {"c3_complete": True}),
+               (jt, {"c3b_tier": {**tier, "computable": False}}), (jt, {"c3b_tier": {**tier, "E_b": 1.0}}),
+               (jt, {"c3b_tier": {"computable": True, "n_d": {"Sr": 8, "Cl": 1, "Cs": 1, "GA": 1}}}),
+               (jt, {"c3b_tier": {"computable": True, "n_d": {"Sr": 8, "Cl": 2, "Cs": 0}}}),
+               (jt, {"c3b_tier": {"computable": True, "n_d": {"Sr": 8, "Cl": 9, "Cs": 0, "GA": 0}}}),
+               (jt, {"c3b_tier": {"computable": True, "n_d": {"Sr": 8, "Cl": True, "Cs": 2, "GA": 0}}}),
+               (jt, {"c3b_tier": {"computable": True, "n_d": {"Sr": 8, "Cl": -1, "Cs": 2, "GA": 0}}}),     # below 0
+               (jt, {"c3b_tier": {"computable": True, "n_d": {"Sr": 8, "Cl": 2, "Cs": 0, "GA": 0, "Ca": 8}}}),
+               ({"id": "gate:FR", "gate": "FR"}, {"FR": {}})]
+        for j, dec in bad:
+            _c3b_stop(lambda j=j, dec=dec: rn.s2b_decision_check(j, dec), "not applied")
+        g49.C4B_PLANNED = True
+        try:
+            _c3b_stop(lambda: rn.s2b_decision_check(jf, {"s2b_projection": pj}), "not applied")
+        finally:
+            g49.C4B_PLANNED = False
+        # run_gate: applied when result.over_cap is False; a STOP, not applied and no marker, when it is True or absent
+        st0 = copy.deepcopy(rn.state)
+        for res in ({"over_cap": True}, {"scripted": True}, {"over_cap": None}):
+            rn.be.cfg["gate_results"] = {"s2b_projection": res}
+            _c3b_stop(lambda: rn.run_gate(jf), "nothing to cut")
+            assert rn.state == st0 and read_json(rn.node.state) == st0 and not os.path.exists(rn.gate_marker(jf))
+        rn.be.cfg["gate_results"] = {"s2b_projection": {"over_cap": False}}
+        rn.run_gate(jf)
+        assert rn.state["s2b_projection"] == pj and os.path.exists(rn.gate_marker(jf)) and \
+            read_json(rn.node.state)["s2b_projection"] == pj
+        assert {k: v for k, v in rn.state.items() if k != "s2b_projection"} == st0
+        _c3b_stop(lambda: rn.run_gate(jc), "not applied")                  # the scripted decision still names [fr]
+        rn.be.cfg["gates"] = {"s2b_projection": {"s2b_projection": {**pj, "points": ["fr", "c3b"]}},
+                              "c3b_complete": {"c3b_complete": True}, "c3b_tier": {"c3b_tier": tier}}
+        rn.run_gate(jc)
+        assert rn.state["s2b_projection"]["points"] == ["fr", "c3b"] and os.path.exists(rn.gate_marker(jc))
+        # review finding 6: the last recorded point is evaluated again only while its marker is absent (a node loss
+        # between the state and the marker) and must give the same decision; with the marker, never again
+        pj2 = {**pj, "points": ["fr", "c3b"]}
+        mk = rn.gate_marker(jc)
+        assert not rn.c3b_point_again(jc) and not rn.c3b_point_again(jf) and "reevaluate" not in rn.gate_inputs(jc)[0]
+        _c3b_stop(lambda: rn.s2b_decision_check(jc, {"s2b_projection": pj2}), "not applied")
+        os.replace(mk, mk + ".away")
+        assert rn.c3b_point_again(jc) and not rn.c3b_point_again(jf) and rn.gate_inputs(jc)[0]["reevaluate"] is True
+        rn.s2b_decision_check(jc, {"s2b_projection": pj2})
+        _c3b_stop(lambda: rn.s2b_decision_check(jc, {"s2b_projection": {**pj2, "points": ["fr", "c3b", "c3b"]}}),
+                  "not applied")
+        _c3b_stop(lambda: rn.s2b_decision_check(jf, {"s2b_projection": pj}), "not applied")    # fr is not the last point
+        rn.run_gate(jc)                                                    # the same decision, and now its marker
+        assert rn.state["s2b_projection"] == pj2 and os.path.exists(mk) and not rn.c3b_point_again(jc)
+        # the end check: every decision of state_end.json, else no CAMPAIGN_DONE
+        _c3b_stop(rn.c3b_end_check, "c3b_complete")
+        _c3b_stop(rn.finish, "CAMPAIGN_DONE is not written")
+        assert not os.path.exists(os.path.join(rn.cdir, "CAMPAIGN_DONE")) and \
+            not os.path.exists(os.path.join(rn.cdir, "state_end.json"))
+        rn.run_gate(jk)
+        _c3b_stop(rn.c3b_end_check, "c3b_tier")
+        rn.run_gate(jt)
+        rn.c3b_end_check()
+        for over, word in (({"s2b_projection": pj}, "s2b_projection"), ({"c3b_complete": None}, "c3b_complete"),
+                           ({"s2b_projection": {**rn.state["s2b_projection"], "c4b_run": True}}, "s2b_projection"),
+                           ({"c3b_tier": {"computable": True, "n_d": {"Sr": 1}}}, "c3b_tier")):
+            r_ = _c3b_runner(Rm); r_.state.update(over)
+            _c3b_stop(r_.c3b_end_check, word)
+        gp = c46.Layout(kind="node", root=Rm).gate("c3b", "c3b_tier")
+        gt = read_json(gp)
+        assert gt["result"] == {"scripted": True}
+        gt["result"] = {"invariant_only_counts": {"V": 1, "D": 2, "DV": 0, "other": 9}, "invariant_only": ["s2_m06_VB76"]}
+        write_json(gt, gp)
+        out = io.StringIO()
+        old, sys.stdout = sys.stdout, out
+        try:
+            cmd_status(Rm)
+        finally:
+            sys.stdout = old
+        il = [x for x in out.getvalue().splitlines() if x.startswith("c3b_tier invariant-only cells:")]
+        assert len(il) == 1 and json.loads(il[0].split(":", 1)[1]) == {"V": 1, "D": 2, "DV": 0} and \
+            "s2_m06_VB76" not in out.getvalue(), il                        # three counts, no label (review finding 14)
+        sl = [x for x in out.getvalue().splitlines() if x.startswith("state (c3b):")]
+        assert len(sl) == 1 and json.loads(sl[0][len("state (c3b):"):]) == {
+            "s2b_projection": rn.state["s2b_projection"], "c3b_complete": True, "c3b_tier": tier}, sl
+        return (f"gate inputs (H_spent of the fr ledger at fr, live at c3b; labels; sites); {len(good)} decisions pass "
+                f"and {len(bad) + 1} are STOPs before they are applied; over the cap, or without result.over_cap, "
+                f"the decision is not applied and no marker is written; the end check needs both points, "
+                f"c3b_complete and c3b_tier; status prints the c3b decisions")
+
+    def z40():
+        """N-C3B6, N-C3B2: the invariant reading on c3b relax jobs; the fr-only branches stay fr's."""
+        sysd, Rm = _c3b_mini(base, "jobs")
+        got = {}
+
+        class _P:
+            pid = 4242
+
+            def poll(self):
+                return None
+
+        def launch(c, j):
+            rn = _c3b_runner(Rm, c=c)
+            rn.held, rn.cap_ok = (lambda: False), (lambda *a, **k: True)
+            rn.be.spawn = lambda cmd, **kw: _P()
+            rn.lockfd = None
+            rn.launch_mace(j)
+            return read_json(os.path.join(rn.L.cell_dir(c, j["work_id"]), "job.json")), rn
+        jv = {"id": "mace:s2_ref233_VB136", "kind": "mace", "action": "relax", "work_id": "s2_ref233_VB136",
+              "member": "ref233", "cell_kind": "V", "L": "B", "site": 136, "xkind": "mace", "role": "reference"}
+        jh = {"id": "mace:s2_ref233_host", "kind": "mace", "action": "relax-host", "work_id": "s2_ref233_host",
+              "member": "ref233", "cell_kind": "host", "xkind": "host", "role": "reference"}
+        job, rn = launch("c3b", jv)
+        assert job["check5_reading"] == "invariant" and job["campaign"] == "c3b" and job["action"] == "relax"
+        assert "check5_reading" not in launch("c3b", jh)[0]
+        assert "check5_reading" not in launch("c1", jv)[0] and "check5_reading" not in launch("c1", jh)[0]
+        # a record of a V+, D or D+V cell must hold the invariant reading; a host record has none
+        rec = {"schema": "s2-cell-1", "work_id": jv["work_id"], "relax": {"wall_s": 60.0, "E_mace_eV": -1.0},
+               "validity": {"valid": True, "failed": [], "check5_reading": "invariant", "valid_as_written": True,
+                            "failed_as_written": [], "invariant_only": False}}
+        write_json(rec, rn.L.record("c3b", jv["work_id"]))
+        assert rn.mace_status(jv, "ok") == "done"
+        write_json({**rec, "validity": {"valid": True, "failed": []}}, rn.L.record("c3b", jv["work_id"]))
+        _c3b_stop(lambda: rn.mace_status(jv, "ok"), "invariant reading")
+        write_json({**rec, "work_id": jh["work_id"], "validity": {"valid": True, "failed": []}},
+                   rn.L.record("c3b", jh["work_id"]))
+        assert rn.mace_status(jh, "ok") == "done"
+        r1 = _c3b_runner(Rm, c="c1")
+        write_json({**rec, "validity": {"valid": True, "failed": []}}, r1.L.record("c1", jv["work_id"]))
+        assert r1.mace_status(jv, "ok") == "done"                          # c1: no reading is asked for
+        # the fr-only branches: no A2 stop, no FR scan, no fr_outcome for c3b
+        rc = _c3b_runner(Rm)
+        rc.state.update(K2="fail", fr_stop={"at": "x", "kind": "check"}, fr_step0={"outcome": "fail_final"})
+        assert rc.a2_stopped() is False
+        rf = _c3b_runner(Rm, c="fr")
+        rf.state.update(fr_stop={"at": "x", "kind": "check"})
+        assert rf.a2_stopped() is True
+
+        def _no(*a, **k):
+            raise AssertionError("the FR scan ran in c3b")
+        rc.fr_scan, rc.spot_check = _no, (lambda: True)
+        rc.G = {"phases": list(PHASES["c3b"]), "jobs_by_id": {"check:upf": {"id": "check:upf", "phase": "check"}}}
+        rc.schedule({"check:upf": "done"})
+        rc.state = rc.load_state()
+        rc.begin_stop("a test STOP")
+        cj = read_json(os.path.join(rc.cdir, "campaign.json"))
+        assert cj["status"] == "stopped" and "fr_outcome" not in cj and cj["commit"] is None, cj
+        return ("c3b relax jobs of V+, D, D+V carry check5_reading 'invariant' (host jobs and c1 jobs do not); a c3b "
+                "record of another reading is a STOP; a2_stopped is False for c3b whatever K2 and the fr keys say; no "
+                "FR scan and no fr_outcome in c3b")
+
+    def z41():
+        """N-C3B7: the private --out of the c3b archive and MANIFEST.sha256."""
+        top = os.path.join(base, "c3b_arch")
+        priv = os.path.join(top, "private", "c3b")
+        os.makedirs(os.path.join(top, "private"), exist_ok=True)
+        assert c3b_archive_out_refusal(priv) is None
+        os.makedirs(os.path.join(top, "co", "results", "objective2", "s2"), exist_ok=True)
+        os.symlink(os.path.join(top, "co", "results", "objective2", "s2"), os.path.join(top, "private", "link"))
+        os.symlink(os.path.join(ROOT, "results"), os.path.join(top, "private", "repo_results"))
+        assert c3b_archive_out_refusal(priv) is None, \
+            "the self-test directory lies inside a checkout (a directory above it holds .git): use another --work"
+        os.makedirs(os.path.join(top, "clone", ".git"), exist_ok=True)     # another clone (review finding 10)
+        for o in (os.path.join(top, "clone", "c3b"), os.path.join(top, "clone", "notes", "private", "c3b")):
+            assert "inside a checkout" in (c3b_archive_out_refusal(o) or ""), o
+        bad = [os.path.join(top, "clone", "c3b"), os.path.join(top, "clone", "notes", "private", "c3b"),
+               os.path.join(top, "private", "c3"), os.path.join(top, "private", "C3B"), os.path.join(top, "private"),
+               os.path.join(top, "private", "c3b", "x"), os.path.join(ROOT, "c3b"),
+               os.path.join(ROOT, "results", "objective2", "s2", "c3b"), os.path.join(ROOT, "private", "c3b"),
+               os.path.join(top, "co", "results", "objective2", "s2", "c3b"),
+               os.path.join(top, "co", "results", "objective2", "s2", "fr", "c3b"),
+               os.path.join(top, "co", "Results", "Objective2", "S2", "c3b"),
+               os.path.join(top, "private", "link", "c3b"), os.path.join(top, "private", "repo_results", "c3b")]
+        for b in bad:
+            assert c3b_archive_out_refusal(b), b
+            try:
+                archive(os.path.join(top, "stage"), "c3b", b); raise AssertionError(f"archived to {b}")
+            except S2Error as e:
+                assert "N-C3B7" in str(e) and "nothing written" in str(e), e
+            assert not os.path.lexists(b) or b == os.path.join(top, "private"), b
+        assert archive_out_refusal(os.path.join(ROOT, "results", "objective2", "s2", "fr")) is None      # fr: as before
+        assert archive_out_refusal(os.path.join(ROOT, "results", "objective2", "s2", "c3b")) is not None
+        cw = os.path.join(top, "stage", "work", "c3b")
+        write_json({"schema": "s2-campaign-1", "campaign": "c3b", "status": "done"}, os.path.join(cw, "campaign.json"))
+        write_json({"s2b_projection": {"points": ["fr", "c3b"]}}, os.path.join(cw, "state_end.json"))
+        write_json({"gate": "c3b_tier"}, os.path.join(cw, "gates", "c3b_tier.json"))
+        write_text("[2026-11-17T00:00:00Z] start c3b\n", os.path.join(cw, "campaign.log"))
+        res = archive(os.path.join(top, "stage"), "c3b", priv)
+        mf = os.path.join(priv, "MANIFEST.sha256")
+        lines = open(mf).read().splitlines()
+        files = sorted(os.path.relpath(os.path.join(dp, f), priv).replace(os.sep, "/")
+                       for dp, _, fs in os.walk(priv) for f in fs if f != "MANIFEST.sha256")
+        assert [x.split("  ", 1)[1] for x in lines] == files and len(files) >= 6 and "MANIFEST.sha256" not in files
+        assert all(x.split("  ", 1)[0] == sha256_file(os.path.join(priv, x.split("  ", 1)[1])) and
+                   re.fullmatch(r"[0-9a-f]{64}  \S.*", x) for x in lines)
+        assert res["manifest"] == {"file": "MANIFEST.sha256", "files": len(files), "sha256": sha256_file(mf)}
+        assert max(os.path.getmtime(os.path.join(priv, f)) for f in files) <= os.path.getmtime(mf)       # written last
+        try:
+            archive(os.path.join(top, "stage"), "c3b", priv); raise AssertionError("archived twice")
+        except S2Error:
+            pass
+        fr_out = os.path.join(top, "fr_out")
+        os.makedirs(os.path.join(top, "stage", "work", "fr"))
+        rfr = archive(os.path.join(top, "stage"), "fr", fr_out)
+        assert "manifest" not in rfr and not os.path.exists(os.path.join(fr_out, "MANIFEST.sha256"))    # c3b only
+        return (f"archive --campaign c3b: {len(bad)} --out refused before anything is written (not named c3b, inside "
+                f"this checkout, under results/objective2/s2 of a checkout, through links or a case variant); a "
+                f"private c3b/ is written and MANIFEST.sha256 lists its {len(files)} files, sorted, itself excluded, "
+                f"written last; fr gets no manifest")
+
+    def z42():
+        """N-C3B1 (mock node): the reduced reference graph of c3b that the mock backend serves, and its scripted gate
+        decisions keyed by the projection point."""
+        st = _c3b_state()
+        g = graph_ref_c3b(st).to_json()
+        assert g["campaign"] == "c3b" and g["phases"] == list(PHASES["c3b"]), g["phases"]
+        assert g["counts"] == {"mace_host": 1, "mace_V": 1, "mace_dopant": 2, "sp": 4, "gate": 4}, g["counts"]
+        row = lambda j: (j["id"], j["phase"], j["deps"], j["gate"], j.get("point"))            # noqa: E731
+        gates = [row(j) for j in g["jobs"] if j["kind"] == "gate"]
+        assert gates == [row(j) for j in graph("c3b", st, sites=_c3b_sites)["jobs"] if j["kind"] == "gate"], gates
+        assert len(gates) == 4 and [j["id"] for j in g["jobs"]][:3] == ["check:upf", "check:nodescripts", "check:mace"]
+        sps = {j["label"]: j["cell"] for j in g["jobs"] if j["kind"] == "sp"}
+        assert sps == {"s2_m06_host": "s2_ref233_host", "s2_m06_VB136": "s2_ref233_VB136",
+                       "s2_m06_Sr136o0_novac": "s2_ref233_Sr136p0_novac",
+                       "s2_m06_Sr136o0_vac": "s2_ref233_Sr136p0_vac"}, sps
+        assert all(j["deps"] == ["mace:" + j["cell"]] for j in g["jobs"] if j["kind"] == "sp")
+        assert {j["member"] for j in g["jobs"] if j["kind"] in ("mace", "g46")} == {"ref233"}       # N-1
+        relax = [j for j in g["jobs"] if j["kind"] == "mace"]
+        assert [(j["action"], j["cell_kind"]) for j in relax] == [("relax-host", "host"), ("relax", "V"), ("relax", "D"),
+                                                                 ("relax", "DV")], relax
+        d1 = {"s2b_projection": {"points": ["fr"], "cuts": [], "c4b_run": False, "c4b_origin": g49.C4B_ORIGIN}}
+        d2 = {"s2b_projection": {"points": ["fr", "c3b"], "cuts": [], "c4b_run": False, "c4b_origin": g49.C4B_ORIGIN}}
+        cfg = dict(_c3b_git(), gates={"s2b_projection@fr": d1, "s2b_projection@c3b": d2, "c3b_complete": {"c3b_complete": True},
+                                      "projection": {"cuts": []}},
+                   gate_results={"s2b_projection": {"over_cap": False}})
+        sysd, Rm = _c3b_mini(base, "refgraph", cfg=cfg)
+        be = MockBackend(Rm)
+        assert be.graph("c3b", st) == g and be.graph("fr", st)["campaign"] == "fr"
+        Lm = c46.Layout(kind="node", root=Rm)
+        gd = os.path.join(Rm, "work", "s2", "c3b", "gates_applied")
+        os.makedirs(gd, exist_ok=True)
+
+        def scripted(gate, campaign, inp):
+            ip = os.path.join(gd, "in.json")
+            write_json(inp, ip)
+            assert be.gate(gate, campaign, os.path.join(gd, "gates.log"), ip, 1) == 0
+            return read_json(Lm.gate(campaign, gate))
+        o1 = scripted("s2b_projection", "c3b", {"point": "fr", "H_spent_h": 1.0})
+        o2 = scripted("s2b_projection", "c3b", {"point": "c3b", "H_spent_h": 1.0})
+        assert o1["decision"] == d1 and o2["decision"] == d2 and o1["result"] == o2["result"] == {"over_cap": False}
+        o3 = scripted("c3b_complete", "c3b", {"c1": {"c3b_labels": []}})                # no point: the plain key
+        assert o3["decision"] == {"c3b_complete": True} and o3["result"] == {"scripted": True}, o3
+        o4 = scripted("projection", "c3", {"point": "c3", "H_spent_h": 1.0})            # a point without a keyed entry
+        assert o4["decision"] == {"cuts": []}, o4
+        o5 = scripted("s2b_projection", "c3b", {"point": "x", "H_spent_h": 1.0})        # an unknown point: no decision
+        assert o5["decision"] == {}, o5
+        return ("mock c3b graph: 1 host, 1 V+, 2 dopant relaxations, 4 single points (labels of m06 on reference cells), "
+                "the 4 gate rows of graph_c3b; the mock backend serves it for c3b and the fr graph for fr; scripted "
+                "s2b_projection decisions by point (fr, then fr and c3b), the plain key for a gate without a point or "
+                "without a keyed entry, and no decision for an unknown point")
+
+    def z43():
+        """N-C3B8 (review findings 1, 2, 3): the site table agrees with scripts/49 and with the graph's labels; the
+        checks that need no node work are made before the route is consumed; the walls of jobs/s2c3b are loaded."""
+        st = _c3b_state()
+        g = graph("c3b", st, sites=_c3b_sites)
+        tab = c3b_table_check(st, g, sites=_c3b_sites)
+        sp_labels = sorted(j["label"] for j in g["jobs"] if j["kind"] == "sp")
+        assert tab == c3b_site_table(st, sites=_c3b_sites) and len(g49.c3b_quartets(tab)) == 8 * 24
+        assert g49.c3b_table_labels(tab) == sp_labels and len(sp_labels) == len(set(sp_labels)) == 544
+        wids = {w for q in g49.c3b_quartets(tab) for w in q["wids"].values()}
+        assert wids == {j["cell"] for j in g["jobs"] if j["kind"] == "sp"} and len(wids) == 544      # the records read
+
+        def far_moved(h):
+            s = copy.deepcopy(_c3b_sites(h))
+            if h == "m06":
+                s["X"]["far"] = [175, 187]
+            return s
+
+        def short(h):
+            s = copy.deepcopy(_c3b_sites(h))
+            s["B"]["first"] = [124]
+            return s
+        g_less = dict(g, jobs=[j for j in g["jobs"] if j.get("label") != "s2_m06_host"])
+        n_tab = 0
+        for g_, sites_, word in ((g, far_moved, "not the single-point labels of the graph"),
+                                 (g_less, _c3b_sites, "not the single-point labels of the graph"),
+                                 (g, short, "site table is not that of S2B")):
+            try:
+                c3b_table_check(st, g_, sites=sites_)
+                raise AssertionError(f"a wrong site table passed ({word})")
+            except S2Error as e:
+                assert word in str(e) and "N-C3B8" in str(e), e
+                n_tab += 1
+        # the real node's graph build: the table is checked at each build (the site sets come from the cache)
+        hosts8 = c3b_hosts(st)
+        keep = {h: _SITE_CACHE.get(h) for h in hosts8}
+        line = f"{_C3B_H} {_C3B_DATE} {C3B_NOTE}\n"
+
+        def start(tag, **kw):
+            sysd, Rm = _c3b_mini(base, "pre_" + tag, **kw)
+            rn = _c3b_runner(Rm)
+            rn.node.checkout = _c3b_checkout(sysd)
+            write_text(line, os.path.join(rn.cdir, "CAMPAIGN_COMMIT"))
+            return rn
+        try:
+            _SITE_CACHE.update({h: _c3b_sites(h) for h in hosts8})
+            rn = start("build")
+            rn.be.mock = False
+            rn.be.graph = lambda c, s: graph(c, s)
+            assert rn.graph_now()["counts"] == C3B_COUNTS
+            _SITE_CACHE["m06"] = far_moved("m06")
+            rn.be.graph = lambda c, s: g                                # a graph that is not the table's
+            rn.gkey = None
+            try:
+                rn.graph_now()
+                raise AssertionError("a graph build with another site table passed")
+            except S2Error as e:
+                assert "N-C3B8" in str(e), e
+        finally:
+            for h, v in keep.items():
+                if v is None:
+                    _SITE_CACHE.pop(h, None)
+                else:
+                    _SITE_CACHE[h] = v
+        # before the route is consumed: each of these stops with no commit recorded and the route file left in place
+        rows = [("ledger", dict(fr={"ledger.json": {"complete": False, "H_spent_h": 150.0}}), "fr/ledger.json"),
+                ("noledger", dict(fr={"ledger.json": None}), "fr/ledger.json"),
+                ("n10", dict(state=_c3b_state(n=10)), "c3b preconditions"),
+                ("nrule", dict(nrule=False), "c3b preconditions"),
+                ("ca", dict(state=_c3b_state(G1={"Cl": True, "Ca": True})), "c3b preconditions")]
+        for tag, kw, word in rows:
+            r_ = start(tag, **kw)
+            s0 = read_json(r_.node.state)
+            _c3b_stop(r_.check_commit, word)
+            assert read_json(r_.node.state) == s0 and r_.state.get("campaign_commit") == s0["campaign_commit"], tag
+            assert os.path.exists(os.path.join(r_.cdir, "CAMPAIGN_COMMIT")) and \
+                not [x for x in os.listdir(r_.cdir) if x.startswith("CAMPAIGN_COMMIT.used")], tag
+        # after the remedy the same route file admits the commit
+        r_ = start("remedy", fr={"ledger.json": {"complete": False, "H_spent_h": 150.0}})
+        _c3b_stop(r_.check_commit, "fr/ledger.json")
+        write_json({"complete": True, "H_spent_h": 150.0}, os.path.join(r_.node.c("fr"), "ledger.json"))
+        r_.check_commit()
+        assert read_json(r_.node.state)["campaign_commit"] == {"fr": _C3B_F, "c3b": _C3B_H}
+        # the dry evaluation of s2b_projection at the point fr (scripted on the mock node): refused, over the cap,
+        # without the flag, or with another decision, the route is not consumed; a good one admits the commit
+        pj = {"s2b_projection": {"points": ["fr"], "cuts": [], "c4b_run": False, "c4b_origin": g49.C4B_ORIGIN}}
+        dry_rows = [("dryref", {"rc": 3, "out": "REFUSED: GateRefused: the site table"}, "did not complete (exit 3)"),
+                    ("dryover", {"rc": 0, "decision": pj, "over_cap": True}, "exceeds the cap of 520 node-h"),
+                    ("drynone", {"rc": 0, "decision": pj}, "no over_cap flag at the point fr"),
+                    ("drydec", {"rc": 0, "decision": {"s2b_projection": {**pj["s2b_projection"], "points": ["c3b"]}},
+                                "over_cap": False}, "not applied"),
+                    ("drykey", {"rc": 0, "decision": {"cuts": []}, "over_cap": False}, "not applied")]
+        for tag, dry, word in dry_rows:
+            r_ = start(tag, cfg=dict(_c3b_git(), gate_dry=dry))
+            s0 = read_json(r_.node.state)
+            _c3b_stop(r_.check_commit, word)
+            assert read_json(r_.node.state) == s0 and os.path.exists(os.path.join(r_.cdir, "CAMPAIGN_COMMIT")), tag
+            assert not os.path.isdir(os.path.join(r_.cdir, "gates")) and not os.path.isdir(os.path.join(r_.cdir, "gates_applied"))
+        r_ = start("dryok", cfg=dict(_c3b_git(), gate_dry={"rc": 0, "decision": pj, "over_cap": False}))
+        r_.check_commit()
+        assert read_json(r_.node.state)["campaign_commit"]["c3b"] == _C3B_H and "s2b_projection" not in r_.state
+        assert "dry s2b_projection at the point fr" in open(os.path.join(r_.cdir, "campaign.log")).read()
+        # the real path of that dry evaluation: scripts/49 `run --dry-run` in a child process on a node root (the
+        # timings given, so that no output is read); it writes nothing; a wrong table is refused there
+        rd = start("drycli")
+        ip = os.path.join(base, "c3b_pre_drycli", "dry_inputs.json")
+        timing = {"point": "fr", "H_spent_h": 150.0, "tau_SP_h": 0.5, "mace_h_per_relax": 0.02, "host_wave_h": 2.0}
+        write_json({**timing, "c1": {"c3b_sites": tab}}, ip)
+        before = sorted(os.path.join(dp, f) for dp, _, fs in os.walk(rd.node.work) for f in fs)
+        rc, rec, out = NodeBackend.gate_dry(rd.be, "s2b_projection", "c3b", ip)
+        assert rc == 0 and rec == {"gate": "s2b_projection", "campaign": "c3b", "decision": pj, "over_cap": False}, (rc, rec, out)
+        write_json({**timing, "c1": {"c3b_sites": {h: short(h) for h in tab}}}, ip)
+        rc2, rec2, out2 = NodeBackend.gate_dry(rd.be, "s2b_projection", "c3b", ip)
+        assert rc2 == 3 and rec2 is None and "site table is not that of S2B" in out2, (rc2, rec2, out2)
+        assert sorted(os.path.join(dp, f) for dp, _, fs in os.walk(rd.node.work) for f in fs) == before, "the dry run wrote"
+        # the real node's pre-route arm: a graph that is not the table's stops before the route is consumed
+        try:
+            _SITE_CACHE.update({h: _c3b_sites(h) for h in hosts8})
+            r_ = start("pretab")
+            r_.be.mock = False
+            r_.be.graph = lambda c, s: g_less
+            s0 = read_json(r_.node.state)
+            _c3b_stop(r_.check_commit, "before the route is consumed")
+            assert read_json(r_.node.state) == s0 and os.path.exists(os.path.join(r_.cdir, "CAMPAIGN_COMMIT"))
+        finally:
+            for h, v in keep.items():
+                if v is None:
+                    _SITE_CACHE.pop(h, None)
+                else:
+                    _SITE_CACHE[h] = v
+        # load_walls reads the single points of jobs/s2c3b (and no other tree that is not a campaign's)
+        rw = start("walls")
+        for c, lab, out in (("c3b", "s2_m06_host", True), ("c3b", "s2_m06_VB136", True), ("c3b", "s2_m02_host", False),
+                            ("c4b", "s2_m06_VA28", True)):
+            d = os.path.join(rw.node.jobs, f"s2{c}", lab)
+            write_text("x\n", os.path.join(d, f"{lab}.in"))
+            if out:
+                write_text("x\n", os.path.join(d, f"{lab}.out"))
+        rw.read_out = lambda what, lab, mode, fn, *a, **k: {"status": "complete", "wall_s": 1800.0}
+        rw.load_walls()
+        assert rw.walls.get("sp") == {"c3b:s2_m06_host": 0.5, "c3b:s2_m06_VB136": 0.5}, rw.walls
+        return (f"the site table passes scripts/49 and gives the graph's 544 single-point labels and 544 work ids; "
+                f"{n_tab} wrong tables or graphs are S2Errors, also at a graph build of the real node; {len(rows)} "
+                f"defects (the fr ledger, n, the n rule, G1) stop before the route is consumed, with no commit recorded "
+                f"and the route file left; after the remedy the same file admits the commit; {len(dry_rows)} scripted "
+                f"dry evaluations (refused, over the cap, no flag, another decision) stop likewise and a good one "
+                f"admits the commit; scripts/49 run --dry-run in a child process gives the decision and over_cap, "
+                f"refuses a wrong table and writes nothing; the walls of jobs/s2c3b are loaded")
+
+    return [("(z34) S2b c3b: graph and counts (N-C3B1)", z34),
+            ("(z35) S2b c3b: refusal before any write (N-C3B4)", z35),
+            ("(z36) S2b c3b: preconditions on new keys, never K3 (N-C3B4)", z36),
+            ("(z37) S2b c3b: the dated route with its own note and block 4 (N-C3B3)", z37),
+            ("(z38) S2b c3b: protected state keys; the fr digest unchanged (N-C3B2)", z38),
+            ("(z39) S2b c3b: gate inputs, decisions, the over-cap STOP, the end check (N-C3B5)", z39),
+            ("(z40) S2b c3b: invariant reading on relax jobs; fr-only branches (N-C3B6, N-C3B2)", z40),
+            ("(z41) S2b c3b: private archive and MANIFEST.sha256 (N-C3B7)", z41),
+            ("(z42) S2b c3b: the mock reference graph and its scripted gates (N-C3B1)", z42),
+            ("(z43) S2b c3b: checks before the route is consumed; the site table (N-C3B8)", z43)]
 
 
 def _hyg_scan(text):
@@ -9217,9 +10680,13 @@ def _hyg_scan(text):
 
 # ---------------------------------------------------------------- CLI
 def cmd_graph(campaign, state_file):
-    st = read_json(state_file) if state_file else synthetic_state(a2_layout=None if campaign == "c1" else "48")
+    st = read_json(state_file) if state_file else synthetic_state(
+        a2_layout=None if campaign == "c1" else "48",
+        **({"G1": {"Cl": True, "Ca": False}} if campaign == "c3b" else {}))      # c3b: the G1 outcome of S2B section 3
     g = graph(campaign, st)
     exp, adj = assert_counts(g, st)
+    if campaign == "c3b":
+        c3b_table_check(st, g)                                              # N-C3B8: the dry run of the note, section 5
     print(json.dumps({"campaign": campaign, "counts": g["counts"], "plan": exp, "adjustments": adj,
                       "jobs": len(g["jobs"]), "state": "file" if state_file else "synthetic (plan lists, all gates passed)"},
                      indent=1))

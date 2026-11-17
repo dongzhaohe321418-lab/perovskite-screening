@@ -1124,6 +1124,13 @@ EXPECTED = {
                              ("result.cells.s2_m30_Sr136o0_vac.dF_meV", "result.cells.s2_m30_Sr136o0_vac.passed"),
                              "c2/gates/step0.json":
                              ("result.cells.s2_m30_Sr136o0_vac.dF_meV", "result.cells.s2_m30_Sr136o0_vac.passed")}, ()),
+    # block 4 (amendment 2026-11-16a, B-9): the c3b campaign and state leaves, none an energy; no c4b kind (D-0)
+    ("tier", "campaign_c3b"): (("c3b/campaign.json",), ("status", "commit", "start_commit", "stop_reason"), {}, ()),
+    ("tier", "state_c3b"): (("c3b/state_end.json",),
+                            ("commit", "campaigns.c3b", "campaign_commit.c3b", "n", "stage0.production_n8", "G1.Cl",
+                             "G1.Ca", "pose.Cs", "pose.Cl", "gateN.Sr", "gateN.Cl", "gateN.Cs", "gateN.GA",
+                             "c3b_tier.computable", "c3b_tier.n_d.Sr", "c3b_tier.n_d.Cl", "c3b_tier.n_d.Cs",
+                             "c3b_tier.n_d.GA", "s2b_projection.c4b_run", "s2b_projection.c4b_origin"), {}, ()),
 }
 FIG_WITHHELD = frozenset({"dF_200_180_meV", "value_meV", "Eb_A2_meV"})                     # figures/fig_s2_c2_a2.py
 S2B_ENERGY = ("Eb_A1_meV", "Eb_A2_meV", "delta_far_meV", "dF_meV", "F_sp_eV", "F_k0_eV", "F_final_eV")
@@ -2777,8 +2784,8 @@ def block4_true_text():
     (RF-3: block 4 with its implementation at the c3b start commit)."""
     with open(os.path.join(HERE, "e_block4.py")) as fh:
         t = fh.read()
-    assert "\nBLOCK4_IMPLEMENTED = False\n" in t
-    return t.replace("\nBLOCK4_IMPLEMENTED = False\n", "\nBLOCK4_IMPLEMENTED = True\n", 1)
+    assert t.count("\nBLOCK4_IMPLEMENTED = True\n") == 1          # block 4 is implemented (the c3b campaign commit)
+    return t
 
 
 def repo_of(fx, name, scenario=None, **kw):
@@ -4940,15 +4947,25 @@ def case_d4(fx):
     assert r.rc == 2 and not r.written and "RF-3" in r.result_text and X[:12] in r.result_text, r.result_text[-300:]
 
 
+class _B4Stub:
+    """A block 4 that is still the stub (the state of e_block4.py at the fr campaign commit): E must refuse an
+    FR-pass route before it calls anything of it. Block 4 itself is implemented at the c3b campaign commit, so the
+    refusal is tested with this double."""
+    BLOCK4_IMPLEMENTED = False
+
+    def tier_route(self, run):
+        raise AssertionError("tier_route of a stub was called")
+
+
 @case("D5", "D", mutants=(
-        ("stub_bypassed", lambda fx: patched(_sibling("e_block4"), "BLOCK4_IMPLEMENTED", True)),))
+        ("stub_bypassed", lambda fx: patched(_B4Stub, "BLOCK4_IMPLEMENTED", True)),))
 def case_d5(fx):
     """Preconditions (S2B:515-518; spec 6.1): fr running is refused; stopped without a note is refused; FR pass
     with BLOCK4_IMPLEMENTED = False is refused (exit 2, nothing written); an fr_outcome inconsistent with
     decision.FR gives INT-ROUTE (exit 3)."""
     for name, sc, why in (("d5_running", {"fr": {"status": "running", "cells": {"D": {"status": "pending"}}}},
                            "fr is running"), ("C1j", None, "needs --stop-note"), ("pass", None, "block 4 is a stub")):
-        r = e_run(fx, repo_of(fx, name, sc), ["--run"])
+        r = e_run(fx, repo_of(fx, name, sc), ["--run"], **({"block4": _B4Stub()} if name == "pass" else {}))
         assert r.rc == 2 and not r.written and why in r.result_text, (name, r.rc, r.result_text[-300:])
     r = e_run(fx, repo_of(fx, "d5_route", {"fr": {**SCEN["C1a"]["fr"], "fr_outcome": "fail (FR-2)"}}), ["--run"])
     assert r.rc == 3 and "INTEGRITY FAILED: INT-ROUTE" in r.result_text
@@ -6045,24 +6062,1739 @@ def _route_admit_no_precommit(orig):
     return f
 
 
-# ---------------------------------------------------------------- group T: the block-4 stub (spec 13, 18 T)
+# ---------------------------------------------------------------- group T: block 4 (spec 13, 18 T; amendment 2026-11-16a)
+def b4m():
+    return _sibling("e_block4")
+
+
+def b4_src_patched(name, old, new):
+    """A source mutant of the module-level function e_block4.<name>: its source with the one occurrence of old
+    replaced by new, compiled in e_block4's namespace (as src_patched does for the methods of e_eval.py)."""
+    return mod_src_patched(b4m(), name, old, new)
+
+
+def mod_src_patched(m, name, old, new):
+    """A source mutant of the module-level function m.<name> (e_block4, or scripts/48 of the 8bff03e extraction)."""
+    import inspect
+    src = inspect.getsource(getattr(m, name))
+    if src.count(old) != 1:
+        raise MutantNotApplied(f"mod_src_patched: {name}: {src.count(old)} occurrences of {old!r}")
+    ns = {}
+    exec(compile(src.replace(old, new), f"<mutant of {name}>", "exec"), m.__dict__, ns)
+    return patched(m, name, ns[name])
+
+
+T_DOPANTS = ("Sr", "Cl", "Cs", "GA")
+T_SUB = {"Sr": "B", "Cl": "X", "Cs": "A", "GA": "A"}
+T_NEED = {"B": 2, "A": 2, "X": 6}                       # P:680-682
+T_KT = 25.7
+T_NULL = "no first-shell interaction beyond k_BT"
+# a second transcription of P:283-290 (far pairs f1, f2 by sublattice, hosts in draw order), for the pin of T4
+T_FAR_ROWS = {"B": "76 172|76 172|76 172|76 172|76 172|76 172|76 172|172 76",
+              "A": "200 164|188 152|164 188|68 200|200 188|68 164|16 4|200 4",
+              "X": "175 222|175 186|175 222|175 222|175 222|175 222|175 186|175 186"}
+T_FIRST = {"B": (124, 136), "A": (28, 92, 128), "X": (49, 53, 90, 102, 125, 126, 137, 138)}       # P:259-266, again
+T_LABELS = {"L_DOPANT_Sr": "B far pair (Pb76, Pb172) untested at A2 (Pb76 invalid)",
+            "L_DOPANT_Cl": "X far pair (I175, I186) untested at A2",
+            "L_DOPANT_GA": "A f₁ (FA188) tested with Cs only; f₂ (FA164) untested",
+            "L_DOPANT_Cs": "A f₂ (FA164) untested",
+            "L_SENS": "sensitive to the far bias at FA188 (one quartet, Cs, A site; reported only)",
+            "L_NOTIER": "no A1 tier computable; reported only; no class",
+            "L_C3BSTOP": "no A1 tier (final STOP in c3b; S2B section 1); reported only; no class",
+            "L_C3B_INV": "check 5 passed only under the identical-atom reading at a C3b cell of this value (S2B "
+                         "section 3)",
+            "L_C4B": "C4b not run (decision, amendment 2026-11-16a)"}
+
+
+def t_table(fx, **kw):
+    """(the block-4 table, the scripts/48 table) of one scripts/48 synth_table: the same hosts, sites, F, validity
+    and gates; block 4's copy has no A2 cell (B-7) and carries the 8bff03e extraction."""
+    t48 = fx.ex.m48.synth_table(**kw)
+    for h, H in t48["hosts"].items():                   # synth_table's `invalid` marks the cell only; a quartet reads
+        if H["cell_valid"].get(f"s2_{h}_host") is False:    # host_valid [48:226] (review B2)
+            H["host_valid"] = False
+    t4 = copy.deepcopy(t48)
+    t4["a2"] = {}
+    t4["b4"] = {"ex": fx.ex}
+    return t4, t48
+
+
+def _ind_t(q, nu):
+    """Student's t quantile by bisection on a CDF formed from the regularised incomplete beta function (not
+    scipy.stats.t.ppf, which scripts/49 t_ppf uses)."""
+    from scipy.special import betainc
+    lo, hi = 0.0, 1.0e5
+    for _ in range(200):
+        mid = 0.5 * (lo + hi)
+        if 1.0 - 0.5 * betainc(nu / 2.0, 0.5, nu / (nu + mid * mid)) < q:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def _ind_ms(v):
+    n = len(v)
+    m = math.fsum(v) / n
+    return m, (math.sqrt(math.fsum((x - m) ** 2 for x in v) / (n - 1)) if n >= 2 else None)
+
+
+def _ind_quartet(H, h, d, L, j):
+    """E_b (meV) of one quartet from the table's F with exact differences, or None if it is not valid (P:678-679)."""
+    labs = (f"s2_{h}_{d}{j}o0_vac", f"s2_{h}_{d}{j}o0_novac", f"s2_{h}_V{L}{j}", f"s2_{h}_host")
+    if H.get("host_valid") is not True or any(H["cell_valid"].get(x) is not True for x in labs[:3]) or \
+            any(H["F"].get(x) is None for x in labs):
+        return None
+    F = [Fraction(H["F"][x]) for x in labs]
+    return float(((F[0] - F[1]) - (F[2] - F[3])) * 1000)
+
+
+def ind_tier(table, extra=0.0):
+    """An independent A1 tier of P section 14 for (Sr, Cl, Cs, GA), written from the plan's text with explicit loops:
+    valid quartets and hosts (P:678-682), e_h(j), Y_h, Delta_h (P:143-146, 766), Ybar, s_Y, I^A1, U (P:725-728,
+    748-749), G_d and the flag (P:750-756), the classes (P:739-749), the A1 controls and the no-class conditions
+    (P:765-770, 778-781, 683-690), the ranking (P:782-785) and the required hosts (P:817-818). extra: added to every
+    half-width (S2B:685-687)."""
+    prod, n_all, g = list(table["production"]), int(table["n"]), table["gates"]
+    out = {}
+    for d in T_DOPANTS:
+        L = T_SUB[d]
+        Y, e, Dl, raw = {}, {}, {}, {}
+        for h in prod:
+            H, S = table["hosts"][h], table["sites"][h][L]
+            far = [_ind_quartet(H, h, d, L, f) for f in S["far"]]
+            first = {j: _ind_quartet(H, h, d, L, j) for j in S["first"]}
+            raw[h] = {**first, **dict(zip(S["far"], far))}                   # raw E_b of every quartet (P section 15)
+            vf = [j for j in S["first"] if first[j] is not None]
+            if any(x is None for x in far) or len(vf) < T_NEED[L]:
+                continue
+            fmean = (far[0] + far[1]) / 2.0
+            e[h] = {j: first[j] - fmean for j in vf}
+            Y[h] = math.fsum(e[h].values()) / len(vf)
+            Dl[h] = far[0] - far[1]
+        n = len(Y)
+        Eb, site_iv = {}, {}
+        for j in table["sites"][prod[0]][L]["first"]:
+            v = [e[h][j] for h in Y if j in e[h]]
+            site_iv[j] = None
+            if v:
+                Eb[j] = math.fsum(v) / len(v)
+            if len(v) >= 2:                                                  # P:755-756: t_{n_j - 1}(0.975)
+                hw = _ind_t(0.975, len(v) - 1) * _ind_ms(v)[1] / math.sqrt(len(v))
+                site_iv[j] = [Eb[j] - hw, Eb[j] + hw]
+        G = mean = None
+        flag = False
+        if Eb:
+            xs = list(Eb.values())
+            m0 = min(xs)
+            G = m0 - T_KT * math.log(math.fsum(math.exp(-(x - m0) / T_KT) for x in xs) / len(xs))
+            mean = math.fsum(xs) / len(xs)
+            flag = abs(G - mean) > T_KT
+        rec = {"n": n, "Y": Y, "Delta": Dl, "Ebar": Eb, "G": G, "flag": flag, "Ybar": None, "s": None, "t": None,
+               "I": None, "U": None, "rule_v": None, "raw": raw, "e": e, "site_iv": site_iv}
+        if n >= 2:
+            ys = list(Y.values())
+            yb, s = _ind_ms(ys)
+            t = _ind_t(0.99375, n - 1)
+            pg = (g.get("pose") or {}).get(d) or {}
+            ap = float(pg["a_pose_meV"]) if d in ("Cs", "Cl") and pg.get("mode") == "default" else 0.0
+            half = t * s / math.sqrt(n) + ap + extra
+            lo, hi = yb - half, yb + half
+            need = -((-3 * n) // 4)                                       # ceil(0.75 n)
+            if lo > T_KT and sum(1 for y in ys if y > 0) >= need:
+                rv = "repels"
+            elif hi < -T_KT and sum(1 for y in ys if y < 0) >= need:
+                rv = "binds"
+            elif lo > -T_KT and hi < T_KT and G is not None and G > -T_KT:
+                rv = T_NULL
+            else:
+                rv = "not resolved"
+            rec.update(Ybar=yb, s=s, t=t, I=[lo, hi], U=abs(yb) + half, rule_v=rv)
+        gN = ((g.get("N") or {}).get(d) or {}).get("pass") is True
+        D = list(Dl.values())
+        c2 = False
+        if len(D) >= 2:
+            mD, sD = _ind_ms(D)
+            c2 = gN and sD / math.sqrt(2) < 25.0 and abs(mD) < 15.0
+        g1 = (g.get("G1") or {}).get("Cl")
+        c3 = True if d != "Cl" else ((g1.get("pass") if isinstance(g1, dict) else g1) is True)
+        n_cells = n_bad = 0
+        at = {}
+        for h in prod:                                                      # P:683-690 on the C3b A1 cells (B-7)
+            H = table["hosts"][h]
+            for j in table["sites"][h][L]["first"]:
+                if H.get("host_valid") is not True or H["cell_valid"].get(f"s2_{h}_V{L}{j}") is not True:
+                    continue
+                rj = (H.get("pair_rejected") or {}).get(f"{d}{j}")
+                rej = rj is True or (bool(rj) and "p0" in rj)
+                for leg in ("novac", "vac"):
+                    fc = H["failed_checks"].get(f"s2_{h}_{d}{j}o0_{leg}") or []
+                    bad = rej or bool({2, 3, 5} & set(fc))
+                    n_cells += 1
+                    n_bad += int(bad)
+                    if bad:
+                        at.setdefault(j, set()).add(h)
+        trip = any(4 * len(hs) > len(prod) for hs in at.values()) or (n_cells > 0 and n_bad / n_cells > 0.10)
+        rec.update(C2=c2, C3=c3, C4=n >= n_all - 1, noclass=[x for x, bad in (("gate N", not gN), ("G1", not c3),
+                                                                               ("dopant-specific", trip)) if bad])
+        out[d] = rec
+    sr = out["Sr"]
+    sr_ok = sr["rule_v"] == "repels" and not sr["flag"] and not sr["noclass"] and sr["C2"] and sr["C3"] and sr["C4"]
+    for d in T_DOPANTS:
+        r = out[d]
+        if r["n"] < 2:
+            r["class"] = "no class (n_d)"
+        elif r["noclass"]:
+            r["class"] = "no class (" + r["noclass"][0] + ")"
+        elif r["flag"]:
+            r["class"] = "no class (heterogeneous shell)"
+        elif not (sr_ok and r["C2"] and r["C3"] and r["C4"]):
+            r["class"] = "no class (control)"
+        else:
+            r["class"] = r["rule_v"]
+        r["required"] = {}
+        for key, lim in (("k_BT", T_KT), ("k_BT/2", T_KT / 2)):
+            r["required"][key] = None if r["s"] is None else next(
+                (k for k in range(2, 1001) if _ind_t(0.99375, k - 1) * r["s"] / math.sqrt(k) < lim), None)
+    rank = {}
+    for i, d1 in enumerate(T_DOPANTS):
+        for d2 in T_DOPANTS[i + 1:]:
+            D = [out[d1]["Y"][h] - out[d2]["Y"][h] for h in prod if h in out[d1]["Y"] and h in out[d2]["Y"]]
+            r = {"n": len(D), "mean": None, "I": None}
+            if D:
+                m, s = _ind_ms(D)
+                r["mean"] = m
+                if len(D) >= 2:
+                    hw = _ind_t(0.9975, len(D) - 1) * s / math.sqrt(len(D))
+                    r["I"] = [m - hw, m + hw]
+            rank[f"{d1}-{d2}"] = r
+    return {"per": out, "rank": rank, "computable": any(out[d]["n"] >= 2 for d in ("Cl", "Cs", "GA"))}
+
+
+def _t_close(a, b, tol=1e-6):
+    return (a is None and b is None) or (a is not None and b is not None and abs(a - b) <= tol)
+
+
+def _class_kind(c):
+    """The displayed class reduced to what the independent code distinguishes."""
+    if not c.startswith("no class ("):
+        return c
+    for key, kind in (("n_d =", "n_d"), ("gate N failed", "gate N"), ("G1 failed", "G1"),
+                      ("dopant-specific failure rule", "dopant-specific"), ("heterogeneous shell",
+                                                                              "heterogeneous shell"),
+                      ("A1-tier control failed", "control")):
+        if key in c:
+            return f"no class ({kind})"
+    raise AssertionError(c)
+
+
+def assert_tier(res, ind, where=""):
+    """evaluate_tier's result against the independent tier: every statistic to 1e-6 meV and every class."""
+    for d in T_DOPANTS:
+        p, a1, q = res["per_dopant"][d], res["per_dopant"][d]["a1"], ind["per"][d]
+        assert a1["n_d"] == q["n"] == res["n_d"][d] and sorted(p["Y"]) == sorted(q["Y"]), (where, d)
+        for h in q["Y"]:
+            assert _t_close(p["Y"][h], q["Y"][h]) and _t_close(res["hv"][d][h]["Delta_h_meV"], q["Delta"][h]), \
+                (where, d, h)
+        het = p["het"]
+        assert {int(j) for j in het["Ebar_meV"]} == set(q["Ebar"]) and all(
+            _t_close(het["Ebar_meV"][str(j)], v) for j, v in q["Ebar"].items()), (where, d)
+        assert _t_close(het["G_meV"], q["G"]) and bool(het["flag"]) == q["flag"], (where, d)
+        if q["n"] >= 2:
+            assert a1["available"] and _t_close(a1["Ybar_meV"], q["Ybar"]) and _t_close(a1["s_Y_meV"], q["s"]) and \
+                _t_close(a1["t"], q["t"]) and _t_close(a1["interval_meV"][0], q["I"][0]) and \
+                _t_close(a1["interval_meV"][1], q["I"][1]) and _t_close(a1["U_meV"], q["U"]) and \
+                a1["class_rule_v"] == q["rule_v"], (where, d, a1, q)
+        else:
+            assert not a1["available"], (where, d)
+        assert p["C2"]["pass"] == q["C2"] and p["C3"] == q["C3"] and p["C4"]["pass"] == q["C4"], (where, d)
+        assert _class_kind(p["class"]) == q["class"], (where, d, p["class"], q["class"])
+        assert p["required_hosts"] == q["required"], (where, d, p["required_hosts"], q["required"])
+    assert res["computable"] == ind["computable"], where
+    if res["ranking"] is not None:
+        assert list(res["ranking"]) == list(ind["rank"]) and len(res["ranking"]) == 6
+        for k, r in res["ranking"].items():
+            q = ind["rank"][k]
+            assert r["n"] == q["n"] and _t_close(r["mean_meV"], q["mean"]) and (
+                (r["interval_meV"] is None and q["I"] is None) or
+                (_t_close(r["interval_meV"][0], q["I"][0]) and _t_close(r["interval_meV"][1], q["I"][1]))), (where, k)
+
+
+def t_rows(res):
+    b4 = b4m()
+    rows = b4.rows(res, dict(b4.LABELS))
+    ids = [r.id for r in rows]
+    assert len(ids) == len(set(ids)), [i for i in ids if ids.count(i) > 1][:5]
+    return {r.id: r for r in rows}
+
+
+def t_lab(h, d, j, leg):
+    return f"s2_{h}_{d}{j}o0_{leg}"
+
+
+def _ind_mace(H, h, d, L, j):
+    """The zero-shot MACE E_b (meV) of one quartet from the table's E_mace, with exact differences."""
+    E = H["E_mace"]
+    v = [Fraction(E[x]) for x in (t_lab(h, d, j, "vac"), t_lab(h, d, j, "novac"), f"s2_{h}_V{L}{j}", f"s2_{h}_host")]
+    return float(((v[0] - v[1]) - (v[2] - v[3])) * 1000)
+
+
+def t_shift(t, h, d, js, x_meV, leg="vac"):
+    """Add x_meV to E_b,h(j) of dopant d at the sites js, through F of the D+V+ (or, negated, the D) cell."""
+    for j in js:
+        t["hosts"][h]["F"][t_lab(h, d, j, leg)] += x_meV / 1000.0
+
+
+T1_SCEN = (
+    ("base", dict(seed=11)),
+    ("noisy", dict(seed=12, noise=20.0, host_sd=25.0)),
+    # cells without a result: an invalid V+ at a far site (the host drops for Cl), a missing single point at a
+    # first-shell site, an invalid host relaxation (the host drops for every dopant): unequal n_d
+    ("missing", dict(seed=13, invalid=(("m06", "s2_m06_VX175"), ("m02", "s2_m02_host"), ("m16", "s2_m16_VA28")),
+                     missing_sp=(("m12", t_lab("m12", "Sr", 124, "vac")), ("m32", t_lab("m32", "Cl", 49, "novac")),
+                                 ("m32", t_lab("m32", "Cl", 53, "novac")), ("m32", t_lab("m32", "Cl", 90, "vac"))))),
+    # dopant-specific failures at one X site on three hosts (> n/4) and a rejected pair
+    ("specific", dict(seed=14, fail=tuple((h, t_lab(h, "Cl", 137, "vac"), [3]) for h in ("m06", "m02", "m16")),
+                      rejected=(("m23", "GA92"),))),
+)
+
+
 @case("T1", "T", mutants=(
-        ("stub_returns", lambda fx: patched(_sibling("e_block4"), "rows", lambda result, labels: [])),
-        ("flag_true", lambda fx: patched(_sibling("e_block4"), "BLOCK4_IMPLEMENTED", True))))
+        # the far-site reference dropped from e_h(j): every Y_h, Ybar and interval moves (scripts/48 host_values)
+        ("no_far_reference", lambda fx: patched(fx.ex.m48, "host_values", _hv_no_far(fx.ex.m48.host_values))),
+        # the pose allowance dropped from I^A1 (P:727)
+        ("no_a_pose", lambda fx: patched(b4m(), "_a_pose", lambda table, d: 0.0)),
+        # the ranking with the family quantile q* in place of the 10-pair quantile (S2B:576)
+        ("rank_quantile", lambda fx: b4_src_patched("_ranking", 'g49.RULES["Q_RANK"]', 'g49.RULES["Q_STAR"]')),
+        # Ca kept in the ranking (10 pairs)
+        ("rank_with_ca", lambda fx: b4_src_patched("_ranking", "itertools.combinations(DOPANTS, 2)",
+                                                   "itertools.combinations(ex.g49.TOKENS, 2)")),
+        # the host term dropped from E_b: it cancels in Y_h, so only the printed raw E_b shows it (review M7)
+        ("eb_no_host", lambda fx: patched(fx.ex.g49, "eb_meV", lambda dv, d, v, h: None if None in (dv, d, v, h)
+                                          else (dv - d - v) * 1000.0)),
+        # row 4.2 printing e_h(j) in place of the raw E_b
+        ("eb_row_prints_e", lambda fx: b4_src_patched("rows", "E_b^A1 = {_m(q['Eb_meV'])}", "E_b^A1 = {_m(e)}")),
+        # the sign of the zero-shot MACE E_b, and of its difference from the DFT A1 value
+        ("mace_sign", lambda fx: patched(fx.ex.m48, "_mace_eb", _neg(fx.ex.m48._mace_eb))),
+        ("mace_diff_sign", lambda fx: b4_src_patched("rows", 'dm = em - q["Eb_meV"] if', 'dm = q["Eb_meV"] - em if')),
+        # the per-site intervals at the family quantile in place of 0.975 (P:755-756)
+        ("site_quantile", lambda fx: patched(fx.ex.g49.RULES, "Q_SITE", 0.99375)),
+        # the ranking over the hosts valid for the first dopant only (P:783: valid for both)
+        # (the reviewer's variant 'Y_h of d2 is not None' is equivalent: Y_h is formed iff the host is valid)
+        ("rank_hosts_one", lambda fx: b4_src_patched("_ranking", 'if hv[d1][h]["valid"] and hv[d2][h]["valid"]]',
+                                                     'if hv[d1][h]["valid"]]'))))
 def case_t1(fx):
-    """Block 4 at the FR commit is a stub: BLOCK4_IMPLEMENTED is False and every interface function raises
-    NotImplementedError('block 4 is specified before C3b ...'); a run on an FR-pass route is refused (exit 2,
-    nothing written); an FR-fail route never calls block 4. T1-T5 of spec 18 are written with block 4."""
-    b4 = _sibling("e_block4")
-    assert b4.BLOCK4_IMPLEMENTED is False
-    for fn, args in ((b4.tier_route, (None,)), (b4.c4b_df_delta_validity, (None,)),
-                     (b4.build_tier_table, (None, None, None)), (b4.evaluate_tier, (None, None)),
-                     (b4.rows, (None, None)), (b4.manifest, (None, None))):
-        raises(NotImplementedError, fn, *args, check=lambda e: "before C3b" in str(e))
-    r = e_run(fx, repo_of(fx, "pass"), ["--run"])
-    assert r.rc == 2 and not r.written and "block 4 is a stub" in r.result_text
-    r, sr = run_of(fx, "C1a")
-    assert "BLOCK 4. Tier block: not printed (FR failed)" in r.result_text
+    """T1 (spec 18): every statistic of the A1 tier (P section 14) that block 4 prints, against an independent
+    implementation to 1e-6 meV, on tables with planted noise, cells without a result, invalid hosts, unequal n_d
+    and dopant-specific failures; where no dopant-specific failure is planted, also against scripts/48 _evaluate on
+    the same table (a second oracle, on synthetic tables only; B-18); the printed strings equal the formatted
+    independent values."""
+    b4 = b4m()
+    assert b4.BLOCK4_IMPLEMENTED is True and b4.DOPANTS == T_DOPANTS and b4.DECISIVE == ("Cl", "Cs", "GA")
+    for name, kw in T1_SCEN:
+        t4, t48 = t_table(fx, **kw)
+        res = b4.evaluate_tier(t4, {"FA188": None})
+        ind = ind_tier(t4)
+        assert_tier(res, ind, name)
+        if name != "specific":                             # scripts/48 counts A2 units too; block 4 does not (B-7)
+            o = fx.ex.m48._evaluate(t48)
+            for d in T_DOPANTS:
+                a, b = res["per_dopant"][d]["a1"], o["per_dopant"][d]["a1"]
+                assert a["available"] == b["available"] and res["per_dopant"][d]["class"] == b["class"], (name, d)
+                if a["available"]:
+                    assert a["interval_meV"] == b["interval_meV"] and a["class_rule_v"] == b["class_rule_v"]
+            for k, r in res["ranking"].items():
+                assert r["interval_meV"] == o["ranking"]["A1"][k]["interval_meV"], (name, k)
+        R = t_rows(res)
+        for d in T_DOPANTS:
+            q = ind["per"][d]
+            if q["n"] >= 2:
+                tx = R[f"B4.tier.{d}"].text
+                for s in (f"n_d = {q['n']}", f"Ȳ_d = {q['Ybar']:.2f} meV", f"s_Y,d = {q['s']:.2f} meV",
+                          f"t_(n_d−1)(q*) = {q['t']:.6f}", f"I^A1_d = [{q['I'][0]:.2f}, {q['I'][1]:.2f}] meV",
+                          f"U_d = {q['U']:.2f} meV"):
+                    assert s in tx, (name, d, s, tx)
+                assert f"G_d = {q['G']:.2f} meV" in R[f"B4.G.{d}"].text
+            for h, y in q["Y"].items():
+                tx = R[f"B4.Y.{h}.{d}"].text
+                assert f"Y_h = {y:.2f} meV" in tx and f"Δ_h = {q['Delta'][h]:.2f} meV" in tx, (name, d, h, tx)
+        assert sum(1 for i in R if i.startswith("B4.rank.")) == 6 and "B4.rank.Sr-Cl" in R
+        assert R["XC-C3B-YSUM"].values["ok"] is True
+        # the P section 15 items as printed: raw E_b, e_h(j), the zero-shot MACE E_b and its difference from the
+        # DFT A1 value, the per-site t(0.975) intervals (review M7)
+        n_raw = n_mace = n_iv = 0
+        for d in T_DOPANTS:
+            q, L = ind["per"][d], T_SUB[d]
+            for h in t4["production"]:
+                S = t4["sites"][h][L]
+                for j in list(S["first"]) + list(S["far"]):
+                    eb, tx = q["raw"][h][j], R[f"B4.Eb.{h}.{d}{j}"].text
+                    if eb is None:
+                        assert "E_b^A1 = not formed" in tx, (name, tx)
+                        continue
+                    n_raw += 1
+                    assert f"E_b^A1 = {eb:.2f} meV" in tx, (name, tx, eb)
+                    if j in S["first"] and j in q["e"].get(h, {}):
+                        assert f"e_h(j) = {q['e'][h][j]:.2f} meV" in tx, (name, tx)
+                    em = _ind_mace(t4["hosts"][h], h, d, L, j)
+                    assert f"zero-shot MACE E_b = {em:.2f} meV; MACE − DFT A1 = {em - eb:.2f} meV" in \
+                        R[f"B4.mace.{h}.{d}{j}"].text, (name, R[f"B4.mace.{h}.{d}{j}"].text, em, eb)
+                    n_mace += 1
+            for j, iv in q["site_iv"].items():
+                tx = R[f"B4.site.{d}.{j}"].text
+                if iv is None:
+                    assert "interval" not in tx, (name, tx)
+                else:
+                    n_iv += 1
+                    assert f"t(0.975) interval [{iv[0]:.2f}, {iv[1]:.2f}] meV" in tx, (name, tx, iv)
+        assert n_raw > 150 and n_mace == n_raw and n_iv >= 13, (name, n_raw, n_mace, n_iv)     # of 192 and 16
+    nd = [ind_tier(t_table(fx, **T1_SCEN[2][1])[0])["per"][d]["n"] for d in T_DOPANTS]
+    assert len(set(nd)) > 1 and max(nd) < 8, nd             # the 'missing' scenario has unequal n_d below n
+
+
+def _neg(orig):
+    def f(H, labels):
+        v = orig(H, labels)
+        return None if v is None else -v
+    return f
+
+
+def _hv_no_far(orig):
+    def f(table, d):
+        out = orig(table, d)
+        for r in out.values():
+            if r["valid"]:
+                r["e_meV"] = {j: e + r["far_mean_meV"] for j, e in r["e_meV"].items()}
+                r["Y_h_meV"] = r["Y_h_meV"] + r["far_mean_meV"]
+        return out
+    return f
+
+
+def _t2_tables(fx):
+    X = (49, 53, 90, 102, 125, 126, 137, 138)
+    quiet = dict(noise=2.0, host_sd=2.0)
+    return {"planted": t_table(fx, seed=21, eb={"Sr": 120.0, "Ca": -75.0, "Cl": -90.0, "Cs": 0.0, "GA": 60.0},
+                               **quiet)[0],
+            "het100": t_table(fx, seed=22, eb={"Sr": 120.0, "Ca": -75.0, "Cl": {j: (-100.0 if j == 137 else 0.0)
+                                                                                 for j in X}, "Cs": 0.0, "GA": 60.0},
+                              **quiet)[0],
+            "trap80": t_table(fx, seed=23, eb={"Sr": 120.0, "Ca": -75.0, "Cl": {j: (-80.0 if j == 137 else 0.0)
+                                                                                for j in X}, "Cs": 0.0, "GA": 60.0},
+                              **quiet)[0]}
+
+
+@case("T2", "T", mutants=(
+        # the heterogeneity flag no longer removes the class (P:755)
+        ("flag_ignored", lambda fx: b4_src_patched("_compose", 'elif r["flag"]:', "elif False:")),
+        # the Boltzmann shell value withheld from rule V: the -80 meV trap becomes a null class (P:743-747)
+        ("no_g_condition", lambda fx: b4_src_patched("_compose", 'list(Y.values()), het["G_meV"])',
+                                                     "list(Y.values()), 0.0)")),
+        # the host values withheld from rule V's sign count
+        ("no_sign_count", lambda fx: b4_src_patched("_compose", 'm48.classify(*a1["interval_meV"], list(Y.values())',
+                                                    'm48.classify(*a1["interval_meV"], [-1.0, -1.0]'))))
+def case_t2(fx):
+    """T2 (spec 18; S2B:582): planted classes at the A1 tier: a repelling control (Sr), a binder (Cl), a null at low
+    noise (Cs), a repeller (GA); a heterogeneous shell (one X site at -100 meV) is flagged and receives no class;
+    one X site at -80 meV is neither flagged nor classed 'no first-shell interaction beyond k_BT'. Every A1 class
+    row carries the tier label and its per-dopant label."""
+    b4, T = b4m(), _t2_tables(fx)
+    res = b4.evaluate_tier(T["planted"], {"FA188": None})
+    cls = {d: res["per_dopant"][d]["class"] for d in T_DOPANTS}
+    assert cls == {"Sr": "repels", "Cl": "binds", "Cs": T_NULL, "GA": "repels"}, cls
+    assert_tier(res, ind_tier(T["planted"]), "planted")
+    R = t_rows(res)
+    for d in T_DOPANTS:
+        r = R[f"B4.class.{d}"]
+        assert r.kind == "class" and r.values["class"] == cls[d] and f"A1-tier class: {cls[d]}" in r.text
+        assert r.labels[:2] == ("L_A1TIER", f"L_DOPANT_{d}") and b4.LABELS[f"L_DOPANT_{d}"] == T_LABELS[f"L_DOPANT_{d}"]
+    res = b4.evaluate_tier(T["het100"], {"FA188": None})
+    p = res["per_dopant"]["Cl"]
+    assert p["flag"] is True and p["class"] == "no class (heterogeneous shell)" and p["het"]["G_meV"] < -T_KT
+    assert "heterogeneity flag: True" in t_rows(res)["B4.G.Cl"].text
+    res = b4.evaluate_tier(T["trap80"], {"FA188": None})
+    p = res["per_dopant"]["Cl"]
+    lo, hi = p["a1"]["interval_meV"]
+    assert p["flag"] is False and -T_KT < lo and hi < T_KT and p["het"]["G_meV"] < -T_KT, (lo, hi, p["het"]["G_meV"])
+    assert p["class"] == "not resolved" and f"U_d = {p['a1']['U_meV']:.2f} meV" in t_rows(res)["B4.tier.Cl"].text
+
+
+def _t3(fx, **kw):
+    return b4m().evaluate_tier(t_table(fx, seed=31, noise=2.0, host_sd=2.0, **kw)[0], {"FA188": None})
+
+
+@case("T3", "T", mutants=(
+        # the Sr control dropped from the A1-tier controls (P:778)
+        ("no_sr_control", lambda fx: b4_src_patched("_compose", '("Sr does not repel at the A1 tier", sr_a1)',
+                                                    '("Sr does not repel at the A1 tier", True)')),
+        # gate N no longer a no-class condition (P:780)
+        ("no_gate_n", lambda fx: b4_src_patched("_no_class_reasons", '.get("pass") is not True', '.get("pass") is 0')),
+        # the dopant-specific rule no longer removes the class (P:683-690)
+        ("no_dopant_specific", lambda fx: b4_src_patched("_no_class_reasons", 'if ds["applies"]:', "if False:")),
+        # C4 loosened to n_d >= n - 2 (P:770)
+        ("c4_loose", lambda fx: b4_src_patched("_compose", "len(vh) >= n - 1", "len(vh) >= n - 2")),
+        # G1 no longer a no-class condition for Cl (P:768)
+        ("no_g1", lambda fx: b4_src_patched("_no_class_reasons", 'if not ex.g49.g1_pass(g.get("G1") or {}, d):',
+                                            "if False:")),
+        # a hinge value accepted: a calibrated tier although C4b is not run (D-0)
+        ("hinge_accepted", lambda fx: b4_src_patched("evaluate_tier", "if hinge is not None:", "if False:"))))
+def case_t3(fx):
+    """T3 (spec 18, at the A1 tier): no class when the control does not repel (every dopant), when gate N or G1
+    failed, under the dopant-specific rule, and when C4 fails; a hinge value is refused, since no calibrated tier is
+    formed (C4b not run)."""
+    b4 = b4m()
+    eb = {"Sr": 120.0, "Ca": -75.0, "Cl": -90.0, "Cs": 0.0, "GA": 60.0}
+    res = _t3(fx, eb={**eb, "Sr": 0.0})
+    for d in ("Cl", "Cs", "GA"):
+        assert res["per_dopant"][d]["class"] == \
+            "no class (A1-tier control failed: Sr does not repel at the A1 tier)", res["per_dopant"][d]["class"]
+        assert res["per_dopant"][d]["a1"]["class_rule_v"] in ("binds", T_NULL, "repels")
+    assert res["per_dopant"]["Sr"]["class"].startswith("no class (A1-tier control failed: Sr does not repel")
+    res = _t3(fx, eb=eb, gates={"N": {"GA": {"pass": False}}})
+    assert res["per_dopant"]["GA"]["class"] == "no class (gate N failed: inconclusive below the DFT noise floor)"
+    assert res["per_dopant"]["Cl"]["class"] == "binds"
+    res = _t3(fx, eb=eb, gates={"G1": {"Cl": False}})
+    assert res["per_dopant"]["Cl"]["class"] == "no class (G1 failed for the element (C3))"
+    res = _t3(fx, eb=eb, fail=tuple((h, t_lab(h, "Cl", 137, "vac"), [3]) for h in ("m06", "m02", "m16")))
+    p = res["per_dopant"]["Cl"]
+    assert p["ds"]["applies"] and p["ds"]["site_trip"] == {"137": 3} and p["ds"]["n_a2_units"] == 0      # B-7
+    assert p["class"] == "no class (dopant-specific failure rule: first shell not stable under the S2 protocol)"
+    assert p["a1"]["n_d"] == 8                                 # 7 of 8 X quartets valid: the hosts stay valid
+    res = _t3(fx, eb=eb, invalid=(("m06", "s2_m06_VA188"), ("m02", "s2_m02_VA188")))
+    assert res["per_dopant"]["Cs"]["a1"]["n_d"] == 6 and res["per_dopant"]["Cs"]["class"] == \
+        "no class (A1-tier control failed: C4)" and res["per_dopant"]["Cl"]["class"] == "binds"
+    assert_tier(res, ind_tier(t_table(fx, seed=31, noise=2.0, host_sd=2.0, eb=eb, invalid=(
+        ("m06", "s2_m06_VA188"), ("m02", "s2_m02_VA188")))[0]), "c4")
+    t4 = t_table(fx, seed=31, eb=eb)[0]
+    raises(EError, b4.evaluate_tier, t4, {"FA188": None}, hinge=12.5, check=lambda e: "C4b not run" in str(e))
+    raises(EError, b4.c4b_df_delta_validity, None, check=lambda e: "C4b not run (decision, amendment 2026-11-16a)"
+           in str(e))
+
+
+def _t4_table(fx, sr=120.0, cs=10.0):
+    """No noise: every Y_h,d equals the planted value, so I^A1_d = Ybar_d +- a_pose,d (Cs 6, Cl 4, others 0)."""
+    return t_table(fx, seed=41, noise=0.0, host_sd=0.0, eb={"Sr": sr, "Ca": -75.0, "Cl": -90.0, "Cs": cs, "GA": 60.0})[0]
+
+
+def _t4_cells(inv=()):
+    b4 = b4m()
+    cells = {}
+    for h in b4.PROD8:
+        for wid, kind, lab, L, j, d, leg in b4.ALL_CELLS[h]:
+            cells[wid] = {"host": h, "kind": kind, "label": lab, "L": L, "site": j, "dopant": d, "leg": leg,
+                          "record": True, "valid": True, "failed": [], "valid_as_written": wid not in inv,
+                          "failed_as_written": [5] if wid in inv else [], "sp": "complete", "missing_reason": None,
+                          "check5": None if kind == "host" else "invariant only" if wid in inv else "as written"}
+    return cells
+
+
+@case("T4", "T", mutants=(
+        # the far bias added with its sign (S2B:685: |delta_far|)
+        ("far_bias_signed", lambda fx: b4_src_patched("evaluate_tier", 'extra = abs(float(d188["delta"]))',
+                                                      'extra = float(d188["delta"])')),
+        # the far bias subtracted from the half-width
+        ("far_bias_narrows", lambda fx: b4_src_patched("_compose", 'half = a1["half_width_meV"] + extra',
+                                                       'half = a1["half_width_meV"] - extra')),
+        # a changed class not flagged
+        ("sens_not_flagged", lambda fx: b4_src_patched("rows", '(("L_SENS",) if x["changed"] else ())', "()")),
+        # the sensitivity without the Sr control: only Sr's own class would change
+        ("sens_no_sr_control", lambda fx: patched(b4m(), "_compose", _compose_fixed_sr(b4m()._compose))),
+        # invariant-only cells not flagged on the values that use them
+        ("inv_not_flagged", lambda fx: b4_src_patched("rows", 'c.get("check5") == "invariant only"}',
+                                                      'c.get("check5") == "never"}')),
+        # the consistency of the two readings unchecked (a failure other than check 5 lost by the invariant reading)
+        ("readings_unchecked", lambda fx: b4_src_patched("_validity", " or (set(fw) - set(failed)) - {5}:", ":")),
+        # an invariant-only pass counted invalid
+        ("inv_invalid", lambda fx: patched(b4m(), "_validity", _validity_as_written(b4m()._validity))),
+        # the far pair of m23 B in the order of the other hosts (P:290: 172, 76)
+        ("far_order_m23", lambda fx: patched(b4m(), "FAR", {**b4m().FAR, "m23": {**b4m().FAR["m23"], "B": (76, 172)}})),
+        # the recorded n_d and 'computable' unchecked against E's recompute (INT-ROUTE)
+        ("nd_unchecked", lambda fx: b4_src_patched("evaluate_tier", 'if rec["n_d"].get(d) != n_d[d]:', "if False:")),
+        ("computable_unchecked", lambda fx: b4_src_patched("evaluate_tier",
+                                                           'if rec.get("computable") is not computable:', "if False:")),
+        # the check-5 flag without the D (no vacancy) cell of a quartet
+        ("inv_novac_ignored", lambda fx: b4_src_patched(
+            "rows", '(f"s2_{h}_V{L}{j}", f"s2_{h}_{d}{j}p0_novac", f"s2_{h}_{d}{j}p0_vac")',
+            '(f"s2_{h}_V{L}{j}", f"s2_{h}_{d}{j}p0_vac")')),
+        # the MACE − DFT A1 rows without the labels of an A1 value (S2B:158, 331-332)
+        ("mace_unlabelled", lambda fx: b4_src_patched(
+            "rows", '("L_MACE",) + ((tl(d) + il(q_inv(h, d, j))) if dm is not None else ())', '("L_MACE",)')),
+        # a first-shell site of the literal changed (P:259-266)
+        ("first_literal", lambda fx: patched(b4m(), "FIRST", {**b4m().FIRST, "X": (49, 53, 90, 102, 125, 126, 127,
+                                                                                    138)})),
+        # δ_far(FA188) absent on a tier route printed as 'not formed' (the part-1 behaviour)
+        ("far_bias_silent", lambda fx: b4_src_patched("evaluate_tier", "if dl is None and rid is None:",
+                                                      "if dl is None:")),
+        # a boolean, and a non-finite, δ_far(FA188) accepted
+        ("far_bias_bool", lambda fx: b4_src_patched("evaluate_tier", "elif isinstance(dl, bool) or not isinstance(",
+                                                    "elif not isinstance(")),
+        ("far_bias_nan", lambda fx: b4_src_patched("evaluate_tier", " or not math.isfinite(dl):", ":"))))
+def case_t4(fx):
+    """T4 (spec 18, the binding cases of the A1 tier): the far-bias sensitivity fires just above and not just below
+    its threshold, with |delta_far(FA188)| and with the Sr control formed again (S2B:685-687; B-8); an invariant-only
+    C3b pass counts as valid and is flagged on every quartet, host value, tier and class that uses it, and nowhere
+    else (S2B:330-332); inconsistent readings are INT-STRUCT; the far-pair order of P:283-290 (the sign of Delta_h);
+    the n_d and 'computable' of the c3b campaign against E's recompute (INT-ROUTE)."""
+    b4 = b4m()
+    t4 = _t4_table(fx)                                          # Cs: I = [4, 16] meV: null while 16 + |d| < 25.7
+    for delta, changed in ((9.6, False), (-9.6, False), (9.8, True), (-9.8, True)):
+        res = b4.evaluate_tier(t4, {"FA188": {"A1": 0.0, "A2": delta, "delta": delta}})
+        s = res["sens"]
+        assert s["formed"] and s["extra_meV"] == abs(delta) and res["per_dopant"]["Cs"]["class"] == T_NULL
+        x = s["per_dopant"]["Cs"]
+        assert x["changed"] is changed and x["class"] == ("not resolved" if changed else T_NULL), (delta, x["class"])
+        assert _t_close(x["a1"]["interval_meV"][1], 16.0 + abs(delta))
+        assert_tier({**res, "per_dopant": {d: {**res["per_dopant"][d], **s["per_dopant"][d]} for d in T_DOPANTS},
+                     "ranking": None}, ind_tier(t4, abs(delta)), f"sens {delta}")
+        R = t_rows(res)
+        assert ("L_SENS" in R["B4.sens.Cs"].labels) is changed and "L_SENS" not in R["B4.sens.Sr"].labels
+        assert f"δ_far(FA188) = {delta:.2f} meV" in R["B4.sens.delta"].text and R["B4.sens.delta"].has_a1
+        assert b4.LABELS["L_SENS"] == T_LABELS["L_SENS"]
+    res = b4.evaluate_tier(_t4_table(fx, sr=30.0), {"FA188": {"delta": -5.0}})     # Sr: 30 - 5 < 25.7
+    assert res["per_dopant"]["Sr"]["class"] == "repels" and res["per_dopant"]["Cl"]["class"] == "binds"
+    assert all(res["sens"]["per_dopant"][d]["changed"] for d in T_DOPANTS)
+    assert res["sens"]["per_dopant"]["Cl"]["class"].startswith("no class (A1-tier control failed: Sr does not repel")
+    assert t_rows(b4.evaluate_tier(t4, {"FA188": None}))["B4.sens"].text == "not formed (δ_far(FA188) not formed)"
+    # invariant-only passes: valid, flagged where used
+    t4["b4"]["cells"] = _t4_cells(inv=("s2_m06_VA28", "s2_m02_Cl175p0_vac"))
+    R = t_rows(b4.evaluate_tier(t4, {"FA188": None}))
+    flagged = {i for i, r in R.items() if "L_C3B_INV" in r.labels}
+    want = {"B4.Eb.m06.Cs28", "B4.Eb.m06.GA28", "B4.Y.m06.Cs", "B4.Y.m06.GA", "B4.Eb.m02.Cl175", "B4.Y.m02.Cl",
+            "B4.mace.m06.Cs28", "B4.mace.m06.GA28", "B4.mace.m02.Cl175"}      # the MACE − DFT A1 rows too (m4)
+    for d in ("Cs", "GA", "Cl"):
+        want |= {f"B4.tier.{d}", f"B4.controls.{d}", f"B4.class.{d}", f"B4.G.{d}", f"B4.required.{d}"}
+        want |= {i for i in R if i.startswith(f"B4.site.{d}.")}
+    want |= {i for i in R if i.startswith("B4.rank.")}
+    assert flagged == want, sorted(flagged ^ want)
+    assert R["B4.check5"].values == {"as written": 534, "invariant only": 2, "failed": 0, "not evaluated": 0}
+    assert R["B4.check5.cells"].values["cells"] == ["s2_m02_Cl175p0_vac", "s2_m06_VA28"]
+    assert b4.LABELS["L_C3B_INV"] == T_LABELS["L_C3B_INV"]
+    assert R["B4.mace.m06.Cs28"].labels == ("L_MACE", "L_A1TIER", "L_DOPANT_Cs", "L_C3B_INV") and \
+        R["B4.mace.m06.Cs92"].labels == ("L_MACE", "L_A1TIER", "L_DOPANT_Cs")
+    # a D (no vacancy) cell: flagged on Sr's values at that host and site, and on nothing of Cl, Cs or GA
+    t4["b4"]["cells"] = _t4_cells(inv=("s2_m16_Sr124p0_novac",))
+    R = t_rows(b4.evaluate_tier(t4, {"FA188": None}))
+    flagged = {i for i, r in R.items() if "L_C3B_INV" in r.labels}
+    want = {"B4.Eb.m16.Sr124", "B4.mace.m16.Sr124", "B4.Y.m16.Sr", "B4.tier.Sr", "B4.controls.Sr", "B4.class.Sr",
+            "B4.G.Sr", "B4.required.Sr", "B4.rank.Sr-Cl", "B4.rank.Sr-Cs", "B4.rank.Sr-GA"}
+    want |= {i for i in R if i.startswith("B4.site.Sr.")}
+    assert flagged == want, sorted(flagged ^ want)
+    assert R["B4.check5"].values["invariant only"] == 1
+    # the first shells: P:259-266 in a second transcription, and the 8bff03e object
+    assert b4.FIRST == T_FIRST and {L: tuple(fx.ex.m48.SITES[L]["first"]) for L in "BAX"} == T_FIRST
+    assert sorted(b4.ALL_WIDS) == sorted(
+        [f"s2_{h}_host" for h in b4.PROD8] +
+        [f"s2_{h}_V{L}{j}" for h in b4.PROD8 for L in "BAX" for j in T_FIRST[L] + b4.FAR[h][L]] +
+        [f"s2_{h}_{d}{j}p0_{leg}" for h in b4.PROD8 for d in T_DOPANTS for j in T_FIRST[T_SUB[d]] + b4.FAR[h][T_SUB[d]]
+         for leg in ("novac", "vac")]) and len(b4.ALL_WIDS) == 544
+    v = b4._validity({"valid": True, "failed": [], "check5_reading": "invariant", "valid_as_written": False,
+                      "failed_as_written": [5], "invariant_only": True}, "V", "x")
+    assert v["valid"] is True and v["check5"] == "invariant only"
+    v = b4._validity({"valid": False, "failed": [3, 5], "check5_reading": "invariant", "valid_as_written": False,
+                      "failed_as_written": [3, 5], "invariant_only": False}, "DV", "x")
+    assert v["valid"] is False and v["check5"] == "failed"
+    assert b4._validity({"valid": True, "failed": []}, "host", "x")["check5"] is None
+    assert b4._validity({"valid": None, "failed": None}, "D", "x")["check5"] == "not evaluated"
+    ok = {"valid": True, "failed": [], "check5_reading": "invariant", "valid_as_written": True,
+          "failed_as_written": [], "invariant_only": False}
+    assert b4._validity(dict(ok), "D", "x")["check5"] == "as written"
+    for bad in ({"check5_reading": "as_written"}, {"invariant_only": True}, {"valid_as_written": False},
+                {"failed_as_written": [3], "valid_as_written": False, "invariant_only": True},
+                {"valid": False, "failed": [3], "failed_as_written": [5], "valid_as_written": False},
+                {"valid": False}, {"failed": [True]}, {"invariant_only": None}):
+        int_fail("INT-STRUCT", b4._validity, {**ok, **bad}, "D", "c3b/records/x.json")
+    int_fail("INT-STRUCT", b4._validity, {"valid": True, "failed": []}, "V", "x")       # a V+ needs both readings
+    # the far pairs: P:283-290 in a second transcription; the order is the sign of Delta_h
+    for L, row in T_FAR_ROWS.items():
+        for h, pair in zip(b4.PROD8, row.split("|")):
+            assert b4.FAR[h][L] == tuple(int(x) for x in pair.split()), (h, L)
+    t5 = _t4_table(fx)
+    for h in t5["production"]:
+        t5["hosts"][h]["F"][t_lab(h, "Sr", 76, "vac")] += 0.010                     # E_b(76) - E_b(172) = +10 meV
+    a = b4.evaluate_tier(t5, {"FA188": None})["hv"]["Sr"]["m23"]["Delta_h_meV"]
+    t5["sites"]["m23"]["B"]["far"] = list(b4.FAR["m23"]["B"])
+    b = b4.evaluate_tier(t5, {"FA188": None})["hv"]["Sr"]["m23"]["Delta_h_meV"]
+    assert _t_close(a, 10.0, 1e-6) and _t_close(b, -10.0, 1e-6), (a, b)
+    # INT-ROUTE
+    nd = {d: 8 for d in T_DOPANTS}
+    ok188 = {"FA188": {"A1": 1.0, "A2": 4.0, "delta": 3.0}}
+    t4["b4"]["route"] = {"id": "C4B-NOTRUN", "c3b": {"n_d": dict(nd), "computable": True}}
+    assert b4.evaluate_tier(t4, ok188)["tier"] is True
+    # on a tier route δ_far(FA188) of block 2 must be there: never a silent 'not formed' (B-8; review M6)
+    for bad in ({}, {"FA188": None}, {"FA188": {}}, {"FA188": {"delta": None}}, {"FA164": {"delta": 3.0}},
+                {"FA188": {"delta": True}}, {"FA188": {"delta": float("nan")}}, {"FA188": {"delta": float("inf")}},
+                {"FA188": {"delta": "3.0"}}):
+        assert int_fail("INT-STRUCT", b4.evaluate_tier, t4, bad).where == "block 2 FA188", bad
+    t4["b4"].pop("route")                                       # a table alone: absent is 'not formed', the rest fails
+    assert b4.evaluate_tier(t4, {})["sens"] == {"formed": False}
+    for bad in ({"FA188": {"delta": True}}, {"FA188": {"delta": float("nan")}}):
+        int_fail("INT-STRUCT", b4.evaluate_tier, t4, bad)
+    with open(os.path.join(HERE, "e_eval.py")) as fh:           # the object block 2 forms and block 4 is handed
+        src = fh.read()
+    assert src.count('vals = {"A1": a1, "A2": a2, "delta": dl}') == 1 and src.count('self.v["FA188"] = vals') == 1 \
+        and src.count('"FA188": self.v.get("FA188")') == 1
+    t4["b4"]["route"] = {"id": "C4B-NOTRUN", "c3b": {"n_d": {**nd, "GA": 7}, "computable": True}}
+    e = int_fail("INT-ROUTE", b4.evaluate_tier, t4, ok188)
+    assert e.key == "c3b_tier.n_d.GA"
+    t4["b4"]["route"] = {"id": "C3B-NOTIER", "c3b": {"n_d": dict(nd), "computable": False}}
+    assert int_fail("INT-ROUTE", b4.evaluate_tier, t4, ok188).key == "c3b_tier.computable"
+
+
+def _compose_fixed_sr(orig):
+    def f(ex, table, hv, extra=0.0):
+        out = orig(ex, table, hv, extra)
+        if extra and not out["Sr"]["Sr_repels_A1"]:          # the other dopants as if the control had not moved
+            for d in T_DOPANTS[1:]:
+                if out[d]["class"] == "no class (A1-tier control failed: Sr does not repel at the A1 tier)":
+                    out[d]["class"] = out[d]["a1"]["class_rule_v"]
+        return out
+    return f
+
+
+def _validity_as_written(orig):
+    def f(val, kind, where):
+        out = orig(val, kind, where)
+        if out.get("check5") == "invariant only":
+            out["valid"] = False
+        return out
+    return f
+
+
+def _t5_notier(fx):
+    """Seven of the eight hosts lose a far V+ cell on the A and on the X sublattice: n_d = 1 for Cl, Cs and GA, and
+    8 for Sr."""
+    inv = tuple((h, f"s2_{h}_V{Lj}") for h in b4m().PROD8[1:] for Lj in ("A188", "X175"))
+    return t_table(fx, seed=51, invalid=inv)[0]
+
+
+@case("T5", "T", mutants=(
+        # an A1 tier although the route is a final STOP in c3b (S2B:154)
+        ("stop_gives_tier", lambda fx: b4_src_patched("evaluate_tier", 'tier = computable and rid in (None, '
+                                                      '"C4B-NOTRUN")', "tier = computable")),
+        # 'computable' counted over Sr as well (B-2: one of Cl, Cs, GA)
+        ("computable_with_sr", lambda fx: b4_src_patched("evaluate_tier", "for d in DECISIVE)", "for d in DOPANTS)")),
+        # the no-tier label not printed on the values
+        ("notier_label_lost", lambda fx: b4_src_patched("rows", 'if tier else notier', 'if tier else ()')),
+        # a C4b item of S2B section 7 not printed
+        ("c4b_item_lost", lambda fx: patched(b4m(), "C4B_ITEMS", b4m().C4B_ITEMS[:-1])),
+        # the D-0 text changed in one place only
+        ("c4b_text", lambda fx: patched(b4m(), "C4B_ITEM", "C4b not run")),
+        # 'computable' needing every one of Cl, Cs, GA (B-2: one of them)
+        ("computable_all", lambda fx: b4_src_patched(
+            "evaluate_tier", 'computable = any(per[d]["a1"]["available"] for d in DECISIVE)',
+            'computable = all(per[d]["a1"]["available"] for d in DECISIVE)')),
+        # the per-site intervals, and the heterogeneity flag, printed on a route without a tier (B-1)
+        ("notier_site_interval", lambda fx: b4_src_patched("rows", 'iv = het["intervals"].get(j) if tier else None',
+                                                           'iv = het["intervals"].get(j)')),
+        ("notier_flag", lambda fx: b4_src_patched("rows", "{het['flag']}\" if tier else \"\")", "{het['flag']}\")"))))
+def case_t5(fx):
+    """T5 (spec 18, the routes of block 4 at this commit, on tables): C3b done without a computable tier (n_d < 2
+    for each of Cl, Cs, GA, although Sr has n_d = 8) and a final STOP in c3b print the P section 15 items with
+    L_NOTIER or L_C3BSTOP on every value and no interval, class, ranking or sensitivity; C3b done with a tier prints
+    them; every C4b item of S2B section 7 is printed 'C4b not run (decision, amendment 2026-11-16a)', and that
+    decision sits in one place of e_block4.py."""
+    b4 = b4m()
+    assert b4.C4B_RUN is False and b4.C4B_ORIGIN == "decision (S2B amendment 2026-11-16a)" and \
+        b4.C4B_ITEM == T_LABELS["L_C4B"] == b4.LABELS["L_C4B"] and b4.ROUTES_ADMITTED == (
+            "C3B-STOP", "C3B-NOTIER", "C4B-NOTRUN")
+    with open(os.path.join(HERE, "e_block4.py")) as fh:
+        src = fh.read()
+    assert src.count('"C4b not run (decision, amendment 2026-11-16a)"') == 1 and src.count("C4B_RUN = False") == 1
+    for k in ("L_NOTIER", "L_C3BSTOP"):
+        assert b4.LABELS[k] == T_LABELS[k]
+    t4 = _t5_notier(fx)
+    nd = {"Sr": 8, "Cl": 1, "Cs": 1, "GA": 1}
+    t4["b4"]["route"] = {"id": "C3B-NOTIER", "c3b": {"n_d": dict(nd), "computable": False}}
+    res = b4.evaluate_tier(t4, {"FA188": {"delta": 3.0}})
+    assert res["n_d"] == nd and res["computable"] is False and res["tier"] is False and res["ranking"] is None and \
+        res["sens"] is None
+    assert_tier(res, ind_tier(t4), "notier")
+
+    def no_tier(R, lab):
+        txt = "\n".join(r.text for r in R.values())
+        assert not any(i.startswith(("B4.class.", "B4.controls.", "B4.rank.", "B4.sens.")) for i in R), sorted(R)[:5]
+        assert "I^A1_d" not in txt and "A1-tier class" not in txt and "U_d" not in txt
+        # B-1: the P section 15 items only: no interval of any kind and no heterogeneity flag (review M3)
+        assert "t(0.975)" not in txt and "] meV" not in txt and "heterogeneity flag" not in txt
+        assert not any("interval_meV" in r.values or "flag" in r.values for r in R.values())
+        assert "G_d = " in R["B4.G.Sr"].text and "over n_j = 8 hosts" in R["B4.site.Sr.124"].text
+        assert R["B4.rank"].text == R["B4.sens"].text == "not formed (no A1 tier on this route)"
+        vals = [r for r in R.values() if r.kind in ("Eb_A1", "Y", "tier")]
+        assert len(vals) > 200 and all(r.labels[0] == lab and "L_A1TIER" not in r.labels for r in vals), lab
+        assert R["B4.Eb.m06.Cl49"].has_a1 and "E_b^A1 = " in R["B4.Eb.m06.Cl49"].text       # the P §15 items stay
+        assert "Y_h = " in R["B4.Y.m06.Cl"].text and "Ē_d(j) = " in R["B4.site.Sr.124"].text
+        assert "zero-shot MACE E_b = " in R["B4.mace.m06.Cl49"].text and \
+            R["B4.mace.m06.Cl49"].labels == ("L_MACE", lab)
+
+    R = t_rows(res)
+    no_tier(R, "L_NOTIER")
+    assert R["B4.route"].values == {"route": "C3B-NOTIER", "tier": False} and "no A1 tier is computable" in \
+        R["B4.route"].text and "Sr 8, Cl 1, Cs 1, GA 1" in R["B4.nd"].text
+    t6 = t_table(fx, seed=52)[0]
+    t6["b4"]["route"] = {"id": "C3B-STOP", "c3b": {"n_d": None, "computable": None, "stop_reason": "synthetic"}}
+    res = b4.evaluate_tier(t6, {"FA188": {"delta": 3.0}})
+    assert res["computable"] is True and res["tier"] is False
+    R = t_rows(res)
+    no_tier(R, "L_C3BSTOP")
+    assert "final STOP in c3b" in R["B4.route"].text and "(stop reason: synthetic)" in R["B4.route"].text
+    t6["b4"]["route"] = {"id": "C4B-NOTRUN", "c3b": {"n_d": {d: 8 for d in T_DOPANTS}, "computable": True}}
+    res = b4.evaluate_tier(t6, {"FA188": {"delta": 3.0}})
+    R = t_rows(res)
+    assert res["tier"] is True and all(f"B4.class.{d}" in R for d in T_DOPANTS) and "B4.sens.Cl" in R
+    vals = [r for r in R.values() if r.kind in ("Eb_A1", "Y", "tier", "class")]
+    assert all(r.labels[0] == "L_A1TIER" and r.labels[1].startswith("L_DOPANT_") for r in vals)
+    assert R["B4.rank.Cl-GA"].labels[:3] == ("L_A1TIER", "L_DOPANT_Cl", "L_DOPANT_GA")
+    # D-0: every C4b item, each with the one text
+    c4 = [r for i, r in R.items() if i.startswith("B4.c4b.")]
+    assert len(c4) == 12 and all(r.text.endswith(": " + T_LABELS["L_C4B"]) and r.labels == ("L_C4B",) for r in c4)
+    for item in ("per-relaxation items", "WP2c comparison at FA128", "WP2c comparison at Pb124", "q = 0 link rows",
+                 "calibrated tier and validated classes", "shared-region sensitivity", "plateau-excluded intervals",
+                 "C4b δ"):
+        assert sum(item in r.text for r in c4) == 1, item
+    assert R["B4.c4b"].text.startswith("C4b: " + T_LABELS["L_C4B"]) and R["B4.inv.c4b"].text == "C4b: " + \
+        T_LABELS["L_C4B"]
+    assert [r.text for i, r in R.items() if i.startswith("B4.title.")] == list(b4.TITLES)
+    # B-2: one of Cl, Cs, GA with n_d >= 2 makes the tier computable (here Cl alone)
+    t7 = t_table(fx, seed=53, invalid=tuple((h, f"s2_{h}_VA188") for h in b4.PROD8[1:]))[0]
+    res = b4.evaluate_tier(t7, {"FA188": None})
+    assert res["n_d"] == {"Sr": 8, "Cl": 8, "Cs": 1, "GA": 1} and res["computable"] is True and res["tier"] is True
+    assert_tier(res, ind_tier(t7), "Cl alone")
+    R = t_rows(res)
+    assert "I^A1_d" in R["B4.tier.Cl"].text and R["B4.tier.Cs"].text == "Cs: A1 tier not formed (n_d = 1 < 2)" and \
+        R["B4.class.Cs"].text == "Cs: A1-tier class: no class (n_d = 1 < 2)"
+
+
+T6_EB = {"Sr": 120.0, "Ca": -75.0, "Cl": -90.0, "Cs": 0.0, "GA": 60.0}
+
+
+def _t6(fx, **kw):
+    """No noise: Y_h,d is the planted value on every host and Delta_h is 0, until a test moves them."""
+    return t_table(fx, seed=61, noise=0.0, host_sd=0.0, **{"eb": T6_EB, **kw})[0]
+
+
+def _t6_eval(t, where):
+    res = b4m().evaluate_tier(t, {"FA188": None})
+    assert_tier(res, ind_tier(t), where)
+    return res["per_dopant"]
+
+
+def _tier_a1_n3(orig):
+    def f(Y, a_pose):
+        return orig(Y, a_pose) if len(Y) >= 3 else {"available": False, "n_d": len(Y), "reason": f"n_d = {len(Y)} < 3"}
+    return f
+
+
+@case("T6", "T", mutants=(
+        # C2 reduced to gate N; its two limits widened (P:766-767)
+        ("c2_gate_only", lambda fx: mod_src_patched(
+            fx.ex.m48, "c2_noise", 'ok = gN and sd2 < RULES["C2_SD_MAX_MEV"] and abs(mn) < RULES["C2_MEAN_MAX_MEV"]',
+            "ok = gN")),
+        ("c2_sd_30", lambda fx: patched(fx.ex.g49.RULES, "C2_SD_MAX_MEV", 30.0)),
+        ("c2_mean_20", lambda fx: patched(fx.ex.g49.RULES, "C2_MEAN_MAX_MEV", 20.0)),
+        # the sign count of rule V: half of the hosts, and all of them, for ceil(0.75 n) (P:740-742)
+        ("sign_half", lambda fx: patched(fx.ex.g49, "sign_required", lambda n: n // 2)),
+        ("sign_all", lambda fx: patched(fx.ex.g49, "sign_required", lambda n: n)),
+        # the valid-host thresholds (P:680-682): X 6 -> 7, A 2 -> 1
+        ("valid_x7", lambda fx: patched(fx.ex.g49.RULES["VALID_HOST_MIN"], "X", 7)),
+        ("valid_a1", lambda fx: patched(fx.ex.g49.RULES["VALID_HOST_MIN"], "A", 1)),
+        # a tier only from three valid hosts (P:725: n_d >= 2)
+        ("tier_n3", lambda fx: patched(fx.ex.m48, "tier_a1", _tier_a1_n3(fx.ex.m48.tier_a1))),
+        # the dopant-specific rule (P:683-690): check 5, check 2 dropped; '>= n/4'; the 10 % rule at 50 %; far cells
+        ("ds_no5", lambda fx: patched(fx.ex.g49.RULES["DOPANT_SPECIFIC"], "checks", (2, 3))),
+        ("ds_no2", lambda fx: patched(fx.ex.g49.RULES["DOPANT_SPECIFIC"], "checks", (3, 5))),
+        ("ds_site_ge", lambda fx: mod_src_patched(fx.ex.m48, "dopant_specific", "if len(hs) * b > nprod * a}",
+                                                  "if len(hs) * b >= nprod * a}")),
+        ("ds_cells_50", lambda fx: patched(fx.ex.g49.RULES["DOPANT_SPECIFIC"], "cell_fraction", 0.5)),
+        ("ds_far_counted", lambda fx: mod_src_patched(
+            fx.ex.m48, "dopant_specific", 'table["sites"][h][L]["first"]]:',
+            'table["sites"][h][L]["first"] + table["sites"][h][L]["far"]]:')),
+        # Sr's own heterogeneity flag left out of the Sr control (P:778)
+        ("sr_flag_ignored", lambda fx: b4_src_patched("_compose", 'and not sr["flag"] and not sr["no_class_reasons"]',
+                                                      'and not sr["no_class_reasons"]'))))
+def case_t6(fx):
+    """T6 (review M7): the binding conditions of the A1 tier that T1-T5 did not bind. C2 failing by SD(Delta_h)/sqrt2
+    and by |mean(Delta_h)| just above the limits and passing just below; the sign count with 5 and with 7 of 8 hosts
+    positive and I^A1 above k_BT; exactly 6 of 8 X and 1 of 3 A valid quartets; n_d = 2; the dopant-specific rule
+    with failed checks [2] and [5], with 2 and 3 hosts at one site, with 12 and 13 of 128 cells, and with far cells;
+    a flagged Sr."""
+    b4 = b4m()
+    c2fail, binds = "no class (A1-tier control failed: C2)", "binds"
+    hosts = list(b4.PROD8)
+    # C2 by the mean of Delta_h: +14 passes, +16 fails (limit 15, strict)
+    for x, want in ((14.0, binds), (16.0, c2fail)):
+        t = _t6(fx)
+        for h in hosts:
+            t_shift(t, h, "Cl", [t["sites"][h]["X"]["far"][0]], x)
+        p = _t6_eval(t, f"C2 mean {x}")["Cl"]
+        assert _t_close(p["C2"]["mean_meV"], x) and p["C2"]["pass"] is (want == binds) and p["class"] == want, \
+            (x, p["C2"], p["class"])
+    # C2 by SD(Delta_h)/sqrt2: Delta_h = +-s on 4 + 4 hosts gives s sqrt(4/7): 24.57 at 32.5, 25.32 at 33.5
+    for s, want in ((32.5, binds), (33.5, c2fail)):
+        t = _t6(fx)
+        for i, h in enumerate(hosts):
+            t_shift(t, h, "Cl", [t["sites"][h]["X"]["far"][0]], s if i % 2 == 0 else -s)
+        p = _t6_eval(t, f"C2 sd {s}")["Cl"]
+        assert _t_close(p["C2"]["sd_over_sqrt2_meV"], s * math.sqrt(4.0 / 7.0)) and _t_close(p["C2"]["mean_meV"], 0.0)
+        assert p["C2"]["pass"] is (want == binds) and p["class"] == want, (s, p["C2"], p["class"])
+    # the sign count: I^A1 above k_BT with 5 of 8 hosts positive is not 'repels'; with 7 of 8 it is
+    for npos, big, want in ((5, 4000.0, "not resolved"), (7, 200.0, "repels")):
+        t = _t6(fx)
+        for i, h in enumerate(hosts):
+            t_shift(t, h, "GA", t["sites"][h]["A"]["first"], (big if i < npos else -1.0) - T6_EB["GA"])
+        p = _t6_eval(t, f"sign {npos}")["GA"]
+        assert p["a1"]["interval_meV"][0] > T_KT and sum(1 for y in p["Y"].values() if y > 0) == npos
+        assert p["a1"]["class_rule_v"] == want and p["class"] == want, (npos, p["class"])
+    # valid hosts: 6 of 8 X quartets keep the host (Cl), 1 of 3 A quartets loses it (Cs)
+    t = _t6(fx)
+    for j in t["sites"]["m06"]["X"]["first"][:2]:
+        t["hosts"]["m06"]["F"][t_lab("m06", "Cl", j, "vac")] = None
+    for j in t["sites"]["m02"]["A"]["first"][:2]:
+        t["hosts"]["m02"]["F"][t_lab("m02", "Cs", j, "novac")] = None
+    res = b4.evaluate_tier(t, {"FA188": None})
+    assert_tier(res, ind_tier(t), "thresholds")
+    assert res["n_d"] == {"Sr": 8, "Cl": 8, "Cs": 7, "GA": 8} and res["hv"]["Cl"]["m06"]["n_valid_first"] == 6 and \
+        res["hv"]["Cs"]["m02"]["n_valid_first"] == 1 and res["hv"]["Cs"]["m02"]["valid"] is False
+    # n_d = 2: a tier is formed (and C4 fails)
+    t = _t6(fx, invalid=tuple((h, f"s2_{h}_VA188") for h in hosts[2:]))
+    p = _t6_eval(t, "n_d 2")
+    assert p["Cs"]["a1"]["available"] and p["Cs"]["a1"]["n_d"] == 2 and p["GA"]["a1"]["n_d"] == 2 and \
+        p["Cs"]["class"] == "no class (A1-tier control failed: C4)"
+    # the dopant-specific rule
+    ds_class = "no class (dopant-specific failure rule: first shell not stable under the S2 protocol)"
+    for checks in ([2], [5], [3]):
+        t = _t6(fx, fail=tuple((h, t_lab(h, "Cl", 137, "vac"), checks) for h in hosts[:3]))
+        p = _t6_eval(t, f"ds {checks}")["Cl"]
+        assert p["ds"]["applies"] and p["ds"]["site_trip"] == {"137": 3} and p["class"] == ds_class, (checks, p["ds"])
+    t = _t6(fx, fail=tuple((h, t_lab(h, "Cl", 137, "vac"), [4]) for h in hosts[:3]))       # check 4 is not of the rule
+    assert _t6_eval(t, "ds [4]")["Cl"]["ds"]["applies"] is False
+    t = _t6(fx, fail=tuple((h, t_lab(h, "Cl", 137, "vac"), [3]) for h in hosts[:2]))       # 2 hosts: not > n/4
+    p = _t6_eval(t, "ds 2 hosts")["Cl"]
+    assert p["ds"]["applies"] is False and p["ds"]["n_failed_cells"] == 2 and p["class"] == binds
+    X = t["sites"]["m06"]["X"]["first"]
+    pairs = [(hosts[k], X[k]) for k in range(7)]                # one site per host, one host per site
+    cells = [(h, t_lab(h, "Cl", j, leg), [3]) for h, j in pairs[:6] for leg in ("novac", "vac")]
+    for extra, applies in ((), False), (((pairs[6][0], t_lab(pairs[6][0], "Cl", pairs[6][1], "vac"), [3]),), True):
+        t = _t6(fx, fail=tuple(cells) + extra)
+        p = _t6_eval(t, f"ds cells {12 + len(extra)}")["Cl"]
+        assert p["ds"]["n_cells"] == 128 and p["ds"]["n_failed_cells"] == 12 + len(extra) and \
+            p["ds"]["site_trip"] == {} and p["ds"]["applies"] is applies and p["a1"]["n_d"] == 8, p["ds"]
+        assert p["class"] == (ds_class if applies else binds)
+    t = _t6(fx, fail=tuple((h, t_lab(h, "Cl", t["sites"][h]["X"]["far"][0], "vac"), [3]) for h in hosts[:3]))
+    p = _t6_eval(t, "ds far")["Cl"]
+    assert p["ds"]["applies"] is False and p["ds"]["n_cells"] == 128 and p["ds"]["n_failed_cells"] == 0 and \
+        p["a1"]["n_d"] == 5 and p["class"] == "no class (A1-tier control failed: C4)"
+    # a flagged Sr is no control: every dopant loses its class
+    t = _t6(fx, eb={**T6_EB, "Sr": {124: 200.0, 136: 60.0}})
+    p = _t6_eval(t, "Sr flag")
+    assert p["Sr"]["flag"] is True and p["Sr"]["a1"]["class_rule_v"] == "repels" and \
+        p["Sr"]["class"] == "no class (heterogeneous shell)"
+    for d in ("Cl", "Cs", "GA"):
+        assert p[d]["class"] == "no class (A1-tier control failed: Sr does not repel at the A1 tier)", p[d]["class"]
+
+
+# ---------------------------------------------------------------- group T: a synthetic c3b archive (review M1)
+# Block 4 on a private c3b archive, with a stand-in for e_eval.Run: the real ELayout, OpenAudit, eg_load, Checks and
+# C3bAccess, the 8bff03e scripts/48 and scripts/49; the committed notes, the record loader and the single-point
+# reader are stand-ins (the routes through E itself are the cases of group T that run e_eval.execute).
+C3B_EB = {"Sr": 120.0, "Cl": -90.0, "Cs": 0.0, "GA": 60.0}
+C3B_COMMIT, C3B_START = "a" * 40, "b" * 40
+T_OK188 = {"FA188": {"A1": 1.0, "A2": 4.0, "delta": 3.0}}
+
+
+class _FakeQ47:
+    class S2Error(RuntimeError):
+        pass
+
+    class Refused(RuntimeError):
+        pass
+
+    @staticmethod
+    def sp_status(d, label):
+        return {"status": "complete" if os.path.exists(os.path.join(d, f"{label}.out.gz")) else "pending",
+                "missing_reason": None}
+
+
+class _FakeReads:
+    """parse_sp of a synthetic single point: a JSON file under the .out.gz name."""
+
+    def __init__(self):
+        self.calls = []
+
+    def parse_sp(self, label, path, *, free, block=None):
+        with open(path) as fh:
+            d = json.load(fh)
+        self.calls.append((label, block))
+        fr = None if free is None else {"rms_eVA": 0.02, "max_eVA": 0.05, "n": len(free), "indices": list(free),
+                                        "norms_eVA": [0.01] * len(free)}
+        return {"F_eV": d["F_eV"], "forces": {"all": {"rms_eVA": 0.03, "max_eVA": 0.07, "n": 7}, "free": fr},
+                "scf_converged": d.get("scf", True)}
+
+
+def _fake_load_record(path, blind=True):
+    with open(path) as fh:
+        return json.load(fh)
+
+
+def c3b_manifest(priv, *, order="path", skip=(), lines=None):
+    """Write <priv>/c3b/MANIFEST.sha256 ('<sha256>  <path relative to c3b>', sorted bytewise by path) -> its sha256.
+    order 'reverse', skip and lines plant a defect."""
+    base, ent = os.path.join(priv, "c3b"), []
+    for dp, _, fns in os.walk(base):
+        for fn in fns:
+            rel = os.path.relpath(os.path.join(dp, fn), base).replace(os.sep, "/")
+            if rel == "MANIFEST.sha256" or rel in skip:
+                continue
+            with open(os.path.join(dp, fn), "rb") as fh:
+                ent.append((rel, hashlib.sha256(fh.read()).hexdigest()))
+    ent.sort(key=lambda x: x[0].encode(), reverse=(order == "reverse"))
+    out = [f"{s}  {p}" for p, s in ent]
+    if lines is not None:
+        out = lines(out)
+    data = "".join(x + "\n" for x in out).encode()
+    with open(os.path.join(base, "MANIFEST.sha256"), "wb") as fh:
+        fh.write(data)
+    return hashlib.sha256(data).hexdigest()
+
+
+def c3b_archive(fx, name, *, cells=False, seed=1, status="done", state="full", state_edit=None, campaign_edit=None,
+                nd=None, computable=None, drop_records=(), drop_sp=(), inv_only=(), fail=None, rejected=(),
+                record_edit=None, extra=(), pub_extra=(), edit=None, order="path", skip=(), lines=None, late=(),
+                late_rm=(), pose_mode="default"):
+    """A synthetic c3b archive under a private root and the three public C1 gates under a public root; numbers
+    generated here. cells: the 544 records and single points with planted E_b (C3B_EB) -> an object with pub,
+    priv, sha (of the manifest) and F ({label: eV})."""
+    import types
+    b4 = b4m()
+    rng = np.random.default_rng(seed)
+    d = fx.workdir(f"c3b_{name}")
+    pub, priv = os.path.join(d, "pub"), os.path.join(d, "priv")
+    c3b = os.path.join(priv, "c3b")
+    for sub in ("records", "raw", "pairs"):
+        os.makedirs(os.path.join(c3b, sub))
+    dump(os.path.join(pub, "c1", "gates", "N.json"), {"result": {"dopants": {t: {"pass": True} for t in (
+        "Sr", "Ca", "Cl", "Cs", "GA")}}})
+    dump(os.path.join(pub, "c1", "gates", "pose.json"), {"result": {"Cs": {"mode": pose_mode, "a_pose_meV": 6.0},
+                                                                    "Cl": {"mode": "default", "a_pose_meV": 4.0}}})
+    dump(os.path.join(pub, "c1", "gates", "G1.json"), {"decision": {"G1": {"Cl": True, "Ca": False}}})
+    F = {}
+    for h in b4.PROD8 if cells else ():
+        Fh = -80000.0 + float(rng.uniform(-3, 3))
+        F[f"s2_{h}_host"], FV = Fh, {}
+        for wid, kind, lab, L, j, tok, leg in b4.ALL_CELLS[h]:
+            if kind == "V":
+                FV[(L, j)] = F[lab] = Fh + 3.5 + float(rng.uniform(-0.2, 0.2))
+        for tok in b4.DOPANTS:
+            L, off = b4.SUBLATTICE[tok], float(rng.normal(0, 8))
+            for j in b4.FIRST[L] + b4.FAR[h][L]:
+                e = off + (C3B_EB[tok] if j in b4.FIRST[L] else 0.0) + float(rng.normal(0, 3))
+                FD = Fh - 2.0 + float(rng.uniform(-0.2, 0.2))
+                F[f"s2_{h}_{tok}{j}o0_novac"] = FD
+                F[f"s2_{h}_{tok}{j}o0_vac"] = FD + (FV[(L, j)] - Fh) + e / 1000.0
+        for wid, kind, lab, L, j, tok, leg in b4.ALL_CELLS[h]:
+            val = {"checks": {}, "valid": True, "failed": []}
+            if kind != "host":
+                val.update(check5_reading="invariant", valid_as_written=wid not in inv_only,
+                           failed_as_written=[5] if wid in inv_only else [], invariant_only=wid in inv_only)
+            if fail and wid in fail:
+                val.update(valid=False, failed=list(fail[wid]))
+                if kind != "host":
+                    val.update(valid_as_written=False, failed_as_written=list(fail[wid]), invariant_only=False)
+            relax = {"E_mace_eV": -1200.0 + float(rng.uniform(-1, 1))}
+            if kind == "host":
+                relax["stages"] = [{"E_mace_eV": -1199.0 - s} for s in range(3)]
+            rec = {"work_id": wid, "labels": [lab], "member": h, "cell_kind": kind, "token": tok, "site": j,
+                   "leg": leg, "free": [0, 2, 5], "validity": val, "relax": relax}
+            if record_edit is not None:
+                record_edit(rec)
+            if wid not in drop_records:
+                dump(os.path.join(c3b, "records", f"{wid}.json"), rec)
+            if lab not in drop_sp:
+                dump(os.path.join(c3b, "raw", f"{lab}.out.gz"), {"F_eV": F[lab]})
+    for h, tj in rejected:
+        dump(os.path.join(c3b, "pairs", f"{h}_{tj}p0.json"), {"status": "rejected"})
+    cj = {"status": status, "commit": C3B_COMMIT, "start_commit": C3B_START,
+          "stop_reason": "synthetic stop" if status == "stopped" else None}
+    if campaign_edit is not None:
+        campaign_edit(cj)
+    if cj:
+        dump(os.path.join(c3b, "campaign.json"), cj)
+    proj = {"points": [], "cuts": [], "c4b_run": False, "c4b_origin": b4.C4B_ORIGIN}
+    if state == "full":
+        nd = dict(nd or {t: 8 for t in b4.DOPANTS})
+        st = {"commit": C3B_COMMIT, "campaigns": {"c3b": "done"}, "campaign_commit": {"c3b": C3B_COMMIT}, "n": 8,
+              "stage0": {"production_n8": list(b4.PROD8)}, "G1": {"Cl": True, "Ca": False},
+              "gateN": {t: True for t in ("Sr", "Ca", "Cl", "Cs", "GA")}, "pose": {"Cs": "default", "Cl": "default"},
+              "c3b_tier": {"computable": any(nd[t] >= 2 for t in ("Cl", "Cs", "GA")) if computable is None else
+                           computable, "n_d": nd}, "s2b_projection": proj}
+    elif state == "d0":                                   # a final STOP: the D-0 leaves only
+        st = {"s2b_projection": proj}
+    else:
+        st = None
+    if st is not None:
+        if state_edit is not None:
+            state_edit(st)
+        dump(os.path.join(c3b, "state_end.json"), st)
+    for base, rels in ((priv, extra), (pub, pub_extra)):
+        for rel in rels:
+            write_text(os.path.join(base, *rel.split("/")), "x\n")
+    if edit is not None:
+        edit(pub, priv)
+    sha = c3b_manifest(priv, order=order, skip=skip, lines=lines)
+    for rel in late:
+        write_text(os.path.join(priv, *rel.split("/")), "x\n")
+    for rel in late_rm:
+        os.remove(os.path.join(priv, *rel.split("/")))
+    return types.SimpleNamespace(pub=pub, priv=priv, sha=sha, F=F)
+
+
+@contextlib.contextmanager
+def c3b_session(fx, A, *, stop_note=None, notes=None, private=True):
+    """The stand-in for e_eval.Run on a synthetic archive, with a started OpenAudit (stopped afterwards). notes:
+    {repository path: text, or None for 'not committed'} over the three committed notes."""
+    import types
+    b4 = b4m()
+    priv = A.priv if private else None
+    L = er.ELayout(A.pub, priv)
+    au = eg.OpenAudit(A.pub, private_root=priv, tmp=[fx.ex.tmp]).start()
+    committed = {b4.VERIFY_C3B: "verify c3b (synthetic)\nverify c3b: ok\n",
+                 b4.C3B_NOTE: f"# c3b (synthetic)\n\nc3b/MANIFEST.sha256 sha256: {A.sha}\n",
+                 b4.C3B_STOP_NOTE: "2026-11-20: the c3b STOP is final (synthetic).\n", **(notes or {})}
+
+    def note_ok(path, *, what):
+        if committed.get(path) is None:
+            raise EError(f"{what} {path} is not committed and clean")
+        return committed[path]
+    run = types.SimpleNamespace(
+        a=types.SimpleNamespace(stop_note=stop_note), env=types.SimpleNamespace(private_root=priv), root=A.pub, L=L,
+        pre_route=[], route=None, chk=eg.Checks(), au=au, ctx=types.SimpleNamespace(reads=_FakeReads()),
+        note_ok=note_ok, load=lambda c, rel, mode, kind: eg.eg_load(L, c, rel, mode=mode, kind=kind, audit=au),
+        ex=types.SimpleNamespace(m48=fx.ex.m48, g49=fx.ex.g49, q47=_FakeQ47,
+                                 c46=types.SimpleNamespace(load_record=_fake_load_record)))
+    try:
+        yield run
+    finally:
+        au.stop()
+
+
+def c3b_admit(fx, A, **kw):
+    """tier_route on the stand-in -> (its result, the pre-route lines)."""
+    with c3b_session(fx, A, **kw) as run:
+        return b4m().tier_route(run), list(run.pre_route)
+
+
+def c3b_refused(fx, A, text, **kw):
+    """tier_route refuses: an EError proper (exit 2; never an integrity failure) holding text; no pre-route line."""
+    with c3b_session(fx, A, **kw) as run:
+        e = raises(EError, b4m().tier_route, run, check=lambda e: text in str(e))
+        assert type(e) is EError and run.pre_route == [], (type(e), text, run.pre_route)
+    return e
+
+
+def c3b_go(fx, A, *, fr=None, **kw):
+    """tier_route, build_tier_table, evaluate_tier and rows on the stand-in -> (route, table, result, rows by id,
+    the stand-in run)."""
+    b4 = b4m()
+    with c3b_session(fx, A, **kw) as run:
+        r = b4.tier_route(run)
+        run.route = {"id": r["id"], "b4": r}
+        run.au.set_block(4)
+        tbl = b4.build_tier_table(run, None, None)
+        res = b4.evaluate_tier(tbl, T_OK188 if fr is None else fr)
+        return r, tbl, res, t_rows(res), run
+
+
+def _state_set(path, value):
+    def f(st):
+        _set(st, path, value)
+    return f
+
+
+def _state_pop(a, b):
+    def f(st):
+        st[a].pop(b)
+    return f
+
+
+def _rm(*rel):
+    def f(pub, priv):
+        os.remove(os.path.join(priv, *rel))
+    return f
+
+
+def _mkdir(*rel):
+    def f(pub, priv):
+        os.makedirs(os.path.join(priv, *rel))
+    return f
+
+
+T7_REFUSALS = (   # (name, c3b_archive arguments, c3b_session arguments, a text of the refusal)
+    ("no_private_root", {}, {"private": False}, "needs --private-root"),
+    ("c4b_dir_private", {"extra": ("c4b/campaign.json",)}, {}, "the private root holds the entry c4b"),
+    ("c4b_tar_private", {"extra": ("c4b.tar.gz",)}, {}, "the private root holds the entry c4b.tar.gz"),
+    ("c4b_old_private", {"extra": ("C4B_old/x.json",)}, {}, "the private root holds the entry C4B_old"),
+    ("c4b_note_private", {"extra": ("c4b_note.md",)}, {}, "the private root holds the entry c4b_note.md"),
+    ("c4b_dir_public", {"pub_extra": ("c4b-2/x.json",)}, {}, "the public root holds the entry c4b-2"),
+    ("c4b_in_c3b_dir", {"extra": ("c3b/c4b/x.json",)}, {}, "a c4b entry in the c3b archive"),
+    ("c4b_in_c3b_file", {"extra": ("c3b/c4b.tar.gz",)}, {}, "c3b/c4b.tar.gz: a c4b entry in the c3b archive"),
+    ("c4b_in_c3b_empty_dir", {"edit": _mkdir("c3b", "raw", "c4b.bak")}, {}, "c3b/raw/c4b.bak: a c4b entry"),
+    ("campaign_absent", {"edit": _rm("c3b", "campaign.json")}, {}, "c3b has not run"),
+    ("running", {"status": "running"}, {}, "c3b is running"),
+    ("status_other", {"status": "paused"}, {}, "neither done nor stopped"),
+    ("commit_not_hex", {"campaign_edit": lambda cj: cj.update(commit="abc")}, {}, "commit is not a 40-hex commit"),
+    ("start_not_hex", {"campaign_edit": lambda cj: cj.update(start_commit=None)}, {},
+     "start_commit is not a 40-hex commit"),
+    ("done_without_state", {"state": None}, {}, "c3b/state_end.json is absent"),
+    ("c4b_run_true", {"state_edit": _state_set("s2b_projection.c4b_run", True)}, {}, "c4b_run is not false"),
+    ("c4b_run_absent", {"state_edit": _state_pop("s2b_projection", "c4b_run")}, {}, "c4b_run is not false"),
+    ("c4b_run_zero", {"state_edit": _state_set("s2b_projection.c4b_run", 0)}, {}, "c4b_run is not false"),
+    ("c4b_origin_other", {"state_edit": _state_set("s2b_projection.c4b_origin", "cut 2")}, {}, "c4b_run is not false"),
+    ("stop_c4b_run_true", {"state": "d0", "status": "stopped", "state_edit": _state_set("s2b_projection.c4b_run",
+                                                                                      True)},
+     {"stop_note": "STOP"}, "c4b_run is not false"),
+    ("state_running", {"state_edit": _state_set("campaigns.c3b", "running")}, {}, "disagrees with c3b/campaign.json"),
+    ("state_commit", {"state_edit": _state_set("campaign_commit.c3b", "c" * 40)}, {},
+     "disagrees with c3b/campaign.json"),
+    ("tier_absent", {"state_edit": lambda st: st.pop("c3b_tier")}, {}, "absent or of the wrong type"),
+    ("nd_bool", {"state_edit": _state_set("c3b_tier.n_d.Cl", True)}, {}, "absent or of the wrong type"),
+    ("computable_text", {"state_edit": _state_set("c3b_tier.computable", "yes")}, {}, "absent or of the wrong type"),
+    ("stop_no_note", {"state": "d0", "status": "stopped"}, {}, "a final STOP needs --stop-note"),
+    ("stop_other_note", {"state": "d0", "status": "stopped"}, {"stop_note": "results/objective2/s2/STOP_NOTE.md"},
+     "a final STOP needs --stop-note"),
+    ("stop_no_phrase", {"state": "d0", "status": "stopped"},
+     {"stop_note": "STOP", "notes": {"STOP": "2026-11-20: c3b stopped.\n"}}, "is not a dated note"),
+    ("stop_no_date", {"state": "d0", "status": "stopped"},
+     {"stop_note": "STOP", "notes": {"STOP": "the c3b STOP is final.\n"}}, "is not a dated note"),
+    ("stop_note_uncommitted", {"state": "d0", "status": "stopped"}, {"stop_note": "STOP", "notes": {"STOP": None}},
+     "is not committed and clean"),
+    ("done_with_note", {}, {"stop_note": "STOP"}, "c3b is done, there is no STOP"),
+    ("verify_uncommitted", {}, {"notes": {"VERIFY": None}}, "verify record of c3b"),
+    ("note_uncommitted", {}, {"notes": {"NOTE": None}}, "the c3b note"),
+    ("note_no_line", {}, {"notes": {"NOTE": "# c3b\n"}}, "does not hold exactly one line"),
+    ("note_two_lines", {}, {"notes": {"NOTE": "c3b/MANIFEST.sha256 sha256: " + "0" * 64 + "\n" +
+                                      "c3b/MANIFEST.sha256 sha256: " + "1" * 64 + "\n"}},
+     "does not hold exactly one line"),
+    ("note_short_sha", {}, {"notes": {"NOTE": "c3b/MANIFEST.sha256 sha256: " + "0" * 63 + "\n"}},
+     "does not hold exactly one line"),
+    ("manifest_absent", {"late_rm": ("c3b/MANIFEST.sha256",)}, {}, "c3b/MANIFEST.sha256: absent"),
+    ("manifest_sha", {}, {"notes": {"NOTE": "c3b/MANIFEST.sha256 sha256: " + "0" * 64 + "\n"}},
+     "sha256 against the line of the committed c3b note"),
+    ("manifest_reverse", {"order": "reverse"}, {}, "sorted bytewise by path"),
+    ("manifest_twice", {"lines": lambda x: x + x[-1:]}, {}, "sorted bytewise by path"),
+    ("manifest_one_space", {"lines": lambda x: [x[0].replace("  ", " ", 1)] + x[1:]}, {}, "line format or path"),
+    ("manifest_dotdot", {"lines": lambda x: x + ["0" * 64 + "  ../x"]}, {}, "line format or path"),
+    ("manifest_absolute", {"lines": lambda x: ["0" * 64 + "  /x"] + x}, {}, "line format or path"),
+    ("manifest_itself", {"lines": lambda x: ["0" * 64 + "  MANIFEST.sha256"] + x}, {}, "line format or path"),
+    ("stray_after", {"late": ("c3b/.DS_Store",)}, {}, "c3b/.DS_Store: c3b/MANIFEST.sha256: not listed"),
+    ("unlisted", {"extra": ("c3b/regions/m06_B124.json",), "skip": ("regions/m06_B124.json",)}, {}, "not listed"),
+    ("listed_absent", {"extra": ("c3b/regions/m06_B124.json",), "late_rm": ("c3b/regions/m06_B124.json",)}, {},
+     "c3b/regions/m06_B124.json: c3b/MANIFEST.sha256: listed, absent"),
+    ("foreign_record", {"extra": ("c3b/records/s2_m06_Ca124p0_vac.json",)}, {}, "not a cell of the production graph"),
+    ("pilot_record", {"extra": ("c3b/records/s2_m30_host.json",)}, {}, "not a cell of the production graph"),
+    ("foreign_raw", {"extra": ("c3b/raw/s2_m06_Sr124o1_vac.out.gz",)}, {}, "not a single point of the production"),
+    ("foreign_pair", {"extra": ("c3b/pairs/m06_Sr124p1.json",)}, {}, "not a pair file of the production graph"),
+    ("far_pair_other_host", {"extra": ("c3b/pairs/m06_Cs188p0.json",)}, {}, "not a pair file of the production graph"),
+    ("foreign_region", {"extra": ("c3b/regions/m30_B76.json",)}, {}, "not a region file of the production graph"),
+)
+
+
+def _t7_args(build, sess):
+    """The placeholders STOP, NOTE and VERIFY of T7_REFUSALS as the paths of e_block4."""
+    b4 = b4m()
+    names = {"STOP": b4.C3B_STOP_NOTE, "NOTE": b4.C3B_NOTE, "VERIFY": b4.VERIFY_C3B}
+    sess = dict(sess)
+    if "stop_note" in sess:
+        sess["stop_note"] = names.get(sess["stop_note"], sess["stop_note"])
+    if "notes" in sess:
+        sess["notes"] = {names.get(k, k): v for k, v in sess["notes"].items()}
+    return dict(build), sess
+
+
+@case("T7", "T", mutants=(
+        # only an entry named exactly c4b refused (the part-1 behaviour; review M5)
+        ("c4b_exact_name", lambda fx: patched(b4m(), "C4B_NAME", re.compile(r"c4b"))),
+        ("c4b_in_manifest_unchecked", lambda fx: b4_src_patched(
+            "_manifest_read", 'if any(C4B_NAME.fullmatch(s) for s in p.split("/")):', "if False:")),
+        ("c4b_dirs_unchecked", lambda fx: b4_src_patched("_manifest_complete", "if C4B_NAME.fullmatch(dn):",
+                                                         "if False:")),
+        ("c4b_notes_in_private", lambda fx: b4_src_patched("tier_route", '(env.private_root, "the private root", False)',
+                                                           '(env.private_root, "the private root", True)')),
+        # the state file required at a final STOP (the runner publishes none); not required when c3b is done
+        ("stop_needs_state", lambda fx: b4_src_patched("tier_route", 'if status != "stopped":', "if True:")),
+        ("done_state_optional", lambda fx: b4_src_patched("tier_route", 'if status != "stopped":', "if False:")),
+        # the D-0 leaves unchecked; the origin unchecked (B-12)
+        ("d0_unchecked", lambda fx: b4_src_patched(
+            "tier_route", 'if st.get("s2b_projection.c4b_run") is not C4B_RUN or '
+            'st.get("s2b_projection.c4b_origin") != C4B_ORIGIN:', "if False:")),
+        ("d0_falsy", lambda fx: b4_src_patched("tier_route", 'if st.get("s2b_projection.c4b_run") is not C4B_RUN or',
+                                               'if st.get("s2b_projection.c4b_run") or')),
+        ("origin_unchecked", lambda fx: b4_src_patched(
+            "tier_route", ' or st.get("s2b_projection.c4b_origin") != C4B_ORIGIN:', ":")),
+        # the names checks left to block 4 (an integrity failure, an attempt spent; review M2)
+        ("names_not_at_admission", lambda fx: b4_src_patched("tier_route", "except _Names as e:",
+                                                             "except ZeroDivisionError as e:")),
+        ("order_unchecked", lambda fx: b4_src_patched(
+            "_manifest_read", 'if prev is not None and p.encode("utf-8") <= prev.encode("utf-8"):', "if False:")),
+        ("complete_unchecked", lambda fx: b4_src_patched("_manifest_complete", "for p in sorted(on_disk ^ set(man)):",
+                                                         "for p in ():")),
+        ("census_unchecked", lambda fx: patched(b4m(), "_census", lambda run: True)),
+        ("manifest_sha_unchecked", lambda fx: b4_src_patched(
+            "_manifest_read", "if want is None or hashlib.sha256(data).hexdigest() != want:", "if False:")),
+        ("manifest_path_unchecked", lambda fx: b4_src_patched(
+            "_manifest_read", 'if p is None or p.startswith("/") or any(s in ("", ".", "..") for s in p.split("/")) '
+            'or p == MANIFEST_NAME:', "if p is None:")),
+        # the stop note: its phrase, its date, its one path; a stop note beside a done c3b
+        ("stop_phrase_unchecked", lambda fx: b4_src_patched(
+            "tier_route", "if not (STOP_PHRASE.search(text) and ISO_DATE.search(text)):",
+            "if not ISO_DATE.search(text):")),
+        ("stop_date_unchecked", lambda fx: b4_src_patched(
+            "tier_route", "if not (STOP_PHRASE.search(text) and ISO_DATE.search(text)):",
+            "if not STOP_PHRASE.search(text):")),
+        ("stop_note_any_path", lambda fx: b4_src_patched("tier_route", "if a.stop_note != note:",
+                                                         "if not a.stop_note:")),
+        ("done_with_note_admitted", lambda fx: b4_src_patched("tier_route", "        if a.stop_note:\n",
+                                                              "        if False:\n")),
+        # the committed notes
+        ("note_lines_unchecked", lambda fx: b4_src_patched("tier_route", "if len(got) != 1:", "if len(got) < 1:")),
+        ("verify_unchecked", lambda fx: b4_src_patched(
+            "tier_route", 'vt = run.note_ok(vp, what="verify record of c3b")', 'vt = "not read"')),
+        # the campaign and state leaves
+        ("status_unchecked", lambda fx: b4_src_patched("tier_route", 'if status not in ("done", "stopped"):',
+                                                       "if False:")),
+        ("commits_unchecked", lambda fx: b4_src_patched(
+            "tier_route", "if not (isinstance(x, str) and HEX40.fullmatch(x)):", "if False:")),
+        ("state_commit_unchecked", lambda fx: b4_src_patched(
+            "tier_route", 'if st.get("campaigns.c3b") != "done" or st.get("campaign_commit.c3b") != commit:',
+            'if st.get("campaigns.c3b") != "done":')),
+        ("tier_types_unchecked", lambda fx: b4_src_patched(
+            "tier_route", "if not isinstance(comp, bool) or any(isinstance(v, bool) or not isinstance(v, int) for v in "
+            "nd.values()):", "if not isinstance(comp, bool) or any(not isinstance(v, int) for v in nd.values()):")),
+        # a no-tier state admitted as the tier route
+        ("route_always_tier", lambda fx: b4_src_patched(
+            "tier_route", 'out["id"] = "C4B-NOTRUN" if comp else "C3B-NOTIER"', 'out["id"] = "C4B-NOTRUN"'))))
+def case_t7(fx):
+    """T7 (review M1, M2, M4, M5): admission by e_block4.tier_route on a synthetic c3b archive. The three ruled
+    routes are admitted with their commits, manifest sha256 and pre-route lines. Every defect of the campaign and
+    state leaves, the committed notes, the manifest (hash, format, bytewise order, completeness), the names under
+    records, raw, pairs and regions, and every form of a c4b tree is a refusal (an EError: exit 2, nothing written),
+    never an integrity failure; the D-0 leaves are required on a final STOP as well."""
+    b4 = b4m()
+    A = c3b_archive(fx, "t7_done", extra=("c3b/regions/m06_B124.json", "c3b/pairs/m23_GA92p0.json",
+                                          "c3b/pairs/m06_Cl49_vac.distinct.json", "c3b/structures.tar.gz"),
+                    pub_extra=("C4B_NOTE.md",))                 # a committed note about C4b is not a c4b tree
+    r, pre = c3b_admit(fx, A)
+    assert r["id"] == "C4B-NOTRUN" and r["commits"] == {"c3b_start": C3B_START, "c3b": C3B_COMMIT} and \
+        r["manifest_sha256"] == A.sha and r["n_manifest"] == 7 and r["stop_note"] is None and \
+        r["c3b"]["n_d"] == {d: 8 for d in T_DOPANTS} and r["c3b"]["computable"] is True and \
+        r["c4b"] == {"run": False, "origin": "decision (S2B amendment 2026-11-16a)"}, r
+    assert pre[0] == f"c3b: status done; start commit {C3B_START}; commit {C3B_COMMIT}" and pre[-1] == \
+        "C4b: C4b not run (decision, amendment 2026-11-16a)" and any(
+            x.startswith(f"c3b note: {b4.C3B_NOTE} sha256 ") and x.endswith(f"c3b/MANIFEST.sha256 sha256 {A.sha}")
+            for x in pre) and any(x.startswith(f"verify record c3b: {b4.VERIFY_C3B} sha256 ") and
+                                  x.endswith("last line: verify c3b: ok") for x in pre), pre
+    A = c3b_archive(fx, "t7_notier", nd={"Sr": 8, "Cl": 1, "Cs": 0, "GA": 1})
+    r, pre = c3b_admit(fx, A)
+    assert r["id"] == "C3B-NOTIER" and r["c3b"]["computable"] is False and r["c3b"]["n_d"]["Cs"] == 0
+    for state in ("d0", "full", None):       # a final STOP: no state file (the runner's STOP), or the D-0 leaves
+        A = c3b_archive(fx, f"t7_stop_{state}", status="stopped", state=state)
+        r, pre = c3b_admit(fx, A, stop_note=b4.C3B_STOP_NOTE)
+        assert r["id"] == "C3B-STOP" and r["c3b"]["stop_reason"] == "synthetic stop" and r["c3b"]["n_d"] is None and \
+            r["stop_note"][0] == b4.C3B_STOP_NOTE and re.fullmatch(r"[0-9a-f]{64}", r["stop_note"][1]) and \
+            any(x.startswith(f"c3b stop note: {b4.C3B_STOP_NOTE} sha256 ") for x in pre), (state, r)
+    assert b4.C3B_NOTE == "results/objective2/s2/C3B_NOTE.md" and b4.C3B_STOP_NOTE == \
+        "results/objective2/s2/C3B_STOP_NOTE.md" and b4.VERIFY_C3B == "results/objective2/s2/c3b_verify/verify_c3b.txt"
+    seen = set()
+    for name, build, sess, text in T7_REFUSALS:
+        build, sess = _t7_args(build, sess)
+        e = c3b_refused(fx, c3b_archive(fx, f"t7_{name}", **build), text, **sess)
+        seen.add(str(e))
+    assert len(seen) >= 30, len(seen)                           # distinct refusals, not one catch-all
+    # the same defects found in block 4 (the archive changed during the run) are integrity failures
+    A = c3b_archive(fx, "t7_block4")
+    with c3b_session(fx, A) as run:
+        r = b4.tier_route(run)
+        run.route = {"id": r["id"], "b4": r}
+        assert b4.manifest(run, "c3b") == {**b4.manifest(run, "c3b")} and len(b4.manifest(run, "c3b")) == 3 and \
+            b4.manifest(run, "c3b")["c3b/MANIFEST.sha256"] == A.sha
+        assert int_fail("INT-SHA", b4.manifest, run, "c4b").where == "c4b/"
+        run.au.stop()                                           # (the audit refuses a write under its roots)
+        write_text(os.path.join(A.priv, "c3b", "raw", ".DS_Store"), "x\n")
+        run.au.start()
+        run.au.set_block(4)
+        e = int_fail("INT-SHA", b4.build_tier_table, run, None, None)
+        assert e.where == "c3b/raw/.DS_Store" and "not listed" in e.key, (e.where, e.key)
+    A = c3b_archive(fx, "t7_block4_sha")
+    with c3b_session(fx, A) as run:
+        run.route = {"id": "C4B-NOTRUN", "b4": {"id": "C4B-NOTRUN", "manifest_sha256": "0" * 64}}
+        assert int_fail("INT-SHA", b4.manifest, run, "c3b").where == "c3b/MANIFEST.sha256"
+
+
+def _c3b_full(fx):
+    return cached(fx, ("c3b", "full"), lambda: c3b_archive(fx, "full", cells=True, seed=71))
+
+
+def _count_calls(orig, box):
+    def f(self):
+        box.append(1)
+        return orig(self)
+    return f
+
+
+@case("T8", "T", mutants=(
+        # the identity leaves of a record unchecked
+        ("record_identity_unchecked", lambda fx: b4_src_patched("build_tier_table", 'rec.get("member") != h or',
+                                                                "False or")),
+        # a single point read although its record is absent (review m1)
+        ("sp_read_without_record", lambda fx: b4_src_patched("build_tier_table", "read=rec is not FILE_ABSENT)",
+                                                             "read=True)")),
+        # the state leaves unchecked; checked on a final STOP as well
+        ("state_unchecked", lambda fx: patched(b4m(), "_state", lambda run, gates: {"gateN": {}, "agrees": True})),
+        ("stop_state_checked", lambda fx: b4_src_patched(
+            "build_tier_table", 'state = None if r4.get("id") == "C3B-STOP" else _state(run, gates)',
+            "state = _state(run, gates)")),
+        # the production pose mode of the C1 pose gate unchecked (S2B:326)
+        ("pose_mode_unchecked", lambda fx: b4_src_patched(
+            "_c1_gates", 'if (pose.get(t) or {}).get("mode") != "default" or isinstance(a, bool)',
+            "if isinstance(a, bool)")),
+        # the block-4-only assertion not made
+        ("closed_not_asserted", lambda fx: b4_src_patched("build_tier_table", "    acc.assert_closed()", "    pass")),
+        # the invariant reading replaced by the reading as written (S2B:330-332)
+        ("as_written_reading", lambda fx: patched(b4m(), "_validity", _validity_as_written(b4m()._validity))),
+        # a rejected pair not carried into the table
+        ("rejected_lost", lambda fx: b4_src_patched("build_tier_table", '.get("status") == "rejected":',
+                                                    '.get("status") == "never":')),
+        # the MACE energy of a record not type-checked
+        ("mace_type_unchecked", lambda fx: b4_src_patched(
+            "build_tier_table", "if e is not None and (isinstance(e, bool) or not isinstance(e, (int, float))):",
+            "if False:")),
+        # the literals not pinned against the 8bff03e objects
+        ("restated_unchecked", lambda fx: patched(b4m(), "_assert_restated", lambda ex: True))))
+def case_t8(fx):
+    """T8 (review M1): build_tier_table, evaluate_tier and rows on a synthetic c3b archive of 544 records and single
+    points, through e_guard.C3bAccess. The table holds the planted F; the tier equals the independent recomputation;
+    the labels and work ids of e_block4 equal scripts/49 lab_* and wid_* at 8bff03e; an absent record or single point
+    lowers n_d without an integrity failure (B-15) and an unread single point is printed, not parsed; an
+    invariant-only pass counts as valid; the three routes; the INT-STRUCT and INT-ROUTE plants."""
+    b4 = b4m()
+    A, box = _c3b_full(fx), []
+    with patched(eg.C3bAccess, "assert_closed", _count_calls(eg.C3bAccess.assert_closed, box)):
+        r, tbl, res, R, run = c3b_go(fx, A)
+    assert box == [1] and isinstance(run._b4_access, eg.C3bAccess)
+    assert r["id"] == "C4B-NOTRUN" and res["tier"] is True and res["n_d"] == {d: 8 for d in T_DOPANTS}
+    assert tbl["production"] == list(b4.PROD8) and tbl["a2"] == {} and len(tbl["sp_labels"]) == 544
+    for h in b4.PROD8:
+        assert tbl["sites"][h] == {L: {"first": list(T_FIRST[L]), "far": list(b4.FAR[h][L])} for L in "BAX"}
+        assert {k: v for k, v in tbl["hosts"][h]["F"].items()} == {k: v for k, v in A.F.items() if f"_{h}_" in k}
+    assert_tier(res, ind_tier(tbl), "archive")
+    assert sorted(set(run.ctx.reads.calls)) == sorted((lab, 4) for lab in b4.ALL_LABELS) and \
+        len(run.ctx.reads.calls) == 544
+    assert run.chk.passed["INT-STRUCT"] == 544 and run.chk.passed["INT-IMPORT"] == 1
+    assert R["B4.route"].values == {"route": "C4B-NOTRUN", "tier": True} and \
+        R["B4.counts"].values == {"cells": 544, "records": 544, "sp_complete": 544} and \
+        R["B4.counts"].text.endswith("files listed in c3b/MANIFEST.sha256: 1091")       # 2 x 544, 2 json, itself
+    assert R["B4.check5"].values == {"as written": 536, "invariant only": 0, "failed": 0, "not evaluated": 0}
+    assert R["B4.inv.none"].text == "c3b: none" and "B4.sens.Cs" in R and "B4.forces.s2_m06_host" in R
+    for xid in ("XC-C3B-MACE-COUNT", "XC-C3B-STATE", "XC-C3B-YSUM"):
+        assert R[xid].values["ok"] is True and R[xid].text.endswith(": ok"), R[xid].text
+    assert "equal to c3b/state_end.json c3b_tier (INT-ROUTE)" in R["B4.nd"].text
+    # B-15: a record absent, a single point absent, a rejected pair without cells; n_d as the campaign recorded it
+    gone, sp_gone = "s2_m06_Sr124p0_vac", "s2_m02_Cl49o0_novac"
+    rej = [f"s2_m23_GA92p0_{leg}" for leg in ("novac", "vac")]
+    A2 = c3b_archive(fx, "t8_b15", cells=True, seed=72, drop_records=(gone, *rej),
+                     drop_sp=(sp_gone, *(x.replace("p0_", "o0_") for x in rej)), rejected=(("m23", "GA92"),),
+                     inv_only=("s2_m16_VA28", "s2_m12_Cl175p0_vac"), nd={"Sr": 7, "Cl": 8, "Cs": 8, "GA": 8})
+    r, tbl, res, R, run = c3b_go(fx, A2)
+    assert res["n_d"] == {"Sr": 7, "Cl": 8, "Cs": 8, "GA": 8} and r["id"] == "C4B-NOTRUN"
+    assert_tier(res, ind_tier(tbl), "b15")
+    assert ("s2_m06_Sr124o0_vac", 4) not in run.ctx.reads.calls and len(run.ctx.reads.calls) == 544 - 4
+    assert R[f"B4.inv.{gone}"].text.endswith("no record; single point complete, not read") and \
+        R["B4.inv.s2_m02_Cl49p0_novac"].text.endswith("single point pending") and \
+        R["B4.inv.pair.m23.GA92"].text == "c3b m23 GA92: pair rejected (p0)" and \
+        tbl["hosts"]["m23"]["pair_rejected"] == {"GA92": ["p0"]}
+    assert R["B4.counts"].values == {"cells": 544, "records": 541, "sp_complete": 541}
+    assert R["B4.check5"].values == {"as written": 531, "invariant only": 2, "failed": 0, "not evaluated": 3} and \
+        res["hv"]["Cs"]["m16"]["first"][28]["valid"] is True and "L_C3B_INV" in R["B4.Eb.m16.Cs28"].labels
+    assert R["XC-C3B-MACE-COUNT"].values["ok"] is True and res["per_dopant"]["GA"]["ds"]["n_failed_cells"] == 2 and \
+        res["per_dopant"]["GA"]["ds"]["applies"] is False       # the rejected p0: one failed cell per leg (I-C10)
+    # the literals of e_block4 against the 8bff03e objects: scripts/49 lab_* and wid_* exist and give its names
+    assert b4._assert_restated(fx.ex) is True
+    for name, wrong in (("wid_v", lambda h, L, j: f"s2_{h}_V{L}{j}x"), ("lab_dop", lambda h, t, j, leg, k=0, prefix="s2":
+                                                                        f"{prefix}_{h}_{t}{j}o1_{leg}")):
+        with patched(fx.ex.g49, name, wrong):
+            assert int_fail("INT-IMPORT", b4._assert_restated, fx.ex).key.startswith("block 4 label ")
+    with patched(fx.ex.m48, "PROD8", list(reversed(b4.PROD8))):
+        assert int_fail("INT-IMPORT", b4._assert_restated, fx.ex).key == "block 4 PROD8"
+    with c3b_session(fx, A) as run:                             # and build_tier_table makes that check
+        r = b4.tier_route(run)
+        run.route = {"id": r["id"], "b4": r}
+        run.au.set_block(4)
+        with patched(fx.ex.g49, "wid_host", lambda h: f"s2_{h}_hostx"):
+            int_fail("INT-IMPORT", b4.build_tier_table, run, None, None)
+    # the recorded n_d against E's recompute
+    A3 = c3b_archive(fx, "t8_route", cells=True, seed=73, drop_records=(gone,))
+    with c3b_session(fx, A3) as run:
+        r = b4.tier_route(run)
+        run.route = {"id": r["id"], "b4": r}
+        run.au.set_block(4)
+        e = int_fail("INT-ROUTE", b4.evaluate_tier, b4.build_tier_table(run, None, None), T_OK188)
+        assert e.key == "c3b_tier.n_d.Sr"
+    # no tier computable, and a final STOP with the D-0 leaves only: the P section 15 items, no class
+    far_v = {f"s2_{h}_V{L}{b4.FAR[h][L][0]}": [3] for h in b4.PROD8[1:] for L in "AX"}
+    for name, kw, sess, rid, lab in (
+            ("notier", {"nd": {"Sr": 8, "Cl": 1, "Cs": 1, "GA": 1}}, {}, "C3B-NOTIER", "L_NOTIER"),
+            ("stop", {"status": "stopped", "state": "d0"}, {"stop_note": b4.C3B_STOP_NOTE}, "C3B-STOP", "L_C3BSTOP")):
+        r, tbl, res, R, run = c3b_go(fx, c3b_archive(fx, f"t8_{name}", cells=True, seed=74, fail=far_v, **kw), **sess)
+        assert r["id"] == rid and res["tier"] is False and res["n_d"] == {"Sr": 8, "Cl": 1, "Cs": 1, "GA": 1}
+        assert not any(i.startswith(("B4.class.", "B4.rank.", "B4.sens.")) for i in R) and \
+            R["B4.Eb.m06.Cl49"].labels[0] == lab and R["B4.route"].values == {"route": rid, "tier": False}
+        assert R["B4.check5"].values["failed"] == 0 and sum(1 for i in R if i.startswith("B4.inv.s2_")) == 14
+        if rid == "C3B-STOP":
+            assert R["XC-C3B-STATE"].values["ok"] is None and "(stop reason: synthetic stop)" in R["B4.route"].text \
+                and "no c3b_tier recorded on this route" in R["B4.nd"].text
+        else:
+            assert R["XC-C3B-STATE"].values["ok"] is True
+    # INT-STRUCT plants: the record identity, the two readings, the MACE energy, the state leaves, the pose mode
+    plants = (
+        ("member", {"record_edit": lambda rec: rec.update(member="m06")}, "c3b/records/s2_m02_host.json"),
+        ("kind", {"record_edit": lambda rec: rec.update(cell_kind="D")}, "c3b/records/s2_m06_host.json"),
+        ("labels", {"record_edit": lambda rec: rec.update(labels=[])}, "c3b/records/s2_m06_host.json"),
+        ("readings", {"record_edit": lambda rec: rec["validity"].update(invariant_only=True)},
+         "c3b/records/s2_m06_VB124.json"),
+        ("no_readings", {"record_edit": lambda rec: rec["validity"].pop("check5_reading", None)},
+         "c3b/records/s2_m06_VB124.json"),
+        ("mace", {"record_edit": lambda rec: rec["relax"].update(E_mace_eV="-1200.0")}, "c3b/records/s2_m06_host.json"),
+        ("state_n", {"state_edit": _state_set("n", 10)}, "c3b/state_end.json"),
+        ("state_prod", {"state_edit": _state_set("stage0.production_n8", list(reversed(b4.PROD8)))},
+         "c3b/state_end.json"),
+        ("state_g1", {"state_edit": _state_set("G1.Ca", True)}, "c3b/state_end.json"),
+        ("state_pose", {"state_edit": _state_set("pose.Cs", "multi")}, "c3b/state_end.json"),
+        ("pose_gate", {"pose_mode": "multi"}, "c1/gates/pose.json"))
+    for name, kw, where in plants:
+        Ap = c3b_archive(fx, f"t8_plant_{name}", cells=True, seed=75, **kw)
+        with c3b_session(fx, Ap) as run:
+            r = b4.tier_route(run)
+            run.route = {"id": r["id"], "b4": r}
+            run.au.set_block(4)
+            assert int_fail("INT-STRUCT", b4.build_tier_table, run, None, None).where == where, name
+    # a state that disagrees with the C1 gates is a failed cross-check, printed, not an integrity failure
+    r, tbl, res, R, run = c3b_go(fx, c3b_archive(fx, "t8_gaten", cells=True, seed=76,
+                                                 state_edit=_state_set("gateN.GA", False)))
+    assert R["XC-C3B-STATE"].values["ok"] is False and R["XC-C3B-STATE"].labels == ("L_XFAIL",)
+
+
+def cls_src_patched(mod, cls, name, old, new):
+    """A source mutant of the method cls.<name> of the module mod (as src_patched, for e_guard's classes)."""
+    import inspect
+    import textwrap
+    src = textwrap.dedent(inspect.getsource(getattr(cls, name)))
+    if src.count(old) != 1:
+        raise MutantNotApplied(f"cls_src_patched: {cls.__name__}.{name}: {src.count(old)} occurrences of {old!r}")
+    ns = {}
+    exec(compile(src.replace(old, new), f"<mutant of {cls.__name__}.{name}>", "exec"), mod.__dict__, ns)
+    return patched(cls, name, ns[name])
+
+
+@case("T9", "T", mutants=(
+        ("wid_set_dropped", lambda fx: cls_src_patched(eg, eg.C3bAccess, "record", "if wid not in self.wids:",
+                                                       "if False:")),
+        ("label_set_dropped", lambda fx: cls_src_patched(eg, eg.C3bAccess, "sp", "if label not in self.labels:",
+                                                         "if False:")),
+        ("audit_block_unchecked", lambda fx: cls_src_patched(
+            eg, eg.C3bAccess, "_block4", "if block != 4 or self.audit.block != 4:", "if block != 4:")),
+        ("block_argument_unchecked", lambda fx: cls_src_patched(
+            eg, eg.C3bAccess, "_block4", "if block != 4 or self.audit.block != 4:", "if self.audit.block != 4:")),
+        ("pin_544", lambda fx: patched(eg.C3bAccess, "N_CELLS", 10)),
+        ("work_re_unpinned", lambda fx: cls_src_patched(
+            eg, eg.C3bAccess, "__init__", "not all(isinstance(w, str) and WORK_RE.fullmatch(w) for w in self.wids):",
+            "False:")),
+        ("closed_noop", lambda fx: patched(eg.C3bAccess, "assert_closed", lambda self: True)),
+        ("read_flag_ignored", lambda fx: cls_src_patched(eg, eg.C3bAccess, "sp", " or not read:", ":")),
+        ("unconverged_accepted", lambda fx: cls_src_patched(
+            eg, eg.C3bAccess, "sp", 'or r.get("scf_converged") is not True:', ":")),
+        ("absent_record_opened", lambda fx: cls_src_patched(eg, eg.C3bAccess, "record",
+                                                            "if not os.path.exists(path):", "if False:"))))
+def case_t9(fx):
+    """T9 (review M1, m2): e_guard.C3bAccess. Its closed sets are the 544 work ids and labels of the production
+    graph, pinned by their count and WORK_RE; a name outside them, and any read outside block 4 (by the argument or
+    by the audit), is refused; an absent record is FILE_ABSENT; a single point that is not complete, or is not to be
+    read, has its status and no F; an unconverged one is INT-SP; assert_closed finds a c3b record opened outside
+    block 4 in the open log (INT-READS)."""
+    import types
+    b4 = b4m()
+    gone, sp_gone, bad_sp = "s2_m06_Sr124p0_vac", "s2_m02_Cl49o0_novac", "s2_m16_host"
+
+    def plant(pub, priv):
+        dump(os.path.join(priv, "c3b", "raw", f"{bad_sp}.out.gz"), {"F_eV": -1.0, "scf": False})
+    A = c3b_archive(fx, "t9", cells=True, seed=91, drop_records=(gone,), drop_sp=(sp_gone,), edit=plant)
+    with c3b_session(fx, A) as run:
+        au, reads = run.au, _FakeReads()
+
+        def access(wids=b4.ALL_WIDS, labels=b4.ALL_LABELS):
+            return eg.C3bAccess(run.L, run.ex.c46, _FakeQ47, au, reads, wids=wids, labels=labels)
+        acc = access()
+        assert eg.C3bAccess.N_CELLS == 544 == len(acc.wids) == len(acc.labels)
+        for wids, labels in ((sorted(b4.ALL_WIDS)[:10], sorted(b4.ALL_LABELS)[:10]),
+                             (b4.ALL_WIDS, sorted(b4.ALL_LABELS)[:-1]),
+                             ((b4.ALL_WIDS - {"s2_m06_host"}) | {"s2_m06_Xx1p0_vac"}, b4.ALL_LABELS)):
+            int_fail("INT-STRUCT", access, wids, labels)
+        au.set_block(3)                                         # outside block 4: by the audit, by the argument
+        raises(Blinded, acc.record, "s2_m06_host", blind=False, block=4)
+        raises(Blinded, acc.sp, "s2_m06_host", free=None, block=4)
+        au.set_block(4)
+        raises(Blinded, acc.record, "s2_m06_host", blind=False, block=3)
+        raises(Blinded, acc.sp, "s2_m06_host", free=None, block=3)
+        assert au.log == {} and reads.calls == []
+        for name in ("s2_m30_host", "s2_m06_Ca124p0_vac", "s2_m06_Sr124p1_vac", "s2_m06_VB76x"):
+            raises(Blinded, acc.record, name, blind=False, block=4)
+        for name in ("s2_m30_host", "s2_m06_Ca124o0_vac", "s2_m06_Sr124o1_vac", "s2_m06_Sr124p0_vac"):
+            raises(Blinded, acc.sp, name, free=None, block=4)
+        rec = acc.record("s2_m06_host", blind=False, block=4)
+        assert rec["work_id"] == "s2_m06_host" and acc.log == [("s2_m06_host", False, 4)]
+        assert acc.record(gone, blind=False, block=4) is FILE_ABSENT and len(acc.log) == 1
+        sp = acc.sp("s2_m06_host", free=rec["free"], block=4)
+        assert sp["status"] == "complete" and sp["F_eV"] == A.F["s2_m06_host"] and sp["forces"]["free"]["n"] == 3
+        assert acc.sp(sp_gone, free=[0], block=4) == {"label": sp_gone, "status": "pending", "missing_reason": None,
+                                                      "F_eV": None, "forces": None}
+        n = len(reads.calls)
+        sp = acc.sp("s2_m06_VB124", free=None, block=4, read=False)
+        assert sp["status"] == "complete" and sp["F_eV"] is None and sp["forces"] is None and len(reads.calls) == n
+        assert int_fail("INT-SP", acc.sp, bad_sp, free=[0], block=4).where == f"c3b/raw/{bad_sp}.out.gz"
+        assert acc.assert_closed() is True
+        au.set_block(3)                                         # a c3b record opened outside block 4, by any code
+        with open(run.L.record("c3b", "s2_m02_host")) as fh:
+            fh.read()
+        e = int_fail("INT-READS", acc.assert_closed)
+        assert e.where == "c3b/records/s2_m02_host.json" and "outside block 4" in e.key
+    with c3b_session(fx, A) as run:                             # and a record() call logged outside block 4
+        acc = eg.C3bAccess(run.L, run.ex.c46, _FakeQ47, run.au, _FakeReads(), wids=b4.ALL_WIDS, labels=b4.ALL_LABELS)
+        acc.log.append(("s2_m06_host", False, 3))
+        assert int_fail("INT-READS", acc.assert_closed).where == "c3b/records/s2_m06_host.json"
+
+
+# ---------------------------------------------------------------- T10: block 4 through e_eval.py (the integration)
+class B4Through(B4Double):
+    """e_block4's own evaluation, rows, labels, C4b item and stop-note path behind the test double's route and
+    commits (T10). The table was built by e_block4 on the stand-in of T8; E evaluates it with its own fr information
+    (block 2), prints its rows and closes its access object at exit."""
+
+    def __init__(self, F, tbl, acc, *, route="C4B-NOTRUN", fail_xc=None):
+        super().__init__(route, None, F)
+        b4 = b4m()
+        self.tbl, self.acc, self.fail_xc, self.fr_seen, self.reached = tbl, acc, fail_xc, None, 0
+        self.LABELS, self.C4B_ITEM, self.C3B_STOP_NOTE = b4.LABELS, b4.C4B_ITEM, b4.C3B_STOP_NOTE
+
+    def tier_route(self, run):
+        self.reached += 1
+        return super().tier_route(run)
+
+    def build_tier_table(self, run, c1, fr):
+        run.__dict__["_b4_access"] = self.acc
+        return self.tbl
+
+    def evaluate_tier(self, table, fr, *, hinge=None):
+        self.fr_seen = fr
+        return b4m().evaluate_tier(table, fr, hinge=hinge)
+
+    def rows(self, result, labels):
+        self.labels = labels
+        out = b4m().rows(result, labels)
+        for x in out:
+            if x.id == self.fail_xc:                     # a planted failing cross-check of block 4
+                x.values["ok"], x.labels = False, ("L_XFAIL",) + tuple(x.labels)
+        return out
+
+
+def _note_at(sr, path):
+    """A repository path under S2_REL, moved to the root of a throwaway repository (as e_block4._rel)."""
+    return path.replace(ee().S2_REL, os.path.relpath(sr.root, sr.repo).replace(os.sep, "/"), 1)
+
+
+@case("T10", "T", mutants=(
+        # the kinds of block 4's rows unknown to E
+        ("kinds_missing", lambda fx: patched(ee(), "KINDS", tuple(k for k in ee().KINDS
+                                                                 if k not in ("Y", "tier", "class")))),
+        # block 4's label ids printed without their texts
+        ("labels_unresolved", lambda fx: src_patched(ee().Run, "block4_and_5", '{**getattr(b4, "LABELS", {}), ', "{")),
+        # block 4's cross-checks not counted in the exit code
+        ("xcheck_uncounted", lambda fx: src_patched(ee().Run, "block4_and_5", 'if r.kind == "xcheck":', "if False:")),
+        # the item-4 label not added to block 4's A1 values (RF-25)
+        ("has_a1_dropped", lambda fx: src_patched(ee().Run, "block4_and_5", "has_a1=r.has_a1,", "has_a1=False,")),
+        # block 4's access object not closed at exit
+        ("access_not_closed", lambda fx: src_patched(ee().Run, "exit_audit", "if acc is not None:", "if False:")),
+        # the c3b single-point labels not taken from the table
+        ("sp_labels_dropped", lambda fx: src_patched(ee().Run, "block4_and_5", 'tuple(tbl.get("sp_labels") or ())',
+                                                     "()")),
+        # the coverage list without block 4's C4b item
+        ("coverage_c4b_item", lambda fx: src_patched(ee().Run, "coverage", 'getattr(self.b4, "C4B_ITEM", "block 4")',
+                                                     '"block 4"')),
+        # the c3b stop note refused beside a done fr (IX-7 applied past FR)
+        ("c3b_note_refused", lambda fx: src_patched(
+            ee().Run, "route_admit", 'if a.stop_note and not (fo == "pass" and a.stop_note == c3b_note):',
+            "if a.stop_note:")),
+        # any stop note admitted beside a done fr that passed
+        ("any_note_admitted", lambda fx: src_patched(
+            ee().Run, "route_admit", 'not (fo == "pass" and a.stop_note == c3b_note)', 'not (fo == "pass")')),
+        # the c3b stop note admitted on an FR-fail route
+        ("note_on_fr_fail", lambda fx: src_patched(
+            ee().Run, "route_admit", 'not (fo == "pass" and a.stop_note == c3b_note)',
+            "not (a.stop_note == c3b_note)"))))
+def case_t10(fx):
+    """T10 (review B1; amendment 2026-11-16a): block 4 through e_eval.py. E runs on the FR-pass repository with
+    e_block4's own evaluate_tier, rows, LABELS and C4B_ITEM on the 544-cell table of T8 (the route and the commits are
+    the test double's: the c3b notes of a throwaway repository are T7's subject). Every row of block 4 is printed by
+    Out.row with its text, kind and values; the kinds Y, tier and class are known; every label id is printed as its
+    text; an A1 value carries the far-site label of the route (RF-25); delta_far(FA188) of block 2 reaches the
+    evaluation under the key block 4 reads; block 4's cross-checks are in E's list and a planted failure gives exit 1
+    with the output complete; the exit audit closes block 4's access object and admits its 544 single-point labels;
+    the coverage list prints block 4's C4b item. The stop note: beside a done fr that passed, the one c3b stop note
+    reaches tier_route and any other path is refused (IX-7); on an FR-fail route the c3b note is refused too."""
+    b4, E = b4m(), ee()
+    A = _c3b_full(fx)
+    _, tbl, _, _, srun = c3b_go(fx, A)
+    sr, box = repo_of(fx, "pass"), []
+    dbl = B4Through(sr.commits["F"], tbl, srun._b4_access)
+    with patched(eg.C3bAccess, "assert_closed", _count_calls(eg.C3bAccess.assert_closed, box)):
+        r = e_run(fx, sr, ["--run"], block4=dbl)
+    t = r.result_text
+    assert r.rc == 0, (r.rc, t[-1500:])
+    assert box == [1] and r.b4_sp == tuple(tbl["sp_labels"]) and len(r.b4_sp) == 544, (box, len(r.b4_sp))
+    assert dbl.fr_seen["FA188"]["delta"] == row(r, "B2.delta").values["delta_meV"] and \
+        isinstance(dbl.fr_seen["FA188"]["delta"], float), dbl.fr_seen["FA188"]
+    ref = b4.rows(b4.evaluate_tier(tbl, dbl.fr_seen), dbl.labels)
+    got = [x for x in r.rows if x.block == 4]
+    assert [x.id for x in got] == [x.id for x in ref] and len(got) > 600, (len(got), len(ref))
+    for x, y in zip(got, ref):
+        assert (x.kind, x.text, x.values) == (y.kind, y.text, y.values) and set(y.labels) <= set(x.labels), x.id
+        assert x.line is not None and x.line in t and not re.search(r"\bL_[A-Z0-9_]+\b", x.line), x.line[:200]
+        for lid in x.labels:
+            assert dbl.labels.get(lid, LABELS.get(lid)) in x.line, (x.id, lid)
+    assert {"Y", "tier", "class"} <= {x.kind for x in got}, sorted({x.kind for x in got})
+    a1 = [x for x, y in zip(got, ref) if y.has_a1 and "L_FAR" not in y.labels]
+    assert len(a1) > 100 and any(x.kind not in ("Eb_A1", "Eb_q0", "Eb_q1") for x in a1) and \
+        all("L_FRVALID" in x.labels and LABELS["L_FRVALID"] in x.line for x in a1), len(a1)
+    assert all(lid in dbl.labels for lid in b4.LABELS) and \
+        dbl.labels["L_A1TIER"] == LABELS["L_A1TIER"].format(clause=""), dbl.labels["L_A1TIER"][:80]
+    xc4 = [(y.id, y.values["ok"]) for y in ref if y.kind == "xcheck"]
+    assert len(xc4) >= 3 and all(ok is True for _, ok in xc4) and all(p in r.xcs for p in xc4), xc4
+    cov = [ln for ln in t.split("\n") if "P15 per A2 cell, C4b" in ln or "P15 shared-region sensitivity" in ln]
+    assert len(cov) == 2 and all(b4.C4B_ITEM in ln for ln in cov), cov
+    # a failing cross-check of block 4: exit 1, the output complete
+    bad = B4Through(sr.commits["F"], tbl, srun._b4_access, fail_xc="XC-C3B-YSUM")
+    r1 = e_run(fx, sr, ["--run"], block4=bad)
+    x = row(r1, "XC-C3B-YSUM")
+    assert r1.rc == 1 and "L_XFAIL" in x.labels and LABELS["L_XFAIL"] in x.line and \
+        r1.result_text.rstrip("\n").endswith("END\nE exit code: 1"), (r1.rc, x.line)
+    # the stop note beside a done fr
+    stop = B4Through(sr.commits["F"], tbl, srun._b4_access, route="C3B-STOP")
+    rs = e_run(fx, sr, ["--run", "--stop-note", _note_at(sr, b4.C3B_STOP_NOTE)], block4=stop)
+    assert stop.reached == 1 and "(IX-7)" not in rs.result_text, rs.result_text[-300:]
+    other = B4Through(sr.commits["F"], tbl, srun._b4_access)
+    ro = e_run(fx, sr, ["--run", "--stop-note", _note_at(sr, E.STOP_NOTE)], block4=other)
+    assert ro.rc == 2 and not ro.written and other.reached == 0 and \
+        "is refused: fr is done, there is no STOP (IX-7)" in ro.result_text, ro.result_text[-300:]
+    sf = repo_of(fx, "C1a")
+    rf = e_run(fx, sf, ["--run", "--stop-note", _note_at(sf, b4.C3B_STOP_NOTE)], block4=B4Through(
+        sf.commits["F"], tbl, srun._b4_access))
+    assert rf.rc == 2 and not rf.written and "is refused: fr is done, there is no STOP (IX-7)" in rf.result_text, \
+        rf.result_text[-300:]
 
 
 # ---------------------------------------------------------------- runner

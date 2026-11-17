@@ -1121,3 +1121,103 @@ C1 MACE values and every fr value are unread.
       - Ids of review findings, mutants and code maps in the self-tests and docstrings (such as M3, G07, R-1, F01 or
         "map 2") label test cases. They are defined in the private review reports, and each test states what it
         checks.
+
+
+## Amendment 2026-11-16a: C3b without C4b in S2b; the c3b gates and runner; E's block 4
+
+**Written.** The rulings below were made by the project lead on 2026-11-16, after FR passed (`FR_RESULT.md`), and
+this text is committed on 2026-11-17 in the c3b campaign commit, together with the c3b code, `C3B_OPERATIONS.md` and
+E's block 4. No c3b cell has run and no c3b value exists. What had been read when the rulings were made: the fr
+decisions, counts, validity under both readings of check 5 and the geometry read of §6b. Not read: every fr energy,
+the C2 part-c values and the C1 MACE values.
+- **Why.** §§3, 4, 7, 8 and 9 leave choices open for the c3b code and for block 4 of E, and item 1 changes the scope
+  of S2b. No item selects a cell, a reading, a tolerance, a gate or a label by a value.
+- **Precedence.** Where an item and §§1, 3, 4, 7, 8, 9 or 11 differ, the item governs. Fixed strings (labels, titles,
+  refusal texts, row texts) are those of `scripts/49_s2_gates.py`, `scripts/50_s2_campaign.py`, `s2b/e_block4.py` and
+  `s2b/e_guard.py` at this commit; they are part of this amendment by reference and are not restated here.
+- **Records.** The rulings behind the items are numbered D-0, R-1 to R-12 (runner and gates) and B-1 to B-19 (block 4).
+
+**Items.**
+
+1. **C4b is not run in S2b (D-0).** This is a decision, not the outcome of a cut. Reasons: C4b costs 132-216 node-h
+   in a separate boot of a node that is restarted by hand; the A1 tier is what S2b was re-planned to deliver; and a
+   calibration designed after E's blocks 1-3 and the A1 tier are read can be pre-registered with more information and
+   can then release the hinge block. Consequences:
+   - The route after C3b is the one §11 gives for "C4b is not run": the A1 tier stands with the labels of §1, no
+     calibrated tier and no validated class is formed, and the hinge block stays blind (§7, block 5; the deferred
+     hinge run of §7 is unchanged).
+   - Every C4b item of §7 is printed "C4b not run (decision, amendment 2026-11-16a)".
+   - No c4b code exists at this commit. A c4b tree, or a `campaigns.c4b` entry, is a refusal for the runner and for E.
+   - The decision is held in one place on each side: `scripts/49` (`C4B_PLANNED = False`,
+     `C4B_ORIGIN = "decision (S2B amendment 2026-11-16a)"`) and `s2b/e_block4.py` (`C4B_RUN = False`, `C4B_ORIGIN`).
+     The c3b campaign records `s2b_projection.c4b_run = false` with that origin, and E requires both when c3b is done.
+   - What is given up: the calibration of A1 against constrained A2 relaxations, the validated classes and the read
+     of the hinge block within S2b. A later pre-registration may take them up.
+2. **One projection gate at two points (R-1 to R-4).** Gate `s2b_projection` is evaluated at the points `fr` and
+   `c3b`, in this order, once each. P is the projection of `S2_PLAN.md` §16 without an A2 term (no relaxation; 544
+   single points; 536 MACE relaxations; one host wave). U = 0.05 (P − H_spent): no A2 allowance is left. H_spent is
+   that of the complete fr ledger at the point `fr` and of the live ledger at the point `c3b`. No C2 record is read.
+   If P + U exceeds 520 node-h nothing can be cut: the decision is not applied and c3b stops. The hard cap is
+   unchanged.
+3. **State and preconditions (R-5, R-6).** A c3b runner writes only `campaign_commit.c3b`, `s2b_projection`,
+   `c3b_complete`, `c3b_tier`, `campaigns.c3b` and new `commit_history` entries, and never reads `K2`, `K3`, `step0`,
+   `cuts` or `c4_run`. A start without a recorded FR pass is refused before anything is written. The state must show
+   n = 8, no Ca (G1), and default poses of Cs and Cl.
+4. **Route (R-7, R-8).** `c3b/CAMPAIGN_COMMIT` holds `<40-hex commit> <YYYY-MM-DD> results/objective2/s2/C3B_OPERATIONS.md`.
+   The commit is a strict descendant of the recorded fr campaign commit; block 4 is implemented at it; the note is
+   final. There is no fix route: the checks that need no node work are made before the route is consumed.
+5. **Check 5 at the A1 cells of c3b (R-9, R-10).** Every c3b relaxation of a V⁺, D or D+V⁺ cell is judged under the
+   invariant reading (§2), and its record also holds the reading as written and `invariant_only`. E takes the
+   invariant reading, requires the two readings to differ by check 5 at most, reports both, and flags every value
+   that rests on an invariant-only cell.
+6. **The two end gates.** `c3b_complete` applies the completeness test of `c3_complete` to the 544 single-point labels.
+   `c3b_tier` records, from validity and completeness alone, `n_d` for Sr, Cl, Cs and GA (the hosts valid for d by
+   `S2_PLAN.md` lines 680-682) and `computable`, true when n_d ≥ 2 for at least one of Cl, Cs, GA. Sr alone makes no
+   tier. E recomputes both; a disagreement is an integrity failure (INT-ROUTE).
+7. **Private archive, manifest, verify and notes (R-11; B-13, B-14).** The c3b archive is written outside every
+   checkout, with `MANIFEST.sha256` last (every file but itself, each path once, sorted bytewise by path, paths
+   relative to the campaign directory). The committed c3b note is `results/objective2/s2/C3B_NOTE.md` and holds
+   exactly one line `c3b/MANIFEST.sha256 sha256: <64 hex>`. The verify record is
+   `results/objective2/s2/c3b_verify/verify_c3b.txt`. E refuses, with nothing written, an archive whose manifest,
+   file list or names do not agree with these, and re-checks them in block 4.
+8. **Routes of E past FR (B-1 to B-3).** Admitted at this commit: `C4B-NOTRUN` (c3b done, a tier computable),
+   `C3B-NOTIER` (c3b done, no tier computable) and `C3B-STOP` (a final STOP in c3b). On the last two E prints the
+   `S2_PLAN.md` §15 items of the archived cells with no interval, class or ranking. A final STOP needs the one stop
+   note `results/objective2/s2/C3B_STOP_NOTE.md`, committed, with the phrase "the c3b STOP is final" and an ISO
+   date, passed as `--stop-note`. This is the one stop note E admits beside a done fr; every other one is refused as
+   before (IX-7). The runner publishes no `state_end.json` at a STOP, so E admits a stopped c3b without that file.
+9. **Block 4 (the other B rulings).** The A1 tier of `S2_PLAN.md` §14 for Sr, Cl, Cs and GA, with rule V and the
+   labels of §1. No Ca enters any pool or ranking. The ranking has 6 pairs and keeps the interval quantile 0.9975 of
+   §7. The dopant-specific rule (`S2_PLAN.md` lines 683-690) is counted on the c3b A1 cells only. The far-bias
+   sensitivity of §7 adds |δ_far(FA188)| to every A1 half-width and forms rule V again; a displayed class that
+   changes is flagged; on a tier route an unformed δ_far(FA188) is an integrity failure. An absent record or single
+   point lowers n_d and is printed; it is not an integrity failure. Every c3b record and single point is opened in
+   block 4 only.
+10. **Block 4 inside E.** `s2b/e_eval.py` prints block 4's rows through its own row writer, so that the label texts,
+    the far-site label of §7 on every A1 value and block 4's cross-checks in the exit code are E's; it admits the
+    row kinds `Y`, `tier` and `class`; its exit audit closes block 4's access to the c3b archive and admits the 544
+    single-point labels; its coverage list prints the C4b item of item 1.
+11. **Checks before the launch (R-12).** The unmodified self-tests of `scripts/46`, `47`, `49` and `50` pass on the
+    node at this commit before the route file is written; the inputs of c3b are byte-identical with those the C1
+    code builds (`s2b/c3b_inputs.py`). `C3B_OPERATIONS.md` gives the procedure and the idle self-stop period of the
+    node (30 minutes, confirmed by the operator on 2026-11-17).
+
+**What was tested before this commit, and what was not.**
+- **Runner and gates.** At this tree, in the repository: the self-tests of `scripts/46` (15 cases), `scripts/47`
+  (15 cases) and `scripts/49` (19 cases) pass, and `s2b/c3b_inputs.py` passes both stages of its self-test.
+- **`scripts/50`.** Its self-test has **not** run on the changed file: the development sandbox refuses the local
+  socket of its mock spot endpoint. Its author ran the ten module-level c3b cases through a harness (15 checks, none
+  failed) and a mutation pass over the runner and gate changes (130 of 131 single mutations caught; the survivor is
+  judged equivalent by reading, which no test shows). The full self-test, with its end-to-end mock campaign, runs for
+  the first time on the node; a failure there is no launch.
+- **E.** `s2b/e_selftest.py` at this tree: 94 of 94 cases pass (groups A-D and T); of 259 deliberately broken variants
+  258 are caught. The one not caught is `A9/worktrees_unlisted`, which removes the listing of additional git worktrees
+  and can be caught only when the repository has a second worktree; it has one, and A9's code is not changed by this
+  commit. `e_eval.py --self-test` therefore exits 1 in this checkout, for that reason alone.
+- **Block 4** is tested on synthetic archives only (T1-T10, 113 broken variants, all caught). Not covered by any
+  test: real c3b records and pw.x outputs read through `scripts/46` `load_record`, `scripts/47` `sp_status` and E's
+  single-point parser; and block 4's own admission (`tier_route`) inside a repository with committed c3b notes (T7
+  uses a stand-in for E's run object, T10 the route of a test double). A defect there is expected to show as a
+  refusal or as a failure before output, to which the rules of §7 apply; that expectation is not a tested property.
+- **Review.** Each side had one static review by a second reader. The fixes that followed, the integration into
+  `e_eval.py`, case T10 and the STOP rule of item 8 were written after those reviews and have had no second reader.

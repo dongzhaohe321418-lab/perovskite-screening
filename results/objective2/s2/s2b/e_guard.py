@@ -225,8 +225,19 @@ TABLE = {
                                      f"c2/gates_applied/{C2_S0_4}.gate.json": _cells("s2_m30_Sr136o0_vac"),
                                      "c2/gates/step0.json": _cells("s2_m30_Sr136o0_vac")}},       # RF-5, A3
     },
-    "tier": {},                       # block 4 (spec section 13): fixed with the c3b and c4b code, before C3b
-    "c4b": {},
+    # block 4 (spec section 13; amendment 2026-11-16a, B-9): the c3b campaign and state leaves, none an energy. The
+    # c3b cell records are scripts/46 records read with load_record (S2B:579; C3bAccess below); no c3b gate file is read
+    "tier": {
+        "campaign_c3b": {"files": ("c3b/campaign.json",),
+                         "get": ("status", "commit", "start_commit", "stop_reason")},
+        "state_c3b": {"files": ("c3b/state_end.json",),
+                      "get": ("commit", "campaigns.c3b", "campaign_commit.c3b", "n", "stage0.production_n8",
+                              "G1.Cl", "G1.Ca", "pose.Cs", "pose.Cl") +
+                             tuple(f"gateN.{d}" for d in ("Sr", "Cl", "Cs", "GA")) + ("c3b_tier.computable",) +
+                             tuple(f"c3b_tier.n_d.{d}" for d in ("Sr", "Cl", "Cs", "GA")) +
+                             ("s2b_projection.c4b_run", "s2b_projection.c4b_origin")},
+    },
+    "c4b": {},                        # C4b is not run in S2b (amendment 2026-11-16a, D-0): the mode stays empty
 }
 MODES = tuple(TABLE)
 
@@ -682,6 +693,72 @@ class C1Access:
             if stem in PB136_SP and not (e["hinge"] and e["block"] == 5):
                 raise EIntegrity("INT-PB136-RAW", e["rel"], "opened outside block 5")
         return True
+
+
+# ---------------------------------------------------------------- C3bAccess (block 4; S2B:579; amendment 2026-11-16a)
+class C3bAccess:
+    """The c3b cell records and single points, in block 4 only (S2B:579, 676-684). wids, labels: the closed sets of
+    the production graph (e_block4 builds them from the plan's literals); a name outside them is refused. A record
+    that does not exist is FILE_ABSENT; a single point that is not complete is returned with its status and no F
+    (B-15: a cell without a result makes its quartet invalid; it is not an integrity failure)."""
+
+    N_CELLS = 544                             # S2B:328-329: 8 production hosts x 68 cells, one single point each
+
+    def __init__(self, L, c46, q47, audit, reads, *, wids, labels):
+        self.L, self.c46, self.q47, self.audit, self.reads = L, c46, q47, audit, reads
+        self.wids, self.labels = frozenset(wids), frozenset(labels)
+        if len(self.wids) != self.N_CELLS or len(self.labels) != self.N_CELLS or \
+                not all(isinstance(w, str) and WORK_RE.fullmatch(w) for w in self.wids):
+            raise EIntegrity("INT-STRUCT", "c3b/records", "the closed set of the production graph (544 cells, WORK_RE)")
+        self.log = []                         # (wid, blind, block) per record() call
+
+    def _block4(self, what, block):
+        if block != 4 or self.audit.block != 4:
+            raise Blinded(f"{what}: c3b values are read in block 4 only (S2B:579, 676)")
+
+    def assert_closed(self):
+        """INT-READS: every c3b record and every c3b raw file in the open log was opened in block 4, and every
+        record() call was made there (called at the end of block 4 and at exit; review m2)."""
+        for w, b, blk in self.log:
+            if blk != 4:
+                raise EIntegrity("INT-READS", f"c3b/records/{w}.json", "read outside block 4")
+        for e in self.audit.log.values():
+            segs = e["rel"].split("/")
+            if e["base"] == "private" and segs[:2] in (["c3b", "records"], ["c3b", "raw"]) and e["block"] != 4:
+                raise EIntegrity("INT-READS", e["rel"], "opened outside block 4")
+        return True
+
+    def record(self, wid, *, blind, block):
+        if wid not in self.wids:
+            raise Blinded(f"{wid} is not a c3b cell of the production graph")
+        self._block4(wid, block)
+        path = self.L.record("c3b", wid)
+        if not os.path.exists(path):
+            return FILE_ABSENT
+        self.log.append((wid, bool(blind), block))
+        return self.c46.load_record(path, blind=bool(blind))
+
+    def sp(self, label, *, free, block, read=True):
+        """sp_status, then parse_sp(read='full', free=<record free>) through the ReadsAudit for a complete single
+        point; {'status', 'missing_reason', 'F_eV', 'forces'}. read=False: the status only (a single point whose
+        record is absent has no free region and no validity: it is not parsed)."""
+        if label not in self.labels:
+            raise Blinded(f"{label} is not a c3b single point of the production graph")
+        self._block4(label, block)
+        q = self.q47
+        try:
+            st = q.sp_status(self.L.cdir("c3b", "raw"), label)
+        except (q.S2Error, q.Refused) as e:                      # RF-20: stage and exception type only
+            raise EIntegrity("INT-SP", f"c3b/raw/{label}", f"stage sp_status {type(e).__name__}") from None
+        out = {"label": label, "status": st.get("status"), "missing_reason": st.get("missing_reason"), "F_eV": None,
+               "forces": None}
+        if st.get("status") != "complete" or not read:
+            return out
+        r = self.reads.parse_sp(label, self.L.raw("c3b", f"{label}.out.gz"), free=free, block=block)
+        if r.get("F_eV") is None or r.get("forces") is None or r.get("scf_converged") is not True:
+            raise EIntegrity("INT-SP", f"c3b/raw/{label}.out.gz", "F_eV, forces, scf_converged")
+        out.update(F_eV=r["F_eV"], forces=copy.deepcopy(r["forces"]))
+        return out
 
 
 # ---------------------------------------------------------------- OpenAudit (spec 4.5; RF-2, RF-9, RF-10, RF-11)

@@ -223,6 +223,13 @@ NOTES = {
               "(c2_diagnostic/check5_diag.py at 966aa75); carbon, dopant and inorganic displacements as written; both "
               "readings are recorded and a pass that needs the invariant reading is flagged; the default reading "
               "'as_written' gives the 8bff03e output without a new key",
+    "C3B-X4": "S2B_PLAN.md section 3 and X4, amendment 2026-11-16a (interface): check 5 of an A1 cell (V+, D, D+V+) "
+              "read invariantly is the same opt-in for the job action relax (job key check5_reading 'invariant', set "
+              "by scripts/50 for campaign c3b only): the record's validity then holds valid and failed under the "
+              "invariant reading, check5_reading, valid_as_written, failed_as_written and invariant_only, the leaf "
+              "names of validate-a2, and check 5 holds both rotations of every FA row; a host record has no check 5 "
+              "and is unchanged; without the job key the record is that of 0a3e8f0; the relaxed geometry does not "
+              "depend on the reading",
 }
 
 
@@ -1478,10 +1485,15 @@ def _centre_host(region, kind):
 
 
 def validity(kind, *, relax_rec, start, final, region, host_relaxed, parent=None, built=None, pool_member=None,
-             parent_work_id=None):
+             parent_work_id=None, check5_reading="as_written"):
     """Checks 1-5 of section 5 for one A1 cell (spec 6.6 table): host 1 (+4 vs the pool member); V+ 1, 2, 4, 5 vs
     the relaxed host (centre v); D 1, 3, 4, 5 vs the relaxed host (centre j); D+V 1, 2, 3, 4, 5 vs the relaxed V+_Rj
-    (centre j). Returns {"checks", "valid", "failed"}."""
+    (centre j). Returns {"checks", "valid", "failed"}. check5_reading 'invariant' (C3B-X4): for V+, D and D+V check 5
+    decides by its invariant reading and the output adds check5_reading, valid_as_written, failed_as_written and
+    invariant_only, as validity_a2 does; 'as_written', and a host under either reading, give the 0a3e8f0 output."""
+    if check5_reading not in CHECK5_READINGS:
+        raise S2Error(f"validity: check-5 reading {check5_reading!r} (one of {CHECK5_READINGS})")
+    inv = check5_reading == "invariant" and kind != "host"
     if kind == "host":
         c = {"1": check_host_converged(relax_rec), "2": None, "3": None,
              "4": check_topology(pool_member if pool_member is not None else start, final), "5": None}
@@ -1497,13 +1509,17 @@ def validity(kind, *, relax_rec, start, final, region, host_relaxed, parent=None
              "3": check_dopant_on_site(start, final, _leg_maps(built)[2]) if kind in ("D", "DV") else None,
              "4": check_topology(start, final),
              "5": dict(check_partner(final, par, c2p, host_relaxed=host_relaxed, child_to_host=c2h,
-                                     centre_host=_centre_host(region, kind), free_child=free),
+                                     centre_host=_centre_host(region, kind), free_child=free, exchange_n=inv),
                        parent=parent_work_id, centre="v" if kind == "V" else "site j")}
     failed = [int(k) for k, x in c.items() if x is not None and not x["passed"]]
-    return {"checks": c, "valid": not failed, "failed": failed}
+    if not inv:
+        return {"checks": c, "valid": not failed, "failed": failed}
+    fw = [int(k) for k, x in c.items() if x is not None and not x.get("passed_as_written", x["passed"])]
+    return {"checks": c, "valid": not failed, "failed": failed, "check5_reading": check5_reading,
+            "valid_as_written": not fw, "failed_as_written": fw, "invariant_only": not failed and bool(fw)}
 
 
-CHECK5_READINGS = ("as_written", "invariant")         # S2B-X4: 'invariant' only for campaign fr (scripts/50)
+CHECK5_READINGS = ("as_written", "invariant")         # S2B-X4, C3B-X4: 'invariant' only for fr and c3b (scripts/50)
 
 
 def validity_a2(kind, *, start, final, region, host_relaxed, parent_final=None, built=None, check5_reading="as_written"):
@@ -1613,7 +1629,7 @@ class Layout:
         self.work = os.path.join(self.root, "work", "s2") if kind == "node" else self.root
 
     def _c(self, c):
-        if c not in ("c1", "c2", "c3", "c4", "fr"):                 # fr: S2b far-site reference (S2B_PLAN.md section 2)
+        if c not in ("c1", "c2", "c3", "c4", "fr", "c3b"):          # fr, c3b: S2b (S2B_PLAN.md sections 2, 3)
             raise S2Error(f"campaign {c!r}")
         return os.path.join(self.work, c)
 
@@ -1965,7 +1981,8 @@ def job_relax(job, calc=None):
     final, rr = relax_frozen(start, calc, free, logfile=L.cell_file(c, wid, "fire"))
     rel = write_cell(L.cell_file(c, wid, "relaxed"), final)
     val = validity(p["kind"], relax_rec=rr, start=start, final=rel, region=reg, host_relaxed=host, parent=parent,
-                   built=built, parent_work_id=pwid)
+                   built=built, parent_work_id=pwid,
+                   check5_reading=job.get("check5_reading", "as_written"))          # C3B-X4: 'invariant' for c3b only
     sets = site_sets(host_context(m))
     c1 = c1_sites(m, m05_cal=job.get("m05_cal"), sets=sets) if m in PILOTS else None
     rec = cell_record(work_id=wid, labels=labels if m not in REF_MEMBERS else [], campaign=c, member=m,
@@ -2798,6 +2815,10 @@ def self_test(work=None):
             pass
         del mf
         inv = t_check5_invariant(base, Ly, cf, outd)
+        try:                                                       # C3B-X4, reported by its own case (check5-a1-c3b)
+            a1_box["msg"] = t_check5_a1(base, Ly, cf, outd)
+        except Exception as e_:                                    # noqa: BLE001 (raised again by that case)
+            a1_box["err"] = e_
         # guards: a mock never on a pool member; MACE never off the node root; derived keys must agree
         for bad in (dict(base, member="m30", action="relax-host", work_id="s2_m30_host"),
                     dict(base, calc="mace", action="relax-host", work_id="s2_ref233_host"),
@@ -2814,6 +2835,101 @@ def self_test(work=None):
                 f"{d['map']}; validate-a2 (host, V, D, D+V pass; far atom moved 0.30 A fails check 5; V, D, D+V "
                 f"without the partner refused, no record; other atoms refused); {inv}; MACE energies blinded; pool "
                 f"member and off-node MACE refused")
+
+    a1_box = {}
+
+    def t_check5_a1(base, Ly, cf, outd):
+        """C3B-X4 on the reference pipeline: validity() of the A1 cells V+ (A128), Cs D and Cs D+V on the final
+        geometries that t_check5_invariant wrote (unperturbed, the two nitrogens exchanged, 19.9 and 25 deg). The
+        default equals 'as_written' and has no new key; 'invariant' adds exactly the leaves of validity_a2, decides
+        by the invariant reading and leaves checks 1-4 as they are; a host is unchanged under either reading; an
+        unknown reading is refused; the job action relax records the leaves only with the job key, and its relaxed
+        geometry does not depend on it; the c3b layout."""
+        hw, vw = "s2_ref233_host", "s2_ref233_VA128"
+        reg = load_record(Ly.region("c1", "ref233", "A", 128))
+        pr = load_record(Ly.pair("c1", "ref233", "Cs", 128, 0))
+        host = read_cell(cf(hw, "relaxed"))
+        new = ("check5_reading", "valid_as_written", "failed_as_written", "invariant_only")
+        n = 0
+        for kind, leg, w, par_w in (("D", "novac", "s2_ref233_Cs128p0_novac", hw), ("DV", "vac", "s2_ref233_Cs128p0_vac", vw)):
+            rr = load_record(Ly.record("c1", w))["relax"]
+            kwv = dict(relax_rec=rr, start=read_cell(cf(w, "start")), region=reg, host_relaxed=host,
+                       parent=read_cell(cf(par_w, "relaxed")), built=pr["legs"][leg], parent_work_id=par_w)
+            for nm, want_w, want_i in (("unperturbed", True, True), ("exchanged", False, True), ("rot19.9", True, True),
+                                       ("rot25", False, False)):
+                fin = read_cell(os.path.join(outd, f"inv_{kind}_{nm}.extxyz"))
+                vd = validity(kind, final=fin, **kwv)
+                vw_ = validity(kind, final=fin, check5_reading="as_written", **kwv)
+                vi = validity(kind, final=fin, check5_reading="invariant", **kwv)
+                assert canon(vd) == canon(vw_) and set(vd) == {"checks", "valid", "failed"}, (kind, nm)
+                for k_ in new + ("passed_as_written", "rot_exchanged_deg", "fa_needs_exchange"):
+                    assert k_ not in json.dumps(vd), f"{kind} {nm}: the default output has {k_}"
+                assert set(vi) == {"checks", "valid", "failed"} | set(new), (kind, nm, sorted(vi))
+                c5 = vi["checks"]["5"]
+                assert vd["checks"]["5"]["passed"] is want_w and c5["passed_as_written"] is want_w, (kind, nm)
+                assert c5["passed"] is want_i and (5 in vi["failed"]) is (not want_i), (kind, nm, vi["failed"])
+                assert (5 in vi["failed_as_written"]) is (not want_w) and vi["failed_as_written"] == vd["failed"], (kind, nm)
+                assert vi["valid"] is (not vi["failed"]) and vi["valid_as_written"] is vd["valid"], (kind, nm)
+                assert vi["invariant_only"] is (vi["valid"] and not vi["valid_as_written"]), (kind, nm)
+                assert vi["check5_reading"] == "invariant" and c5["parent"] == par_w, (kind, nm)
+                assert canon({k_: vi["checks"][k_] for k_ in "1234"}) == canon({k_: vd["checks"][k_] for k_ in "1234"})
+                if nm == "exchanged":
+                    assert 5 not in vi["failed"] and vd["failed"] == [5] and vi["invariant_only"], (kind, vi["failed"])
+                if nm == "rot25":
+                    assert 5 in vi["failed"] and not vi["valid"] and not vi["invariant_only"], (kind, vi["failed"])
+                n += 1
+            for bad in ("bogus", None, ""):
+                try:
+                    validity(kind, final=read_cell(cf(w, "relaxed")), check5_reading=bad, **kwv)
+                    raise AssertionError(f"check-5 reading {bad!r} accepted by validity")
+                except S2Error:
+                    pass
+        rv = load_record(Ly.record("c1", vw))["relax"]
+        kv = dict(relax_rec=rv, start=read_cell(cf(vw, "start")), final=read_cell(cf(vw, "relaxed")), region=reg,
+                  host_relaxed=host, parent_work_id=hw)
+        v_d, v_i = validity("V", **kv), validity("V", check5_reading="invariant", **kv)
+        assert set(v_i) == {"checks", "valid", "failed"} | set(new) and v_i["valid"] is v_d["valid"] and \
+            v_i["invariant_only"] is False and v_i["failed_as_written"] == v_d["failed"], v_i["failed"]
+        rh = load_record(Ly.record("c1", hw))["relax"]
+        kh = dict(relax_rec=rh, start=read_cell(cf(hw, "start")), final=host, region=None, host_relaxed=host)
+        assert canon(validity("host", **kh)) == canon(validity("host", check5_reading="invariant", **kh))
+        # the job action relax: the leaves only with the job key; the same relaxed geometry
+        wj = "s2_ref233_Cs128p0_novac"
+        try:
+            r_i = run_job(dict(base, action="relax", work_id=wj, check5_reading="invariant"))
+            r_d = run_job(dict(base, action="relax", work_id=wj))
+            assert set(r_i["validity"]) == {"checks", "valid", "failed"} | set(new) and \
+                r_i["validity"]["check5_reading"] == "invariant", sorted(r_i["validity"])
+            assert set(r_d["validity"]) == {"checks", "valid", "failed"} and "check5_reading" not in json.dumps(r_d)
+            assert r_i["geometry_sha256"] == r_d["geometry_sha256"] and r_i["sha256"] == r_d["sha256"]
+            try:
+                run_job(dict(base, action="relax", work_id=wj, check5_reading="exchange"))
+                raise AssertionError("a relax job with an unknown check-5 reading was run")
+            except S2Error:
+                pass
+        finally:
+            run_job(dict(base, action="relax", work_id=wj))        # the record of the default reading is left
+        La, Ln = Layout("archive", "results/objective2/s2"), Layout("node")
+        assert Ln.record("c3b", "s2_m06_host") == "/data/work/s2/c3b/cells/s2_m06_host/record.json"
+        assert Ln.sp_out("c3b", "s2_m06_host") == "/data/jobs/s2c3b/s2_m06_host/s2_m06_host.out"
+        assert La.record("c3b", "s2_m06_host") == "results/objective2/s2/c3b/records/s2_m06_host.json"
+        for bad in ("c4b", "c3B", "c5"):
+            try:
+                Ln.campaign_dir(bad)
+                raise AssertionError(f"layout campaign {bad!r} accepted")
+            except S2Error:
+                pass
+        return (f"check 5 of A1 cells (C3B-X4): {n} cases x 3 readings on Cs D and D+V, and V+: default == as_written "
+                f"without a new key; 'invariant' adds the four leaves of validate-a2 and decides (exchanged nitrogens "
+                f"valid, invariant_only; 25 deg invalid); checks 1-4 unchanged; host unchanged; unknown readings "
+                f"refused; relax job: leaves only with the job key, same relaxed geometry; layout c3b, no c4b")
+
+    def t_check5_a1_case():
+        if "err" in a1_box:
+            raise a1_box["err"]
+        if "msg" not in a1_box:
+            raise AssertionError("jobs-mock did not reach the A1 check-5 test (C3B-X4)")
+        return a1_box["msg"]
 
     def t_check5_invariant(base, Ly, cf, outd):
         """S2B-X4 on the Cs128 D and D+V legs of the reference pipeline (an A-site substitution map: FA128 deleted, Cs
@@ -2999,7 +3115,7 @@ def self_test(work=None):
                      ("regions-transfer", t_regions), ("labels", t_labels), ("validity-checks", t_validity),
                      ("validity-table", t_validity_wrap), ("distinct-minima", t_distinct),
                      ("relax-frozen-mock", t_relax), ("pose-starts", t_poses), ("jobs-mock", t_jobs),
-                     ("hygiene-layout", t_hygiene), ("model-loader", t_model)):
+                     ("hygiene-layout", t_hygiene), ("model-loader", t_model), ("check5-a1-c3b", t_check5_a1_case)):
         case(name, fn)
     print("NOTES (interpretations, implementation notes, conflicts implemented here):")
     for k, v in NOTES.items():

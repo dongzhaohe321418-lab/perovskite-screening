@@ -15,7 +15,7 @@
 # start (no /data/work/s2) it refuses with that reason (round 4).
 set -euo pipefail
 W=/data/work/s2; R=/data/work/ps_s2
-CAMPS="c1 c2 c3 c4 fr"                  # every S2 and S2b campaign id (S2B_PLAN.md section 9; N-FR1)
+CAMPS="c1 c2 c3 c4 fr c3b"              # every S2 and S2b campaign id (S2B_PLAN.md section 9; N-FR1, N-C3B1)
 KA=${W%/work/s2}/KEEP_ALIVE
 stale_ka(){
   local bt m

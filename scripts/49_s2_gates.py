@@ -24,6 +24,10 @@ node driver (scripts/50) or the laptop evaluates before the next stage starts (S
               FR-1, the four FR cells accepted and valid under the invariant reading of check 5 (X4), in the FR order
               with the early stop (fr_progress, shared with scripts/50); FR-2, |delta_far(FA188)| <= 50 meV, read
               only after FR-1 passes (state key FR).
+  s2b_projection, c3b_complete, c3b_tier  S2b production c3b (S2B_PLAN.md §§3, 8; amendment 2026-11-16a): the
+              projection P + U at the points fr and c3b with C4b not run (U = R = 0.05 (P - H_spent); nothing to cut:
+              above 520 node-h scripts/50 stops), the completeness of the c3b single points, and the valid hosts n_d
+              of each dopant with 'A1 tier computable', from validity and completeness alone (state key c3b_tier).
 
 Blinding (§17). Every gate opens its inputs through a Reader built from allow_list(gate): a label outside the list,
 or an energy read mode (full, k0, final) on a production-host (C3) or A2-II (C4) label, raises Blinded before any
@@ -257,6 +261,29 @@ NOTES = {
     "S2B-X6": "S2B_PLAN.md X6: a final step-0 failure (including 'no error found') ends FR as failed: gate FR is "
               "not evaluated after fr_step0 fail_pending_fix or fail_final (refused; scripts/50 skips gate:FR at "
               "fail_final)",
+    "C3B-1": "S2B_PLAN.md §§3, 8 and amendment 2026-11-16a: the gates s2b_projection, c3b_complete and c3b_tier are "
+             "evaluated only for campaign c3b, and campaign c3b only for those three (GateRefused before anything is "
+             "read); their decisions are written only as s2b_projection, c3b_complete and c3b_tier (no C2 key is read "
+             "or written: not cuts, c4_run, n or multi_pose_cut); production labels and work ids are read in the c3b "
+             "tree only by a Reader of campaign c3b (label_campaign production='c3b'); for every other campaign "
+             "label_campaign is unchanged",
+    "C3B-2": "S2B_PLAN.md §8 and amendment 2026-11-16a (D-0, R-1, R-2, R-4): C4b is not run in S2b, by decision "
+             "(C4B_PLANNED, C4B_ORIGIN; the one place of that decision on the runner side); the S2b projection is "
+             "P + U with P of §16 over the whole of C3b (8 hosts x 68 single points, 8 x 67 frozen relaxations, one "
+             "host wave; N_relax = 0) and U = R = 0.05 (P - H_spent), no A2 campaign being left; it reads no C2 or A2 "
+             "record; it is evaluated at the points fr (H_spent of the fr ledger) and c3b (the live ledger), in that "
+             "order; there is nothing to cut, so cuts is [] and P + U > 520 node-h is result.over_cap, on which "
+             "scripts/50 stops without applying the decision; the state must show n = 8, G1 Ca false and Cl true, and "
+             "default poses (S2B §3), else the gate is refused",
+    "C3B-3": "S2B_PLAN.md §3, P:678-682 and amendment 2026-11-16a (interface): c3b_tier, from validity and "
+             "completeness alone (single points in status mode, cell records through the blinded loader): a quartet "
+             "is valid iff its four single points are complete and its host, V+, D and D+V+ records are valid, the "
+             "last three under the invariant reading of check 5 (a V+, D or D+V+ record of another reading is a "
+             "refusal); a host is valid for dopant d iff both far quartets of d are valid and at least 2 of 2 (B), 2 "
+             "of 3 (A) or 6 of 8 (X) first-shell quartets on d's sublattice are; n_d counts the valid hosts of Sr, Cl, "
+             "Cs and GA; computable iff n_d >= 2 for at least one of Cl, Cs, GA; the decision {c3b_tier: {computable, "
+             "n_d}} holds no value, check list or validity leaf; the cells valid only under the invariant reading are "
+             "in result.invariant_only",
 }
 
 
@@ -409,6 +436,19 @@ FR_STEP0_PAIRS = {"s2_m30_VA188": "s2r_m30_VA188", "s2_m30_Cs188o0_vac": "s2r_m3
 STEP0_GATES = {"step0": ("step0", STEP0_PAIRS), "fr_step0": ("fr_step0", FR_STEP0_PAIRS)}         # gate -> (key, pairs)
 FR_ENERGY_FIELDS = ("Eb_A1_meV", "Eb_A2_meV", "delta_far_meV", "dF_meV")   # every energy-valued leaf of FR, fr_step0
 RULES["FR2_MAX_MEV"] = 50.0                 # S2B §2 FR-2: |delta_far(FA188)| <= 50 meV (C5's admission bound, P:771)
+# S2b production c3b (S2B_PLAN.md §§3, 8; amendment 2026-11-16a). D-0 of that amendment (C4b is not run in S2b, by
+# decision) is kept in the two names C4B_PLANNED and C4B_ORIGIN only (C3B-2); scripts/50 reads them from here
+C4B_PLANNED = False
+C4B_ORIGIN = "decision (S2B amendment 2026-11-16a)"
+S2B_POINTS = ("fr", "c3b")                  # S2B §8: the FR decision and the start of C3b, in this order (R-1)
+S2B_RESERVE = 0.05                          # S2B §8: R = 0.05 x (P - H_spent)
+S2B_PROJECTION_KEYS = ("points", "cuts", "c4b_run", "c4b_origin")         # decision.s2b_projection (interface)
+C3B_GATES = ("s2b_projection", "c3b_complete", "c3b_tier")                # the gates of campaign c3b (C3B-1)
+C3B_DOPANTS = ("Sr", "Cl", "Cs", "GA")      # S2B §3: no Ca (G1)
+C3B_DECISIVE = ("Cl", "Cs", "GA")
+C3B_TIER_MIN_HOSTS = 2                      # amendment 2026-11-16a: computable iff n_d >= 2 for a decisive dopant
+C3B_FAR_SITES = 2                           # P:680: "both far quartets of d"
+C3B_TIER_KEYS = ("computable", "n_d")       # decision.c3b_tier (interface)
 
 
 def a1_start_of(label):
@@ -421,8 +461,9 @@ def a1_start_of(label):
     return wid_dop(c["pilot"], c["token"], c["site"], c["leg"], 0)
 
 
-def label_campaign(label):
-    """Campaign of an S2 label from its prefix and host (C2/C4 lists fixed above; pilots m30, m05)."""
+def label_campaign(label, production="c3"):
+    """Campaign of an S2 label from its prefix and host (C2/C4 lists fixed above; pilots m30, m05). production: the
+    campaign of a production-host label or work id, 'c3' unless a Reader of campaign c3b asks (C3B-1)."""
     if label.startswith(("s2g1_", "s2spin_", "s2tp_", "s2smoke_")):
         return "c1"
     if label.startswith("s2r_"):
@@ -433,7 +474,7 @@ def label_campaign(label):
     m = re.match(r"s2_(m\d\d|ref233)_", label)
     if not m:
         raise GateRefused(f"not an S2 label: {label}")
-    return "c1" if m.group(1) in PILOTS else "c3"
+    return "c1" if m.group(1) in PILOTS else production
 
 
 def is_blinded(label):
@@ -934,6 +975,48 @@ def expected_hours(kind, measured):
     return _mean(m) if m else EXPECTED_KINDS[k](RULES["UNIT_COST_H"])
 
 
+# ---------------------------------------------------------------- S2b budget (S2B §8; amendment 2026-11-16a)
+def plan_work_s2b(state, point):
+    """C3B-2: the work still planned at an S2b projection point. Both points precede every c3b job, so the whole of
+    C3b is planned: n = 8 hosts at default poses without Ca (S2B §3), with 68 single points, 67 frozen relaxations and
+    one host relaxation per host; and no A2 relaxation, since C4b is not run (C4B_PLANNED). A state that does not show
+    n = 8, Ca removed and Cl kept by G1, and default poses is refused, and so is a planned C4b (not implemented)."""
+    if point not in S2B_POINTS:
+        raise GateRefused(f"unknown S2b projection point {point!r} (one of {', '.join(S2B_POINTS)})")
+    if C4B_PLANNED:
+        raise GateRefused("C4b is planned (C4B_PLANNED): its relaxations, allowance and cut order are not implemented "
+                          "at this commit (amendment 2026-11-16a)")
+    state = state or {}
+    g1, pose = state.get("G1") or {}, state.get("pose") or {}
+    bad = ([f"n = {state.get('n')!r}"] if state.get("n") != RULES["N_BASE"] else []) + \
+          ([f"G1.Ca = {g1.get('Ca')!r}"] if g1.get("Ca") is not False else []) + \
+          ([f"G1.Cl = {g1.get('Cl')!r}"] if g1.get("Cl") is not True else []) + \
+          [f"pose.{t} = {pose.get(t)!r}" for t in ("Cs", "Cl") if pose.get(t) != "default"]
+    if bad:
+        raise GateRefused(f"the state does not show the C3b of S2B §3 (n = 8, no Ca, default poses): {'; '.join(bad)}")
+    per_sp = RULES["C3_PER_HOST"]["sp"] - RULES["C3_G1_REMOVAL"]["Ca"]["sp"]
+    per_rx = RULES["C3_PER_HOST"]["relax"] - RULES["C3_G1_REMOVAL"]["Ca"]["relax"]
+    n = RULES["N_BASE"]
+    return {"N_relax": 0, "N_SP": n * per_sp, "N_MACE": n * per_rx, "host_waves": 1}
+
+
+def projection_s2b(t):
+    """C3B-2 (S2B §8; amendment 2026-11-16a): P of §16 (projection, without an A2 term) and U = the sum over the A2
+    campaigns not yet ended of max(0, A_c - spent_c), plus R = 0.05 (P - H_spent). With fr ended and C4b not run no
+    A2 campaign is left, so U = R. over_cap iff P + U > 520 node-h. Only counts and timings enter, never an energy."""
+    if t.get("N_relax"):
+        raise GateRefused("an S2b projection with A2 relaxations planned is not implemented (C4b is not run; "
+                          "amendment 2026-11-16a)")
+    p = projection({**t, "a2_completed": []})
+    P, H = p["P_h"], float(t["H_spent_h"])
+    allowance = 0.0                                  # no A2 campaign not yet ended (fr ended; C4b not run)
+    R = S2B_RESERVE * (P - H)
+    U = allowance + R
+    return {"P_h": P, "U_h": U, "R_h": R, "allowance_h": allowance, "PU_h": P + U,
+            "over_cap": P + U > RULES["HARD_CAP_H"], "terms": p["terms"], "tau_SP_h": p["tau_SP_h"],
+            "mace_h_per_relax": p["mace_h_per_relax"], "host_wave_h": p["host_wave_h"], "counts": p["counts"]}
+
+
 def tp_decide(rates):
     """rates: {"48": r | None, "64": r | None, "2x32": r | None} configurations per node-hour (None = failed)."""
     r48 = rates.get("48")
@@ -1026,6 +1109,7 @@ class Reader:
     def __init__(self, layout, campaign, allow, *, evaluation=False, sp_parser=None, relax_parser=None,
                  record_loader=None, sp_status=None, end_rule_fn=None, mapping=None):
         self.layout, self.campaign, self.evaluation = layout, campaign, evaluation
+        self.production = "c3b" if campaign == "c3b" else "c3"       # C3B-1: where production labels are read
         self.allow = {k: set(v) for k, v in allow.items()}
         self._sp, self._relax, self._rec, self._status = sp_parser, relax_parser, record_loader, sp_status
         self._end = end_rule_fn
@@ -1055,7 +1139,7 @@ class Reader:
         self._check("label", label, mode)
         if ("sp", label, mode) in self._cache:          # a shared cell (host, V+) is opened and logged once
             return self._cache[("sp", label, mode)]
-        c = label_campaign(label)
+        c = label_campaign(label, self.production)
         job_dir = self.layout.sp_dir(c, label)
         st = (self._status or dep("q47").sp_status)(job_dir, label)
         for p in sorted(glob.glob(os.path.join(glob.escape(job_dir), f"{label}.out*"))):
@@ -1073,7 +1157,7 @@ class Reader:
     def sp_state(self, label):
         """§12 completeness of one single point (status mode: no energy regex is executed)."""
         self._check("label", label, "status")
-        c = label_campaign(label)
+        c = label_campaign(label, self.production)
         job_dir = self.layout.sp_dir(c, label)
         fn = self._status or dep("q47").sp_status
         res = fn(job_dir, label)
@@ -1099,7 +1183,7 @@ class Reader:
         self._check("record", work_id, "records")
         if ("rec", work_id) in self._cache:
             return self._cache[("rec", work_id)]
-        path = self.layout.record(label_campaign(work_id), work_id)
+        path = self.layout.record(label_campaign(work_id, self.production), work_id)
         if not os.path.exists(path):
             return None
         loader = self._rec or (lambda p: dep("c46").load_record(p, blind=True))
@@ -1257,6 +1341,16 @@ def allow_list(gate, state=None, c1=None):
         for lab in a2_planned(state, "c4"):
             A["end_rule"].add(lab)
             A["files"].add(f"a2:{lab}")
+    elif gate == "s2b_projection":
+        pass                                           # C3B-2: non-energy inputs only; no record is opened
+    elif gate == "c3b_complete":
+        A["status"] |= set((c1 or {}).get("c3b_labels", []))
+    elif gate == "c3b_tier":
+        sites = (c1 or {}).get("c3b_sites")
+        c3b_sites_check(sites, state)                  # C3B-3: before any label is formed
+        for q in c3b_quartets(sites):
+            A["status"] |= set(q["labels"].values())
+            A["records"] |= set(q["wids"].values())
     else:
         raise GateRefused(f"unknown gate {gate}")
     return A
@@ -1474,18 +1568,24 @@ def derive_inputs(gate, layout, state, inputs=None, *, reader_kw=None):
         if inp.get("attempt") is not None and int(inp["attempt"]) != want:
             raise GateRefused(f"step-0 attempt {inp['attempt']} given, the state implies attempt {want} (§11)")
         inp["attempt"] = want
-    elif gate == "projection":
+    elif gate in ("projection", "s2b_projection"):
+        s2b = gate == "s2b_projection"
         inp.setdefault("point", ctx.get("point"))
-        if inp["point"] not in RULES["CUT_AVAILABLE"]:
+        if s2b and inp["point"] not in S2B_POINTS:
+            raise GateRefused(f"S2b projection point {inp['point']!r} unknown (one of {', '.join(S2B_POINTS)})")
+        if not s2b and inp["point"] not in RULES["CUT_AVAILABLE"]:
             raise GateRefused(f"projection point {inp['point']!r} unknown (state gate_context)")
+        # C3B-2: H_spent of the fr ledger at the point fr and of the live ledger at the point c3b; the C1 timings as
+        # for the §16 projection (the legacy ledger keys are unchanged)
+        led_keys = ({"fr": ("ledger:fr",), "c3b": ("ledger:node",)}[inp["point"]] if s2b else
+                    ("ledger:node", "ledger:c4", "ledger:c3", "ledger:c2", "ledger:c1"))
         sp_labels = [x for x in list_sp_labels(layout, "c1") if label_campaign(x) == "c1"]
         rec_ids = sorted(_glob_ids(layout.record("c1", "__ID__")))
-        rd = Reader(layout, "c1", {"status": set(sp_labels), "records": set(rec_ids),
-                                   "files": {"ledger:node", "ledger:c1", "ledger:c2", "ledger:c3", "ledger:c4"}},
+        rd = Reader(layout, "c1", {"status": set(sp_labels), "records": set(rec_ids), "files": set(led_keys)},
                     **(reader_kw or {}))
         if "H_spent_h" not in inp:
             led = None
-            for key in ("ledger:node", "ledger:c4", "ledger:c3", "ledger:c2", "ledger:c1"):
+            for key in led_keys:
                 led = rd.json_file(key)
                 if led:
                     break
@@ -1510,6 +1610,10 @@ def derive_inputs(gate, layout, state, inputs=None, *, reader_kw=None):
     elif gate == "c3_complete":
         inp.setdefault("c1", {})
         inp["c1"].setdefault("c3_labels", [x for x in list_sp_labels(layout, "c3") if label_campaign(x) == "c3"])
+    elif gate == "c3b_complete":
+        inp.setdefault("c1", {})
+        inp["c1"].setdefault("c3b_labels", [x for x in list_sp_labels(layout, "c3b")
+                                            if label_campaign(x, "c3b") == "c3b"])
     return inp, opened
 
 
@@ -1535,6 +1639,111 @@ def c4_end(reader, state):
     return {"end_rules": out, "all_ended": all(v.get("outcome") != "incomplete" for v in out.values())}
 
 
+# ---------------------------------------------------------------- c3b: valid hosts and the A1 tier (C3B-3)
+def c3b_sites_check(sites, state):
+    """C3B-3: the site table scripts/50 passes, {host: {L: {"first": [...], "far": [...]}}}, names exactly the eight
+    production hosts of the state, each with 2 / 3 / 8 first-shell sites (B / A / X) and two far sites per
+    sublattice, no site twice; else refused."""
+    prod = ((state or {}).get("stage0") or {}).get("production_n8")
+    if not isinstance(sites, dict) or not sites:
+        raise GateRefused("c3b_tier: no site table (inputs c1.c3b_sites)")
+    why = []
+    if not prod or len(prod) != RULES["N_BASE"]:
+        why.append("the state holds no Stage-0 production list of 8 hosts")
+    elif sorted(sites) != sorted(prod):
+        why.append(f"its hosts {sorted(sites)} are not the production list {sorted(prod)}")
+    for h in sorted(sites):
+        for L in "BAX":
+            row = (sites[h] or {}).get(L) or {}
+            first, far = list(row.get("first") or []), list(row.get("far") or [])
+            if len(first) != RULES["FIRST_SHELL_SIZE"][L] or len(far) != C3B_FAR_SITES \
+                    or len(set(first + far)) != len(first) + len(far):
+                why.append(f"{h} {L}: {len(first)} first-shell and {len(far)} far sites")
+    if why:
+        raise GateRefused(f"c3b_tier: the site table is not that of S2B §3: {'; '.join(why)}")
+
+
+def c3b_quartets(sites):
+    """C3B-3: the production quartets of the site table, 24 per host (Sr at 4 B sites, Cs and GA at 5 A sites, Cl at
+    10 X sites), each with the labels and work ids of its four cells (default pose)."""
+    rows = []
+    for h in sorted(sites):
+        for L in "BAX":
+            for role in ("first", "far"):
+                for j in sites[h][L][role]:
+                    for d in TOKENS_OF[L]:
+                        if d in C3B_DOPANTS:
+                            rows.append({"h": h, "L": L, "j": int(j), "role": role, "d": d,
+                                         "labels": {"host": lab_host(h), "V": lab_v(h, L, int(j)),
+                                                    "D": lab_dop(h, d, int(j), "novac"),
+                                                    "DV": lab_dop(h, d, int(j), "vac")},
+                                         "wids": {"host": wid_host(h), "V": wid_v(h, L, int(j)),
+                                                  "D": wid_dop(h, d, int(j), "novac"),
+                                                  "DV": wid_dop(h, d, int(j), "vac")}})
+    return rows
+
+
+def c3b_table_labels(sites):
+    """C3B-3: the single-point labels of every cell of every production quartet of the site table, sorted (544 for
+    the table of S2B §3). scripts/50 compares them with the 'sp' labels of its graph before the first job."""
+    return sorted({lab for q in c3b_quartets(sites) for lab in q["labels"].values()})
+
+
+def c3b_tier_eval(hosts, quartets):
+    """C3B-3, a pure function of validity flags. quartets: rows with h, d, role ('first' | 'far') and valid. A host
+    is valid for d iff both far quartets of d are valid and at least VALID_HOST_MIN of its first-shell quartets on
+    d's sublattice are (P:680-682); n_d counts them; computable iff n_d >= 2 for a decisive dopant."""
+    n_d, valid_hosts = {}, {}
+    for d in C3B_DOPANTS:
+        L, ok = SUBLATTICE[d], []
+        for h in sorted(hosts):
+            far = [bool(q["valid"]) for q in quartets if q["h"] == h and q["d"] == d and q["role"] == "far"]
+            first = [bool(q["valid"]) for q in quartets if q["h"] == h and q["d"] == d and q["role"] == "first"]
+            if len(far) != C3B_FAR_SITES or len(first) != RULES["FIRST_SHELL_SIZE"][L]:
+                raise GateRefused(f"c3b_tier: {h} {d} has {len(first)} first-shell and {len(far)} far quartets")
+            if all(far) and sum(first) >= RULES["VALID_HOST_MIN"][L]:
+                ok.append(h)
+        valid_hosts[d], n_d[d] = ok, len(ok)
+    return {"n_d": n_d, "valid_hosts": valid_hosts,
+            "computable": any(n_d[d] >= C3B_TIER_MIN_HOSTS for d in C3B_DECISIVE)}
+
+
+def c3b_tier(reader, sites, state):
+    """C3B-3: gate c3b_tier. Reads, for every cell of every production quartet, its single point in status mode and
+    its record through the blinded loader (validity leaves only); no energy."""
+    c3b_sites_check(sites, state)
+    cells = {}
+
+    def cell(role, label, wid):
+        if wid not in cells:
+            st = reader.sp_state(label).get("status")
+            rec = reader.record(wid)
+            v = (rec or {}).get("validity") or {}
+            if rec is not None and role != "host" and v.get("check5_reading") != "invariant":
+                raise GateRefused(f"c3b_tier: the record of {wid} does not hold the invariant reading of check 5 "
+                                  f"(check5_reading {v.get('check5_reading')!r}; S2B §3, X4)")
+            why = ([] if st == "complete" else [f"single point {st}"]) + \
+                  (["no record"] if rec is None else [] if v.get("valid") is True
+                   else [f"invalid (checks {v.get('failed')})"])
+            cells[wid] = {"role": role, "why": why, "invariant_only": v.get("invariant_only") is True}
+        return cells[wid]
+
+    rows, bad = [], []
+    for q in c3b_quartets(sites):
+        why = {r: cell(r, q["labels"][r], q["wids"][r])["why"] for r in ("host", "V", "D", "DV")}
+        valid = not any(why.values())
+        rows.append({"h": q["h"], "d": q["d"], "role": q["role"], "valid": valid})
+        if not valid:
+            bad.append({"h": q["h"], "d": q["d"], "L": q["L"], "j": q["j"], "role": q["role"],
+                        "cells": {q["wids"][r]: w for r, w in why.items() if w}})
+    res = c3b_tier_eval(sorted(sites), rows)
+    inv = sorted(w for w, c in cells.items() if c["invariant_only"])
+    res.update({"n_quartets": len(rows), "n_valid_quartets": sum(r["valid"] for r in rows), "invalid_quartets": bad,
+                "invariant_only": inv,
+                "invariant_only_counts": {k: sum(1 for w in inv if cells[w]["role"] == k) for k in ("V", "D", "DV")}})
+    return res
+
+
 def _git_head():
     try:
         return subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"], capture_output=True, text=True,
@@ -1551,6 +1760,10 @@ def gate_campaign_check(gate, campaign):
     if (gate in S2B_GATES) != (campaign == "fr"):
         raise GateRefused(f"gate {gate} is not evaluated for campaign {campaign}: the gates {', '.join(S2B_GATES)} "
                           f"belong to campaign fr only, and fr has no other gate (S2B §§1, 2)")
+    if (gate in C3B_GATES) != (campaign == "c3b"):         # C3B-1
+        raise GateRefused(f"gate {gate} is not evaluated for campaign {campaign}: the gates {', '.join(C3B_GATES)} "
+                          f"belong to campaign c3b only, and c3b has no other gate (S2B §§3, 8; amendment "
+                          f"2026-11-16a)")
 
 
 def evaluate_gate(gate, layout, campaign, state, *, attempt=1, inputs=None, c1=None, reader_kw=None):
@@ -1652,6 +1865,47 @@ def evaluate_gate(gate, layout, campaign, state, *, attempt=1, inputs=None, c1=N
     elif gate == "c4_end":
         res = c4_end(rd, state)
         dec = {"c4_ended": res["all_ended"]}
+    elif gate == "s2b_projection":
+        # C3B-2: P + U from the non-energy inputs alone; the points in their order; nothing to cut (C4b not run)
+        point = inputs.get("point")
+        work = plan_work_s2b(state, point)
+        prev = list(((state or {}).get("s2b_projection") or {}).get("points") or [])
+        want = list(S2B_POINTS[:S2B_POINTS.index(point)])
+        if inputs.get("reevaluate") is True and prev == want + [point]:
+            # the last recorded point again: its decision reached the state but its marker was never written (a
+            # node loss between the two); the decision is the same one (review finding 6)
+            prev = want
+        sites = (c1 or {}).get("c3b_sites")
+        if sites is not None:
+            # C3B-3 at the start of c3b (review finding 2): the geometry-only site table is refused here, before any
+            # job, and not only by gate c3b_tier after every node-hour is spent
+            c3b_sites_check(sites, state)
+            n_lab = len(c3b_table_labels(sites))
+            want_n = RULES["N_BASE"] * (RULES["C3_PER_HOST"]["sp"] - RULES["C3_G1_REMOVAL"]["Ca"]["sp"])
+            if n_lab != want_n:
+                raise GateRefused(f"s2b_projection at the point {point}: the site table gives {n_lab} single-point "
+                                  f"labels, not the {want_n} of S2B §3")
+        if prev != want:
+            raise GateRefused(f"s2b_projection at the point {point}: the points recorded so far are {prev}, not "
+                              f"{want} (S2B §8; amendment 2026-11-16a R-1)")
+        if inputs.get("H_spent_h") is None:
+            raise GateRefused(f"s2b_projection at the point {point}: no H_spent_h (the ledger of that point)")
+        timing = {k: inputs.get(k) for k in ("H_spent_h", "tau_SP_h", "mace_h_per_relax", "host_wave_h")}
+        res = projection_s2b({**work, **timing})
+        res.update({"point": point, "work": work, "inputs": timing})   # the site table only refuses: no result leaf
+        dec = {"s2b_projection": {"points": prev + [point], "cuts": [], "c4b_run": C4B_PLANNED,
+                                  "c4b_origin": C4B_ORIGIN}}
+    elif gate == "c3b_complete":
+        labels = list((c1 or {}).get("c3b_labels", []))
+        want_n = RULES["N_BASE"] * (RULES["C3_PER_HOST"]["sp"] - RULES["C3_G1_REMOVAL"]["Ca"]["sp"])
+        if len(set(labels)) != want_n or len(labels) != want_n:
+            raise GateRefused(f"c3b_complete: {len(labels)} single-point labels ({len(set(labels))} distinct), not "
+                              f"the {want_n} of S2B §3")
+        res = c3_complete(rd, labels)
+        dec = {"c3b_complete": res["complete"]}
+    elif gate == "c3b_tier":
+        res = c3b_tier(rd, (c1 or {}).get("c3b_sites"), state)
+        dec = {"c3b_tier": {"computable": res["computable"], "n_d": dict(res["n_d"])}}
     else:
         raise GateRefused(f"unknown gate {gate}")
     return {"schema": "s2-gate-1", "gate": gate, "campaign": campaign, "commit": _git_head(), "attempt": attempt,
@@ -1696,16 +1950,19 @@ def main(argv=None):
     ap.add_argument("--self-test", action="store_true")
     sub = ap.add_subparsers(dest="cmd")
     r = sub.add_parser("run", help="evaluate one gate and write its s2-gate-1 output (node or archive root)")
-    r.add_argument("--gate", required=True, choices=list(GATE_NAMES))
+    r.add_argument("--gate", required=True, choices=list(GATE_NAMES + C3B_GATES))
     r.add_argument("--root", default="/data")
     r.add_argument("--kind", default="node", choices=["node", "archive"])
-    r.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4", "fr"])
+    r.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4", "fr", "c3b"])
     r.add_argument("--state", default=None, help="state.json (default: the layout's state file)")
     r.add_argument("--inputs", default=None, help="JSON of the non-energy inputs (projection timings, step-0 note)")
     r.add_argument("--attempt", type=int, default=1)
+    r.add_argument("--dry-run", action="store_true",
+                   help="evaluate the gate and print one line 'DRY <json>' (gate, campaign, decision, over_cap); "
+                        "no gate file and nothing else is written (C3B-2: before the c3b route is consumed)")
     v = sub.add_parser("verify")
     v.add_argument("--archive", required=True)
-    v.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4", "fr"])
+    v.add_argument("--campaign", required=True, choices=["c1", "c2", "c3", "c4", "fr", "c3b"])
     a = ap.parse_args(argv)
     if a.self_test:
         return self_test()
@@ -1720,6 +1977,10 @@ def main(argv=None):
             inputs, derived_opened = derive_inputs(a.gate, lay, state, inputs)
             rec = evaluate_gate(a.gate, lay, a.campaign, state, attempt=a.attempt, inputs=inputs,
                                 c1=inputs.get("c1"))
+            if a.dry_run:                                      # the same evaluation; nothing is written
+                print("DRY " + json.dumps({"gate": a.gate, "campaign": a.campaign, "decision": rec["decision"],
+                                           "over_cap": (rec.get("result") or {}).get("over_cap")}, sort_keys=True))
+                return 0
             rec["state_in"], rec["inputs_in"], rec["c1_in"] = state, inputs, inputs.get("c1")
             rec["inputs_opened"] = derived_opened
             print(f"{a.gate}: decision {json.dumps(rec['decision'])}; written {write_gate(rec, lay)}")
@@ -2938,6 +3199,211 @@ def self_test():
                    "verify caught (IX-8)")
         return "; ".join(out)
 
+    def t_c3b():
+        """S2b production c3b (S2B_PLAN.md §§3, 8; amendment 2026-11-16a; C3B-1 to C3B-3), synthetic values only."""
+        out = []
+        lay = _TestLayout(os.path.join(work, "arch_c3b"))
+        hosts = ["m06", "m02", "m16", "m12", "m32", "m26", "m22", "m23"]
+        st = base_state(G1={"Cl": True, "Ca": False}, stage0={"production_n8": hosts})
+        # C3B-1: the label map; its default is that of 0a3e8f0
+        assert label_campaign("s2_m06_host") == "c3" and label_campaign("s2_m06_host", "c3b") == "c3b"
+        assert label_campaign("s2_m30_host", "c3b") == "c1" and label_campaign("s2r_m30_VA188", "c3b") == "fr"
+        assert label_campaign("s2r_m05_VB124", "c3b") == "c4" and is_blinded("s2_m06_host")
+        assert not set(C3B_GATES) & set(GATE_NAMES) and len({x.lower() for x in GATE_NAMES + C3B_GATES}) == 16
+        # C3B-2: the planned work, P + U and the cap
+        assert C4B_PLANNED is False and C4B_ORIGIN == "decision (S2B amendment 2026-11-16a)"
+        w = plan_work_s2b(st, "fr")
+        assert w == plan_work_s2b(st, "c3b") == {"N_relax": 0, "N_SP": 544, "N_MACE": 536, "host_waves": 1}
+        for bad in (base_state(), base_state(G1={"Cl": True, "Ca": False}, n=10),
+                    base_state(G1={"Cl": False, "Ca": False}), {},
+                    base_state(G1={"Cl": True, "Ca": False}, pose={"Cs": "multi", "Cl": "default"}),
+                    base_state(G1={"Cl": True, "Ca": False}, pose={"Cs": "default", "Cl": "multi"})):
+            refused(lambda b=bad: plan_work_s2b(b, "c3b"))
+        for pt in ("c4b", "after4", "c3", None):
+            refused(lambda q=pt: plan_work_s2b(st, q))
+        g_ = globals()
+        try:
+            g_["C4B_PLANNED"] = True
+            refused(lambda: plan_work_s2b(st, "c3b"))                              # a planned C4b is not implemented
+        finally:
+            g_["C4B_PLANNED"] = False
+        tin = {"H_spent_h": 120.0, "tau_SP_h": 0.11, "mace_h_per_relax": 0.02, "host_wave_h": 2.5}
+        pj = projection_s2b({**w, **tin})
+        P = 120.0 + 544 * 0.11 + 536 * 0.02 + 2.5                                  # an independent recomputation
+        assert abs(pj["P_h"] - P) < 1e-9 and abs(pj["R_h"] - 0.05 * (P - 120.0)) < 1e-9 and pj["allowance_h"] == 0.0
+        assert abs(pj["U_h"] - pj["R_h"]) < 1e-12 and abs(pj["PU_h"] - (P + 0.05 * (P - 120.0))) < 1e-9
+        assert pj["over_cap"] is False and pj["counts"]["N_relax"] == 0 and pj["terms"]["A2_h"] == 0.0
+        pu = projection_s2b({**w, "H_spent_h": 120.0})                             # §16 unit costs without timings
+        assert abs(pu["P_h"] - (120.0 + 544 * 6.74 / 60 + 536 * 2 / 60 + 3.3)) < 1e-9
+        refused(lambda: projection_s2b({**w, **tin, "N_relax": 1}))
+        none = {"N_relax": 0, "N_SP": 0, "N_MACE": 0, "host_waves": 0}
+        assert projection_s2b({**none, "H_spent_h": 520.0})["over_cap"] is False   # P + U = 520 exactly: not over
+        assert projection_s2b({**none, "H_spent_h": 520.001})["over_cap"] is True
+        X = P - 120.0                                                              # P + U = H + 1.05 X
+        assert projection_s2b({**w, **tin, "H_spent_h": 520.0 - 1.05 * X - 1e-6})["over_cap"] is False
+        assert projection_s2b({**w, **tin, "H_spent_h": 520.0 - 1.05 * X + 1e-6})["over_cap"] is True
+        assert projection_s2b({**w, **tin, "H_spent_h": 520.0 - X})["over_cap"] is True      # P alone at the cap
+        g1 = evaluate_gate("s2b_projection", lay, "c3b", st, inputs={"point": "fr", **tin}, reader_kw=kw)
+        want = {"points": ["fr"], "cuts": [], "c4b_run": False, "c4b_origin": C4B_ORIGIN}
+        assert g1["decision"] == {"s2b_projection": want} and not g1["opened"] and g1["result"]["point"] == "fr"
+        assert tuple(want) == S2B_PROJECTION_KEYS and g1["result"]["over_cap"] is False
+        st2 = {**st, **copy.deepcopy(g1["decision"])}
+        g2 = evaluate_gate("s2b_projection", lay, "c3b", st2, inputs={"point": "c3b", **tin, "H_spent_h": 121.0},
+                           reader_kw=kw)
+        assert g2["decision"] == {"s2b_projection": {**want, "points": ["fr", "c3b"]}}
+        st3 = {**st, **copy.deepcopy(g2["decision"])}
+        for s_, pt in ((st, "c3b"), (st2, "fr"), (st3, "fr"), (st3, "c3b")):       # the points in their order, once
+            refused(lambda a=s_, b=pt: evaluate_gate("s2b_projection", lay, "c3b", a, inputs={"point": b, **tin},
+                                                     reader_kw=kw))
+        refused(lambda: evaluate_gate("s2b_projection", lay, "c3b", st, inputs={"point": "fr"}, reader_kw=kw))
+        go = evaluate_gate("s2b_projection", lay, "c3b", st, inputs={"point": "fr", **tin, "H_spent_h": 500.0},
+                           reader_kw=kw)
+        assert go["result"]["over_cap"] is True and go["decision"] == g1["decision"]         # scripts/50 stops on it
+        poisoned = {**st, "K3": "pass", "K2": "fail", "cuts": [{"cut": 8}], "c4_run": True, "multi_pose_cut": {"Cs": 1}}
+        gp = evaluate_gate("s2b_projection", lay, "c3b", poisoned, inputs={"point": "fr", **tin}, reader_kw=kw)
+        assert gp["decision"] == g1["decision"] and gp["result"] == g1["result"]             # no C2 key is read
+        put_json(lay, "ledger:fr", {"complete": True, "H_spent_h": 116.25})
+        inp, _ = derive_inputs("s2b_projection", lay, st, {"point": "fr"}, reader_kw=kw)
+        assert inp["H_spent_h"] == 116.25 and inp["tau_SP_h"] is None and inp["host_wave_h"] is None
+        refused(lambda: derive_inputs("s2b_projection", lay, st, {"point": "c3b"}, reader_kw=kw))   # no live ledger
+        refused(lambda: derive_inputs("s2b_projection", lay, st, {"point": "c3"}, reader_kw=kw))
+        refused(lambda: derive_inputs("projection", lay, st, {"point": "fr"}, reader_kw=kw))        # legacy points only
+        put_json(lay, "ledger:fr", {"complete": False, "H_spent_h": 116.25})
+        refused(lambda: derive_inputs("s2b_projection", lay, st, {"point": "fr"}, reader_kw=kw))
+        out.append("s2b_projection: 544 / 536 / 1 and no A2 work; P + U recomputed; 520.000 not over, 520.001 over; "
+                   "points fr then c3b, once each; decision {points, cuts [], c4b_run false, c4b_origin}; C2 keys "
+                   "unread; H_spent from the fr ledger at the point fr")
+        # C3B-1: gates bound to campaigns
+        class _NoRead:
+            def __getattr__(self, k):
+                raise AssertionError(f"the layout was used ({k}) before the gate-campaign refusal")
+        nb = 0
+        for gate, camp in [(a, b) for a in C3B_GATES for b in ("c1", "c2", "c3", "c4", "fr")] + \
+                          [(a, "c3b") for a in GATE_NAMES]:
+            refused(lambda a=gate, b=camp: evaluate_gate(a, _NoRead(), b, None))
+            nb += 1
+        import contextlib, io
+        cli = os.path.join(work, "cli_c3b"); os.makedirs(cli)
+        for args in (["--gate", "c3b_tier", "--campaign", "fr"], ["--gate", "s2b_projection", "--campaign", "c3"],
+                     ["--gate", "projection", "--campaign", "c3b"], ["--gate", "c3_complete", "--campaign", "c3b"]):
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                rc = main(["run", "--root", cli, "--kind", "archive", "--state", os.path.join(cli, "none.json")] + args)
+            assert rc == 3 and "REFUSED" in err.getvalue() and not os.listdir(cli), (args, rc, err.getvalue())
+        out.append(f"gates bound to campaigns: {nb} pairings refused before the layout is touched, 4 by the run CLI")
+        # C3B-3: completeness and the tier, on a synthetic c3b archive (records under c3b/, status-mode reads)
+        sites = {h: {"B": {"first": [124, 136], "far": [76, 172]}, "A": {"first": [28, 92, 128], "far": [164, 188]},
+                     "X": {"first": [3, 49, 53, 90, 102, 125, 126, 138], "far": [175, 186]}} for h in hosts}
+        qs = c3b_quartets(sites)
+        labs = sorted({x for q in qs for x in q["labels"].values()})
+        wids = sorted({x for q in qs for x in q["wids"].values()})
+        assert len(qs) == 8 * 24 and len(labs) == 544 and len(wids) == 544
+        states = {}
+        kw2 = {**kw, "sp_status": lambda d, lab: {"status": states.get(lab, "complete"), "missing_reason": None}}
+
+        def put_c3b(wid, valid=True, reading="invariant", inv_only=False):
+            p_ = lay.record("c3b", wid)
+            os.makedirs(os.path.dirname(p_), exist_ok=True)
+            v = {"valid": valid, "failed": [] if valid else [5]}
+            if not wid.endswith("_host"):
+                v.update({"check5_reading": reading, "valid_as_written": valid and not inv_only,
+                          "failed_as_written": [] if valid and not inv_only else [5], "invariant_only": inv_only})
+                if reading != "invariant":
+                    v = {"valid": valid, "failed": [] if valid else [5]}
+            json.dump({"schema": "s2-cell-1", "work_id": wid, "validity": v, "relax": {"E_mace_eV": -1234.5}},
+                      open(p_, "w"))
+        for w_ in wids:
+            put_c3b(w_)
+        c1in = {"c3b_labels": labs, "c3b_sites": sites}
+        cc = evaluate_gate("c3b_complete", lay, "c3b", st, c1=c1in, reader_kw=kw2)
+        assert cc["decision"] == {"c3b_complete": True} and cc["result"]["n"] == 544
+        states[labs[0]] = "pending"
+        assert evaluate_gate("c3b_complete", lay, "c3b", st, c1=c1in, reader_kw=kw2)["decision"] == {"c3b_complete": False}
+        states.clear()
+        for badl in (labs[:-1], labs + [labs[0]], []):
+            refused(lambda b=badl: evaluate_gate("c3b_complete", lay, "c3b", st, c1={"c3b_labels": b}, reader_kw=kw2))
+
+        def tier():
+            return evaluate_gate("c3b_tier", lay, "c3b", st, c1=c1in, reader_kw=kw2)
+        t0_ = tier()
+        assert t0_["decision"] == {"c3b_tier": {"computable": True, "n_d": {"Sr": 8, "Cl": 8, "Cs": 8, "GA": 8}}}
+        assert tuple(t0_["decision"]["c3b_tier"]) == C3B_TIER_KEYS and t0_["result"]["n_valid_quartets"] == 192
+        assert all(o["mode"] in ("status", "records") and o["file"].startswith("c3b" + os.sep) for o in t0_["opened"])
+        assert "E_mace_eV" not in json.dumps(t0_) and "-1234.5" not in json.dumps(t0_)
+        rd_ = Reader(lay, "c3b", allow_list("c3b_tier", st, c1in), **kw2)
+        refused(lambda: rd_.sp("s2_m06_host", "full"), Blinded)                    # a c3b energy read stays blinded
+        refused(lambda: Reader(lay, "c3b", {"full": {"s2_m06_host"}}, **kw2).sp("s2_m06_host"), Blinded)
+        # a single point not complete, a missing record and an invalid record each invalidate the quartet
+        states["s2_m06_Cl175o0_vac"] = "missing"                                   # a far quartet of Cl on m06
+        t1 = tier()
+        assert t1["decision"]["c3b_tier"]["n_d"] == {"Sr": 8, "Cl": 7, "Cs": 8, "GA": 8}
+        assert [b["cells"] for b in t1["result"]["invalid_quartets"]] == [{"s2_m06_Cl175p0_vac": ["single point missing"]}]
+        states.clear()
+        os.remove(lay.record("c3b", "s2_m02_Sr124p0_novac"))                       # B first shell: 2 of 2 needed
+        put_c3b("s2_m16_VA92", valid=False)                                        # A first shell: 2 of 3 suffice
+        put_c3b("s2_m12_VA92", valid=False); put_c3b("s2_m12_VA28", valid=False)   # 1 of 3: not valid for Cs, GA
+        for j in (3, 49):
+            put_c3b(f"s2_m32_VX{j}", valid=False)                                  # X first shell: 6 of 8 suffice
+        for j in (3, 49, 53):
+            put_c3b(f"s2_m26_Cl{j}p0_vac", valid=False)                            # 5 of 8: not valid for Cl
+        put_c3b("s2_m22_host", valid=False)                                        # an invalid host: no dopant
+        t2 = tier()
+        assert t2["decision"]["c3b_tier"]["n_d"] == {"Sr": 6, "Cl": 6, "Cs": 6, "GA": 6}, t2["decision"]
+        vh = t2["result"]["valid_hosts"]
+        assert "m02" not in vh["Sr"] and "m16" in vh["Cs"] and "m12" not in vh["GA"] and "m32" in vh["Cl"] \
+            and "m26" not in vh["Cl"] and all("m22" not in v for v in vh.values())
+        assert {"s2_m02_Sr124p0_novac": ["no record"]} in [b["cells"] for b in t2["result"]["invalid_quartets"]]
+        put_c3b("s2_m23_VB76", inv_only=True)                                      # valid, invariant reading only
+        t3 = tier()
+        assert t3["result"]["invariant_only"] == ["s2_m23_VB76"] and t3["decision"] == t2["decision"]
+        assert t3["result"]["invariant_only_counts"] == {"V": 1, "D": 0, "DV": 0}
+        put_c3b("s2_m23_VB76", reading="as_written")                               # another reading is a refusal
+        refused(tier)
+        put_c3b("s2_m23_VB76")
+        t4 = tier()
+        assert t4["result"]["invariant_only"] == [] and t4["decision"] == t2["decision"]
+        # the thresholds of the pure rule, and 'computable'
+        def rows(nfar, nfirst, d, hs):
+            L = SUBLATTICE[d]
+            return [{"h": h, "d": d, "role": "far", "valid": i < nfar} for h in hs for i in range(2)] + \
+                   [{"h": h, "d": d, "role": "first", "valid": i < nfirst} for h in hs
+                    for i in range(RULES["FIRST_SHELL_SIZE"][L])]
+
+        def n_of(d, nfar, nfirst, hs=("a", "b")):
+            others = [r for x in C3B_DOPANTS if x != d for r in rows(0, 0, x, hs)]
+            return c3b_tier_eval(list(hs), rows(nfar, nfirst, d, hs) + others)
+        for d, lo in (("Sr", 2), ("Cs", 2), ("GA", 2), ("Cl", 6)):
+            assert n_of(d, 2, lo)["n_d"][d] == 2 and n_of(d, 2, lo - 1)["n_d"][d] == 0, d
+            assert n_of(d, 1, RULES["FIRST_SHELL_SIZE"][SUBLATTICE[d]])["n_d"][d] == 0, d       # one far quartet lost
+        assert n_of("Sr", 2, 2)["computable"] is False                             # Sr is not decisive
+        assert n_of("Cl", 2, 8)["computable"] is True and n_of("Cl", 2, 8, hs=("a",))["computable"] is False
+        refused(lambda: c3b_tier_eval(["a"], rows(2, 2, "Sr", ["a"])))             # quartets of a dopant missing
+        # the site table
+        for bad in (None, {}, {h: sites[h] for h in hosts[:7]}, {**sites, "m30": sites["m06"]},
+                    {**sites, "m06": {**sites["m06"], "A": {"first": [28, 92], "far": [164, 188]}}},
+                    {**sites, "m06": {**sites["m06"], "X": {"first": sites["m06"]["X"]["first"], "far": [175]}}},
+                    {**sites, "m06": {**sites["m06"], "B": {"first": [124, 136], "far": [76, 124]}}}):
+            refused(lambda b=bad: evaluate_gate("c3b_tier", lay, "c3b", st, c1={"c3b_sites": b}, reader_kw=kw2))
+        refused(lambda: evaluate_gate("c3b_tier", lay, "c3b", base_state(), c1=c1in, reader_kw=kw2))   # no host list
+        # verify reproduces the three c3b gate files, and names a changed record
+        for rec_, sin, iin in ((g2, st2, {"point": "c3b", **tin, "H_spent_h": 121.0}), (cc, st, {"c1": c1in}),
+                               (t4, st, {"c1": c1in})):
+            r_ = dict(rec_, state_in=sin, inputs_in=iin, c1_in=c1in)
+            os.makedirs(os.path.dirname(lay.gate("c3b", r_["gate"])), exist_ok=True)
+            json.dump(r_, open(lay.gate("c3b", r_["gate"]), "w"))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc0 = verify(lay.root, "c3b", layout=lay, reader_kw=kw2)
+            put_c3b("s2_m06_VB76", valid=False)
+            rc1 = verify(lay.root, "c3b", layout=lay, reader_kw=kw2)
+        assert rc0 == 0 and rc1 == 1 and "DIFF c3b c3b_tier" in buf.getvalue() and "OK   c3b c3b_complete" in buf.getvalue()
+        out.append("c3b_complete: 544 labels or a refusal; c3b_tier: n_d 8 / 8 / 8 / 8 on a valid archive; a missing "
+                   "single point, a missing or invalid record and an invalid host lower it; B 2 of 2, A 2 of 3, X 6 of "
+                   "8 and both far quartets; computable iff n_d >= 2 for Cl, Cs or GA; an invariant-only cell is valid "
+                   "and listed; a record as written is refused; reads only status and records under c3b; verify "
+                   "reproduces 3 gate files and names a changed record")
+        return "; ".join(out)
+
     def t_real_parser():
         try:
             q47 = dep("q47")
@@ -2973,10 +3439,144 @@ def self_test():
         assert not bad, bad
         return "this file passes the public-repository rules of scripts/46 (gate outputs go through dump_public)"
 
+    def t_c3b_cli():
+        """Review finding 3: the three c3b gates to success through the `run` CLI on a temporary node root with the
+        scripts/46 Layout (the only path the node uses), with the inputs that scripts/50 gate_inputs writes. Only the
+        status parser of scripts/47 is replaced (it has its own case, 'real parser'); the records are read by the
+        scripts/46 loader. Also: the site table refused at the first gate (finding 2), the last point evaluated again
+        (finding 6), the labels derived when the runner gives none, and verify on the root without its c1 tree."""
+        import contextlib, io
+        if mocked:
+            return f"skipped ({', '.join(mocked)} absent)"
+        c46, q47 = dep("c46"), dep("q47")
+        root = os.path.join(work, "c3b_cli")
+        lay = c46.Layout(kind="node", root=root)
+        hosts = ["m06", "m02", "m16", "m12", "m32", "m26", "m22", "m23"]
+        row = {"B": {"first": [124, 136], "far": [76, 172]}, "A": {"first": [28, 92, 128], "far": [188, 164]},
+               "X": {"first": [3, 49, 53, 90, 102, 125, 126, 138], "far": [175, 186]}}
+        sites = {h: copy.deepcopy(row) for h in hosts}
+        state = {"n": 8, "G1": {"Cl": True, "Ca": False}, "pose": {"Cs": "default", "Cl": "default"},
+                 "stage0": {"production_n8": hosts},
+                 "campaigns": {"c1": "done", "c2": "done", "c3": "not_run", "fr": "done"}}
+
+        def save_state():
+            os.makedirs(os.path.dirname(lay.state()), exist_ok=True)
+            json.dump(state, open(lay.state(), "w"))
+
+        def touch_sp(c, lab):
+            p = lay.sp_out(c, lab)
+            os.makedirs(os.path.dirname(p), exist_ok=True)
+            open(p, "w").write("synthetic single-point output (status parser replaced)\n")
+
+        def put_record(c, wid, kind):
+            v = {"valid": True, "failed": []}
+            if kind != "host":
+                v.update({"check5_reading": "invariant", "valid_as_written": True, "failed_as_written": [],
+                          "invariant_only": False})
+            p = lay.record(c, wid)
+            os.makedirs(os.path.dirname(p), exist_ok=True)
+            json.dump({"schema": "s2-cell-1", "work_id": wid, "cell_kind": kind, "validity": v,
+                       "relax": {"wall_s": 7200.0 if kind == "host" else 600.0}}, open(p, "w"))
+
+        def fake_status(job_dir, label):
+            if glob.glob(os.path.join(glob.escape(job_dir), f"{label}.out*")):
+                return {"status": "complete", "wall_s": 1800.0}
+            return {"status": "pending"}
+
+        def run(gate, inp, expect=0, dry=False):
+            ip = os.path.join(root, "inputs.json")
+            json.dump(inp, open(ip, "w"))
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+                rc = main(["run", "--gate", gate, "--root", root, "--campaign", "c3b", "--inputs", ip] +
+                          (["--dry-run"] if dry else []))
+            assert rc == expect, (gate, rc, buf.getvalue()[-400:])
+            if rc != 0:
+                return buf.getvalue()
+            if dry:
+                return json.loads([x for x in buf.getvalue().splitlines() if x.startswith("DRY ")][-1][4:])
+            return json.load(open(lay.gate("c3b", gate)))
+        save_state()
+        qs = c3b_quartets(sites)
+        labels = c3b_table_labels(sites)
+        wids = {q["wids"][r]: r for q in qs for r in ("host", "V", "D", "DV")}
+        assert len(qs) == 8 * 24 and len(labels) == 544 and len(wids) == 544, (len(qs), len(labels), len(wids))
+        for lab in labels:
+            touch_sp("c3b", lab)
+        for w, r in wids.items():
+            put_record("c3b", w, r)
+        for lab, w, k in (("s2_m30_host", "s2_m30_host", "host"), ("s2_m30_VB136", "s2_m30_VB136", "V")):
+            touch_sp("c1", lab)                                      # the C1 timings of the projection (I-C7b)
+            put_record("c1", w, k)
+        proj = lambda pts: {"s2b_projection": {"points": pts, "cuts": [], "c4b_run": False,       # noqa: E731
+                                               "c4b_origin": C4B_ORIGIN}}
+        tab = {"c1": {"c3b_sites": sites}}
+        orig = q47.sp_status
+        q47.sp_status = fake_status
+        try:
+            # --dry-run (the pre-route check of scripts/50): the same decision, over_cap, and no gate file
+            gdir = os.path.dirname(lay.gate("c3b", "s2b_projection"))
+            d0 = run("s2b_projection", {"point": "fr", "H_spent_h": 150.0, **tab}, dry=True)
+            assert d0 == {"gate": "s2b_projection", "campaign": "c3b", "decision": proj(["fr"]), "over_cap": False}, d0
+            assert "site table" in run("s2b_projection", {"point": "fr", "H_spent_h": 150.0, "c1": {
+                "c3b_sites": {h: sites[h] for h in hosts[:-1]}}}, 3, dry=True)
+            assert not os.path.isdir(gdir), "a dry run wrote a gate file"
+            g1 = run("s2b_projection", {"point": "fr", "H_spent_h": 150.0, **tab})
+            assert g1["decision"] == proj(["fr"]) and g1["result"]["over_cap"] is False, g1["decision"]
+            assert g1["c1_in"] == {"c3b_sites": sites} and "site_table" not in g1["result"]
+            assert g1["inputs_in"]["tau_SP_h"] == 0.5 and g1["inputs_in"]["host_wave_h"] == 2.0, g1["inputs_in"]
+            assert g1["result"]["work"] == {"N_relax": 0, "N_SP": 544, "N_MACE": 536, "host_waves": 1}
+            state.update(g1["decision"]); save_state()
+            # finding 6: the point fr again (its marker lost): refused without the flag, the same decision with it
+            assert "points recorded so far" in run("s2b_projection", {"point": "fr", "H_spent_h": 150.0, **tab}, 3)
+            g1b = run("s2b_projection", {"point": "fr", "H_spent_h": 150.0, "reevaluate": True, **tab})
+            assert g1b["decision"] == g1["decision"] and g1b["result"]["PU_h"] == g1["result"]["PU_h"]
+            # the flag admits only the last recorded point: the point c3b is not yet recorded
+            g2 = run("s2b_projection", {"point": "c3b", "H_spent_h": 151.0, "reevaluate": True, **tab})
+            assert g2["decision"] == proj(["fr", "c3b"]), g2["decision"]
+            state.update(g2["decision"]); save_state()
+            assert "points recorded so far" in run("s2b_projection", {"point": "fr", "H_spent_h": 150.0,
+                                                                      "reevaluate": True, **tab}, 3)
+            # finding 2: a table without one host, or with a short first shell, is refused at this first gate
+            short = copy.deepcopy(sites); short["m06"]["X"]["first"] = short["m06"]["X"]["first"][:-1]
+            n_tab = 0
+            for bad in ({h: sites[h] for h in hosts[:-1]}, short):
+                txt = run("s2b_projection", {"point": "c3b", "H_spent_h": 151.0, "reevaluate": True,
+                                             "c1": {"c3b_sites": bad}}, 3)
+                assert "site table is not that of S2B" in txt, txt[-300:]
+                n_tab += 1
+            g3 = run("c3b_complete", {"c1": {"c3b_labels": labels}})
+            assert g3["decision"] == {"c3b_complete": True}, g3["decision"]
+            g3b = run("c3b_complete", {})                           # no labels given: derived from the node tree
+            assert g3b["decision"] == g3["decision"] and g3b["inputs_in"]["c1"]["c3b_labels"] == labels
+            os.remove(lay.sp_out("c3b", labels[0]))
+            g3c = run("c3b_complete", {"c1": {"c3b_labels": labels}})
+            assert g3c["decision"] == {"c3b_complete": False}, g3c["decision"]
+            touch_sp("c3b", labels[0])
+            run("c3b_complete", {"c1": {"c3b_labels": labels}})
+            g4 = run("c3b_tier", tab)
+            assert g4["decision"] == {"c3b_tier": {"computable": True, "n_d": {d: 8 for d in C3B_DOPANTS}}}, g4["decision"]
+            assert "site table" in run("c3b_tier", {"c1": {"c3b_sites": short}}, 3)
+            # verify on this root once its c1 tree is gone: the three gate files reproduce from the c3b tree alone
+            shutil.rmtree(lay.campaign_dir("c1"))
+            shutil.rmtree(os.path.dirname(lay.sp_dir("c1", "s2_m30_host")))
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                rv = verify(root, "c3b", layout=lay)
+            assert rv == 0 and "verify c3b: 3 gate files, 0 differ" in buf.getvalue(), buf.getvalue()
+        finally:
+            q47.sp_status = orig
+        return ("run CLI on a node root with the scripts/46 Layout (status parser replaced): s2b_projection at fr and "
+                "c3b with the site table (8 hosts, 192 quartets, 544 labels) and the C1 timings derived from the tree; "
+                "the last point again only with the flag; "
+                f"{n_tab} bad tables refused at the first gate; c3b_complete with given and with derived labels, false "
+                "for a missing output; c3b_tier n_d 8 / 8 / 8 / 8; verify reproduces the 3 gate files without the c1 tree")
+
     for nm, fn in (("hygiene", t_hygiene), ("constants", t_constants), ("t quantile", t_tppf), ("Boltzmann", t_boltz), ("G1", t_g1),
                    ("gate N and n rule", t_gate_n), ("pose rule", t_pose), ("step-0", t_step0), ("K2 and K3", t_k2k3),
                    ("separability", t_sep), ("budget", t_budget), ("throughput", t_tp), ("Reader", t_reader),
-                   ("gate runners", t_runners), ("S2b fr gates", t_fr), ("real parser", t_real_parser)):
+                   ("gate runners", t_runners), ("S2b fr gates", t_fr), ("real parser", t_real_parser), ("S2b c3b gates", t_c3b),
+                   ("S2b c3b run CLI", t_c3b_cli)):
         case(nm, fn)
     print("NOTES:")
     for k, v in NOTES.items():

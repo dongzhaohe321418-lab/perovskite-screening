@@ -275,7 +275,7 @@ class Row:
 
 
 KINDS = ("F", "relax_energy", "Eb_A1", "Eb_A2", "delta", "dF_tail", "path_work", "curve", "Eb_mace", "E_mace", "Eb_q0",
-         "Eb_q1", "forces", "determinism", "invalid", "status", "xcheck", "note")
+         "Eb_q1", "forces", "determinism", "invalid", "status", "xcheck", "note", "Y", "tier", "class")
 
 
 class Out:
@@ -586,6 +586,7 @@ class Run:
         self.item4, self.header, self.hinge_open, self.trigger = "L_ITEM4", None, False, None
         self.v, self.csv_rows, self.reads_summary, self.appendix = {}, [], [], []
         self.written, self.archive_fr, self.stop_note_sha, self.amend = [], None, None, None
+        self.b4_sp = ()                                  # the c3b single-point labels block 4 may read (exit audit)
         # the lines before the header, in the output order of spec section 9 (filled by phases 0a and 0b)
         self.pre_head, self.pre_env, self.pre_route, self.pre_commits = [], [], [], []
 
@@ -973,9 +974,13 @@ class Run:
             self.pre_route.append(f"route: FR-STOP (fr stopped; no fr/state_end.json; stop note {a.stop_note} sha256 "
                                   f"{self.stop_note_sha})")
             return
-        if a.stop_note:                                  # IX-7: beside a done fr, as the figure and 6b refuse
-            raise EError(f"--stop-note {a.stop_note} is refused: fr is done, there is no STOP (IX-7)")
         fo = cj.get("fr_outcome")
+        c3b_note = getattr(self.b4, "C3B_STOP_NOTE", None)   # amendment 2026-11-16a (B-3): the one stop note of c3b
+        if c3b_note is not None and self.root_rel != S2_REL:
+            c3b_note = c3b_note.replace(S2_REL, self.root_rel, 1)
+        if a.stop_note and not (fo == "pass" and a.stop_note == c3b_note):
+            # IX-7: beside a done fr, as the figure and 6b refuse; past FR, block 4's tier_route judges the c3b note
+            raise EError(f"--stop-note {a.stop_note} is refused: fr is done, there is no STOP (IX-7)")
         if not isinstance(fo, str) or fo not in eg.FR_OUTCOMES:
             raise EError(f"fr/campaign.json fr_outcome {S(fo)!r} is not one of {list(eg.FR_OUTCOMES)} (spec 6.1)")
         fr["outcome"] = fo
@@ -2122,6 +2127,7 @@ class Run:
         if self.mode == "evaluation" and rid not in ("FR-FAIL", "FR-STOP"):
             self.au.set_block(4)
             tbl = b4.build_tier_table(self, self.c1, fr_info)
+            self.b4_sp = tuple(tbl.get("sp_labels") or ()) if isinstance(tbl, dict) else ()
             res = b4.evaluate_tier(tbl, fr_info)
         self.stage = "block 5"
         if self.mode == "hinge":
@@ -2154,11 +2160,12 @@ class Run:
                 o4.line("BLOCK 4. Tier block (S2B §7 item 4; e_block4.py)")
                 o4.line(self.header)
                 clause = L_A1TIER_CLAUSE if self.v.get("invariant_only") else ""
-                labels = {"L_A1TIER": L["L_A1TIER"].format(clause=clause)}
-                for r in b4.rows(res, labels):
-                    o4.rows.append(r)
-                    o4.lines.append("  " + r.text + ("  -- " + "; ".join(labels.get(x, L.get(x, x)) for x in r.labels)
-                                                       if r.labels else ""))
+                labels = {**getattr(b4, "LABELS", {}), "L_A1TIER": L["L_A1TIER"].format(clause=clause)}
+                for r in b4.rows(res, labels):               # through Out.row: the label texts, the item-4 label
+                    o4.row(4, r.id, r.kind, r.text, values=r.values, has_a1=r.has_a1,     # on every A1 value (RF-25)
+                           labels=[(x, labels.get(x, L.get(x, x))) for x in r.labels])
+                    if r.kind == "xcheck":                   # block 4's cross-checks count in the exit code
+                        self.xcs.append((r.id, r.values.get("ok")))
             self.outs[4] = o4
         self.outs[5] = o5
 
@@ -2292,7 +2299,10 @@ class Run:
                 raise EIntegrity("INT-HINGE-CLOSED", bad[0][0], bad[0][1])
             self.chk.passed["INT-HINGE-CLOSED"] += 1
         a2_ok = set(FAR) | set(self.v.get("fr_rel") or {}) | (set(HINGE) if self.hinge_open else set())
-        sp_ok = set(eg.BLOCK3_SP) | (set(eg.PB136_SP) if self.hinge_open else set())
+        sp_ok = set(eg.BLOCK3_SP) | (set(eg.PB136_SP) if self.hinge_open else set()) | set(self.b4_sp)
+        acc = getattr(self, "_b4_access", None)          # block 4's c3b access: closed, every read in block 4 (INT-READS)
+        if acc is not None:
+            acc.assert_closed()
         self.ctx.reads.check_labels(a2_ok, sp_ok)
         self.chk.passed["INT-READS"] += 1
         er.assert_one_47(self.ex.q47)
@@ -2404,7 +2414,7 @@ class Run:
         fr_fail = self.route["id"] in ("FR-FAIL", "FR-STOP")
         b5 = "block 5" if self.hinge_open else "deferred to block 5"
         noc3 = "not formed (FR failed: no C3b)" if fr_fail else "block 4"
-        noc4 = L["L_C4BNOTRUN"] if fr_fail else "block 4"
+        noc4 = L["L_C4BNOTRUN"] if fr_fail else getattr(self.b4, "C4B_ITEM", "block 4")
         items = (("P10 q = 0 Sr76", "block 3, B3.q0.Sr76"), ("P10 q = 0 Cl138", "block 3, B3.q0.Cl138"),
                  ("P10 q = 0 Cs128", "block 3, B3.q0.Cs128"), ("P10 q = 0 GA128", "block 3, B3.q0.GA128"),
                  ("P10 q = 0 Sr136", b5 + (", B5.q0.Sr136" if self.hinge_open else "")),

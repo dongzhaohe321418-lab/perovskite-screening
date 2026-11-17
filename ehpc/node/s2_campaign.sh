@@ -1,9 +1,10 @@
 #!/bin/bash
 # S2 node runner (results/objective2/s2/S2_PLAN.md sections 13, 16 and 17 item 5; Stage-0 interface spec 9.5).
-# Usage, as the node user in the clean checkout at the S2b campaign commit (results/objective2/s2/S2B_PLAN.md):
-#     bash /data/work/ps_s2/ehpc/node/s2_campaign.sh fr        (fr only; one campaign per node boot cycle)
-# At this commit only the S2b campaign fr starts; c1-c4 need a checkout at the S2 commit 8bff03e (the runner refuses
-# a c1-c4 start at another HEAD after C2 as well, N-FR3).
+# Usage, as the node user in the clean checkout at the c3b campaign commit (results/objective2/s2/S2B_PLAN.md,
+# amendment 2026-11-16a; results/objective2/s2/C3B_OPERATIONS.md):
+#     bash /data/work/ps_s2/ehpc/node/s2_campaign.sh c3b       (c3b only; one campaign per node boot cycle)
+# At this commit only the S2b production campaign c3b starts: fr has ended, C4b is not run, and c1-c4 need a checkout
+# at the S2 commit 8bff03e (the runner refuses a c1-c4 start at another HEAD after C2 as well, N-FR3).
 # Starts scripts/50_s2_campaign.py run in its own session and returns; the runner's output goes to
 # /data/work/s2/<campaign>/driver.out and its log to /data/work/s2/<campaign>/campaign.log. The lock
 # /data/work/s2/s2.lock is taken here on fd 8 and inherited by the runner and every child it starts, so a second
@@ -12,7 +13,7 @@
 # After a reclaim or reboot use s2_relaunch.sh, which refuses while any S2 process is alive.
 set -euo pipefail
 C=${1:-}
-case "$C" in fr) ;; *) echo "usage: s2_campaign.sh fr (the S2b campaign; c1-c4 need a checkout at 8bff03e)" >&2; exit 2;; esac
+case "$C" in c3b) ;; *) echo "usage: s2_campaign.sh c3b (the S2b production campaign; fr has ended; c1-c4 need a checkout at 8bff03e)" >&2; exit 2;; esac
 R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2
 cd "$R"
 # a git failure (no repository, a copy without .git, git's ownership refusal) is a refusal, never 'clean' (round 4)
