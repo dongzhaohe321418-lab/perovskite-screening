@@ -1,0 +1,185 @@
+e2e_T11_log.txt - case T11 of e_selftest.py (private copy of 840ad22; base commit of the copy 6f8c981)
+Environment: Python 3.12.16, numpy 2.5.4, scipy 1.18.1, ase 3.29.0 (conda environment e4dev; see the notes: the
+environment psan named in the task held no numpy). OMP_NUM_THREADS=2, GIT_CONFIG_GLOBAL=/dev/null, one process
+at a time. <real repo> = the project repository, used read-only for the git objects of 8bff03e. Absolute paths
+are masked as <path>. Every command was run from the root of the private copy.
+
+Order of the runs. Sections 3, 4 and 5 were run first. Then three source comments of T11 were corrected after a
+reviewer finding (they cited plan lines that had not been read): 8 lines removed, 13 added, comments and one
+docstring only. The delivered file and the file of sections 3-5 have identical code: their syntax trees, with
+docstrings removed, are equal (checked). Sections 1 and 2 were run on the delivered file after that correction.
+The whole self-test (section 4) was not repeated after it.
+
+====================================================================================================
+1. T11 without mutants, delivered file:  python -B -I results/objective2/s2/s2b/e_selftest.py --case T11 --no-mutants --repo <real repo>
+====================================================================================================
+T11 [T] ok (45.4 s); mutants 10: -
+e_selftest: 1 of 1 cases passed; 10 mutants, 0 not caught
+
+real	0m48.603s
+user	0m11.895s
+sys	0m35.778s
+
+   (the summary '10 mutants, 0 not caught' under --no-mutants is the registered count: no mutant was run)
+
+====================================================================================================
+2. T11 with mutants, delivered file:  python -B -I results/objective2/s2/s2b/e_selftest.py --case T11 --repo <real repo>
+====================================================================================================
+T11 [T] ok (91.2 s); mutants 10: exit_sp_labels: AssertionError; manifest_class_unchecked: AssertionError; manifest_class_exempt: AssertionError; record_read_blind: AssertionError; c3b_opened_in_block3: AssertionError; audit_block_not_set: AssertionError; c3b_commit_not_last: AssertionError; has_a1_everywhere: AssertionError; xcheck_none_as_false: AssertionError; xcheck_twice: AssertionError
+e_selftest: 1 of 1 cases passed; 10 mutants, 0 not caught
+
+real	1m35.785s
+user	0m26.281s
+sys	1m7.146s
+
+====================================================================================================
+3. Supplementary: the assertion message that stops each mutant (throwaway harness, not part of the patch;
+   it installs the two selftest_block refusals as e_selftest.run does, then runs the case under each mutant)
+====================================================================================================
+T11 base: ok (45.9 s)
+exit_sp_labels (2.2 s): AssertionError: (3, "9cd3ef4; c3b/MANIFEST.sha256 sha256 9d66db539ef4f45b1c04637692771a306fa3fa9aef4243f5a639232239216b24\nC4b: C4b not run (decision, amendment 2026-11-16a)\nroute: C4B-NOTRUN (fr done; fr_outcome pass)\nverify record c2: results/objective2/s2/c2_verify/verify_c2.txt sha256 5391494b8924efd20adae03ac73c6e03b006c0087b47ece6b8334e
+manifest_class_unchecked (10.7 s): AssertionError: ripts/47 counters, by key)
+  F 1550, TS 661, ase 10, fermi 661, forces 1550, mag_abs 661, mag_total 661, positions 889
+  A2 labels read: s2r_m30_Cs188o0_novac, s2r_m30_Cs188o0_vac, s2r_m30_Sr76o0_novac, s2r_m30_Sr76o0_vac, s2r_m30_VA188, s2r_m30_VB76, s2r_m30_hostA188, s2r_m30_hostB76
+  SP labels read: 661
+
+APPENDIX A. git diff 
+manifest_class_exempt (2.6 s): AssertionError: Counter({'INT-SHA-STABLE': 1628, 'INT-STRUCT': 548, 'INT-SHA': 345, 'INT-SP': 117, 'INT-FR-DEC': 8, 'INT-PARTS': 8, 'INT-PARSE': 8, 'INT-NCFG': 8, 'INT-KLAST': 8, 'INT-FINALK': 8, 'INT-FINALSHA': 8, 'INT-FINALPOS': 8, 'INT-CELL': 8, 'INT-ROUTE': 5, 'INT-C1-CENSUS': 4, 'INT-IMPORT': 3, 'INT-COMMITS': 3, 'INT-FR-SHA': 2, 'INT-K3-N
+record_read_blind (2.8 s): AssertionError: (1, '\n  P15 noise-pilot per-site values: block 3, B3.noise\n  P15 determinism (P §5): block 3, B3.det\n  P15 throughput row: block 3, B3.throughput\n\nCROSS-CHECKS\n  XC-C2R: 16 ok, 0 failed, 0 not evaluated\n  XC-PARTS: 8 ok, 0 failed, 0 not evaluated\n  XC-ENDRULE: 8 ok, 0 failed, 0 not evaluated\n  XC-MIC: 8 ok, 0 failed, 0 
+c3b_opened_in_block3 (2.2 s): AssertionError: (3, " c3b/MANIFEST.sha256 sha256 9d66db539ef4f45b1c04637692771a306fa3fa9aef4243f5a639232239216b24\nC4b: C4b not run (decision, amendment 2026-11-16a)\nroute: C4B-NOTRUN (fr done; fr_outcome pass)\nverify record c2: results/objective2/s2/c2_verify/verify_c2.txt sha256 5391494b8924efd20adae03ac73c6e03b006c0087b47ece6b8334e0aaf6d6e
+audit_block_not_set (1.2 s): AssertionError: (3, "698299db7897d0f6b8bcec4cc62b21cf9af87245b9cd3ef4; c3b/MANIFEST.sha256 sha256 9d66db539ef4f45b1c04637692771a306fa3fa9aef4243f5a639232239216b24\nC4b: C4b not run (decision, amendment 2026-11-16a)\nroute: C4B-NOTRUN (fr done; fr_outcome pass)\nverify record c2: results/objective2/s2/c2_verify/verify_c2.txt sha256 5391494b8924e
+c3b_commit_not_last (0.5 s): AssertionError: (2, "E refused (exit 2; nothing written): scripts/46-50 or E's files differ between S2B_LAST and HEAD without --amendment (S2B:615-617)")
+has_a1_everywhere (2.8 s): AssertionError: ('C4B-NOTRUN', [' 4.0 Route, archive and counts', ' 4.1 Invalid cells and the two readings of check 5 (C3b)', ' 4.2 Per host: raw E_b, far-site values, e_h(j), Y_h, Δ_h and the zero-shot MACE E_b (meV)', ' 4.3 Per dopant: Ē_d(j), G_d, the A1 tier (P §14) and its controls', ' 4.4 Ranking at the A1 tier (reported only; P:782-785)'
+xcheck_none_as_false (18.1 s): AssertionError: (1, '\n  P15 noise-pilot per-site values: block 3, B3.noise\n  P15 determinism (P §5): block 3, B3.det\n  P15 throughput row: block 3, B3.throughput\n\nCROSS-CHECKS\n  XC-C2R: 16 ok, 0 failed, 0 not evaluated\n  XC-PARTS: 8 ok, 0 failed, 0 not evaluated\n  XC-ENDRULE: 8 ok, 0 failed, 0 not evaluated\n  XC-MIC: 8 ok, 0 failed, 0 
+xcheck_twice (3.0 s): AssertionError: [('XC-C3B-MACE-COUNT', True), ('XC-C3B-STATE', True), ('XC-C3B-YSUM', True)]
+
+real	1m36.747s
+user	0m26.541s
+sys	1m7.579s
+
+====================================================================================================
+4. The whole self-test after the change (before the comment correction):  python -B -I results/objective2/s2/s2b/e_selftest.py --repo <real repo>
+====================================================================================================
+Matplotlib is building the font cache; this may take a moment.
+<mutant of _no_class_reasons>:5: SyntaxWarning: "is" with 'int' literal. Did you mean "=="?
+A1 [A] ok (0.0 s); mutants 3: table_extra_leaf: AssertionError; get_no_allow_list: KeyError; step0_leaf_all_files: AssertionError
+A2 [A] ok (0.0 s); mutants 3: deepcopy_allowed: AssertionError; parent_allowed: AssertionError; absent_printable: AssertionError
+A3 [A] ok (0.0 s); mutants 2: no_file_list: AssertionError; hinge_without_allowance: AssertionError
+A4 [A] ok (0.0 s); mutants 2: is_none_anywhere: Blinded; absent_is_none: AssertionError
+A5 [A] ok (0.0 s); mutants 2: no_R4: AssertionError; no_R1: AssertionError
+A6 [A] ok (0.0 s); mutants 2: hinge_in_far: AssertionError; fr2_in_far: AssertionError
+A7 [A] ok (2.3 s); mutants 3: pb136_record_open: EIntegrity; pb136_sp_block3: AssertionError; never_sp_allowed: AssertionError
+A8 [A] ok (0.4 s); mutants 2: mace_walk_no_lists: AssertionError; pb136_in_block3: Blinded
+A9 [A] ok (0.6 s); mutants 2: no_selftest_block: AssertionError; worktrees_unlisted: NOT CAUGHT
+A11 [A] ok (0.3 s); mutants 3: planted_private_access: AssertionError; planted_sys_path: AssertionError; planted_work_area_word: AssertionError
+A12 [A] ok (0.0 s); mutants 4: never_files_open: AssertionError; hinge_raw_open: AssertionError; pb136_raw_open: AssertionError; no_root_binding: AssertionError
+A13 [A] ok (0.0 s); mutants 1: hook_during_rmtree: AssertionError
+B1 [B] ok (0.1 s); mutants 2: no_between_check: AssertionError; ase_delta_one: EIntegrity
+B2 [B] ok (0.5 s); mutants 2: klast_no_conv: AssertionError; cap_read_as_199: EIntegrity
+B3 [B] ok (0.1 s); mutants 2: finalpos_loose: AssertionError; cell_loose: AssertionError
+B4 [B] ok (0.1 s); mutants 3: q0_own_record: EIntegrity; sp_delta_short: EIntegrity; no_cache: AssertionError
+B5 [B] ok (0.0 s); mutants 2: no_images: AssertionError; mic_plain: AssertionError
+B6 [B] ok (0.1 s); mutants 2: parts_gap_allowed: AssertionError; no_rf20_catch: S2Error
+B7 [B] ok (0.1 s); mutants 2: old_c3_rule: EError; no_c3_segment: AssertionError
+B8 [B] ok (1.6 s); mutants 4: host_mace_stage: AssertionError; no_work_ids: KeyError; pb136_label_added: AssertionError; census_no_counts: EIntegrity
+B9 [B] ok (0.0 s); mutants 2: absent_raises: FileNotFoundError; absent_is_none_value: AssertionError
+B10 [B] ok (0.1 s); mutants 3: no_zero_branch: EIntegrity; parts_after_rerun: AssertionError; operator_recomputed: AssertionError
+B11 [B] ok (0.0 s); mutants 2: stable_self: AssertionError; no_member_log: AssertionError
+B12 [B] ok (1.1 s); mutants 3: one_47_unchecked: AssertionError; far4_drift: EIntegrity; fr_order_drift: EIntegrity
+C1a [C] ok (8.5 s); mutants 2: fr_reason_lost: AssertionError; q0_item4_lost: AssertionError
+C1b [C] ok (7.4 s); mutants 1: no_plateau_line: AssertionError
+C1c [C] ok (6.5 s); mutants 1: plateau_rejected: AssertionError
+C1d [C] ok (7.2 s); mutants 1: missing_reason: AssertionError
+C1e [C] ok (7.4 s); mutants 1: cap_reason: AssertionError
+C1f [C] ok (7.5 s); mutants 1: fr1_label_variant: AssertionError
+C1n [C] ok (7.5 s); mutants 1: fr1_endrule_variant: AssertionError
+C1g [C] ok (7.4 s); mutants 1: check_list_lost: AssertionError
+C1h [C] ok (7.4 s); mutants 1: gate_label_lost: AssertionError
+C1i [C] ok (15.1 s); mutants 2: k_counts_fr: AssertionError; fr2_label_lost: AssertionError
+C1j [C] ok (14.9 s); mutants 2: stop_without_note: AssertionError; stop_note_any_path: AssertionError
+C1v [C] ok (98.6 s); mutants 3: stop_decision_unread: AssertionError; frstop_label_dropped: AssertionError; frstop_any_route: AssertionError
+C1k [C] ok (7.2 s); mutants 1: no_zero_branch: AssertionError
+C1l [C] ok (7.1 s); mutants 1: tail_formed_below_36: AssertionError
+C1m [C] ok (13.1 s); mutants 1: gate_label_lost: AssertionError
+C1r [C] ok (13.0 s); mutants 1: k0_marker_required: AssertionError
+C1s [C] ok (15.2 s); mutants 2: cne_as_check: AssertionError; cne_label_not_run: AssertionError
+C1t [C] ok (25.9 s); mutants 0: -
+C1o [C] ok (8.0 s); mutants 1: decision_leaves_unprinted: AssertionError
+C1p [C] ok (6.5 s); mutants 0: -
+C1q [C] ok (87.0 s); mutants 4: no_set_aside: AssertionError; aside_at4_only: AssertionError; aside_named_at4_only: AssertionError; in_force_repeat_only: AssertionError
+C2 [C] ok (5.8 s); mutants 4: eb_roles_swapped: AssertionError; precision: AssertionError; no_boltzmann: AssertionError; mace_dopant_swap: AssertionError
+C3 [C] ok (7.5 s); mutants 2: census_open: AssertionError; leaf_count: AssertionError
+C4 [C] ok (6.5 s); mutants 5: no_rf25: AssertionError; coverage_twice: AssertionError; noform_lost: AssertionError; q0_label_lost: AssertionError; gate_stats_no_item4: AssertionError
+C5 [C] ok (0.0 s); mutants 2: strict_bound: AssertionError; bound_moved: AssertionError
+C5b [C] ok (15.6 s); mutants 2: strict_bound: AssertionError; frvalid_beside_far: AssertionError
+C6 [C] ok (2.9 s); mutants 2: delta_from_pb76: AssertionError; trigger_strict: AssertionError
+C7 [C] ok (4.0 s); mutants 1: trigger_loose: AssertionError
+C8 [C] ok (7.7 s); mutants 1: tolerance_loose: AssertionError
+C8b [C] ok (2.6 s); mutants 1: xc_never_fails: AssertionError
+C6b [C] ok (6.5 s); mutants 0: -
+C8c [C] ok (6.2 s); mutants 0: -
+C8d [C] ok (9.3 s); mutants 1: xfail_drops_value_labels: AssertionError
+C9 [C] ok (7.7 s); mutants 1: clause_lost: AssertionError
+C10 [C] ok (1.9 s); mutants 1: message_printed: AssertionError
+C11 [C] ok (127.2 s); mutants 4: caption_no_header: AssertionError; csv_value_off: FigRefused; meta_extra_end_rule: FigRefused; meta_no_status: FigRefused
+C11b [C] ok (0.5 s); mutants 6: zero_unchecked: AssertionError; contiguity_unchecked: AssertionError; tail_unchecked: AssertionError; restarts_unchecked: AssertionError; e_output_unchecked: AssertionError; caption_no_header: AssertionError
+A4b [A] ok (7.1 s); mutants 1: null_unchecked: AssertionError
+A10 [A] ok (2.0 s); mutants 1: calc_unchecked: AssertionError
+D1 [D] ok (1.3 s); mutants 1: no_clean_check: AssertionError
+D2 [D] ok (101.8 s); mutants 3: old_code_unchecked: AssertionError; unchanged_code_accepted: AssertionError; harness_error_accepted: AssertionError
+D3 [D] ok (3.3 s); mutants 1: no_exit_lock: AssertionError
+D4 [D] ok (38.3 s); mutants 2: diff_ignored: AssertionError; rf3_unchecked: AssertionError
+D5 [D] ok (10.8 s); mutants 1: stub_bypassed: AssertionError
+D6 [D] ok (112.7 s); mutants 1: key_path_lost: AssertionError
+D7 [D] ok (42.9 s); mutants 2: no_fallback: AssertionError; no_30_days: AssertionError
+D10 [D] ok (96.7 s); mutants 2: no_step0_absence: AssertionError; no_route_absences: AssertionError
+D8 [D] ok (38.9 s); mutants 1: backstop_moved: AssertionError
+D9 [D] ok (13.5 s); mutants 1: no_excl: AssertionError
+D11 [D] ok (11.6 s); mutants 1: fr_verify_unchecked: AssertionError
+D12 [D] ok (14.0 s); mutants 1: rf3_c3b_unchecked: AssertionError
+D13 [D] ok (25.6 s); mutants 1: fallback_not_standing: AssertionError
+D14 [D] ok (24.4 s); mutants 0: -
+D15 [D] ok (37.7 s); mutants 1: stop_note_unchecked: AssertionError
+D16 [D] ok (12.6 s); mutants 1: pycache_read: AssertionError
+D17 [D] ok (11.7 s); mutants 2: fallback_no_hinge: AssertionError; fallback_frstop_any_outcome: AssertionError
+D18 [D] ok (15.9 s); mutants 1: hinge_xc_rows_dropped: AssertionError
+D19 [D] ok (10.3 s); mutants 1: no_precommit_refusal: AssertionError
+D20 [D] ok (14.6 s); mutants 0: -
+D21 [D] ok (11.2 s); mutants 1: unapplied_admitted: AssertionError
+T1 [T] ok (0.8 s); mutants 10: no_far_reference: AssertionError; no_a_pose: AssertionError; rank_quantile: AssertionError; rank_with_ca: KeyError; eb_no_host: AssertionError; eb_row_prints_e: AssertionError; mace_sign: AssertionError; mace_diff_sign: AssertionError; site_quantile: AssertionError; rank_hosts_one: TypeError
+T2 [T] ok (0.1 s); mutants 3: flag_ignored: AssertionError; no_g_condition: AssertionError; no_sign_count: AssertionError
+T3 [T] ok (0.1 s); mutants 6: no_sr_control: AssertionError; no_gate_n: AssertionError; no_dopant_specific: AssertionError; c4_loose: AssertionError; no_g1: AssertionError; hinge_accepted: AssertionError
+T4 [T] ok (1.0 s); mutants 16: far_bias_signed: AssertionError; far_bias_narrows: AssertionError; sens_not_flagged: AssertionError; sens_no_sr_control: AssertionError; inv_not_flagged: AssertionError; readings_unchecked: AssertionError; inv_invalid: AssertionError; far_order_m23: AssertionError; nd_unchecked: AssertionError; computable_unchecked: AssertionError; inv_novac_ignored: AssertionError; mace_unlabelled: AssertionError; first_literal: AssertionError; far_bias_silent: AssertionError; far_bias_bool: AssertionError; far_bias_nan: AssertionError
+T5 [T] ok (0.1 s); mutants 8: stop_gives_tier: AssertionError; computable_with_sr: EIntegrity; notier_label_lost: IndexError; c4b_item_lost: AssertionError; c4b_text: AssertionError; computable_all: AssertionError; notier_site_interval: AssertionError; notier_flag: AssertionError
+T6 [T] ok (4.9 s); mutants 14: c2_gate_only: AssertionError; c2_sd_30: AssertionError; c2_mean_20: AssertionError; sign_half: AssertionError; sign_all: AssertionError; valid_x7: AssertionError; valid_a1: AssertionError; tier_n3: AssertionError; ds_no5: AssertionError; ds_no2: AssertionError; ds_site_ge: AssertionError; ds_cells_50: AssertionError; ds_far_counted: AssertionError; sr_flag_ignored: AssertionError
+T7 [T] ok (5.0 s); mutants 26: c4b_exact_name: AssertionError; c4b_in_manifest_unchecked: AssertionError; c4b_dirs_unchecked: AssertionError; c4b_notes_in_private: AssertionError; stop_needs_state: EError; done_state_optional: AttributeError; d0_unchecked: AssertionError; d0_falsy: Blinded; origin_unchecked: AssertionError; names_not_at_admission: _Names; order_unchecked: AssertionError; complete_unchecked: AssertionError; census_unchecked: AssertionError; manifest_sha_unchecked: AssertionError; manifest_path_unchecked: AssertionError; stop_phrase_unchecked: AssertionError; stop_date_unchecked: AssertionError; stop_note_any_path: AssertionError; done_with_note_admitted: AssertionError; note_lines_unchecked: AssertionError; verify_unchecked: AssertionError; status_unchecked: AssertionError; commits_unchecked: AssertionError; state_commit_unchecked: AssertionError; tier_types_unchecked: AssertionError; route_always_tier: AssertionError
+T8 [T] ok (74.7 s); mutants 10: record_identity_unchecked: AssertionError; sp_read_without_record: AssertionError; state_unchecked: AssertionError; stop_state_checked: EIntegrity; pose_mode_unchecked: AssertionError; closed_not_asserted: AssertionError; as_written_reading: EIntegrity; rejected_lost: KeyError; mace_type_unchecked: AssertionError; restated_unchecked: AssertionError
+T9 [T] ok (9.0 s); mutants 10: wid_set_dropped: AssertionError; label_set_dropped: AssertionError; audit_block_unchecked: AssertionError; block_argument_unchecked: AssertionError; pin_544: EIntegrity; work_re_unpinned: AssertionError; closed_noop: AssertionError; read_flag_ignored: AssertionError; unconverged_accepted: AssertionError; absent_record_opened: FileNotFoundError
+T10 [T] ok (40.1 s); mutants 10: kinds_missing: AssertionError; labels_unresolved: AssertionError; xcheck_uncounted: AssertionError; has_a1_dropped: AssertionError; access_not_closed: AssertionError; sp_labels_dropped: AssertionError; coverage_c4b_item: AssertionError; c3b_note_refused: AssertionError; any_note_admitted: AssertionError; note_on_fr_fail: AssertionError
+T11 [T] ok (94.8 s); mutants 10: exit_sp_labels: AssertionError; manifest_class_unchecked: AssertionError; manifest_class_exempt: AssertionError; record_read_blind: AssertionError; c3b_opened_in_block3: AssertionError; audit_block_not_set: AssertionError; c3b_commit_not_last: AssertionError; has_a1_everywhere: AssertionError; xcheck_none_as_false: AssertionError; xcheck_twice: AssertionError
+e_selftest: 95 of 95 cases passed; 269 mutants, 1 not caught; failed: ['A9/worktrees_unlisted']
+
+real	26m30.166s
+user	6m1.387s
+sys	19m40.013s
+
+====================================================================================================
+5. A9 on the base file (git show 6f8c981:.../e_selftest.py, placed beside the current file, then removed):
+   python -B -I results/objective2/s2/s2b/e_selftest_base_tmp.py --case A9 --repo <real repo>
+====================================================================================================
+A9 [A] ok (0.6 s); mutants 2: no_selftest_block: AssertionError; worktrees_unlisted: NOT CAUGHT
+e_selftest: 1 of 1 cases passed; 2 mutants, 1 not caught; failed: ['A9/worktrees_unlisted']
+   base: 94 cases, 259 mutants; with the patch: 95 cases, 269 mutants (--list)
+   checked separately in the copy, same call: `git worktree list | wc -l` printed 1 (one worktree)
+
+====================================================================================================
+6. The runs before T11 passed (no mutants), in order. Runs 1-2: the e_h(j) question of the notes (not ruled; the
+   test's oracle was changed to follow what E prints). Runs 3-5: errors in the test's own expectations (run 4 had
+   no assertion message; run 5 located it). No file of E was changed between these runs.
+====================================================================================================
+run 1: T11 [T] FAILED (AssertionError: ('notier', 'B4.Eb.m06.Sr136')) (40.8 s); mutants 10: -
+run 2: T11 [T] FAILED (AssertionError: ('notier', 'B4.Eb.m06.Sr136', 139.39461184781976, None, '  m06 Sr B136 (first shell): E_b^A1 = 135.20 meV; e_h(j) = 139.39 meV  -- far-site reference: FR, m30 FA188, valid; no A1 tier computable; reported on', 'm06 Sr: not a valid host (far pair valid: True; valid first-shell quartets 1 of 2, 2 need) (40.4 s); mutants 10: -
+run 3: T11 [T] FAILED (AssertionError: ('B4.tier.Sr', ('L_NOTIER',))) (40.0 s); mutants 10: -
+run 4: T11 [T] FAILED (AssertionError: ) (44.6 s); mutants 10: -
+run 5: T11 [T] FAILED (AssertionError: ('stop fixture', None, {'Sr': 4, 'Cl': 3, 'Cs': 3, 'GA': 3}, 234)) (43.6 s); mutants 10: -
+run 6: T11 [T] ok (45.7 s); mutants 10: -
