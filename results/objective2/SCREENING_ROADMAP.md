@@ -377,3 +377,35 @@ C1 ran on 2026-11-04/05 at the campaign commit `8bff03e`. It used 20.6 node-h (e
 3. **Pose rule.** Cs and Cl keep one minimum per leg at both pilot sites. Production uses the default pose, with a_pose = 0.
 4. **A2 layout.** 64 ranks: 13.10 configurations per node-hour against 10.60 at 48 ranks.
 5. **Next: C2.** C2 is A2 on m30 at the same commit: 8 relaxations, with the Ca136 pair dropped. The step-0, K2, projection and K3 gates apply as pre-registered.
+
+## Update 2026-11-17 — S2 re-planned as S2b; FR passed; production campaign C3b started
+
+This entry is an index. It states decisions and counts only; every value is in the note it names. No S2b energy
+has been read: the one evaluation (E, `s2/S2B_PLAN.md` §7) runs after C3b ends.
+
+1. **C2 (2026-11-07 to 2026-11-11): K3 fail_replan.** All eight A2 relaxations on m30 completed. One cell of the far
+   quartet failed final-geometry check 5, so K3 failed before its value test and S2 was re-planned
+   (`s2/C2_RESULT.md`, `s2/C2_DIAGNOSTIC.md`).
+2. **S2b (pre-registered 2026-11-12, `s2/S2B_PLAN.md`).** The far reference is moved to a site whose free region
+   holds no mobile organic cation (m30, FA188, Cs), and the production tier is A1: MACE geometries with a 6 Å free
+   region, scored by far-referenced DFT single points. Amendments: 2026-11-12a (E's code), 2026-11-16a (C3b without
+   C4b in S2b, by decision; the c3b gates and runner; E's block 4), 2026-11-17a (below).
+3. **FR (2026-11-15): pass.** The four relaxations of the far-reference quartet completed; gates `fr_step0@2`,
+   `fr_step0@4` and FR passed; the geometry read of §6b found all four cells valid under both readings of check 5.
+   Cost 23.0 node-h against a plan of 22 to 58 (`s2/FR_RESULT.md`).
+4. **C3b (started 2026-11-17).** Eight production hosts, 68 cells each: 8 host relaxations, 536 MACE relaxations of
+   V⁺, D and D+V⁺ cells and 544 DFT single points (`s2/C3B_OPERATIONS.md`).
+   - The node check at the first c3b commit (`840ad22`) failed in the self-test of `scripts/50` (77 cases, 3 failed).
+     Nothing of c3b had started. The three failures were defects of test cases, corrected inside the self-test
+     only; amendment 2026-11-17a records the causes, what the corrected test shows and does not, and one deviation
+     of the operator (the node was kept running during the diagnosis).
+   - At the campaign commit `e5883d5` every check of `s2/C3B_OPERATIONS.md` §5 passed on the node, and the runner
+     started on 2026-11-17 at 14:07 UTC with both budget projections applied and no cut. H_spent at the start:
+     118.5 node-h of the 520 node-h cap.
+   - C4b (the A2 calibration at the production level) is not run in S2b. E follows C3b directly; what E can then
+     state is the A1 tier without that calibration (`s2/S2B_PLAN.md`, amendment 2026-11-16a, D-0).
+5. **Known limits before E.** Block 4 of E has been tested on synthetic archives only; an end-to-end test on
+   real-format files is being written and will be committed, with a dated note, before E runs. An independent static
+   review of the integration found no blocking defect and named that gap as its one major finding.
+6. **Fine-tuning retests (outside S2b's blinded data).** Three post hoc retests of the WP3 fine-tuning failure have
+   run and a fourth is running; they are reported together, under their pre-specified readings, when the fourth ends.
