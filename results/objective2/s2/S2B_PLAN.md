@@ -1221,3 +1221,64 @@ the C2 part-c values and the C1 MACE values.
   refusal or as a failure before output, to which the rules of §7 apply; that expectation is not a tested property.
 - **Review.** Each side had one static review by a second reader. The fixes that followed, the integration into
   `e_eval.py`, case T10 and the STOP rule of item 8 were written after those reviews and have had no second reader.
+
+## Amendment 2026-11-17a: the node check of the first c3b commit failed in a self-test; three test cases corrected; the commit of this amendment is the c3b campaign commit
+
+Written on 2026-11-17, before any c3b route file, c3b job or c3b file exists. It changes no rule of this plan and no
+line of the runner, of the gates, of the node scripts or of E. It records a failed check, its cause, a correction of
+test code, and one deviation of the operator from `C3B_OPERATIONS.md`.
+
+**What happened.** The checks of `C3B_OPERATIONS.md` section 5 ran on the node on 2026-11-17, in a clean checkout of
+the first c3b commit (`840ad22`).
+- Passed: the self-tests of `scripts/46` (15 cases), `scripts/47` (15 cases) and `scripts/49` (19 cases); the
+  production side of the input identity (19 regions, 24 pairs, 68 single-point inputs, "0 differ"); the counts of
+  `scripts/50 graph --campaign c3b`; the dry run of `s2b_projection` at the point fr (`over_cap` false).
+- Failed: the self-test of `scripts/50`: 77 cases, 3 failed.
+- Not valid as run: the C1 side of the input identity printed "4 differ" (the four Cl cells of m30). The cause is in
+  the operator's check script, not in the repository: its comparison copy of `8bff03e` was an export of `scripts` and
+  `results/fa_host` only and so lacked `results/objective2/s2/stage0/pbcl_source.json`, which the Cl cells read. The
+  side built with the scripts of `840ad22` equalled the C1 records. The check is repeated with a complete export
+  before the launch, and "0 differ" is required as before.
+
+By section 5 item 1 a failure is no launch. No route file was written, no c3b job started, and the node holds no
+`c3b/` tree.
+
+**The three failures are defects of the test cases**, found in the runner's log of the test directory and in the
+launcher's message:
+1. Case "(c3b) S2b campaign c3b on a mock node of its own". Its mini node tree held no
+   `c1/nodescripts_check.json`. The runner stopped at `check:nodescripts` with "no passed c1/nodescripts_check.json
+   to compare the node scripts with (N-F31)", as N-F31 requires, and the case waited for a campaign that could not go
+   on until its time limit. On the real node the record exists since C1. The case now writes the record from the mock
+   node's scripts, with the function a C1 runner uses, before the campaign starts.
+2. Case z19 ("git failures are a STOP") and
+3. case z23 ("wrappers before the first start and on a refused start") start the launcher `s2_campaign.sh` with the
+   campaign `fr`. Since `840ad22` the launcher accepts `c3b` only, so it refused before it reached the behaviour the
+   cases test. Both cases now name `c3b`.
+
+**The change.** 11 lines added and 6 removed in `scripts/50_s2_campaign.py`, all inside `self_test` (the functions
+`c_c3b_campaign`, `c_git_state` and `c_wrappers_r4`). Between `840ad22` and this commit nothing else differs in
+`scripts/`, in `ehpc/node/` or in `results/objective2/s2/s2b/`.
+
+**What the corrected self-test shows.** In a separate clone of `840ad22` on the node, with the three corrections and
+outside the checkout and the work tree: 77 cases, none failed. The mock c3b campaign ran to CAMPAIGN_DONE for the
+first time: the route admitted the commit after the pre-route checks, both projection points were applied before the
+first job, the node was lost in the host wave and c3b resumed in the next boot at the recorded commit, the three c3b
+decisions are in the state, `c1/` and `fr/` are unchanged, and the private archive carries `MANIFEST.sha256` and
+`state_end.json`. All checks of section 5 are repeated in a clean checkout of this commit before the route file is
+written; a failure there is again no launch.
+
+**What it does not show.** The mock campaign uses a mock MACE, a mock pw.x, scripted gate decisions and a synthetic
+repository, and it runs 4 single points, not 544. That the first execution of this case failed for a reason inside
+the case confirms what amendment 2026-11-16a states: its author had never executed it. Other cases of the same origin
+that pass may be weak in ways a pass does not show; the mutation pass of 2026-11-16 (130 of 131 caught) is the only
+evidence on that, and it did not cover these three cases.
+
+**Deviation from `C3B_OPERATIONS.md` section 5 item 1** ("the node is stopped and the defect is fixed in a dated
+commit"). The node was not stopped. The operator kept it running, with the keep-alive flag, while the failures were
+diagnosed in that separate clone, to avoid one more boot. These hours carry no job. They are counted in H_spent: by the
+boot record if c3b starts in the same boot, by an operator entry in the ledger otherwise. Nothing of c3b existed
+during that time, so the blinding is not concerned.
+
+**The c3b campaign commit** is the commit that holds this amendment. The route file names it, with the date
+2026-11-17 and `results/objective2/s2/C3B_OPERATIONS.md`, as section 2 of that note prescribes. `840ad22` is not used
+as a campaign commit.

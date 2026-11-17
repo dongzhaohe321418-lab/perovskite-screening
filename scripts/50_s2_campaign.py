@@ -6371,6 +6371,11 @@ def self_test(work=None):
         W = os.path.join(Rx, "work", "s2")
         os.remove(os.path.join(W, "ledger", f"boot.{boot1}.json"))        # the runner writes its own boot records
         _node_scripts(sysd)
+        # the C1 record of the node scripts, which every later campaign compares with (N-F31): the mini tree has no
+        # C1 run of its own, so the record is made here from the mock node's scripts, as a C1 runner makes it
+        ns_rec = MockBackend(Rx).nodescripts_check("c1", None)
+        assert ns_rec["passed"] and len(ns_rec["files"]) == 5, ns_rec
+        c46.dump_public(ns_rec, os.path.join(W, "c1", "nodescripts_check.json"))
         spx = _Spot()
         write_text(f"http://localhost:{spx.port}/latest/meta-data/instance/spot/termination-time\n",
                    os.path.join(Rx, "setup", "s2_spot_url"))
@@ -8322,10 +8327,10 @@ def self_test(work=None):
         camp = camp.replace(a_, f"R={nog}; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup")
         write_text(camp, os.path.join(sysd, "camp.sh"))
         _node_scripts(sysd)
-        pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), "fr"], capture_output=True, text=True,
+        pr = subprocess.run(["bash", os.path.join(sysd, "camp.sh"), "c3b"], capture_output=True, text=True,
                             env=dict(os.environ, PATH=os.path.join(sysd, "bin") + os.pathsep + os.environ.get("PATH", "")))
-        assert pr.returncode == 1 and "git failed" in pr.stderr and not os.path.exists(os.path.join(W, "fr", "driver.out")), \
-            (pr.returncode, pr.stderr[-300:])
+        assert pr.returncode == 1 and "git failed" in pr.stderr and not os.path.exists(os.path.join(W, "c3b", "driver.out")), \
+            (pr.returncode, pr.stderr[-300:])                 # c3b: the one campaign the launcher starts at this commit
         return "no .git: STOP; a git checkout: 40-hex HEAD, clean, then dirty; s2_campaign.sh in a non-repository: exit 1, nothing started"
     case("(z19) git failures are a STOP (round-4 R4-C1-3 node)", c_git_state)
 
@@ -8457,7 +8462,7 @@ def self_test(work=None):
         assert rr == 1 and "no S2 work tree" in so, (rr, so)
         # a refusal of s2_campaign.sh itself (the checkout is not clean): the stale KEEP_ALIVE goes
         W = os.path.join(Rm, "work", "s2"); co = os.path.join(Rm, "work", "ps_s2")
-        os.makedirs(os.path.join(W, "fr"), exist_ok=True); os.makedirs(os.path.join(co, "ehpc", "node"), exist_ok=True)
+        os.makedirs(os.path.join(W, "c3b"), exist_ok=True); os.makedirs(os.path.join(co, "ehpc", "node"), exist_ok=True)
         camp = open(os.path.join(ROOT, "ehpc", "node", "s2_campaign.sh")).read()
         camp = camp.replace("R=/data/work/ps_s2; PY=/data/miniforge3/envs/mace/bin/python; W=/data/work/s2",
                             f"R={co}; PY=/usr/bin/false; W={W}").replace("setsid nohup", "nohup")
@@ -8467,8 +8472,8 @@ def self_test(work=None):
         for cmd in (["init", "-q"], ["add", "-A"], ["commit", "-q", "-m", "s2 self-test"]):
             subprocess.run(["git", "-C", co] + cmd, check=True, env=ge, capture_output=True)
         write_text("x\n", os.path.join(co, "stray.txt"))
-        write_json({"status": "running"}, os.path.join(W, "fr", "campaign.json"))
-        ka_ = os.path.join(Rm, "KEEP_ALIVE"); write_text("S2 fr\n", ka_)
+        write_json({"status": "running"}, os.path.join(W, "c3b", "campaign.json"))     # the campaign the launcher starts
+        ka_ = os.path.join(Rm, "KEEP_ALIVE"); write_text("S2 c3b\n", ka_)
         bt_ = time.time() - 600
         os.utime(ka_, (bt_ - 3600, bt_ - 3600))
         rr2, so2 = r3_relaunch(sysd, Rm, btime=bt_, campaign_sh=True)

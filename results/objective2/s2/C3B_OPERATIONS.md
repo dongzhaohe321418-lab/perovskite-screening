@@ -221,3 +221,19 @@ The operator confirmed on 2026-11-17 that the node stops itself after 30 minutes
   the node is taken as stopped and the next start is a new boot.
 - **Between the checks of section 5 and the launch.** The checks and the launch are made in one sitting, so that no
   gap of 30 minutes without a job occurs between the last check and the start of the runner.
+
+## 8. Addendum of 2026-11-17: the first node check, and the commit that replaces `840ad22`
+
+Section 5 item 1 says that the self-test of `scripts/50` had not run anywhere. It ran on the node on 2026-11-17 at
+`840ad22` and failed: 77 cases, 3 failed. No route file was written and nothing of c3b started. The three failures
+are defects of three test cases, not of the runner; amendment 2026-11-17a of `S2B_PLAN.md`, committed with this
+addendum, gives the causes, the correction (inside `self_test` only), what the corrected self-test shows (77 cases,
+none failed, in a separate clone on the node; the mock c3b campaign reaches CAMPAIGN_DONE) and what it does not.
+
+- **The c3b campaign commit is the commit of this addendum**, not `840ad22`. Section 2 applies to it unchanged.
+- **Section 5 applies to it in full.** Every check is repeated in a clean checkout of this commit. In item 2 the
+  comparison copy of `8bff03e` must hold `results/objective2/s2/stage0` as well as `scripts` and `results/fa_host`:
+  the first C1-side comparison lacked it and printed "4 differ" for the four Cl cells of m30 for that reason alone.
+- **One deviation from item 1.** The node was not stopped after the failure; it was kept running without a job while
+  the cases were diagnosed (amendment 2026-11-17a). The hours count towards the cap.
+- **E's self-test** (item 5) was not repeated for this commit: no file of E changed.
