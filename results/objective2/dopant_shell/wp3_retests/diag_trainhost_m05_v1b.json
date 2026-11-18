@@ -1,0 +1,346 @@
+{
+ "ZS": {
+  "raw": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 127.44109449249663,
+    "dft_meV": 105.70045295753516,
+    "error_meV": 21.74064153496147,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 152.125971507985,
+    "dft_meV": 116.066358415992,
+    "error_meV": 36.059613091993015,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -32.20027085399124,
+    "dft_meV": -35.042415038333274,
+    "error_meV": 2.8421441843420325,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": 15.022524559526573,
+    "dft_meV": -12.115189427277073,
+    "error_meV": 27.137713986803647,
+    "sign_agree": false
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -31.532677384348062,
+    "dft_meV": -45.35906789533328,
+    "error_meV": 13.82639051098522,
+    "sign_agree": true
+   }
+  },
+  "Eprime": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 127.44109449249663,
+    "dft_meV": 122.00045296049211,
+    "error_meV": 5.44064153200452,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 152.125971507985,
+    "dft_meV": 128.66635841783136,
+    "error_meV": 23.459613090153653,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -32.20027085399124,
+    "dft_meV": -21.042415042757057,
+    "error_meV": -11.157855811234185,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": 15.022524559526573,
+    "dft_meV": -11.615189418080263,
+    "error_meV": 26.637713977606836,
+    "sign_agree": false
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -31.532677384348062,
+    "dft_meV": -44.85906788613647,
+    "error_meV": 13.32639050178841,
+    "sign_agree": true
+   }
+  }
+ },
+ "WP3": {
+  "raw": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 41.263726336183026,
+    "dft_meV": 105.70045295753516,
+    "error_meV": -64.43672662135214,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 51.562910157372244,
+    "dft_meV": 116.066358415992,
+    "error_meV": -64.50344825861976,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -25.707120264996774,
+    "dft_meV": -35.042415038333274,
+    "error_meV": 9.3352947733365,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": -23.774499844876118,
+    "dft_meV": -12.115189427277073,
+    "error_meV": -11.659310417599045,
+    "sign_agree": true
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -35.07815406192094,
+    "dft_meV": -45.35906789533328,
+    "error_meV": 10.280913833412342,
+    "sign_agree": true
+   }
+  },
+  "Eprime": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 41.263726336183026,
+    "dft_meV": 122.00045296049211,
+    "error_meV": -80.73672662430909,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 51.562910157372244,
+    "dft_meV": 128.66635841783136,
+    "error_meV": -77.10344826045912,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -25.707120264996774,
+    "dft_meV": -21.042415042757057,
+    "error_meV": -4.664705222239718,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": -23.774499844876118,
+    "dft_meV": -11.615189418080263,
+    "error_meV": -12.159310426795855,
+    "sign_agree": true
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -35.07815406192094,
+    "dft_meV": -44.85906788613647,
+    "error_meV": 9.780913824215531,
+    "sign_agree": true
+   }
+  }
+ },
+ "V1": {
+  "raw": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 31.11321230244357,
+    "dft_meV": 105.70045295753516,
+    "error_meV": -74.58724065509159,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 35.250515647931024,
+    "dft_meV": 116.066358415992,
+    "error_meV": -80.81584276806097,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -21.54951644479297,
+    "dft_meV": -35.042415038333274,
+    "error_meV": 13.492898593540303,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": -3.926761608454399,
+    "dft_meV": -12.115189427277073,
+    "error_meV": 8.188427818822674,
+    "sign_agree": true
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -23.217214256874286,
+    "dft_meV": -45.35906789533328,
+    "error_meV": 22.141853638458997,
+    "sign_agree": true
+   }
+  },
+  "Eprime": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 31.11321230244357,
+    "dft_meV": 122.00045296049211,
+    "error_meV": -90.88724065804854,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 35.250515647931024,
+    "dft_meV": 128.66635841783136,
+    "error_meV": -93.41584276990034,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -21.54951644479297,
+    "dft_meV": -21.042415042757057,
+    "error_meV": -0.5071014020359144,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": -3.926761608454399,
+    "dft_meV": -11.615189418080263,
+    "error_meV": 7.688427809625864,
+    "sign_agree": true
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -23.217214256874286,
+    "dft_meV": -44.85906788613647,
+    "error_meV": 21.641853629262187,
+    "sign_agree": true
+   }
+  }
+ },
+ "V1b": {
+  "raw": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 0.4939258360536769,
+    "dft_meV": 105.70045295753516,
+    "error_meV": -105.20652712148149,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 6.0218546277610585,
+    "dft_meV": 116.066358415992,
+    "error_meV": -110.04450378823094,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -20.641253096982837,
+    "dft_meV": -35.042415038333274,
+    "error_meV": 14.401161941350438,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": -29.899389803176746,
+    "dft_meV": -12.115189427277073,
+    "error_meV": -17.784200375899673,
+    "sign_agree": true
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -29.23931268742308,
+    "dft_meV": -45.35906789533328,
+    "error_meV": 16.119755207910202,
+    "sign_agree": true
+   }
+  },
+  "Eprime": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 0.4939258360536769,
+    "dft_meV": 122.00045296049211,
+    "error_meV": -121.50652712443843,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 6.0218546277610585,
+    "dft_meV": 128.66635841783136,
+    "error_meV": -122.6445037900703,
+    "sign_agree": true
+   },
+   "Sr48": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -20.641253096982837,
+    "dft_meV": -21.042415042757057,
+    "error_meV": 0.40116194577421993,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": -29.899389803176746,
+    "dft_meV": -11.615189418080263,
+    "error_meV": -18.284200385096483,
+    "sign_agree": true
+   },
+   "GA40": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": -29.23931268742308,
+    "dft_meV": -44.85906788613647,
+    "error_meV": 15.619755198713392,
+    "sign_agree": true
+   }
+  }
+ }
+}

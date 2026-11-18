@@ -1,0 +1,204 @@
+{
+ "ZS": {
+  "model": "<wp3_retests>/foundation/20231203mace128L1_epoch199model",
+  "i_meVA": 86.80896290193992,
+  "ii_raw_rms_meV": 23.64730379747954,
+  "ii_raw_pairs_meV": {
+   "m30_GA": -22.240506365960755,
+   "m30_Sr": -29.78244938435637,
+   "m32_GA": -16.393909855651145,
+   "m32_Sr": 24.215392056703422
+  },
+  "iii_m30_rms_meV": 28.41232026213448,
+  "iii_m30_rms_Sr_meV": 9.202687005764755,
+  "iii_m30_rms_GA_meV": 43.48695993635491,
+  "iii_m30_sites": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 122.95671294236854,
+    "dft_meV": 129.3592566944426,
+    "error_meV": -6.4025437520740525,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 109.644772840511,
+    "dft_meV": 95.56121833156794,
+    "error_meV": 14.083554508943052,
+    "sign_agree": true
+   },
+   "Sr52": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -2.6815252826963842,
+    "dft_meV": 1.1563478619791567,
+    "error_meV": -3.837873144675541,
+    "sign_agree": false
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": -24.5802651811573,
+    "dft_meV": 35.4628309578402,
+    "error_meV": -60.0430961389975,
+    "sign_agree": false
+   },
+   "GA212": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": 28.993242334081515,
+    "dft_meV": 42.29955568735022,
+    "error_meV": -13.306313353268706,
+    "sign_agree": true
+   }
+  },
+  "iii_m21_rms_meV": 29.071014919186126,
+  "iii_m21_rms_Sr_meV": 32.05846760792223,
+  "iii_m21_rms_GA_meV": 23.89961826110528,
+  "iii_m21_sites": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 160.50363086128527,
+    "dft_meV": 136.71830396924634,
+    "error_meV": 23.78532689203894,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 157.59643979276916,
+    "dft_meV": 131.73481069679838,
+    "error_meV": 25.861629095970784,
+    "sign_agree": true
+   },
+   "Sr0": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": 20.348402431181967,
+    "dft_meV": 63.34456971671898,
+    "error_meV": -42.99616728553701,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": 57.725066108559986,
+    "dft_meV": 36.26366205571685,
+    "error_meV": 21.461404052843136,
+    "sign_agree": true
+   },
+   "GA104": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": 53.83382838022044,
+    "dft_meV": 27.722688188077882,
+    "error_meV": 26.111140192142557,
+    "sign_agree": true
+   }
+  }
+ },
+ "WP3": {
+  "model": "<repo>/results/objective2/dopant_shell/wp3/run2/wp3.model",
+  "i_meVA": 14.944537467364732,
+  "ii_raw_rms_meV": 32.75728338646295,
+  "ii_raw_pairs_meV": {
+   "m30_GA": -26.85819756879937,
+   "m30_Sr": -20.791703136637807,
+   "m32_GA": -51.53176898602396,
+   "m32_Sr": 21.976750183966942
+  },
+  "iii_m30_rms_meV": 69.37620533366557,
+  "iii_m30_rms_Sr_meV": 88.70537260407093,
+  "iii_m30_rms_GA_meV": 15.155196237816552,
+  "iii_m30_sites": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 11.55284050037153,
+    "dft_meV": 129.3592566944426,
+    "error_meV": -117.80641619407106,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": -2.9610069759655744,
+    "dft_meV": 95.56121833156794,
+    "error_meV": -98.52222530753352,
+    "sign_agree": false
+   },
+   "Sr52": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -3.420639186515473,
+    "dft_meV": 1.1563478619791567,
+    "error_meV": -4.57698704849463,
+    "sign_agree": false
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": 28.28455640701577,
+    "dft_meV": 35.4628309578402,
+    "error_meV": -7.178274550824426,
+    "sign_agree": true
+   },
+   "GA212": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": 22.104696923634037,
+    "dft_meV": 42.29955568735022,
+    "error_meV": -20.194858763716184,
+    "sign_agree": true
+   }
+  },
+  "iii_m21_rms_meV": 63.8421308374445,
+  "iii_m21_rms_Sr_meV": 77.72868569439002,
+  "iii_m21_rms_GA_meV": 33.56964856827587,
+  "iii_m21_sites": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 43.76021330244839,
+    "dft_meV": 136.71830396924634,
+    "error_meV": -92.95809066679794,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 43.887128806090914,
+    "dft_meV": 131.73481069679838,
+    "error_meV": -87.84768189070746,
+    "sign_agree": true
+   },
+   "Sr0": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": 21.310965239536017,
+    "dft_meV": 63.34456971671898,
+    "error_meV": -42.03360447718296,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": 64.75804920773953,
+    "dft_meV": 36.26366205571685,
+    "error_meV": 28.494387152022682,
+    "sign_agree": true
+   },
+   "GA104": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": 65.69521129131317,
+    "dft_meV": 27.722688188077882,
+    "error_meV": 37.97252310323529,
+    "sign_agree": true
+   }
+  }
+ }
+}
