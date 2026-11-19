@@ -3,6 +3,10 @@
 File names are relative to `results/objective2/dopant_shell/wp3_retests/`, except `scripts/NN` (the repository's
 numbered scripts). Text in block quotes is quoted from the pre-specifications and keeps their file names.
 
+> **Addendum, 2026-11-19.** Two further arms, V5 (V3 with another seed) and V4 (learning rate 1e-3), are reported in
+> `WP3_RETESTS_V4V5.md`. They leave the readings below unchanged, with one qualification: at the rate of V3 a second
+> seed is classed "lost" where V3 is "partial", so that class is not stable under the seed.
+
 ## 1. Summary
 
 WP3 (`../WP3_RESULT.md`) fine-tuned the MACE-MP-0 medium model on 201 DFT frames. The force RMSE on the 46 m30/m32

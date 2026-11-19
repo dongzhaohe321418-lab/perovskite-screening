@@ -105,3 +105,68 @@
   0.99999 (read from the installed source for the V2 record).
 - The note `WP3_RETESTS.md`, its table and the files it names are published under
   `results/objective2/dopant_shell/wp3_retests/` with absolute paths replaced by placeholders.
+
+## 2026-11-18 — publication; V5 and V4 pre-specified and started
+
+- 10:46-11:00Z: public folder `results/objective2/dopant_shell/wp3_retests/` assembled (paths replaced by
+  placeholders; README.md), table reproduced byte for byte by `make_retests_table.py`, hygiene scan clean; commit
+  582e576, pushed.
+- `V4V5_PRESPEC_2026-11-18.md` written 11:10Z (sha256 04ef00ef726020b1c02e735e6879ee067766936a78f7b228e8d44cf68dd0282c),
+  committed and pushed as 73eb26a at 11:10:58Z, before any V4 or V5 step.
+- V5 (V3 command with `--seed 124`, name wp3v5, `run_v5`) started 2026-11-18T11:11:26Z; V4 (WP3 command with
+  `--lr 0.001`, name wp3v4, `run_v4`) follows in the same shell when V5 exits 0.
+
+## 2026-11-18 23:20Z — V5 finished; read-out by V4V5_PRESPEC
+
+- V5 (V3 command with `--seed 124`): 100 epochs; selected epoch 99, the last ("Loaded Stage one model from epoch 99");
+  model `run_v5/wp3v5.model`, sha256 fdcad671f826bca80614b09dbf4c4f167fa3e7ab9eadc8e9b9c073168b69558f; 44 kept
+  checkpoints. The last epochs ran slower (about 11 min per epoch against 6.7 earlier; the laptop, not the run).
+- `python -B eval_v1.py --out v5_eval.json V5=run_v5/wp3v5.model`, exit 0: **P1 = 54.84 meV, P3 = 15.37 meV/A**;
+  (ii) raw 20.98; m30 Sr hinge +58.4 (DFT +129.4), flank +33.4 (DFT +95.6), mid -9.6 (DFT +1.2); m30 GA 7.53; m30 all
+  42.75. m21: Sr 39.83, GA 46.74, all 42.73; hinge +87.5 (DFT +136.7), flank +101.8 (DFT +131.7).
+- **Class by V3's rule: "lost"** (P1 > 50 meV with P3 <= 45). **Seed effect: d = |54.84 - 47.04| = 7.80 meV <= 20 meV:
+  "V3's result is reproduced within the limit"**; the statement "lowering the rate alone keeps the sign and about
+  half of the hinge value" stands for two seeds, with both classes reported: V3 "partial", V5 "lost". The two seeds
+  lie on either side of the 50 meV line, so the class at this rate is not a stable property; the values are
+  (hinge +68.5 and +58.4 of +129.4; flank +42.5 and +33.4 of +95.6).
+- P1_low for the V4 reading = mean(47.04, 54.84) = 50.94 meV; max(20, d) = 20 meV.
+- Trajectory: `traj_v5.py` (traj_v3.py with the run directory changed) running.
+- Correction to the entry above: V5 kept 45 checkpoints (`ls run_v5/checkpoints | grep -c epoch-`), not 44.
+- `python -B traj_v5.py` (23:22-23:55Z, exit 0): `v5_traj.json`, `v5_traj.csv`; "selected" reproduces `v5_eval.json`
+  (m30 hinge +58.4, flank +33.4). m30 hinge by checkpoint: +113.8 (epoch 0), +86.4 (11), +75.8 (28), +61.2 (49),
+  +58.4 (99); m05 (training host): hinge +72.2 (label +105.7), flank +79.0 (label +116.1). Same slow decline as V3.
+- V4 (WP3 command with `--lr 0.001`) started 2026-11-18T23:24:04Z in `run_v4`; log: "Learning rate: 0.001", Initial
+  validation loss 0.33213836.
+
+## 2026-11-19 14:35Z — correction: the V3 and V5 trajectories are not monotonic and were not compared before being called "the same"
+
+- The line "Same slow decline as V3" above was written from five sampled V5 checkpoints, without comparing the two
+  tables. Computed now from `v3_traj.csv` and `v5_traj.csv` (Sr hinge, model, kept checkpoints in epoch order):
+  - V3, m30: 42 checkpoints; +118.3 at epoch 0; minimum +59.8 at epoch 84; +68.4 at epoch 91 (the selected model), a
+    rise of 8.6 meV after the minimum; 16 of the 41 checkpoint-to-checkpoint steps go up (largest +4.5; sum of rises
+    +24.1, of falls -73.9).
+  - V5, m30: 45 checkpoints; +113.8 at epoch 0; minimum +54.1 at epoch 97; +58.4 at epoch 99 (selected), a rise of
+    4.2 meV after the minimum; 17 of the 44 steps go up (largest +5.5; sum of rises +30.7, of falls -86.2).
+  - m21 and m05 show the same pattern in both runs (minima at epochs 84 and 97; rises after the minimum of 8.2 and
+    7.1 meV in V3, 3.4 and 2.6 meV in V5).
+- What can be said: in both runs the hinge E_b has a net fall of about 50 to 56 meV on m30 over the run, made of
+  many small falls and rises; neither trajectory is monotonic; V3's selected model sits 8.6 meV above its own minimum
+  and V5's 4.2 meV above. Whether the two trajectories are "the same" is not tested by anything here.
+
+## 2026-11-19 15:10Z — V4 finished; read-out by V4V5_PRESPEC
+
+- V4 (WP3 command with `--lr 0.001`): exit 0 at 15:06:11Z; 100 epochs; selected epoch 97 ("Loaded Stage one model from
+  epoch 97"); model `run_v4/wp3v4.model`, sha256 4e599e5be66963ecc42da4b3c968bad6d67a633eb7b879716fb2d2547fa9842c; 15
+  kept checkpoints (epochs 0, 4, 6, 9, 13, 23, 25, 29, 31, 42, 44, 55, 61, 71, 97).
+- `python -B eval_v1.py --out v4_eval.json V4=run_v4/wp3v4.model`, exit 0: **P1 = 83.52 meV, P3 = 13.63 meV/A**;
+  (ii) raw 23.63; m30 Sr hinge +24.3 (DFT +129.4), flank -3.4 (DFT +95.6), mid -8.7 (DFT +1.2); m30 GA 5.19; m30 all
+  64.78. m21: Sr 67.77, GA 33.25, all 56.55; hinge +54.1 (DFT +136.7), flank +60.2 (DFT +131.7).
+- **Class by V3's rule: "lost".** **Order with the rate:** P1_low = mean(47.04, 54.84) = 50.94 meV; limit
+  max(20, d = 7.80) = 20 meV; P1(V4) - P1_low = +32.58 meV > 20 with P3 <= 45: **"ordered with the rate"**. By the
+  pre-specification this is a dose-response observation over three rates (1e-4: 47.04 and 54.84; 1e-3: 83.52; 5e-3:
+  88.71) on one data set, not a demonstration that the rate is the cause; replay stays untested at WP3-level forces.
+- `python -B traj_v4.py` (exit 0): `v4_traj.json`, `v4_traj.csv`; "selected" reproduces `v4_eval.json`. m30 hinge:
+  +102.9 (epoch 0), minimum +13.3 at epoch 71, +24.3 at epoch 97; 5 of 14 checkpoint-to-checkpoint steps go up, the
+  largest by 29.5 meV. m05 (training host): +96.6 (epoch 0), minimum +32.7 (epoch 71), +45.0 at epoch 97 (label
+  +105.7). Only 15 checkpoints: the path between them is not known.
+- Shapes of V3 and V5 as in the correction of 14:35Z. No statement that trajectories are "the same" is made.

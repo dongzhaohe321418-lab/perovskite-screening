@@ -1,0 +1,103 @@
+{
+ "V4": {
+  "model": "run_v4/wp3v4.model",
+  "i_meVA": 13.63322077648865,
+  "ii_raw_rms_meV": 23.62882025706149,
+  "ii_raw_pairs_meV": {
+   "m30_GA": -14.869718623231165,
+   "m30_Sr": -22.98711561888922,
+   "m32_GA": -33.71026426611934,
+   "m32_Sr": 18.63831144873984
+  },
+  "iii_m30_rms_meV": 64.7759136231463,
+  "iii_m30_rms_Sr_meV": 83.51796659434164,
+  "iii_m30_rms_GA_meV": 5.188578630311271,
+  "iii_m30_sites": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 24.30712798377499,
+    "dft_meV": 129.3592566944426,
+    "error_meV": -105.0521287106676,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": -3.392591839656234,
+    "dft_meV": 95.56121833156794,
+    "error_meV": -98.95381017122418,
+    "sign_agree": false
+   },
+   "Sr52": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": -8.740416160435416,
+    "dft_meV": 1.1563478619791567,
+    "error_meV": -9.896764022414573,
+    "sign_agree": false
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": 37.801404992933385,
+    "dft_meV": 35.4628309578402,
+    "error_meV": 2.3385740350931883,
+    "sign_agree": true
+   },
+   "GA212": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": 35.34443039097823,
+    "dft_meV": 42.29955568735022,
+    "error_meV": -6.955125296371989,
+    "sign_agree": true
+   }
+  },
+  "iii_m21_rms_meV": 56.549474968393746,
+  "iii_m21_rms_Sr_meV": 67.76836405563648,
+  "iii_m21_rms_GA_meV": 33.25328627123272,
+  "iii_m21_sites": {
+   "Sr136": {
+    "name": "Sr_hinge",
+    "dopant": "Sr",
+    "model_meV": 54.13753383618314,
+    "dft_meV": 136.71830396924634,
+    "error_meV": -82.5807701330632,
+    "sign_agree": true
+   },
+   "Sr124": {
+    "name": "Sr_flank",
+    "dopant": "Sr",
+    "model_meV": 60.22287624364253,
+    "dft_meV": 131.73481069679838,
+    "error_meV": -71.51193445315585,
+    "sign_agree": true
+   },
+   "Sr0": {
+    "name": "Sr_mid",
+    "dopant": "Sr",
+    "model_meV": 20.40143132035155,
+    "dft_meV": 63.34456971671898,
+    "error_meV": -42.94313839636743,
+    "sign_agree": true
+   },
+   "GA128": {
+    "name": "GA_near",
+    "dopant": "GA",
+    "model_meV": 62.49082049180288,
+    "dft_meV": 36.26366205571685,
+    "error_meV": 26.22715843608603,
+    "sign_agree": true
+   },
+   "GA104": {
+    "name": "GA_mid",
+    "dopant": "GA",
+    "model_meV": 66.7572658858262,
+    "dft_meV": 27.722688188077882,
+    "error_meV": 39.03457769774832,
+    "sign_agree": true
+   }
+  }
+ }
+}
