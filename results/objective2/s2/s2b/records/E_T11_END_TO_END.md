@@ -74,6 +74,9 @@ value enters no Y_h, no pooled statistic and no class; no test shows that.
 - A c3b file opened after block 4 (finding 3), and a hinge run on C3B-STOP (finding 4). Neither is fixed. A hinge run
   on C3B-STOP is not made without a dated amendment that settles the comparison of the stop note.
 - Tampering of a single-point output or of a pair file; a private root other than `results/objective2/s2`.
+- An fr with a step-0 repeat before c3b: T11's repository has an fr that passed at the first attempt. The DFT
+  residual forces that block 4 prints are compared for two single-point labels only, not for all 544. (Both gaps
+  were named in the test author's first notes and dropped from the delivered ones; restored here on 2026-11-19.)
 - The remaining T10 escapes of finding 2 that T11 does not reach (the note comparison of `route_admit` with
   near-miss paths; other fail outcomes of fr).
 - A defect in these places is expected to show as a refusal or as a failure before output, to which the rules of
