@@ -409,3 +409,45 @@ has been read: the one evaluation (E, `s2/S2B_PLAN.md` §7) runs after C3b ends.
    review of the integration found no blocking defect and named that gap as its one major finding.
 6. **Fine-tuning retests (outside S2b's blinded data).** Three post hoc retests of the WP3 fine-tuning failure have
    run and a fourth is running; they are reported together, under their pre-specified readings, when the fourth ends.
+
+## Update 2026-11-21 — C3b: three spot reclaims, then a change of node; the fine-tuning re-tests are published
+
+This entry is an index and a record of events. No S2b energy has been read; E (`s2/S2B_PLAN.md` §7) runs after C3b ends.
+
+1. **C3b so far.** All 536 MACE relaxations and the 8 host relaxations are recorded (544 records, 2026-11-18). Of the
+   544 DFT single points, 76 were published when the runner was restarted on 2026-11-21.
+2. **Interruptions.** The spot node was reclaimed three times during C3b: on 2026-11-17 at 14:10 UTC (three minutes
+   after the first start), on 2026-11-18 at 14:35 UTC and on 2026-11-19 at 22:28 UTC. The runner recorded each
+   termination notice. After each, the campaign was restarted with `ehpc/node/s2_relaunch.sh` in the clean checkout of
+   the campaign commit `e5883d5`; the runner re-derives every job from its files, and a published single point is not
+   recomputed.
+3. **Change of node on 2026-11-21 (an event the plan does not foresee; recorded here before the campaign ends).**
+   The operator moved the node from the spot instance to an on-demand instance of the same instance type and CPU
+   model. The data disk is the same: the work tree, the checkout, the conda environments of MACE and Quantum
+   ESPRESSO and the pseudopotentials are unchanged. The system disk is new: the operating system was installed again
+   (kernel 6.8.0-147; before, 6.8.0-139) and the node scripts outside the checkout were installed again.
+   - Checked before the restart: the sha256 of the five node scripts against `s2/c1/nodescripts_check.json`; the
+     sha256 of `pw.x` and of `mpirun` against the first fr launch; the nine pseudopotential files against
+     `s2/c1/upf_check.json`; the unmodified self-tests of `scripts/46`, `47`, `49` and `50` at `e5883d5` on the new
+     instance (15, 15, 19 and 77 cases, none failed); the checkout clean before and after.
+   - The runner was restarted on 2026-11-21 at 16:42 UTC.
+   - **Not checked:** that a single point gives the same energy on the two instances. No single point was computed
+     on both, and comparing one would mean reading a c3b energy before E. The single points of host m06 and the first
+     of m02 (76 in all) ran on the first instance, the others run on the second: same binaries and libraries, same
+     CPU model, another system disk and kernel. The split follows the publication times (before and after
+     2026-11-21 16:42 UTC) and is confounded with the host. The c3b result note will state it.
+4. **Node-hours.** The system journals of the earlier boots stayed on the old system disk. For a boot without a
+   readable journal the ledger takes the assumed bound of `s2/C3B_OPERATIONS.md` §7 (last heartbeat + 60 s + 60 min +
+   15 min). This now applies to all 11 earlier boots, so H_spent reads 152.2 h where the journals gave 139.5 h two
+   days earlier: an over-count of about 12.6 h, on the safe side of the 520 h cap. Nothing was changed in the ledger
+   and no operator entry was made. Expected H_spent at the end of C3b: about 207 h.
+5. **The new node has no idle self-stop.** The statements of `s2/C3B_OPERATIONS.md` §7 that rest on it (the resume
+   window; the end of an unjournalled boot) describe the first node. The operator stops the new node by hand after
+   the pull.
+6. **Fine-tuning re-tests (outside S2b's blinded data): published** in `dopant_shell/wp3_retests/`
+   (`WP3_RETESTS.md`, `WP3_RETESTS_V4V5.md`). In short: three single-head recipes at learning rate 0.005 lose the
+   Sr–vacancy repulsion; multi-head replay keeps it but stays above the pre-set force line; lowering the rate alone
+   limits the loss without removing it (two seeds at 1e-4, on either side of the 50 meV class line), and the loss is
+   ordered with the rate over 1e-4, 1e-3 and 0.005. The cause is not identified, and no model is adopted.
+7. **E, block 4.** The end-to-end test announced on 2026-11-17 is recorded in `s2/s2b/records/E_T11_END_TO_END.md`;
+   it found no defect, and E's files are those of `e5883d5`.
