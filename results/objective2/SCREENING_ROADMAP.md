@@ -498,8 +498,9 @@ archive is private and becomes public with the S2b result note.
    ranks of the campaign.
    - Six ran on the first instance: the quartet of Sr at site 124 in m06 (`s2_m06_host`, `s2_m06_VB124`,
      `s2_m06_Sr124o0_novac`, `s2_m06_Sr124o0_vac`), `s2_m02_host` and `s2_m02_VA92`. They were chosen by position
-     (the first quartet of the first host, the first and the last single point of m02 on that instance), with no
-     energy in view when the list was drafted on 2026-11-23; E has since run.
+     (the first quartet of the first host, the first and the last single point of m02 on that instance). The list
+     was fixed on 2026-11-24, after E had run and its per-dopant results had been seen; no energy of these eight
+     cells had been looked at by the operator when it was fixed.
    - Two are controls that ran on the second instance: `s2_m02_VA128` (its first) and `s2_m23_Cl186o0_vac` (its
      last).
    - Read-out: the difference of the total energy (the line marked "!") between the rerun and the archived output,
@@ -512,5 +513,5 @@ archive is private and becomes public with the S2b result note.
    - It runs after the fine-tuning re-test V6 has ended, so that the 64 ranks have the node to themselves.
 4. **V6 is running** on the node since 2026-11-24 at 00:49 UTC, after a first launch that failed before training;
    the cause, the deviation and the gate as read are in execution note 1 of
-   `dopant_shell/wp3_retests/V6_PRESPEC_2026-11-24.md`. The first three epochs took about 12.5 min each, which
+   `dopant_shell/wp3_retests/V6_PRESPEC_2026-11-24.md`. The first three epochs took 12.3 to 13.0 min each, which
    projects about 21 h for 100 epochs, under the 30 h of the stopping rule for cost.
