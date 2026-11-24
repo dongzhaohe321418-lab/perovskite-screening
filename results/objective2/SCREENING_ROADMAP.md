@@ -451,3 +451,25 @@ This entry is an index and a record of events. No S2b energy has been read; E (`
    ordered with the rate over 1e-4, 1e-3 and 0.005. The cause is not identified, and no model is adopted.
 7. **E, block 4.** The end-to-end test announced on 2026-11-17 is recorded in `s2/s2b/records/E_T11_END_TO_END.md`;
    it found no defect, and E's files are those of `e5883d5`.
+
+## Update 2026-11-24 — C3b ended; private archive and verify made; next steps
+
+No S2b energy has been read. Decisions and counts only.
+
+1. **C3b ended on 2026-11-23 at 23:41 UTC** (CAMPAIGN_DONE) at the campaign commit `e5883d5`: 544 MACE records and
+   544 DFT single points complete. Gate `c3b_complete`: true. Gate `c3b_tier`: computable, with valid hosts per
+   dopant Sr 8, Cl 7, Cs 7, GA 6 of 8. Cells whose check 5 passes under the invariant reading only: none (V 0, D 0,
+   D+V 0). H_spent at the end: 203.8 h of the 520 h cap, of which about 12.6 h is the ledger's over-count recorded
+   on 2026-11-21.
+2. **One more interruption after the change of node.** On 2026-11-23 at 05:32 UTC the node was shut down in an
+   orderly way (the runner received the shutdown signal; not a reclaim, not a crash; who ordered it is not visible
+   from the node). The campaign was restarted at 12:01 UTC. C3b had five starts of the runner in all.
+3. **Pull, private archive, verify (2026-11-23/24).** The c3b tree was pulled and compared with the node by path,
+   size and modification time (10293 files, no difference). The private archive holds 544 labels and 2550 files.
+   `scripts/49 verify` in a private root that holds `c3b/` only: 3 gate files, 0 differ. The c3b note, the verify
+   record and the result note are committed before E runs.
+4. **The cross-instance check announced on 2026-11-21 is still open.** No single point has been recomputed on the
+   second instance yet. If it is made, its rule is committed here before any of its energies is read.
+5. **Fine-tuning re-test V6** (replay with the optimiser settings of V3) is pre-specified in
+   `dopant_shell/wp3_retests/V6_PRESPEC_2026-11-24.md` and runs on the compute node after C3b. Its node time is not
+   S2b time; the archived c3b ledger ends with the campaign.
