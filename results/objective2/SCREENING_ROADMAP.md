@@ -473,3 +473,44 @@ No S2b energy has been read. Decisions and counts only.
 5. **Fine-tuning re-test V6** (replay with the optimiser settings of V3) is pre-specified in
    `dopant_shell/wp3_retests/V6_PRESPEC_2026-11-24.md` and runs on the compute node after C3b. Its node time is not
    S2b time; the archived c3b ledger ends with the campaign.
+
+## Update 2026-11-24 (b) — E has run; corrections to the C3b note; rule of the cross-instance check
+
+No value of E is stated here. By `S2B_PLAN.md` section 7 (run discipline) E's output stays private while the c3b
+archive is private and becomes public with the S2b result note.
+
+1. **E ran once**, on 2026-11-24 at 01:16 UTC, at commit `98bb606` (attempt 1; route C4B-NOTRUN). Its last line is
+   "E exit code: 0": no integrity check and no cross-check failed. sha256 of `E_output.txt`:
+   `3273f0a2241ecd4cc636f073f7bbfac6666db6719102de7440df03419ed34e12`. An independent recomputation of block 4 from
+   the raw single-point outputs is under way; the S2b result note follows it. Block 5 (the hinge) was not opened.
+2. **Corrections to `s2/C3B_NOTE.md`.** The note is not edited, because E recorded its sha256. Found after E, from
+   the start time printed in the header of each single-point output:
+   - 75 single points, not 76, ran on the first instance of the node: the 68 of m06 and 7 of m02 (host, VB124,
+     VB136, VB76, VB172, VA28, VA92). The other 469 ran on the second instance.
+   - "published" in the campaign log marks the submission of a single point to the queue, not its end. The
+     intervals of section 6 of the note (6.55 and 6.17 min) are therefore intervals between submissions, and the
+     counts "per start" of section 5 are submissions.
+   - The number of resubmissions, which the note leaves unread: three single points have an archived first try
+     (`s2_m02_VA92`, `s2_m02_VA128`, `s2_m22_Sr136o0_vac`), each cut short by an interruption of the node (the
+     reclaims of 18 and 19 November and the shutdown of 23 November). Only the completed run of each is a result.
+3. **Rule of the cross-instance check** (announced 2026-11-21; fixed here before any rerun exists). Eight single
+   points are run again on the second instance, from their archived inputs, with the launcher, binary and 64 MPI
+   ranks of the campaign.
+   - Six ran on the first instance: the quartet of Sr at site 124 in m06 (`s2_m06_host`, `s2_m06_VB124`,
+     `s2_m06_Sr124o0_novac`, `s2_m06_Sr124o0_vac`), `s2_m02_host` and `s2_m02_VA92`. They were chosen by position
+     (the first quartet of the first host, the first and the last single point of m02 on that instance), with no
+     energy in view when the list was drafted on 2026-11-23; E has since run.
+   - Two are controls that ran on the second instance: `s2_m02_VA128` (its first) and `s2_m23_Cl186o0_vac` (its
+     last).
+   - Read-out: the difference of the total energy (the line marked "!") between the rerun and the archived output,
+     and for the m06 quartet the difference of the raw E_b.
+   - Readings: every |ΔE| ≤ 0.1 meV, "reproducible across the instances at this sample"; any first-instance
+     |ΔE| > 1 meV with both controls ≤ 0.1 meV, "an instance effect", reported with its size against the intervals
+     of E; a control above 0.1 meV, "the rerun itself is not reproducible at 0.1 meV", and the six say nothing
+     about the instance; anything else is reported as a small difference without a class.
+   - The check changes nothing in E. It is a sample of 6 of 75; it cannot show that all 75 are reproducible.
+   - It runs after the fine-tuning re-test V6 has ended, so that the 64 ranks have the node to themselves.
+4. **V6 is running** on the node since 2026-11-24 at 00:49 UTC, after a first launch that failed before training;
+   the cause, the deviation and the gate as read are in execution note 1 of
+   `dopant_shell/wp3_retests/V6_PRESPEC_2026-11-24.md`. The first three epochs took about 12.5 min each, which
+   projects about 21 h for 100 epochs, under the 30 h of the stopping rule for cost.
