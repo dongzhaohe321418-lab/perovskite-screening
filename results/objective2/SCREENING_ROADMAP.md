@@ -499,8 +499,10 @@ archive is private and becomes public with the S2b result note.
    - Six ran on the first instance: the quartet of Sr at site 124 in m06 (`s2_m06_host`, `s2_m06_VB124`,
      `s2_m06_Sr124o0_novac`, `s2_m06_Sr124o0_vac`), `s2_m02_host` and `s2_m02_VA92`. They were chosen by position
      (the first quartet of the first host, the first and the last single point of m02 on that instance). The list
-     was fixed on 2026-11-24, after E had run and its per-dopant results had been seen; no energy of these eight
-     cells had been looked at by the operator when it was fixed.
+     was fixed on 2026-11-24, after E had run, and it was **not blind**: E's output had been read by then,
+     including the block 4 rows of host m06, which print the raw E_b of this m06 quartet (a value formed from four
+     of the eight cells). An earlier version of this item (commit `a962aee`) said that no energy of the eight cells
+     had been looked at; that was wrong and is corrected here.
    - Two are controls that ran on the second instance: `s2_m02_VA128` (its first) and `s2_m23_Cl186o0_vac` (its
      last).
    - Read-out: the difference of the total energy (the line marked "!") between the rerun and the archived output,
