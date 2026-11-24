@@ -499,10 +499,13 @@ archive is private and becomes public with the S2b result note.
    - Six ran on the first instance: the quartet of Sr at site 124 in m06 (`s2_m06_host`, `s2_m06_VB124`,
      `s2_m06_Sr124o0_novac`, `s2_m06_Sr124o0_vac`), `s2_m02_host` and `s2_m02_VA92`. They were chosen by position
      (the first quartet of the first host, the first and the last single point of m02 on that instance). The list
-     was fixed on 2026-11-24, after E had run, and it was **not blind**: E's output had been read by then,
-     including the block 4 rows of host m06, which print the raw E_b of this m06 quartet (a value formed from four
-     of the eight cells). An earlier version of this item (commit `a962aee`) said that no energy of the eight cells
-     had been looked at; that was wrong and is corrected here.
+     was fixed on 2026-11-24 at 01:39 UTC (commit `d842834`), after E had run. The sequence, from the commit times
+     and the session record: when the list was fixed, the operator had read E's header, sections 4.0, 4.1, 4.3
+     to 4.5, 4.7 and 4.8 of block 4 and the lists after it (counts, the invalid cells, the per-dopant and per-site
+     means, ranking, sensitivity, cross-checks) and no row of section 4.2; the per-host rows of section 4.2, which print the raw E_b of this m06 quartet (a value formed
+     from four of the eight cells), were read a few minutes later, before the reruns were launched at 01:44 UTC.
+     So the list was fixed without a cell energy in view, and the reruns were started with one in view. Two earlier
+     versions of this item (commits `a962aee` and `4634f8e`) each stated one half of this; this one replaces both.
    - Two are controls that ran on the second instance: `s2_m02_VA128` (its first) and `s2_m23_Cl186o0_vac` (its
      last).
    - Read-out: the difference of the total energy (the line marked "!") between the rerun and the archived output,
