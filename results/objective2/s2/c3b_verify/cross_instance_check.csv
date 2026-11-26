@@ -1,0 +1,9 @@
+label,instance_of_archived_run,E_total_archived_Ry,E_total_rerun_second_instance_Ry,difference_meV,printed_strings_identical
+s2_m06_host,first,-5895.10591769,-5895.10591769,0.000000,True
+s2_m06_VB124,first,-5861.84154908,-5861.84154908,0.000000,True
+s2_m06_Sr124o0_novac,first,-5830.10469480,-5830.10469480,0.000000,True
+s2_m06_Sr124o0_vac,first,-5796.84214698,-5796.84214698,0.000000,True
+s2_m02_host,first,-5895.12804936,-5895.12804936,0.000000,True
+s2_m02_VA92,first,-5861.88760646,-5861.88760646,0.000000,True
+s2_m02_VA128,second,-5861.88738513,-5861.88738513,0.000000,True
+s2_m23_Cl186o0_vac,second,-5863.17151113,-5863.17151113,0.000000,True

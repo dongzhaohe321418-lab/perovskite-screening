@@ -1,0 +1,33 @@
+kind,host,dopant,value_meV,lo_meV,hi_meV,n_d,class
+Y_h,m06,Sr,-0.40,,,,
+Y_h,m02,Sr,155.03,,,,
+Y_h,m16,Sr,116.53,,,,
+Y_h,m12,Sr,114.25,,,,
+Y_h,m32,Sr,133.92,,,,
+Y_h,m26,Sr,166.47,,,,
+Y_h,m22,Sr,158.25,,,,
+Y_h,m23,Sr,145.17,,,,
+tier,,Sr,123.65,60.44,186.86,8,repels
+Y_h,m02,Cl,4.50,,,,
+Y_h,m16,Cl,-3.47,,,,
+Y_h,m12,Cl,12.05,,,,
+Y_h,m32,Cl,6.41,,,,
+Y_h,m26,Cl,-8.68,,,,
+Y_h,m22,Cl,22.38,,,,
+Y_h,m23,Cl,-26.55,,,,
+tier,,Cl,0.95,-20.05,21.94,7,no first-shell interaction beyond k_BT
+Y_h,m02,Cs,22.94,,,,
+Y_h,m16,Cs,-20.49,,,,
+Y_h,m12,Cs,-15.98,,,,
+Y_h,m32,Cs,-14.08,,,,
+Y_h,m26,Cs,-51.84,,,,
+Y_h,m22,Cs,-5.85,,,,
+Y_h,m23,Cs,-64.18,,,,
+tier,,Cs,-21.35,-59.96,17.25,7,not resolved
+Y_h,m02,GA,-4.86,,,,
+Y_h,m16,GA,-13.26,,,,
+Y_h,m12,GA,-29.05,,,,
+Y_h,m32,GA,-9.03,,,,
+Y_h,m26,GA,-4.16,,,,
+Y_h,m23,GA,-18.83,,,,
+tier,,GA,-13.20,-27.98,1.58,6,no class (A1-tier control failed: C4)
