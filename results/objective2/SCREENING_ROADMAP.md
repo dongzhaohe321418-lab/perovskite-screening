@@ -520,3 +520,25 @@ archive is private and becomes public with the S2b result note.
    the cause, the deviation and the gate as read are in execution note 1 of
    `dopant_shell/wp3_retests/V6_PRESPEC_2026-11-24.md`. The first three epochs took 12.3 to 13.0 min each, which
    projects about 21 h for 100 epochs, under the 30 h of the stopping rule for cost.
+
+## Update 2026-11-24 (c) — the cross-instance check: reproducible at this sample; V6 ended
+
+Written 2026-11-26 from the records of 2026-11-24 (its commit was held on that day). By the rule of update (b)
+item 3, committed before the reruns existed. No energy is stated here; the table of the eight pairs of energies is
+kept with the private c3b archive until the S2b result note.
+
+1. **Result.** All eight reruns on the second instance print the same total energy as the archived output, digit
+   for digit at the printed 1e-8 Ry (about 1e-4 meV): the six single points whose archived run was on the first
+   instance, and the two controls. Each rerun ended with JOB DONE, with 64 MPI ranks, in the same number of SCF
+   iterations as the archived run. The eight input files of the reruns are byte-identical to the archived inputs.
+   The raw E_b of the m06 Sr quartet at site 124 is therefore unchanged.
+2. **Reading, by the rule:** "reproducible across the instances at this sample". The sample is 6 of the 75 single
+   points of the first instance; the other 69 were not rerun. As update (b) item 3 records, the reruns were
+   launched after the per-host rows of E had been read, so the check is not blind.
+3. **One deviation from the rule's schedule.** The reruns were not left until V6 had ended. V6 was suspended
+   (SIGSTOP) from 01:44:14 to 02:33:21 UTC on 2026-11-24 and resumed afterwards, so that the 64 ranks had the node
+   to themselves as the rule intends. Reason: E had run, and its reading depends on host m06, all of whose single
+   points are from the first instance.
+4. **V6 ended** on 2026-11-24 at 23:01 UTC after 100 epochs. By its pre-specified reading it is "under-trained"
+   (`dopant_shell/wp3_retests/WP3_RETESTS_V6.md`); no further fine-tuning arm follows from it. Node work ended at
+   23:17 UTC.
