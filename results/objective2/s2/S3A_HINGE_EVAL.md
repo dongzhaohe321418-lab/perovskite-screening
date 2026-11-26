@@ -38,3 +38,20 @@ Their results are appended below, in a later commit that changes only this file,
 7. `--prereg` and `--prereg-eval` are repository-relative paths; this record contains the note's path character
    for character (section 1).
 8. The interpreter of E's attempt 1: Python 3.12.16, numpy 2.5.4, scipy 1.18.1, ase 3.29.0.
+
+## 4. Pre-flight results (2026-11-26T17:02:19Z, at commit `325f606`; no hinge file was opened)
+
+1. Objects of `8bff03e` and `e5883d5` present; HEAD `325f606`; `git status --porcelain --untracked-files=all`: 0 lines.
+2. `s2b/E_output.txt` sha256 `30804fefabc8fff35866cbcec5d8dccf8ee0f9f67b2b5d80e95bc66f8dadafb5`; one adding commit,
+   `7336e39`. The unedited file is held on a local branch that is not checked out and in the private store.
+3. No file with "hinge" in its name under `s2b/` or `figures/source_data/`.
+4. `git diff --stat e5883d5 HEAD` over `scripts/46` to `50` and E's eight tools: empty.
+5. `git diff --quiet 98bb606 HEAD -- c1 c2 fr`: exit 0.
+6. The private root holds `c3b` only; sha256 of its `MANIFEST.sha256` equals the line of `C3B_NOTE.md`
+   (`5279cdd3…a68c`); the files under `c3b/` and the manifest list agree (0 differences by name); no `c3` or `c4b`
+   entry under the public root.
+7. This record contains the note's path (section 1); both arguments are given as repository-relative paths.
+8. Python 3.12.16, numpy 2.5.4, scipy 1.18.1, ase 3.29.0.
+
+The blob of the note at this commit is `31e922cdc6304d319949f4e83536ab08b14c6e1e`, as section 1 states. The run
+follows at the commit that adds this section.
