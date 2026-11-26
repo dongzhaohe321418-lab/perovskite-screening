@@ -1,0 +1,10 @@
+key,value
+header,"S2 K3: fail (fail_replan); checks_failed: s2r_m30_VB76, check 5 (C2_RESULT.md). S2b FR: pass. Valid far references: 1 of 2."
+e_output,E_hinge_output.txt
+e_head,00bb6616bc9d95f0ea0a45be844d65ebef026d10
+attempt,1
+mode,hinge
+end_rule.s2r_m30_Sr136o0_novac,accepted_converged
+end_rule.s2r_m30_Sr136o0_vac,accepted_converged
+end_rule.s2r_m30_VB136,accepted_converged
+end_rule.s2r_m30_hostB136,accepted_converged
